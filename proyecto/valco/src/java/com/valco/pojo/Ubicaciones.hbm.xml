@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/11/2014 06:06:43 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.valco.pojo.Ubicaciones" table="UBICACIONES" catalog="valco" optimistic-lock="version">
+        <id name="codigo" type="java.lang.Integer">
+            <column name="CODIGO" />
+            <generator class="identity" />
+        </id>
+        <property name="estado" type="string">
+            <column name="ESTADO" length="45" not-null="true" />
+        </property>
+        <property name="ciudad" type="string">
+            <column name="CIUDAD" length="45" not-null="true" />
+        </property>
+        <property name="oficina" type="string">
+            <column name="OFICINA" length="45" not-null="true" />
+        </property>
+        <property name="estatus" type="string">
+            <column name="ESTATUS" length="20" not-null="true" />
+        </property>
+        <set name="usuarioses" table="USUARIOS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="UBICACIONES_CODIGO" not-null="true" />
+            </key>
+            <one-to-many class="com.valco.pojo.Usuarios" />
+        </set>
+        <set name="productosInventarios" table="PRODUCTOS_INVENTARIO" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="UBICACIONES_CODIGO" not-null="true" />
+            </key>
+            <one-to-many class="com.valco.pojo.ProductosInventario" />
+        </set>
+        <set name="tranferenciasesForSalida" table="TRANFERENCIAS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SALIDA" not-null="true" />
+            </key>
+            <one-to-many class="com.valco.pojo.Tranferencias" />
+        </set>
+        <set name="tranferenciasesForDestino" table="TRANFERENCIAS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DESTINO" not-null="true" />
+            </key>
+            <one-to-many class="com.valco.pojo.Tranferencias" />
+        </set>
+    </class>
+</hibernate-mapping>

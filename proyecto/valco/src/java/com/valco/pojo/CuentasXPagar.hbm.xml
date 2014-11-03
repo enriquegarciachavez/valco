@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/11/2014 06:06:43 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.valco.pojo.CuentasXPagar" table="CUENTAS_X_PAGAR" catalog="valco" optimistic-lock="version">
+        <id name="codigo" type="java.lang.Integer">
+            <column name="CODIGO" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="ordenesCompra" class="com.valco.pojo.OrdenesCompra" fetch="select">
+            <column name="ORDENES_COMPRA_CODIGO" not-null="true" unique="true" />
+        </many-to-one>
+        <property name="fecha" type="timestamp">
+            <column name="FECHA" length="19" not-null="true" />
+        </property>
+        <property name="importe" type="big_decimal">
+            <column name="IMPORTE" precision="7" not-null="true" />
+        </property>
+        <property name="observaciones" type="string">
+            <column name="OBSERVACIONES" length="65535" />
+        </property>
+        <property name="estatus" type="string">
+            <column name="ESTATUS" length="20" not-null="true" />
+        </property>
+        <set name="abonosCuentasXPagars" table="ABONOS_CUENTAS_X_PAGAR" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CUENTAS_X_PAGAR_CODIGO" not-null="true" />
+            </key>
+            <one-to-many class="com.valco.pojo.AbonosCuentasXPagar" />
+        </set>
+    </class>
+</hibernate-mapping>

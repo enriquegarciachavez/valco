@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/11/2014 06:06:43 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.valco.pojo.NotasCredito" table="NOTAS_CREDITO" catalog="valco" optimistic-lock="version">
+        <id name="codigo" type="java.lang.Integer">
+            <column name="CODIGO" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="clientes" class="com.valco.pojo.Clientes" fetch="select">
+            <column name="CLIENTES_CODIGO" not-null="true" />
+        </many-to-one>
+        <property name="fecha" type="date">
+            <column name="FECHA" length="10" not-null="true" />
+        </property>
+        <property name="observaciones" type="string">
+            <column name="OBSERVACIONES" length="65535" />
+        </property>
+        <property name="estatus" type="string">
+            <column name="ESTATUS" length="20" />
+        </property>
+    </class>
+</hibernate-mapping>

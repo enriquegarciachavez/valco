@@ -10,5 +10,28 @@
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.current_session_context_class">thread</property>
     <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
+    <mapping resource="com/valco/pojo/TipoProducto.hbm.xml"/>
+    <mapping resource="com/valco/pojo/CuentasContables.hbm.xml"/>
+    <mapping resource="com/valco/pojo/NotasDeVenta.hbm.xml"/>
+    <mapping resource="com/valco/pojo/MetodosPago.hbm.xml"/>
+    <mapping resource="com/valco/pojo/Tranferencias.hbm.xml"/>
+    <mapping resource="com/valco/pojo/UnidadesDeMedida.hbm.xml"/>
+    <mapping resource="com/valco/pojo/CuentasXPagar.hbm.xml"/>
+    <mapping resource="com/valco/pojo/Movimientos.hbm.xml"/>
+    <mapping resource="com/valco/pojo/NotasCredito.hbm.xml"/>
+    <mapping resource="com/valco/pojo/Proveedores.hbm.xml"/>
+    <mapping resource="com/valco/pojo/ProductosHasProveedores.hbm.xml"/>
+    <mapping resource="com/valco/pojo/AbonosCuentasXCobrar.hbm.xml"/>
+    <mapping resource="com/valco/pojo/Facturas.hbm.xml"/>
+    <mapping resource="com/valco/pojo/Ubicaciones.hbm.xml"/>
+    <mapping resource="com/valco/pojo/OrdenesCompra.hbm.xml"/>
+    <mapping resource="com/valco/pojo/Telefonos.hbm.xml"/>
+    <mapping resource="com/valco/pojo/AbonosCuentasXPagar.hbm.xml"/>
+    <mapping resource="com/valco/pojo/Clientes.hbm.xml"/>
+    <mapping resource="com/valco/pojo/Productos.hbm.xml"/>
+    <mapping resource="com/valco/pojo/Usuarios.hbm.xml"/>
+    <mapping resource="com/valco/pojo/CuentasXCobrar.hbm.xml"/>
+    <mapping resource="com/valco/pojo/ProductosInventario.hbm.xml"/>
+    <mapping resource="com/valco/pojo/Repartidores.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

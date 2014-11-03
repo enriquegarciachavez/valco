@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/11/2014 06:06:43 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.valco.pojo.Usuarios" table="USUARIOS" catalog="valco" optimistic-lock="version">
+        <id name="codigo" type="java.lang.Integer">
+            <column name="CODIGO" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="ubicaciones" class="com.valco.pojo.Ubicaciones" fetch="select">
+            <column name="UBICACIONES_CODIGO" not-null="true" />
+        </many-to-one>
+        <property name="correo" type="string">
+            <column name="CORREO" length="100" not-null="true" unique="true" />
+        </property>
+        <property name="nombre" type="string">
+            <column name="NOMBRE" length="100" not-null="true" />
+        </property>
+        <property name="apellidoPaterno" type="string">
+            <column name="APELLIDO_PATERNO" length="100" not-null="true" />
+        </property>
+        <property name="apellidoMaterno" type="string">
+            <column name="APELLIDO_MATERNO" length="100" />
+        </property>
+        <property name="password" type="string">
+            <column name="PASSWORD" length="100" not-null="true" />
+        </property>
+        <property name="estatus" type="string">
+            <column name="ESTATUS" length="20" />
+        </property>
+        <set name="notasDeVentas" table="NOTAS_DE_VENTA" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="USUARIOS_CODIGO" not-null="true" />
+            </key>
+            <one-to-many class="com.valco.pojo.NotasDeVenta" />
+        </set>
+        <set name="ordenesCompras" table="ORDENES_COMPRA" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="USUARIOS_CODIGO" not-null="true" />
+            </key>
+            <one-to-many class="com.valco.pojo.OrdenesCompra" />
+        </set>
+        <set name="movimientoses" table="MOVIMIENTOS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="USUARIOS_CODIGO" not-null="true" />
+            </key>
+            <one-to-many class="com.valco.pojo.Movimientos" />
+        </set>
+    </class>
+</hibernate-mapping>
