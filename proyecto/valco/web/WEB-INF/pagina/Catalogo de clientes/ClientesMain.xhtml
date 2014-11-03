@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./Template1.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:define name="top">
+        top
+    </ui:define>
+
+    <ui:define name="content">
+        <p:dataTable id="singleDT" var="cliente" value="#{clienteMainBean.clientesModel}" selectionMode="single" selection="#{clienteMainBean.clienteSeleccionado}" rowKey="#{cliente.codigo}">
+        <f:facet name="header">
+            Single with Row Click
+        </f:facet>
+        <p:column headerText="Razón Social">
+            <h:outputText value="#{cliente.razonSocial}" />
+        </p:column>
+        <p:column headerText="Apellido Paterno">
+            <h:outputText value="#{cliente.apellidoPaterno}" />
+        </p:column>
+        <p:column headerText="Apellido Materno">
+            <h:outputText value="#{cliente.apellidoMaterno}" />
+        </p:column>
+        <p:column headerText="Nombres">
+            <h:outputText value="#{cliente.nombres}" />
+        </p:column>
+        <f:facet name="footer">
+            <p:commandButton process="singleDT" update=":form:carDetail" icon="ui-icon-search" value="View" oncomplete="PF('carDialog').show()" />
+        </f:facet>
+    </p:dataTable>
+    </ui:define>
+
+</ui:composition>

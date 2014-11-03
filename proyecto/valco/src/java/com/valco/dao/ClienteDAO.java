@@ -92,7 +92,7 @@ public class ClienteDAO {
             }
         }
     }
-      public List<Clientes> getCliente() throws Exception {
+      public List<Clientes> getClientes() throws Exception {
           Session session = HibernateUtil.getSessionFactory().getCurrentSession();
           Transaction tx = null;
           List<Clientes> clientes = new ArrayList<Clientes>();
