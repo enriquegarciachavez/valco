@@ -35,15 +35,10 @@ public class ClienteMainBean implements Serializable{
      * Creates a new instance of ClienteMainBean
      */
     public ClienteMainBean() {
-        try {
-            
-            clientes= clienteDao.getClientes();
-        } catch (Exception ex) {
-            Logger.getLogger(ClienteMainBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
         
     }
-    public DataModel getClientesModel(){
+    public DataModel getClientesModel() throws Exception{
+        clientes = clienteDao.getClientes();
         modeloClientes= new ListDataModel(clientes);
         return modeloClientes;
     }
