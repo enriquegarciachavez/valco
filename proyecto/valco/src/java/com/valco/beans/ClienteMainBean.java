@@ -7,11 +7,14 @@ package com.valco.beans;
 
 import com.valco.dao.ClienteDAO;
 import com.valco.pojo.Clientes;
+import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 
@@ -20,9 +23,10 @@ import javax.faces.model.ListDataModel;
  * @author Enrique
  */
 @ManagedBean
-@RequestScoped
-public class ClienteMainBean {
-    ClienteDAO clienteDao;
+@ViewScoped
+public class ClienteMainBean implements Serializable{
+    @ManagedProperty(value="#{clienteDao}")
+    private ClienteDAO clienteDao;
     List<Clientes> clientes;
     Clientes clienteSeleccionado;
     DataModel modeloClientes;
@@ -32,7 +36,7 @@ public class ClienteMainBean {
      */
     public ClienteMainBean() {
         try {
-            clienteDao = new ClienteDAO ();
+            
             clientes= clienteDao.getClientes();
         } catch (Exception ex) {
             Logger.getLogger(ClienteMainBean.class.getName()).log(Level.SEVERE, null, ex);
