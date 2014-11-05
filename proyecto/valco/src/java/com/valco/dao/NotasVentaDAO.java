@@ -10,6 +10,8 @@ import com.valco.pojo.Clientes;
 import com.valco.pojo.NotasDeVenta;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -99,7 +101,7 @@ public class NotasVentaDAO {
           List<NotasDeVenta> notas = new ArrayList<NotasDeVenta>();
           try {
               tx = session.beginTransaction();
-              Query q = session.createQuery("FROM NotasDeVenta");
+              Criteria q = session.createCriteria(NotasDeVenta.class).setFetchMode("repartidores", FetchMode.JOIN);
               notas = (List<NotasDeVenta>) q.list();
               return notas;
 
