@@ -31,5 +31,6 @@
 
     <!-- ADD PERSISTENCE SUPPORT HERE (jpa, hibernate, etc) -->
     
-    <bean id="clienteDao" class="com.valco.dao.ClienteDAO" ></bean>
+    <bean id="clienteDao" class="com.valco.dao.ClienteDAO" />
+    <bean id="notadeVentaDao" class="com.valco.dao.NotasVentaDAO" />
 </beans>
