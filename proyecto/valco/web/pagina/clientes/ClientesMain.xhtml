@@ -30,6 +30,73 @@
         <f:facet name="footer">
         </f:facet>
     </p:dataTable>
+        
+           <p:commandButton value="Modal" type="button" onclick="PF('dlg2').show();" />
+           <p:dialog header="Clientes" widgetVar="dlg2" modal="true">
+             <h:outputText value="This is a Modal Dialog." /> 
+             
+             <h:panelGrid   columns="4" cellpadding="5">
+                
+            <h:outputLabel for="razon" value="Razón Social: " />
+            <p:inputText id="razon" required="true" label="razon" />
+            
+            <h:outputLabel for="paterno" value="Apellido Paterno: " />
+            <p:inputText id="paterno" required="true" label="paterno" />
+            
+            <h:outputLabel for="materno" value="Apellido Materno: " />
+            <p:inputText id="materno" required="true" label="materno" />
+            
+            <h:outputLabel for="nombre" value="Nombres: " style="text-align: right"/>
+            <p:inputText id="nombre" required="true" label="nombre" />
+            
+            <h:outputLabel for="direccion" value="Dirección" />
+            <p:inputText id="direccion" required="true" label="direccion" />
+            
+            <h:outputLabel for="colonia" value="Colonia" />
+            <p:inputText id="colonia" required="true" label="colonia" />
+            
+            <h:outputLabel for="interior" value="No. Interior" />
+            <p:inputText id="interior" required="true" label="interior" />
+            
+            <h:outputLabel for="exterior" value="No. Exterior" />
+            <p:inputText id="exterior" required="true" label="exterior" />
+            
+            <h:outputLabel for="postal" value="Código Postal" />
+            <p:inputText id="postal" required="true" label="postal" />
+            
+            <h:outputLabel for="ciudad" value="Ciudad" />
+            <p:inputText id="ciudad" required="true" label="ciudad" />
+            
+            <h:outputLabel for="estado" value="Estado" />
+            <p:inputText id="estado" required="true" label="estado" />
+            
+            <h:outputLabel for="pais" value="País" />
+            <p:inputText id="pais" required="true" label="pais" />
+            
+            <h:outputLabel for="credito" value="Limite de Credito" />
+            <p:inputText id="credito" required="true" label="credito" />
+            
+            <h:outputLabel for="rfc" value="RFC" />
+            <p:inputText id="rfc" required="true" label="rfc" />
+            
+            <h:outputLabel for="correo" value="Correo Electronico" />
+            <p:inputText id="correo" required="true" label="correo" />
+            
+            <h:outputLabel for="´bancaria" value="Cuenta Bancaria" />
+            <p:inputText id="bancaria" required="true" label="bancaria" />
+            
+            <h:outputLabel for="banco" value="Banco" />
+            <p:inputText id="banco" required="true" label="banco" />
+            
+            
+            <h:outputText value="Incobrable: " />
+            <p:selectBooleanCheckbox value="#{selectBooleanView.value1}" />
+            
+            <h:outputText value="Foraneo: " />
+            <p:selectBooleanCheckbox value="#{selectBooleanView.value1}" />
+            
+            </h:panelGrid>
+            </p:dialog>
     </ui:define>
 
 </ui:composition>
