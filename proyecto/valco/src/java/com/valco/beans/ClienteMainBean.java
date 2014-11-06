@@ -7,6 +7,7 @@ package com.valco.beans;
 
 import com.valco.dao.ClienteDAO;
 import com.valco.pojo.Clientes;
+import java.awt.event.ActionEvent;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
@@ -29,11 +30,16 @@ public class ClienteMainBean implements Serializable{
     private ClienteDAO clienteDao;
     List<Clientes> clientes;
     Clientes clienteSeleccionado;
+    Clientes clienteNuevo;
     DataModel modeloClientes;
 
     /**
      * Creates a new instance of ClienteMainBean
+     * @return 
      */
+    
+    
+    
     public ClienteMainBean() {
         
     }
@@ -73,6 +79,30 @@ public class ClienteMainBean implements Serializable{
 
     public void setModeloClientes(DataModel modeloClientes) {
         this.modeloClientes = modeloClientes;
+    }
+    
+    public Clientes getClienteNuevo() {
+        return clienteNuevo;
+    }
+
+    public void setClienteNuevo(Clientes clienteNuevo) {
+        this.clienteNuevo = clienteNuevo;
+    }
+    
+    public void actualizarCliente(){
+        try {
+            clienteDao.actualizarCliente(clienteSeleccionado);
+        } catch (Exception ex) {
+            Logger.getLogger(ClienteMainBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    public void insertarCliente() {
+        try {
+            clienteDao.insertarCliente(clienteNuevo);
+        } catch (Exception ex) {
+            Logger.getLogger(ClienteMainBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }
