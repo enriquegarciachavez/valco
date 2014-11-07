@@ -41,6 +41,7 @@ public class ClienteMainBean implements Serializable{
     
     
     public ClienteMainBean() {
+        clienteNuevo=new Clientes();
         
     }
     public DataModel getClientesModel() throws Exception{
@@ -99,7 +100,15 @@ public class ClienteMainBean implements Serializable{
     }
     public void insertarCliente() {
         try {
+            clienteNuevo.setEstatus("ACTIVO");
             clienteDao.insertarCliente(clienteNuevo);
+        } catch (Exception ex) {
+            Logger.getLogger(ClienteMainBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void borrarCliente(){
+        try {
+            clienteDao.borrarCliente(clienteSeleccionado);
         } catch (Exception ex) {
             Logger.getLogger(ClienteMainBean.class.getName()).log(Level.SEVERE, null, ex);
         }
