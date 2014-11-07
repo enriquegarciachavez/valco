@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../clientes/Template1.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:define name="top">
+        top
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form>
+        <p:menubar>
+            <p:menuitem value="Nuevo" icon="ui-icon-document" onclick="PF('dlg2').show();" />
+        </p:menubar>
+        
+        <p:dataTable id="singleDT" var="nota" value="#{notasDeVentaMainBean.modeloNotas}" selectionMode="single" selection="#{notasDeVentaMainBean.notaSeleccionada}" rowKey="#{nota.codigo}">
+        <f:facet name="header">
+            Single with Row Click
+        </f:facet>
+        <p:column headerText="folio">
+            <h:outputText value="#{nota.folio}" />
+        </p:column>
+        <p:column headerText="fecha">
+            <h:outputText value="#{nota.fechaDeVenta}" />
+        </p:column>
+        <p:column headerText="Estatus">
+            <h:outputText value="#{nota.estatus}" />
+        </p:column>
+        <p:column headerText="repartidor">
+            <h:outputText value="#{nota.repartidores.nombres} #{nota.repartidores.apellidoPaterno}" />
+        </p:column>
+        <f:facet name="footer">
+        </f:facet>
+    </p:dataTable>
+        </h:form>
+        <p:commandButton value="Dynamic Focus" onclick="PF('dlg2').show();" type="button" icon="ui-icon-extlink" />
+    
+        <p:dialog header="Modal Dialog" resizable="false" modal="true" closable="false" closeOnEscape="false" widgetVar="dlg2" height="100"
+                      id="lolo">
+                <h:form onsubmit="return false;">
+                    <h:panelGrid   columns="4" cellpadding="5">
+                <h:outputLabel for="folio" value="Folio: " />
+                <p:inputText id="folio" required="true" label="folio" 
+                             value="#{notasDeVentaMainBean.notaNueva.folio}"
+                             >
+                <p:ajax event="change" update="repartidorOut" listener="#{notasDeVentaMainBean.consultaXFolio}" />
+                </p:inputText>
+            
+                <h:outputLabel   value="Repartidor: " />
+            <h:outputLabel id="repartidorOut"  value="#{notasDeVentaMainBean.notaNueva.repartidores.nombres}" />
+
+            
+            <h:outputLabel for="materno" value="Apellido Materno: " />
+            </h:panelGrid>
+                    </h:form>
+                
+</p:dialog>
+    </ui:define>
+
+</ui:composition>

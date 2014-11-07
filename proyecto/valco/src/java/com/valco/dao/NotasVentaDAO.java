@@ -16,6 +16,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -117,4 +118,27 @@ public class NotasVentaDAO {
         }
     }
     
+      public NotasDeVenta getNotaDeVentaXFolio(int folio) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          NotasDeVenta nota = new NotasDeVenta();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(NotasDeVenta.class)
+                      .setFetchMode("repartidores", FetchMode.JOIN)
+                      .add(Restrictions.eq("folio", folio));
+              nota = (NotasDeVenta)q.uniqueResult();
+              return nota;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los clientes.");
+
+          } finally {
+              try {
+                  session.close();
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los clientes.");
+              }
+        }
+    }
 }
