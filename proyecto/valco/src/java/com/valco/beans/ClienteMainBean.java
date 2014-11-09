@@ -41,9 +41,11 @@ public class ClienteMainBean implements Serializable{
     
     
     public ClienteMainBean() {
-        clienteNuevo=new Clientes();
-        
+    
     }
+    public void inicializarCliente (){
+       this.clienteNuevo=new Clientes();
+}
     public DataModel getClientesModel() throws Exception{
         clientes = clienteDao.getClientes();
         modeloClientes= new ListDataModel(clientes);

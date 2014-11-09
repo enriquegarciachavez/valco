@@ -4,7 +4,8 @@
                 template="./Template1.xhtml"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:h="http://xmlns.jcp.org/jsf/html">
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns="http://www.w3.org/1999/xhtml">
 
     <ui:define name="top">
         top
@@ -29,7 +30,7 @@
                     <h:outputText value="#{cliente.nombres}" />
                 </p:column>
                 <f:facet name="footer">
-                    <p:commandButton value="Ingresar" type="button" onclick="PF('popupingresar').show();" />
+                    <p:commandButton value="Ingresar" update=":formingresar:popupingresar" oncomplete="PF('popupingresar').show();"  action="#{clienteMainBean.inicializarCliente()}"/>
                     <p:commandButton value="Modificar" process="singleDT" update=":popupmodificar" oncomplete="PF('popupmodificar').show();" />
                     <p:commandButton value="Borrar" process="singleDT" update=":popupborrar" oncomplete="PF('popupborrar').show();" />
                 </f:facet>
@@ -38,79 +39,116 @@
 
             <!-- BOTON INGRESAR CLIENTE-->
             <!-- <p:commandButton value="Ingresar" type="button" onclick="PF('popupingresar').show();" /> -->
-            
-            <p:dialog header="Ingresar Cliente" widgetVar="popupingresar" modal="true">
-                <h:form>
-                    <h:panelGrid   columns="4" cellpadding="5">
-
-                        <h:outputLabel for="razon" value="Razón Social: " />
+            <h:form id="formingresar">
+            <p:dialog header="Ingresar Cliente" widgetVar="popupingresar" modal="true" position="top"
+                      id="popupingresar">
+                
+                    
+                    <h:panelGrid id="ingresarGrid"  columns="6" cellpadding="5">
+                        
+                        <f:facet name="header">
+                            <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
+                        </f:facet>
+                        
+                        <p:outputLabel for="razon" value="Razón Social: " />
                         <p:inputText id="razon" required="true" label="razon" value="#{clienteMainBean.clienteNuevo.razonSocial}" />
+                        <p:message for="razon" display="icon" />
 
-                        <h:outputLabel for="paterno" value="Apellido Paterno: " />
+                        <p:outputLabel for="paterno" value="Apellido Paterno: " />
                         <p:inputText id="paterno" required="true" label="paterno" value="#{clienteMainBean.clienteNuevo.apellidoPaterno}"/>
+                        <p:message for="paterno" display="icon" />
 
-                        <h:outputLabel for="materno" value="Apellido Materno: " />
+                        <p:outputLabel for="materno" value="Apellido Materno: " />
                         <p:inputText id="materno" required="false" label="materno" value="#{clienteMainBean.clienteNuevo.apellidoMaterno}"/>
+                        <p:message for="materno" display="icon" />
 
-                        <h:outputLabel for="nombre" value="Nombres: " />
+                        <p:outputLabel for="nombre" value="Nombres: " />
                         <p:inputText id="nombre" required="true" label="nombre" value="#{clienteMainBean.clienteNuevo.nombres}"/>
+                        <p:message for="nombre" display="icon" />
 
-                        <h:outputLabel for="direccion" value="Dirección" />
+                        <p:outputLabel for="direccion" value="Dirección" />
                         <p:inputText id="direccion" required="true" label="direccion" value="#{clienteMainBean.clienteNuevo.direccion}"/>
+                        <p:message for="direccion" display="icon" />
 
-                        <h:outputLabel for="colonia" value="Colonia" />
+                        <p:outputLabel for="colonia" value="Colonia" />
                         <p:inputText id="colonia" required="false" label="colonia" value="#{clienteMainBean.clienteNuevo.colonia}"/>
+                        <p:message for="colonia" display="icon" />
 
-                        <h:outputLabel for="interior" value="No. Interior" />
+                        <p:outputLabel for="interior" value="No. Interior" />
                         <p:inputText id="interior" required="false" label="interior" value="#{clienteMainBean.clienteNuevo.numeroInterior}"/>
+                        <p:message for="interior" display="icon" />
 
-                        <h:outputLabel for="exterior" value="No. Exterior" />
+                        <p:outputLabel for="exterior" value="No. Exterior" />
                         <p:inputText id="exterior" required="true" label="exterior" value="#{clienteMainBean.clienteNuevo.numeroExterior}"/>
+                        <p:message for="exterior" display="icon" />
 
-                        <h:outputLabel for="postal" value="Código Postal" />
+                        <p:outputLabel for="postal" value="Código Postal" />
                         <p:inputText id="postal" required="false" label="postal" value="#{clienteMainBean.clienteNuevo.codigoPostal}"/>
+                        <p:message for="postal" display="icon" />
 
-                        <h:outputLabel for="ciudad" value="Ciudad" />
+                        <p:outputLabel for="ciudad" value="Ciudad" />
                         <p:inputText id="ciudad" required="true" label="ciudad" value="#{clienteMainBean.clienteNuevo.ciudad}"/>
+                        <p:message for="ciudad" display="icon" />
 
-                        <h:outputLabel for="estado" value="Estado" />
+                        <p:outputLabel for="estado" value="Estado" />
                         <p:inputText id="estado" required="true" label="estado" value="#{clienteMainBean.clienteNuevo.estado}"/>
+                        <p:message for="estado" display="icon" />
 
-                        <h:outputLabel for="pais" value="País" />
+                        <p:outputLabel for="pais" value="País" />
                         <p:inputText id="pais" required="true" label="pais" value="#{clienteMainBean.clienteNuevo.pais}"/>
+                        <p:message for="pais" display="icon" />
 
-                        <h:outputLabel for="credito" value="Limite de Credito" />
+                        <p:outputLabel for="credito" value="Limite de Credito" />
                         <p:inputText id="credito" required="false" label="credito" value="#{clienteMainBean.clienteNuevo.limiteCredito}"/>
+                        <p:message for="credito" display="icon" />
 
-                        <h:outputLabel for="rfc" value="RFC" />
+                        <p:outputLabel for="rfc" value="RFC" />
                         <p:inputText id="rfc" required="false" label="rfc" value="#{clienteMainBean.clienteNuevo.rfc}"/>
+                        <p:message for="rfc" display="icon" />
 
-                        <h:outputLabel for="correo" value="Correo Electronico" />
+                        <p:outputLabel for="correo" value="Correo Electronico" />
                         <p:inputText id="correo" required="false" label="correo" value="#{clienteMainBean.clienteNuevo.correoElectronico}"/>
+                        <p:message for="correo" display="icon" />
 
-                        <h:outputLabel for="´bancaria" value="Cuenta Bancaria" />
+                        <p:outputLabel for="bancaria" value="Cuenta Bancaria" />
                         <p:inputText id="bancaria" required="false" label="bancaria" value="#{clienteMainBean.clienteNuevo.cuentaBancaria}"/>
+                        <p:message for="bancaria" display="icon" />
 
-                        <h:outputLabel for="banco" value="Banco" />
+                        <p:outputLabel for="banco" value="Banco" />
                         <p:inputText id="banco" required="false" label="banco" value="#{clienteMainBean.clienteNuevo.banco}"/>
+                        <p:message for="banco" display="icon" />
 
 
                         <h:outputText value="Incobrable: " />
-                        <p:selectBooleanCheckbox value="#{clienteMainBean.clienteNuevo.incobrable}" />
+                        <p:selectBooleanCheckbox value="#{clienteMainBean.clienteNuevo.incobrable}" id="incobrable"/>
+                        <p:message for="incobrable" display="icon"/>
 
                         <h:outputText value="Foraneo: " />
-                        <p:selectBooleanCheckbox value="#{clienteMainBean.clienteNuevo.foreano}" />
+                        <p:selectBooleanCheckbox value="#{clienteMainBean.clienteNuevo.foreano}" id="foraneo"/>
+                        <p:message for="foraneo" display="icon"/>
 
                         <f:facet name="footer">
 
-                            <p:commandButton value="Guardar" id="guardar1" partialSubmit="true" ajax="false" action="#{clienteMainBean.insertarCliente()}"/>
-                            <p:commandButton value="Cancelar" id="cancelar1"  ajax="false" />
+                            <p:commandButton value="Guardar"  id="guardar1" update="ingresarGrid :form:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'popupingresar' )"  action="#{clienteMainBean.insertarCliente()}"/>
+                            <p:commandButton value="Cancelar" ajax="false" id="cancelar1" oncomplete="handleLoginRequest(xhr, status, args, 'popupingresar')" update="ingresarGrid" immediate="true"/>
                         </f:facet>
                     </h:panelGrid>
 
-                </h:form>
+                
             </p:dialog>
+            </h:form>
             
+            <script type="text/javascript">
+    function handleLoginRequest(xhr, status, args, popupname) {
+        if(args.validationFailed ) {
+            PF(popupname).jq.effect("shake", {times:5}, 100);
+        }
+        else {
+            PF(popupname).hide();
+            $('#loginLink').fadeOut();
+        }
+    }
+            </script>
                 
 
             <!-- BOTON MODIFICAR CLIENTE-->
@@ -166,13 +204,13 @@
                     <h:outputLabel for="correo" value="Correo Electronico" />
                     <p:inputText id="correo2" required="false" label="correo" value="#{clienteMainBean.clienteSeleccionado.correoElectronico}"/>
 
-                    <h:outputLabel for="´bancaria" value="Cuenta Bancaria" />
+                    <h:outputLabel for="bancaria" value="Cuenta Bancaria" />
                     <p:inputText id="bancaria2" required="false" label="bancaria" value="#{clienteMainBean.clienteSeleccionado.cuentaBancaria}"/>
 
                     <h:outputLabel for="banco" value="Banco" />
                     <p:inputText id="banco2" required="false" label="banco" value="#{clienteMainBean.clienteSeleccionado.banco}"/>
                     
-                    <h:outputLabel for="estatus" value="Estatus" />
+                    <h:outputLabel for="estatus2" value="Estatus" />
                     <p:inputText id="estatus2" required="true" label="estatus" value="#{clienteMainBean.clienteSeleccionado.estatus}"/>
 
                     <h:outputText value="Incobrable: " />

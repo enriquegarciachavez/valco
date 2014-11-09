@@ -39,7 +39,9 @@ public class ClienteDAO implements Serializable{
             throw new Exception("Ocurrió un error al registrar el cliente.");
         } finally {
             try {
+                if(session.isOpen()){
                 session.close();
+                }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al registrar el cliente.");
             }
@@ -87,7 +89,9 @@ public class ClienteDAO implements Serializable{
             throw new Exception("Ocurrió un error al borrar el cliente.");
         } finally {
             try {
+                if(session.isOpen()){
                 session.close();
+                }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al borrar el cliente.");
             }
