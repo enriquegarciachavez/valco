@@ -19,7 +19,7 @@ public class Clientes  implements java.io.Serializable {
      private String direccion;
      private String colonia;
      private String numeroInterior;
-     private int numeroExterior;
+     private Integer numeroExterior;
      private Integer codigoPostal;
      private String ciudad;
      private String estado;

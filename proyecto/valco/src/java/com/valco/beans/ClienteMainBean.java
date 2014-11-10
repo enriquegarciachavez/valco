@@ -16,6 +16,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIInput;
+import javax.faces.component.UISelectBoolean;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 
@@ -25,31 +27,227 @@ import javax.faces.model.ListDataModel;
  */
 @ManagedBean
 @ViewScoped
-public class ClienteMainBean implements Serializable{
-    @ManagedProperty(value="#{clienteDao}")
+public class ClienteMainBean implements Serializable {
+
+    @ManagedProperty(value = "#{clienteDao}")
     private ClienteDAO clienteDao;
     List<Clientes> clientes;
     Clientes clienteSeleccionado;
     Clientes clienteNuevo;
     DataModel modeloClientes;
+    UIInput razonSocial;
+    UIInput apellidoPaterno;
+    UIInput apellidoMaterno;
+    UIInput nombres;
+    UIInput direccion;
+    UIInput colonia;
+    UIInput numeroInterior;
+    UIInput numeroExterior;
+    UIInput codigoPostal;
+    UIInput ciudad;
+    UIInput estado;
+    UIInput pais;
+    UIInput limiteCredito;
+    UIInput rfc;
+    UIInput correoElectronico;
+    UISelectBoolean incobrable;
+    UISelectBoolean foreano;
+    UIInput cuentaBancaria;
+    UIInput banco;
 
     /**
      * Creates a new instance of ClienteMainBean
-     * @return 
+     *
+     * @return
      */
-    
-    
-    
-    public ClienteMainBean() {
-    
+    public UIInput getApellidoPaterno() {
+        return apellidoPaterno;
     }
-    public void inicializarCliente (){
-       this.clienteNuevo=new Clientes();
-}
-    public DataModel getClientesModel() throws Exception{
+
+    public void setApellidoPaterno(UIInput apellidoPaterno) {
+        this.apellidoPaterno = apellidoPaterno;
+    }
+
+    public UIInput getApellidoMaterno() {
+        return apellidoMaterno;
+    }
+
+    public void setApellidoMaterno(UIInput apellidoMaterno) {
+        this.apellidoMaterno = apellidoMaterno;
+    }
+
+    public UIInput getNombres() {
+        return nombres;
+    }
+
+    public void setNombres(UIInput nombres) {
+        this.nombres = nombres;
+    }
+
+    public UIInput getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(UIInput direccion) {
+        this.direccion = direccion;
+    }
+
+    public UIInput getColonia() {
+        return colonia;
+    }
+
+    public void setColonia(UIInput colonia) {
+        this.colonia = colonia;
+    }
+
+    public UIInput getNumeroInterior() {
+        return numeroInterior;
+    }
+
+    public void setNumeroInterior(UIInput numeroInterior) {
+        this.numeroInterior = numeroInterior;
+    }
+
+    public UIInput getNumeroExterior() {
+        return numeroExterior;
+    }
+
+    public void setNumeroExterior(UIInput numeroExterior) {
+        this.numeroExterior = numeroExterior;
+    }
+
+    public UIInput getCodigoPostal() {
+        return codigoPostal;
+    }
+
+    public void setCodigoPostal(UIInput codigoPostal) {
+        this.codigoPostal = codigoPostal;
+    }
+
+    public UIInput getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(UIInput ciudad) {
+        this.ciudad = ciudad;
+    }
+
+    public UIInput getEstado() {
+        return estado;
+    }
+
+    public void setEstado(UIInput estado) {
+        this.estado = estado;
+    }
+
+    public UIInput getPais() {
+        return pais;
+    }
+
+    public void setPais(UIInput pais) {
+        this.pais = pais;
+    }
+
+    public UIInput getLimiteCredito() {
+        return limiteCredito;
+    }
+
+    public void setLimiteCredito(UIInput limiteCredito) {
+        this.limiteCredito = limiteCredito;
+    }
+
+    public UIInput getRfc() {
+        return rfc;
+    }
+
+    public void setRfc(UIInput rfc) {
+        this.rfc = rfc;
+    }
+
+    public UIInput getCorreoElectronico() {
+        return correoElectronico;
+    }
+
+    public void setCorreoElectronico(UIInput correoElectronico) {
+        this.correoElectronico = correoElectronico;
+    }
+
+    public UISelectBoolean getIncobrable() {
+        return incobrable;
+    }
+
+    public void setIncobrable(UISelectBoolean incobrable) {
+        this.incobrable = incobrable;
+    }
+
+    public UISelectBoolean getForeano() {
+        return foreano;
+    }
+
+    public void setForeano(UISelectBoolean foreano) {
+        this.foreano = foreano;
+    }
+
+    public UIInput getCuentaBancaria() {
+        return cuentaBancaria;
+    }
+
+    public void setCuentaBancaria(UIInput cuentaBancaria) {
+        this.cuentaBancaria = cuentaBancaria;
+    }
+
+    public UIInput getBanco() {
+        return banco;
+    }
+
+    public void setBanco(UIInput banco) {
+        this.banco = banco;
+    }
+
+    public UIInput getRazonSocial() {
+        return razonSocial;
+    }
+
+    public void setRazonSocial(UIInput razonSocial) {
+        this.razonSocial = razonSocial;
+    }
+
+    public ClienteMainBean() {
+
+    }
+
+    public void inicializarCliente() {
+        this.clienteNuevo = new Clientes();
+        limpiarIngresarForm();
+    }
+
+    public DataModel getClientesModel() throws Exception {
         clientes = clienteDao.getClientes();
-        modeloClientes= new ListDataModel(clientes);
+        modeloClientes = new ListDataModel(clientes);
         return modeloClientes;
+    }
+
+    public void limpiarIngresarForm() {
+        razonSocial.setValue(null);
+        apellidoPaterno.setValue(null);
+        apellidoMaterno.setValue(null);
+        nombres.setValue(null);
+        direccion.setValue(null);
+        colonia.setValue(null);
+        numeroInterior.setValue(null);
+        numeroExterior.setValue("");
+        codigoPostal.setValue(null);
+        ciudad.setValue(null);
+        estado.setValue(null);
+        pais.setValue(null);
+        limiteCredito.setValue(null);
+        rfc.setValue(null);
+        correoElectronico.setValue(null);
+        incobrable.setValue(false);
+        foreano.setValue(false);
+        cuentaBancaria.setValue(null);
+        banco.setValue(null);
+
     }
 
     public ClienteDAO getClienteDao() {
@@ -83,7 +281,7 @@ public class ClienteMainBean implements Serializable{
     public void setModeloClientes(DataModel modeloClientes) {
         this.modeloClientes = modeloClientes;
     }
-    
+
     public Clientes getClienteNuevo() {
         return clienteNuevo;
     }
@@ -91,15 +289,16 @@ public class ClienteMainBean implements Serializable{
     public void setClienteNuevo(Clientes clienteNuevo) {
         this.clienteNuevo = clienteNuevo;
     }
-    
-    public void actualizarCliente(){
+
+    public void actualizarCliente() {
         try {
             clienteDao.actualizarCliente(clienteSeleccionado);
         } catch (Exception ex) {
             Logger.getLogger(ClienteMainBean.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
+
     public void insertarCliente() {
         try {
             clienteNuevo.setEstatus("ACTIVO");
@@ -108,12 +307,13 @@ public class ClienteMainBean implements Serializable{
             Logger.getLogger(ClienteMainBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public void borrarCliente(){
+
+    public void borrarCliente() {
         try {
             clienteDao.borrarCliente(clienteSeleccionado);
         } catch (Exception ex) {
             Logger.getLogger(ClienteMainBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
 }
