@@ -4,7 +4,8 @@
                 template="./../clientes/Template1.xhtml"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:h="http://xmlns.jcp.org/jsf/html">
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns="http://www.w3.org/1999/xhtml">
 
     <ui:define name="top">
         top
@@ -13,7 +14,7 @@
     <ui:define name="content">
         <h:form>
         <p:menubar>
-            <p:menuitem value="Nuevo" icon="ui-icon-document" onclick="PF('dlg2').show();" />
+            <p:menuitem value="Nuevo" icon="ui-icon-document" onclick="PF('dlg2').show();" partialSubmit="true" />
         </p:menubar>
         
         <p:dataTable id="singleDT" var="nota" value="#{notasDeVentaMainBean.modeloNotas}" selectionMode="single" selection="#{notasDeVentaMainBean.notaSeleccionada}" rowKey="#{nota.codigo}">
@@ -38,26 +39,98 @@
         </h:form>
         <p:commandButton value="Dynamic Focus" onclick="PF('dlg2').show();" type="button" icon="ui-icon-extlink" />
     
-        <p:dialog header="Modal Dialog" resizable="false" modal="true" closable="false" closeOnEscape="false" widgetVar="dlg2" height="100"
-                      id="lolo">
-                <h:form onsubmit="return false;">
-                    <h:panelGrid   columns="4" cellpadding="5">
-                <h:outputLabel for="folio" value="Folio: " />
+        <p:dialog header="Modal Dialog" resizable="false" modal="true"  closeOnEscape="false" widgetVar="dlg2" 
+                  width="1000" position="top" height="500"   id="lolo">
+            <h:form onsubmit="return false;" id="form1">
+                <h:panelGrid   columns="4" cellpadding="5" id="grid1">
+                <p:outputLabel for="folio" value="Folio: " />
                 <p:inputText id="folio" required="true" label="folio" 
                              value="#{notasDeVentaMainBean.notaNueva.folio}"
                              >
                 <p:ajax event="change" update="repartidorOut" listener="#{notasDeVentaMainBean.consultaXFolio}" />
                 </p:inputText>
             
-                <h:outputLabel   value="Repartidor: " />
-            <h:outputLabel id="repartidorOut"  value="#{notasDeVentaMainBean.notaNueva.repartidores.nombres}" />
-
+                <p:outputLabel   value="Repartidor: " />
+                <p:outputLabel id="repartidorOut"  value="#{notasDeVentaMainBean.notaNueva.repartidores.nombres} #{notasDeVentaMainBean.notaNueva.repartidores.apellidoPaterno}" />
+                
+                <p:outputLabel   value="fecha: " />
+                <p:calendar required="true" id="popup" value="#{notasDeVentaMainBean.notaNueva.fechaDeVenta}" />
             
-            <h:outputLabel for="materno" value="Apellido Materno: " />
+                <p:outputLabel for="cliente" value="Cliente:"  />
+                <p:selectOneMenu id="cliente" value="#{notasDeVentaMainBean.notaNueva.clientes}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
+                                 effect="fade" var="c" style="width:160px" filter="true" filterMatchMode="contains">
+                    <f:selectItems value="#{notasDeVentaMainBean.clientes}" var="cliente" itemLabel="#{cliente.codigo} | #{cliente.nombres} #{cliente.apellidoPaterno}" itemValue="#{cliente}" />
+
+                    <p:column style="width:10%">
+                        <h:outputText value="#{c.codigo}" />
+                    </p:column>
+
+                    <p:column>
+                        <h:outputText value="#{c.nombres} #{c.apellidoPaterno}" />
+                    </p:column>
+                </p:selectOneMenu>
+                
+                <p:outputLabel   value="Flete: " />
+                <p:inputText value="#{notasDeVentaMainBean.notaNueva.flete}" />
+                
+                <f:facet name="footer">
+                    <p:dataTable id="productosSeleccionados" var="producto" value="#{notasDeVentaMainBean.productosSeleccionados}" selectionMode="multiple" selection="#{notasDeVentaMainBean.productosSeleccionados}" rowKey="#{producto.codigo}">
+                        <f:facet name="header">
+                            Single with Row Click
+                        </f:facet>
+                        <p:column headerText="producto">
+                            <h:outputText value="#{producto.productosHasProveedores.productos.descripcion}" />
+                        </p:column>
+                        <p:column headerText="peso">
+                            <h:outputText value="#{producto.peso}" />
+                        </p:column>
+                        <p:column headerText="precio">
+                            <h:outputText value="#{producto.precio}" />
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton value="Seleccionar productos" onclick="PF('productosPopUp').show();" />
+                        </f:facet>
+                    </p:dataTable>
+    </f:facet>
+                
             </h:panelGrid>
-                    </h:form>
+        </h:form>
                 
 </p:dialog>
+        <h:form>
+            <p:dialog id="productosPopUp" widgetVar="productosPopUp" modal="true" height="400px" width="700">
+            <p:commandButton value="Seleccionar" id="btnSeleccionar" oncomplete="handleLoginRequest(xhr, status, args, 'productosPopUp' )" process="productosPopUp" update=":form1:grid1"/>
+            <p:sticky target="btnSeleccionar" />
+            <p:dataTable id="productosDisponibles" var="producto" value="#{notasDeVentaMainBean.productosDisponibles}" selection="#{notasDeVentaMainBean.productosSeleccionados}" rowKey="#{producto.codigo}">
+                        <f:facet name="header">
+                            Single with Row Click
+                        </f:facet>
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                        <p:column headerText="producto">
+                            <h:outputText value="#{producto.productosHasProveedores.productos.descripcion}" />
+                        </p:column>
+                        <p:column headerText="peso" style="width:150px;text-align:center">
+                            <h:outputText value="#{producto.peso}" />
+                        </p:column>
+                        <p:column headerText="precio" style="width:150px;text-align:center">
+                            <h:outputText value="#{producto.precio}" />
+                        </p:column>
+                    </p:dataTable>
+        </p:dialog>
+        </h:form>
+        
+        <script type="text/javascript">
+    function handleLoginRequest(xhr, status, args, popupname) {
+        if(args.validationFailed ) {
+            PF(popupname).jq.effect("shake", {times:5}, 100);
+        }
+        else {
+            PF(popupname).hide();
+            $('#loginLink').fadeOut();
+        }
+    }
+            </script>
+        
     </ui:define>
 
 </ui:composition>

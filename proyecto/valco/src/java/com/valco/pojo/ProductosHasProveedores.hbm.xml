@@ -8,7 +8,7 @@
             <column name="CODIGO" />
             <generator class="identity" />
         </id>
-        <many-to-one name="productos" class="com.valco.pojo.Productos" fetch="select">
+        <many-to-one name="productos" class="com.valco.pojo.Productos" fetch="join">
             <column name="PRODUCTOS_CODIGO" not-null="true" />
         </many-to-one>
         <many-to-one name="proveedores" class="com.valco.pojo.Proveedores" fetch="select">

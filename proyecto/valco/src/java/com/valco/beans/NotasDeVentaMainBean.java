@@ -5,33 +5,95 @@
  */
 package com.valco.beans;
 
+import com.valco.dao.ClienteDAO;
 import com.valco.dao.NotasVentaDAO;
+import com.valco.pojo.Clientes;
 import com.valco.pojo.NotasDeVenta;
+import com.valco.pojo.ProductosInventario;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
-import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.validator.ValidatorException;
-import org.primefaces.context.RequestContext;
-import static sun.net.www.http.HttpClient.New;
 
 /**
  *
  * @author Karlitha
  */
-@ManagedBean
-@ViewScoped
-public class NotasDeVentaMainBean {
-@ManagedProperty(value="#{notadeVentaDao}")
-private NotasVentaDAO notasDeVentaDao;
-private List<NotasDeVenta> notasDeVenta;
-private NotasDeVenta notaSeleccionada;
-private NotasDeVenta notaNueva;
+    @ManagedBean
+    @ViewScoped
+    public class NotasDeVentaMainBean {
+    @ManagedProperty(value="#{notadeVentaDao}")
+    private NotasVentaDAO notasDeVentaDao;
+    @ManagedProperty(value="#{clienteDao}")
+    private ClienteDAO clienteDao;
+    private List<NotasDeVenta> notasDeVenta;
+    private NotasDeVenta notaSeleccionada;
+    private NotasDeVenta notaNueva;
+    private List<ProductosInventario> productosDisponibles;
+
+    public List<ProductosInventario> getProductosDisponibles() {
+        return productosDisponibles;
+    }
+
+    public void setProductosDisponibles(List<ProductosInventario> productosDisponibles) {
+        this.productosDisponibles = productosDisponibles;
+    }
+
+    public List<ProductosInventario> getProductosSeleccionados() {
+        return productosSeleccionados;
+    }
+
+    public void setProductosSeleccionados(List<ProductosInventario> productosSeleccionados) {
+        this.productosSeleccionados = productosSeleccionados;
+    }
+    List<Clientes> clientes;
+    private List<ProductosInventario> productosSeleccionados;
+
+    
+
+    public ClienteDAO getClienteDao() {
+        return clienteDao;
+    }
+
+    public void setClienteDao(ClienteDAO clienteDao) {
+        this.clienteDao = clienteDao;
+    }
+
+    public List<Clientes> getClientes() {
+        return clientes;
+    }
+
+    public void setClientes(List<Clientes> clientes) {
+        this.clientes = clientes;
+    }
+
+        /**
+     * Creates a new instance of NotasDeVentaMainBean
+     */
+    public NotasDeVentaMainBean() {
+        this.productosSeleccionados = new ArrayList<ProductosInventario>();
+        this.notaNueva = new NotasDeVenta();
+    }
+    
+    @PostConstruct
+    public void init(){
+        try {
+            this.clientes = clienteDao.getClientes();
+            this.productosDisponibles = notasDeVentaDao.getProductosDisponibles();
+        } catch (Exception ex) {
+            Logger.getLogger(NotasDeVentaMainBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     public NotasDeVenta getNotaNueva() {
         return notaNueva;
@@ -87,11 +149,6 @@ private NotasDeVenta notaNueva;
     }
     
 DataModel modeloNotas;
-    /**
-     * Creates a new instance of NotasDeVentaMainBean
-     */
-    public NotasDeVentaMainBean() {
-        this.notaNueva = new NotasDeVenta();
-    }
+
     
 }

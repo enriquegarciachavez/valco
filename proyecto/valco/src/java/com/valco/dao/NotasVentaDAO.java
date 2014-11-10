@@ -8,6 +8,7 @@ package com.valco.dao;
 import com.valco.HibernateUtil;
 import com.valco.pojo.Clientes;
 import com.valco.pojo.NotasDeVenta;
+import com.valco.pojo.ProductosInventario;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Criteria;
@@ -102,7 +103,9 @@ public class NotasVentaDAO {
           List<NotasDeVenta> notas = new ArrayList<NotasDeVenta>();
           try {
               tx = session.beginTransaction();
-              Criteria q = session.createCriteria(NotasDeVenta.class).setFetchMode("repartidores", FetchMode.JOIN);
+              Criteria q = session.createCriteria(NotasDeVenta.class)
+                      .setFetchMode("repartidores", FetchMode.JOIN);
+              q.setFetchMode("productosInventarios", FetchMode.JOIN);
               notas = (List<NotasDeVenta>) q.list();
               return notas;
 
@@ -126,9 +129,32 @@ public class NotasVentaDAO {
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(NotasDeVenta.class)
                       .setFetchMode("repartidores", FetchMode.JOIN)
+                      .setFetchMode("productosInventarios", FetchMode.JOIN)
                       .add(Restrictions.eq("folio", folio));
               nota = (NotasDeVenta)q.uniqueResult();
               return nota;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los clientes.");
+
+          } finally {
+              try {
+                  session.close();
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los clientes.");
+              }
+        }
+    }
+      
+      public List<ProductosInventario> getProductosDisponibles() throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          List<ProductosInventario> producto = new ArrayList<ProductosInventario>();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(ProductosInventario.class);
+              producto = (List<ProductosInventario>)q.list();
+              return producto;
 
           } catch (HibernateException he) {
               throw new Exception("Ocurrió un error al consultar los clientes.");

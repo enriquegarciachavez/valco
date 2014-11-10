@@ -19,6 +19,15 @@ public class ProductosInventario  implements java.io.Serializable {
      private BigDecimal peso;
      private BigDecimal precio;
      private String codigoBarras;
+     private String estatus;
+
+    public String getEstatus() {
+        return estatus;
+    }
+
+    public void setEstatus(String estatus) {
+        this.estatus = estatus;
+    }
 
     public ProductosInventario() {
     }

@@ -14,7 +14,7 @@
         <many-to-one name="ordenesCompra" class="com.valco.pojo.OrdenesCompra" fetch="select">
             <column name="ORDENES_COMPRA_CODIGO" not-null="true" />
         </many-to-one>
-        <many-to-one name="productosHasProveedores" class="com.valco.pojo.ProductosHasProveedores" fetch="select">
+        <many-to-one name="productosHasProveedores" class="com.valco.pojo.ProductosHasProveedores" fetch="join">
             <column name="PRODUCTOS_has_PROVEEDORES_CODIGO" not-null="true" />
         </many-to-one>
         <many-to-one name="tranferencias" class="com.valco.pojo.Tranferencias" fetch="select">
@@ -31,6 +31,9 @@
         </property>
         <property name="codigoBarras" type="string">
             <column name="CODIGO_BARRAS" length="100" />
+        </property>
+        <property name="estatus" type="string">
+            <column name="ESTATUS" length="20" />
         </property>
     </class>
 </hibernate-mapping>
