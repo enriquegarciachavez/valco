@@ -44,6 +44,17 @@
             <p:dialog header="Modal Dialog" resizable="false" modal="true"  closeOnEscape="false" widgetVar="dlg2" 
                       width="1000" position="top" height="500"   id="dlg2">
                 
+<<<<<<< HEAD
+=======
+                <p:outputLabel   value="fecha: " />
+                <p:calendar required="true" id="popup" value="#{notasDeVentaMainBean.notaNueva.fechaDeVenta}" />
+            
+                <p:outputLabel for="cliente" value="Cliente:"  />
+                <p:selectOneMenu id="cliente" value="#{notasDeVentaMainBean.notaNueva.clientes}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
+                                 effect="fade" var="c" style="width:160px" filter="true" filterMatchMode="contains">
+
+                    <f:selectItems value="#{notasDeVentaMainBean.clientes}" var="cliente" itemLabel="#{cliente.codigo} | #{cliente.nombres} #{cliente.apellidoPaterno}" itemValue="#{cliente}" />
+>>>>>>> origin/master
 
                 <h:panelGrid   columns="4" cellpadding="5" id="grid1">
                     <f:facet name="header">
@@ -61,6 +72,7 @@
                         <p:ajax event="change" update="repartidorOut" listener="#{notasDeVentaMainBean.consultaXFolio}" />
                     </p:inputText>
 
+<<<<<<< HEAD
                     <p:outputLabel   value="Repartidor: " />
                     <p:outputLabel id="repartidorOut"  value="#{notasDeVentaMainBean.notaNueva.repartidores.nombres} #{notasDeVentaMainBean.notaNueva.repartidores.apellidoPaterno}" />
 
@@ -74,6 +86,26 @@
 
                         <p:column style="width:10%">
                             <h:outputText value="#{c.codigo}" />
+=======
+                    <p:column>
+                        <h:outputText value="#{c.nombres} #{c.apellidoPaterno}" />
+                    </p:column>
+                </p:selectOneMenu>
+
+                <p:outputLabel   value="Flete: " />
+                <p:inputText value="#{notasDeVentaMainBean.notaNueva.flete}" />
+                
+                <f:facet name="footer">
+                    <p:dataTable id="productosSeleccionados" var="producto" value="#{notasDeVentaMainBean.productosSeleccionados}" selectionMode="multiple" selection="#{notasDeVentaMainBean.productosSeleccionados}" rowKey="#{producto.codigo}">
+                        <f:facet name="header">
+                            Single with Row Click
+                        </f:facet>
+                        <p:column headerText="producto">
+                            <h:outputText value="#{producto.productosHasProveedores.productos.descripcion}" />
+                        </p:column>
+                        <p:column headerText="peso">
+                            <h:outputText value="#{producto.peso}" />
+>>>>>>> origin/master
                         </p:column>
 
                         <p:column>
