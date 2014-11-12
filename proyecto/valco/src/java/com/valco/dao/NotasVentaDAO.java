@@ -55,6 +55,9 @@ public class NotasVentaDAO {
         try {
             tx = session.beginTransaction();
             session.update(nota);
+            for(ProductosInventario producto : nota.getProductosInventarios()){
+                session.update(producto);
+            }
             tx.commit();
         } catch (Exception e) {
             if (tx != null) {
@@ -67,7 +70,9 @@ public class NotasVentaDAO {
             throw new Exception("Ocurrió un error al modificar el cliente.");
         } finally {
             try {
-                session.close();
+                if(session.isOpen()){
+                    session.close();
+                }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al modificar el cliente.");
             }
@@ -105,7 +110,8 @@ public class NotasVentaDAO {
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(NotasDeVenta.class)
                       .setFetchMode("repartidores", FetchMode.JOIN);
-              q.setFetchMode("productosInventarios", FetchMode.JOIN);
+              q.setFetchMode("productosInventarios", FetchMode.SELECT)
+                      .add(Restrictions.eq("estatus", "ASIGNADA"));
               notas = (List<NotasDeVenta>) q.list();
               return notas;
 

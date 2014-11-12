@@ -21,6 +21,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.validator.ValidatorException;
@@ -145,6 +147,33 @@ import javax.faces.validator.ValidatorException;
             throw new ValidatorException(new FacesMessage("La nota de venta no ha sido suministrada a ningún repartidor")); 
         }else{
             this.notaNueva = aux;
+        }
+    }
+    
+    public void validaEstatusActivo(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        NotasDeVenta aux = new NotasDeVenta();
+        aux = 
+                this.notasDeVentaDao.getNotaDeVentaXFolio((int)value);
+        if(aux == null){
+            throw new ValidatorException(new FacesMessage("La nota de venta no ha sido suministrada a ningún repartidor")); 
+        }else{
+            this.notaNueva = aux;
+            if(notaNueva == null || notaNueva.getEstatus() == null || !notaNueva.getEstatus().equals("ACTIVO")){
+            throw new ValidatorException(new FacesMessage("La nota de venta no no se encuentra activa")); 
+        }
+        }
+    }
+    public void ingresarNotaVendida(){
+        for(ProductosInventario producto: productosSeleccionados){
+            producto.setNotasDeVenta(notaNueva);
+            this.notaNueva.getProductosInventarios().add(producto);
+        }
+        try {
+            this.notaNueva.setEstatus("ASIGNADA");
+            this.notasDeVentaDao.actualizarNotaDeVenta(notaNueva);
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage("Ocurriò un error al guardar la nota de venta"));
         }
     }
     
