@@ -34,4 +34,8 @@
     <bean id="clienteDao" class="com.valco.dao.ClienteDAO" />
     <bean id="notadeVentaDao" class="com.valco.dao.NotasVentaDAO" />
     <bean id="proveedorDAO" class="com.valco.dao.ProveedorDAO"/>
+    <bean id="productoDao" class="com.valco.dao.ProductoDAO"/>
+    <bean id="unidadesdemedidaDao" class="com.valco.dao.UnidadesDeMedidaDAO"/>
+    <bean id="tipoproductoDao" class="com.valco.dao.TipoProductoDAO"/>
+    
 </beans>

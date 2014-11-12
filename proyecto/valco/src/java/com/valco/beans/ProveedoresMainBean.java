@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIInput;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
@@ -21,12 +22,12 @@ import javax.faces.model.ListDataModel;
  * @author Enrique
  */
 @ManagedBean
-@RequestScoped
+@ViewScoped
 public class ProveedoresMainBean {
 
     @ManagedProperty(value = "#{proveedorDAO}")
     private ProveedorDAO proveedorDAO;
-    List<Proveedores> proveedores;
+       List<Proveedores> proveedores;
     Proveedores proveedorSeleccionado;
     Proveedores proveedorNuevo;
     DataModel modeloProveedores;
@@ -50,6 +51,25 @@ public class ProveedoresMainBean {
      * Creates a new instance of ProveedoresMainBean
      */
     public ProveedoresMainBean() {
+    }
+    
+    public void limpiarIngresarForm() {
+        razonSocial.setValue(null);
+        apellidoPaterno.setValue(null);
+        apellidoMaterno.setValue(null);
+        nombres.setValue(null);
+        direccion.setValue(null);
+        codigoPostal.setValue(null);
+        ciudad.setValue(null);
+        estado.setValue(null);
+        rfc.setValue(null);
+        posicionCodigoInicial.setValue(null);
+        posicionCodigoFinal.setValue(null);
+        posicionPesoInicial.setValue(null);
+        posicionPesoFinal.setValue(null);
+        
+        
+
     }
 
     public ProveedorDAO getProveedorDAO() {
@@ -90,12 +110,11 @@ public class ProveedoresMainBean {
         return modeloProveedores;
     }
 
-    public void setModeloProveedores(){
+    public void setModeloProveedores(DataModel modeloProveedores) {
         this.modeloProveedores = modeloProveedores;
-        
     }
 
-    public UIInput getRazonSocial() {
+       public UIInput getRazonSocial() {
         return razonSocial;
     }
 
@@ -204,6 +223,7 @@ public class ProveedoresMainBean {
         try {
             proveedorNuevo.setEstatus("ACTIVO");
             proveedorDAO.insertarProveedor(proveedorNuevo);
+           
         } catch (Exception ex) {
             
         }
@@ -224,25 +244,13 @@ public class ProveedoresMainBean {
         }
         
     }
+     public void inicializarProveedor() {
+         this.proveedorNuevo = new Proveedores();
+        limpiarIngresarForm();}
     
-     public void limpiarIngresarForm() {
-        razonSocial.setValue(null);
-        apellidoPaterno.setValue(null);
-        apellidoMaterno.setValue(null);
-        nombres.setValue(null);
-        direccion.setValue(null);
-        codigoPostal.setValue(null);
-        ciudad.setValue(null);
-        estado.setValue(null);
-        rfc.setValue(null);
-        posicionCodigoInicial.setValue(null);
-        posicionCodigoFinal.setValue(null);
-        posicionPesoInicial.setValue(null);
-        posicionPesoFinal.setValue(null);
-        
-        
-
-    }
+     
+    
+                
 
   
     

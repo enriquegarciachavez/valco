@@ -59,6 +59,7 @@
                 <p:outputLabel for="cliente" value="Cliente:"  />
                 <p:selectOneMenu id="cliente" value="#{notasDeVentaMainBean.notaNueva.clientes}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
                                  effect="fade" var="c" style="width:160px" filter="true" filterMatchMode="contains">
+
                     <f:selectItems value="#{notasDeVentaMainBean.clientes}" var="cliente" itemLabel="#{cliente.codigo} | #{cliente.nombres} #{cliente.apellidoPaterno}" itemValue="#{cliente}" />
 
                     <p:column style="width:10%">
@@ -69,7 +70,7 @@
                         <h:outputText value="#{c.nombres} #{c.apellidoPaterno}" />
                     </p:column>
                 </p:selectOneMenu>
-                
+
                 <p:outputLabel   value="Flete: " />
                 <p:inputText value="#{notasDeVentaMainBean.notaNueva.flete}" />
                 
