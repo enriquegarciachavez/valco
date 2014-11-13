@@ -16,7 +16,9 @@
         <p:menubar>
             <p:menuitem value="Nuevo" icon="ui-icon-document" onclick="PF('dlg2').show();" partialSubmit="true" />
         </p:menubar>
-        
+        <p:commandButton value="Print" type="button" icon="ui-icon-print" style="display:block;margin-bottom: 20px">
+    <p:printer target="singleDT" />
+</p:commandButton>
         <p:dataTable id="singleDT" var="nota" value="#{notasDeVentaMainBean.modeloNotas}" selectionMode="single" selection="#{notasDeVentaMainBean.notaSeleccionada}" rowKey="#{nota.codigo}">
         <f:facet name="header">
             Single with Row Click
@@ -82,24 +84,45 @@
                 <p:outputLabel   value="Flete: " />
                 <p:inputText value="#{notasDeVentaMainBean.notaNueva.flete}" />
                 
-                
-                    <p:outputLabel for="flete"   value="Flete: " />
-                    <p:inputText id="flete" value="#{notasDeVentaMainBean.notaNueva.flete}" />
-
                     <f:facet name="footer">
-                        <p:dataTable id="productosSeleccionados" var="producto" value="#{notasDeVentaMainBean.productosSeleccionados}" selectionMode="multiple" selection="#{notasDeVentaMainBean.productosSeleccionados}" rowKey="#{producto.codigo}">
+                        <p:dataTable id="productosSeleccionados" editable="true" editMode="cell" var="producto" value="#{notasDeVentaMainBean.productosSeleccionados}">
                             <f:facet name="header">
-                                Single with Row Click
+                                Productos seleccionados
                             </f:facet>
                             <p:column headerText="producto">
+
                                 <p:outputLabel value="#{producto.productosHasProveedores.productos.descripcion}" />
+
                             </p:column>
                             <p:column headerText="peso">
-                                <p:outputLabel value="#{producto.peso}" />
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{producto.peso}" />
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputText id="pesoInput" value="#{producto.peso}"/>
+                                    </f:facet>
+                                </p:cellEditor>
                             </p:column>
                             <p:column headerText="precio">
-                                <p:outputLabel value="#{producto.precio}" />
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{producto.precio}" />
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputText id="precioInput" value="#{producto.precio}">
+                                            <p:ajax event="change" update="productosSeleccionados"/>
+                                        </p:inputText>
+                                    </f:facet>
+                                </p:cellEditor>
                             </p:column>
+                            <p:columnGroup type="footer">
+                                <p:row>
+                                    <p:column colspan="2" style="text-align:right" footerText="Total:"/>
+                                    <p:column id="total" footerText="#{notasDeVentaMainBean.totalSeleccionado}">
+                                    </p:column>
+                                </p:row>
+                            </p:columnGroup>
                             <f:facet name="footer">
                                 <p:commandButton value="Seleccionar productos" onclick="PF('productosPopUp').show();" />
                             </f:facet>
@@ -118,7 +141,7 @@
             <p:sticky target="btnSeleccionar" />
             <p:dataTable id="productosDisponibles" var="producto" value="#{notasDeVentaMainBean.productosDisponibles}" selection="#{notasDeVentaMainBean.productosSeleccionados}" rowKey="#{producto.codigo}">
                         <f:facet name="header">
-                            Single with Row Click
+                            Productos disponibles
                         </f:facet>
                         <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
                         <p:column headerText="producto">

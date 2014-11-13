@@ -177,6 +177,18 @@ import javax.faces.validator.ValidatorException;
         }
     }
     
+    public double getTotalSeleccionado(){
+        double total = 0.00;
+        if(productosSeleccionados == null || productosSeleccionados.isEmpty()){
+            return 0.0;
+        }else{
+            for(ProductosInventario producto : productosSeleccionados){
+                total += producto.getPrecio().doubleValue();
+            }
+            return total;
+        }
+    }
+    
 DataModel modeloNotas;
 
     
