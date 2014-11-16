@@ -6,7 +6,7 @@
 package com.valco.dao;
 
 import com.valco.HibernateUtil;
-import com.valco.pojo.TipoProducto;
+import com.valco.pojo.Repartidores;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.HibernateException;
@@ -18,102 +18,102 @@ import org.hibernate.Transaction;
  *
  * @author Enrique
  */
-public class TipoProductoDAO {
+public class RepartidoresDAO {
     
-    public void insertarTipoProducto(TipoProducto tipoproducto) throws Exception {
+    public void insertarRepartidores(Repartidores repartidores) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            session.save(tipoproducto);
+            session.save(repartidores);
             tx.commit();
         } catch (Exception e) {
             if (tx != null) {
                 try {
                     tx.rollback();
                 } catch (HibernateException he) {
-                    throw new Exception("Ocurrió un error al registrar el producto.");
+                    throw new Exception("Ocurrió un error al registrar el repartidores.");
                 }
             }
-            throw new Exception("Ocurrió un error al registrar el producto.");
+            throw new Exception("Ocurrió un error al registrar el repartidores.");
         } finally {
             try {
                 if(session.isOpen()){
                 session.close();
                 }
             } catch (HibernateException he) {
-                throw new Exception("Ocurrió un error al registrar el producto.");
+                throw new Exception("Ocurrió un error al registrar el repartidores.");
             }
         }
     }
-     public void actualizarTipoProducto(TipoProducto tipoProducto) throws Exception {
+     public void actualizarRepartidor(Repartidores repartidores) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            session.update(tipoProducto);
+            session.update(repartidores);
             tx.commit();
         } catch (Exception e) {
             if (tx != null) {
                 try {
                     tx.rollback();
                 } catch (HibernateException he) {
-                    throw new Exception("Ocurrió un error al modificar el producto.");
+                    throw new Exception("Ocurrió un error al modificar el repartidor.");
                 }
             }
-            throw new Exception("Ocurrió un error al modificar el producto.");
+            throw new Exception("Ocurrió un error al modificar el repartidor.");
         } finally {
             try {
                 session.close();
             } catch (HibernateException he) {
-                throw new Exception("Ocurrió un error al modificar el producto.");
+                throw new Exception("Ocurrió un error al modificar el repartidor    .");
             }
         }
     }
-      public void borrarTipoProducto(TipoProducto tipoProducto) throws Exception {
+      public void borrarRepartidor(Repartidores repartidores) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            session.delete(tipoProducto);
+            session.delete(repartidores);
             tx.commit();
         } catch (Exception e) {
             if (tx != null) {
                 try {
                     tx.rollback();
                 } catch (HibernateException he) {
-                    throw new Exception("Ocurrió un error al borrar el producto.");
+                    throw new Exception("Ocurrió un error al borrar el repartidor.");
                 }
             }
-            throw new Exception("Ocurrió un error al borrar el producto.");
+            throw new Exception("Ocurrió un error al borrar el repartidor.");
         } finally {
             try {
                 if(session.isOpen()){
                 session.close();
                 }
             } catch (HibernateException he) {
-                throw new Exception("Ocurrió un error al borrar el producto.");
+                throw new Exception("Ocurrió un error al borrar el repartidor.");
             }
         }
     }
-      public List<TipoProducto> getTipoProducto() throws Exception {
+      public List<Repartidores> getRepartidores() throws Exception {
           Session session = HibernateUtil.getSessionFactory().getCurrentSession();
           Transaction tx = null;
-          List<TipoProducto> tipoproducto = new ArrayList<TipoProducto>();
+          List<Repartidores> repartidores = new ArrayList<Repartidores>();
           try {
               tx = session.beginTransaction();
-              Query q = session.createQuery("FROM TipoProducto");
-              tipoproducto = (List<TipoProducto>) q.list();
-              return tipoproducto;
+              Query q = session.createQuery("FROM Repartidores");
+              repartidores = (List<Repartidores>) q.list();
+              return repartidores;
 
           } catch (HibernateException he) {
-              throw new Exception("Ocurrió un error al consultar los producto.");
+              throw new Exception("Ocurrió un error al consultar los repartidores.");
 
           } finally {
               try {
                   session.close();
               } catch (HibernateException he) {
-                  throw new Exception("Ocurrió un error al consultar los producto.");
+                  throw new Exception("Ocurrió un error al consultar los repartidores.");
               }
         }
     }

@@ -1,0 +1,161 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../clientes/Template1.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+
+    <ui:define name="top">
+        top
+    </ui:define>
+
+    <ui:define name="content">
+        content
+        <h:form id="form">
+            <p:dataTable id="singleDT" var="repartidor" value="#{repartidoresMainBean.modeloRepartidores}" selectionMode="single" selection="#{repartidoresMainBean.repartidorSeleccionado}" rowKey="#{repartidor.codigo}">
+                <f:facet name="header">
+                    Repartidores
+                </f:facet>
+                <p:column headerText="Apellido Paterno">
+                    <h:outputText value="#{repartidor.apellidoPaterno}" />
+                </p:column>
+                <p:column headerText="Apellido Materno">
+                    <h:outputText value="#{repartidor.apellidoMaterno}" />
+                </p:column>
+                <p:column headerText="Nombres">
+                    <h:outputText value="#{repartidor.nombres}" />
+                </p:column>
+                <f:facet name="footer">
+                    <p:commandButton value="Ingresar" partialSubmit="true" update=":formingresar:popupingresar" oncomplete="PF('popupingresar').show();"  action="#{repartidoresMainBean.inicializarRepartidor()}"/>
+                    <p:commandButton value="Modificar"  process="singleDT" update=":formmodificar:popupmodificar" oncomplete="PF('popupmodificar').show();"/>
+                    <p:commandButton value="Borrar" process="singleDT" update=":popupborrar" oncomplete="PF('popupborrar').show();" />
+                </f:facet>
+            </p:dataTable>
+        </h:form>
+        
+        
+        <!--BONTON INGRESAR REPARTIDOR-->
+        <h:form id="formingresar">
+            <p:dialog header="Ingresar Repartidor" widgetVar="popupingresar" modal="true" position="top"
+                      id="popupingresar">
+
+
+                <h:panelGrid id="ingresarGrid"  columns="3" cellpadding="5">
+
+                    <f:facet name="header">
+                        <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
+                    </f:facet>
+
+                    <p:outputLabel for="paterno" value="Apellido Paterno: " />
+                    <p:inputText id="paterno" validatorMessage="El campo Apellido Paterno solo puede contener letras" binding="#{repartidoresMainBean.apellidoPaterno}" required="true" label="paterno" value="#{repartidoresMainBean.repartidorNuevo.apellidoPaterno}" >
+                        <f:validateRegex
+                            pattern="^[A-Za-z\s]+$"/>
+                    </p:inputText>
+                    <p:message for="paterno" display="icon" />
+
+                    <p:outputLabel for="materno" value="Apllido Materno: " />
+                    <p:inputText id="materno" validatorMessage="El campo Apllido Materno solo puede contener letras" binding="#{repartidoresMainBean.apellidoMaterno}" required="false" label="materno" value="#{repartidoresMainBean.repartidorNuevo.apellidoMaterno}" >
+                        <f:validateRegex
+                            pattern="^[A-Za-z\s]*$"/>
+                    </p:inputText>
+                    <p:message for="materno" display="icon" />
+                    
+                    <p:outputLabel for="nombres" value="Nombres: " />
+                    <p:inputText id="nombres" validatorMessage="El campo Nombres solo puede contener letras" binding="#{repartidoresMainBean.nombres}" required="true" label="nombres" value="#{repartidoresMainBean.repartidorNuevo.nombres}" >
+                        <f:validateRegex
+                            pattern="^[A-Za-z\s]*$"/>
+                    </p:inputText>
+                    <p:message for="nombres" display="icon" />
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar"  id="guardar1" update="ingresarGrid :form:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'popupingresar' )"  action="#{repartidoresMainBean.insertarRepartidor()}"/>
+                    </f:facet>
+                </h:panelGrid>
+
+
+            </p:dialog>
+        </h:form>
+        
+        <!-- BOTON MODIFICAR REPARTIDOR-->
+            <!-- <p:commandButton value="Modificar" type="button" onclick="PF('popupmodificar').show();" /> -->
+            
+            <h:form id="formmodificar">
+                <p:dialog header="Modificar Repartidor" widgetVar="popupmodificar" id="popupmodificar" modal="true" position="top">
+
+                    <h:panelGrid id="modificarGrid"  columns="3" cellpadding="5">
+                        
+                        <f:facet name="header">
+                            <p:messages id="msgsmodificar" style="font-size: 12px; text-align: left;"/>
+                        </f:facet>
+
+                        <p:outputLabel for="paterno1" value="Apellido Paterno: " />
+                        <p:inputText id="paterno1" required="true" validatorMessage="El campo Apellido Paterno solo puede contener letras" label="paterno1" value="#{repartidoresMainBean.repartidorSeleccionado.apellidoPaterno}">
+                            <f:validateRegex
+                                pattern="^[A-Za-z\s]+$"/>
+                        </p:inputText>
+                        <p:message for="paterno1" display="icon" />
+                        
+                        <p:outputLabel for="materno1" value="Apellido Materno: " />
+                        <p:inputText id="materno1" required="false" validatorMessage="El campo Apellido Materno solo puede contener letras" label="materno1" value="#{repartidoresMainBean.repartidorSeleccionado.apellidoMaterno}">
+                            <f:validateRegex
+                                pattern="^[A-Za-z\s]*$"/>
+                        </p:inputText>
+                        <p:message for="materno1" display="icon" />
+
+                        <p:outputLabel for="nombres1" value="Nombres:" />
+                        <p:inputText id="nombres1" validatorMessage="El campo Nombres solo puede contener letras" required="true" label="nombres1" value="#{repartidoresMainBean.repartidorSeleccionado.nombres}">
+                            <f:validateRegex
+                                pattern="^[A-Za-z\s]+$"/>
+                        </p:inputText>
+                        <p:message for="nombres1" display="icon" />
+                        
+                        <p:outputLabel for="estatus" value="Estatus:" />
+                        <p:inputText id="estatus" validatorMessage="El campo Estatus solo puede contener letras" required="true" label="estatus" value="#{repartidoresMainBean.repartidorSeleccionado.estatus}">
+                            <f:validateRegex
+                                pattern="^[A-Za-z\s]+$"/>
+                        </p:inputText>
+                        <p:message for="estatus" display="icon" />
+
+                        
+
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Guardar" id="guardar" oncomplete="handleLoginRequest(xhr, status, args, 'popupmodificar' )" update="modificarGrid :form:singleDT" action="#{repartidoresMainBean.actualizarRepartidor()}"/>
+                        </f:facet>
+                    </h:panelGrid>
+
+                </p:dialog>
+            </h:form>
+            
+             <!--BOTON ELIMINAR REPARTIDOR-->
+
+        <p:dialog header="Borrar Repartidor" widgetVar="popupborrar" modal="true" id="popupborrar">
+            <h:form>
+                <h:panelGrid   columns="4" cellpadding="5">
+                    <h:outputText value="Esta seguro?" /> 
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Si" id="si" partialSubmit="true" ajax="false" action="#{repartidoresMainBean.borrarRepartidor()}"/>
+                        <p:commandButton value="No" id="no"  ajax="false" />
+                    </f:facet>
+                </h:panelGrid>
+            </h:form>
+
+        </p:dialog>
+        
+        <script type="text/javascript">
+            function handleLoginRequest(xhr, status, args, popupname) {
+            if(args.validationFailed ) {
+            PF(popupname).jq.effect("shake", {times:5}, 100);
+            }
+            else {
+            PF(popupname).hide();
+            $('#loginLink').fadeOut();
+            }
+            }
+        </script>
+    </ui:define>
+
+</ui:composition>

@@ -46,6 +46,7 @@ public class ProductoMainBean {
     UISelectBoolean generarSubproducto;
     UISelectBoolean aplicaInventarioFisico;
     
+    
     /**
      * Creates a new instance of ProductoMainBean
      */

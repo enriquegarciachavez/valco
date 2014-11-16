@@ -1,0 +1,236 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../clientes/Template1.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns="http://www.w3.org/1999/xhtml">
+
+    <ui:define name="top">
+        top
+    </ui:define>
+
+    <ui:define name="content">
+        content
+        
+        <h:form id="form">
+            <p:dataTable id="singleDT" var="usuarios" value="#{usuariosMainBean.modeloUsuarios}" selectionMode="single" selection="#{usuariosMainBean.usuarioSeleccionado}" rowKey="#{usuarios.codigo}">
+                <f:facet name="header">
+                    Usuarios
+                </f:facet>
+                <p:column headerText="Correo">
+                    <h:outputText value="#{usuarios.correo}" />
+                </p:column>
+                <p:column headerText="Apellido Paterno">
+                    <h:outputText value="#{usuarios.apellidoPaterno}" />
+                </p:column>
+                <p:column headerText="Apellido Materno">
+                    <h:outputText value="#{usuarios.apellidoMaterno}" />
+                </p:column>
+                <p:column headerText="Nombre">
+                    <h:outputText value="#{usuarios.nombre}" />
+                </p:column>
+                <p:column headerText="Contraseña">
+                    <h:outputText value="#{usuarios.password}" />
+                </p:column>
+                <p:column headerText="Ubicacion Ciudad ">
+                    <h:outputText value="#{usuarios.ubicaciones.ciudad}" />
+                </p:column>
+                <p:column headerText="Ubicacion Oficina ">
+                    <h:outputText value="#{usuarios.ubicaciones.oficina}" />
+                </p:column>
+                
+                <f:facet name="footer">
+                    <p:commandButton value="Ingresar" partialSubmit="true" update=":formingresar:popupingresar" oncomplete="PF('popupingresar').show();"  action="#{usuariosMainBean.inicializarUsuario()}"/>
+                   <p:commandButton value="Modificar"  process="singleDT" update=":formmodificar:popupmodificar" oncomplete="PF('popupmodificar').show();"/>
+                   <p:commandButton value="Borrar" process="singleDT" update=":popupborrar" oncomplete="PF('popupborrar').show();" />
+                </f:facet>
+            </p:dataTable>
+        </h:form>
+        
+        <!-- BOTON INGRESAR USUARIO-->
+       
+        <h:form id="formingresar">
+            <p:dialog header="Ingresar Producto" widgetVar="popupingresar" modal="true" position="top"
+                      id="popupingresar">
+
+
+                <h:panelGrid id="ingresarGrid"  columns="3" cellpadding="5">
+
+                    <f:facet name="header">
+                        <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
+                    </f:facet>
+                    
+                    <p:outputLabel for="correo" value="Correo Electronico:" />
+                    <p:inputText id="correo" validatorMessage="Formato de email incorrecto" binding="#{usuariosMainBean.correo}" required="true" label="correo" value="#{usuariosMainBean.usuarioNuevo.correo}">
+                            <f:validateRegex
+                                    pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
+                        </p:inputText>
+                        <p:message for="correo" display="icon" />
+
+                    <p:outputLabel for="paterno" value="Apellido Paterno: " />
+                    <p:inputText id="paterno" validatorMessage="El campo Apeliido paterno  solo puede contener letras" binding="#{usuariosMainBean.apellidoPaterno}" required="true" label="paterno" value="#{usuariosMainBean.usuarioNuevo.apellidoPaterno}" >
+                        <f:validateRegex
+                            pattern="^[A-Za-z\s]+$"/>
+                    </p:inputText>
+                    <p:message for="paterno" display="icon" />
+                    
+                    <p:outputLabel for="materno" value="Apellido Materno: " />
+                    <p:inputText id="materno" validatorMessage="El campo Apeliido materno  solo puede contener letras" binding="#{usuariosMainBean.apellidoMaterno}" required="false" label="materno" value="#{usuariosMainBean.usuarioNuevo.apellidoMaterno}" >
+                        <f:validateRegex
+                            pattern="^[A-Za-z\s]*$"/>
+                    </p:inputText>
+                    <p:message for="materno" display="icon" />
+                    
+                    <p:outputLabel for="nombre" value=" Nombre:" />
+                    <p:inputText id="nombre" validatorMessage="El campo Nombre solo puede contener letras" binding="#{usuariosMainBean.nombre}" required="true" label="nombre" value="#{usuariosMainBean.usuarioNuevo.nombre}" >
+                        <f:validateRegex
+                            pattern="^[A-Za-z\s]+$"/>
+                    </p:inputText>
+                    <p:message for="nombre" display="icon" />
+                    
+                    
+                    
+                    <h:outputLabel for="pwd1" value="Contraseña: *" />
+                    <p:password id="pwd1" inline="true" feedback="true" value="#{usuariosMainBean.usuarioNuevo.password}" match="pwd2" label="Password 1" required="true" 
+                                promptLabel="Por favor introduzca una contrazeña" weakLabel="Débil"
+                                goodLabel="Nivel intermedio " strongLabel="Fuerte"/>
+                    <p:message for="pwd1" display="icon" />
+                    <h:outputLabel for="pwd2" value="Confirmar contraseña: *" />
+                    <p:password id="pwd2" inline="true" feedback="true" value="#{usuariosMainBean.usuarioNuevo.password}" label="Password 2" required="true" 
+                                promptLabel="Por favor introduzca una contrazeña" weakLabel="Débil"
+                                goodLabel="Nivel intermedio " strongLabel="Fuerte"/>
+                    <p:message for="pwd2" display="icon" />
+                    
+                    
+                    
+                    <p:outputLabel for="ubicacionn0" value="Ubicación:"  />
+                    <p:selectOneMenu id="ubicacionn0" required="true" value="#{usuariosMainBean.usuarioNuevo.ubicaciones}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
+                                     effect="fade" style="width:160px" >
+                        <f:selectItems value="#{usuariosMainBean.ubicaciones}" var="ubicaciones" itemLabel="#{ubicaciones.codigo} | #{ubicaciones.oficina}" itemValue="#{ubicaciones}" />
+                    </p:selectOneMenu>
+                    <p:message for="ubicacionn0" display="icon" /> 
+                    
+                   <!--<p:outputLabel for="password" value="Contraseña:" />
+                    <p:inputText id="password" validatorMessage="El campo password solo puede contener letras" binding="{usuariosMainBean.password}" required="true" label="password" value="{usuariosMainBean.usuarioNuevo.password}" >
+                        <f:validateRegex
+                            pattern="^[a-zA-Z0-9]+$"/>
+                    </p:inputText>
+                    <p:message for="password" display="icon" />-->
+                    
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar"  id="guardar1" update="ingresarGrid :form:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'popupingresar' )"  action="#{usuariosMainBean.insertarUsuario()}"/>
+                    </f:facet>
+                    
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+        
+        <!-- BOTON MODIFICAR USUARIO-->
+            <!-- <p:commandButton value="Modificar" type="button" onclick="PF('popupmodificar').show();" /> -->
+            
+            <h:form id="formmodificar">
+                <p:dialog header="Modificar Producto" widgetVar="popupmodificar" id="popupmodificar" modal="true" position="top">
+
+                    <h:panelGrid id="modificarGrid"  columns="3" cellpadding="5">
+                        
+                        <f:facet name="header">
+                            <p:messages id="msgsmodificar" style="font-size: 12px; text-align: left;"/>
+                        </f:facet>
+                        
+                        <p:outputLabel for="correo2" value="Correo Electronico" />
+                        <p:inputText id="correo2" validatorMessage="Formato de email incorrecto" required="true" label="correo2" value="#{usuariosMainBean.usuarioSeleccionado.correo}">
+                            <f:validateRegex
+                                    pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
+                        </p:inputText>
+                        <p:message for="correo2" display="icon" />
+
+                        <p:outputLabel for="paterno1" value="Apellido Paterno " />
+                        <p:inputText id="paterno1" required="true" validatorMessage="El campo Apellido Paterno solo puede contener letras" label="paterno1" value="#{usuariosMainBean.usuarioSeleccionado.apellidoPaterno}">
+                            <f:validateRegex
+                                pattern="^[A-Za-z\s]+$"/>
+                        </p:inputText>
+                        <p:message for="paterno1" display="icon" />
+                        
+                        <p:outputLabel for="materno1" value="Apellido Materno " />
+                        <p:inputText id="materno1" required="false" validatorMessage="El campo Apellido Materno solo puede contener letras" label="materno1" value="#{usuariosMainBean.usuarioSeleccionado.apellidoMaterno}">
+                            <f:validateRegex
+                                pattern="^[A-Za-z\s]*$"/>
+                        </p:inputText>
+                        <p:message for="materno1" display="icon" />
+                        
+                        <p:outputLabel for="nombre1" value="Nombre " />
+                        <p:inputText id="nombre1" required="true" validatorMessage="El campo Nombre solo puede contener letras" label="nombre1" value="#{usuariosMainBean.usuarioSeleccionado.nombre}">
+                            <f:validateRegex
+                                pattern="^[A-Za-z\s]+$"/>
+                        </p:inputText>
+                        <p:message for="nombre1" display="icon" />
+                        
+                        <p:outputLabel for="password1" value="Password " />
+                        <p:inputText id="password1"  required="true" validatorMessage="El campo Password solo puede contener letras" label="password1" value="#{usuariosMainBean.usuarioSeleccionado.password}">
+                            <f:validateRegex
+                                pattern="^[a-zA-Z0-9]+$"/>
+                        </p:inputText>
+                        <p:message for="password1" display="icon" />
+                        
+                        <p:outputLabel for="estatus" value="Estatus" />
+                        <p:inputText id="estatus" required="true" validatorMessage="El campo Estatus solo puede contener letras" label="estatus" value="#{usuariosMainBean.usuarioSeleccionado.estatus}">
+                            <f:validateRegex
+                                pattern="^[A-Za-z\s]+$"/>
+                        </p:inputText>
+                        <p:message for="estatus" display="icon" />                     
+                        
+                        <p:outputLabel for="ubicacion2" value="Ubicacion Oficina"  />
+                        <p:selectOneMenu id="ubicacion2" value="#{usuariosMainBean.usuarioSeleccionado.ubicaciones}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
+                                         effect="fade"  style="width:160px">
+                            <f:selectItems value="#{usuariosMainBean.ubicaciones}" var="ubicaciones" itemLabel="#{ubicaciones.codigo} | #{ubicaciones.oficina}" itemValue="#{ubicaciones}" />
+                        </p:selectOneMenu>
+                        <p:message for="ubicacion2" display="icon" />
+                        
+                        
+                        
+
+                        
+                        
+                        <f:facet name="footer">
+                            <p:commandButton value="Guardar" id="guardar" oncomplete="handleLoginRequest(xhr, status, args, 'popupmodificar' )" update="modificarGrid :form:singleDT" action="#{usuariosMainBean.actualizarUsuario()}"/>
+                        </f:facet>
+                    </h:panelGrid>
+
+                </p:dialog>
+            </h:form>
+            
+            
+            <!--BOTON ELIMINAR USUARIO-->
+
+            <p:dialog header="Borrar Usuario" widgetVar="popupborrar" modal="true" id="popupborrar">
+                <h:form>
+                    <h:panelGrid   columns="4" cellpadding="5">
+                        <h:outputText value="Esta seguro?" /> 
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Si" id="si" partialSubmit="true" ajax="false" action="#{usuariosMainBean.borrarUsuario()}"/>
+                        <p:commandButton value="No" id="no"  ajax="false" />
+                        </f:facet>
+                    </h:panelGrid>
+                </h:form>
+
+            </p:dialog>
+        
+        <script type="text/javascript">
+    function handleLoginRequest(xhr, status, args, popupname) {
+        if(args.validationFailed ) {
+            PF(popupname).jq.effect("shake", {times:5}, 100);
+        }
+        else {
+            PF(popupname).hide();
+            $('#loginLink').fadeOut();
+        }
+    }
+        </script>
+        
+        
+    </ui:define>
+
+</ui:composition>

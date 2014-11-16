@@ -1,0 +1,148 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../clientes/Template1.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns="http://www.w3.org/1999/xhtml">
+
+    <ui:define name="top">
+        top
+        
+    </ui:define>
+
+    <ui:define name="content">
+        content
+        
+        <!-- TABLA-->
+        <h:form id="form">
+            <p:dataTable id="singleDT" var="tipoproductos" value="#{tipoProductoMainBean.modeloTipoProducto}" selectionMode="single" selection="#{tipoProductoMainBean.tipoProductoSeleccionado}" rowKey="#{tipoproductos.codigo}">
+                <f:facet name="header">
+                  Tipo Productos
+                </f:facet>
+                <p:column headerText="Descripción">
+                    <h:outputText value="#{tipoproductos.descripcion}" />
+                </p:column>
+                <p:column headerText="Observaciones">
+                    <h:outputText value="#{tipoproductos.observaciones}" />
+                </p:column>
+                <p:column headerText="Estatus">
+                    <h:outputText value="#{tipoproductos.estatus}" />
+                </p:column>
+                
+                <f:facet name="footer">
+                    <p:commandButton value="Ingresar" partialSubmit="true" update=":formingresar:popupingresar" oncomplete="PF('popupingresar').show();"  action="#{tipoProductoMainBean.inicializarTipo()}"/>
+                    <p:commandButton value="Modificar"  process="singleDT" update=":formmodificar:popupmodificar" oncomplete="PF('popupmodificar').show();"/>
+                    <p:commandButton value="Borrar" process="singleDT" update=":popupborrar" oncomplete="PF('popupborrar').show();" />
+                </f:facet>
+            </p:dataTable>
+        </h:form>
+        
+        <!--BONTON INGRESAR TIPO PRODUCTO-->
+        
+        <h:form id="formingresar">
+            <p:dialog header="Ingresar Tipo Producto" widgetVar="popupingresar" modal="true" position="top"
+                      id="popupingresar">
+
+
+                <h:panelGrid id="ingresarGrid"  columns="3" cellpadding="5">
+
+                    <f:facet name="header">
+                        <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
+                    </f:facet>
+
+                    <p:outputLabel for="descripcion" value="Ingresar Tipo Producto: " />
+                    <p:inputText id="descripcion" validatorMessage="El campo ingresar Tipo Producto solo puede contener letras" binding="#{tipoProductoMainBean.descripcion}" required="true" label="descripcion" value="#{tipoProductoMainBean.tipoProductoNuevo.descripcion}" >
+                        <f:validateRegex
+                            pattern="^[A-Za-z\s]+$"/>
+                    </p:inputText>
+                    <p:message for="descripcion" display="icon" />
+                    
+                    <h>Observaciones</h>
+                    <p:inputTextarea rows="5" cols="30" counter="display" maxlength="100" counterTemplate="Maximo {0} letras." autoResize="false" value="#{tipoProductoMainBean.tipoProductoNuevo.observaciones}"/>
+                    <h:outputText id="display" />
+                    <p:message for="display" display="icon" />
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar"  id="guardar1" update="ingresarGrid :form:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'popupingresar' )"  action="#{tipoProductoMainBean.insertarTipoProducto()}"/>
+                    </f:facet>
+                </h:panelGrid>
+                </p:dialog>
+                </h:form>
+                
+                <!-- BOTON MODIFICAR TIPO PRODUCTO-->
+                
+                <h:form id="formmodificar">
+                <p:dialog header="Modificar Tipo Producto" widgetVar="popupmodificar" id="popupmodificar" modal="true" position="top">
+
+                    <h:panelGrid id="modificarGrid"  columns="3" cellpadding="5">
+                        
+                        <f:facet name="header">
+                            <p:messages id="msgsmodificar" style="font-size: 12px; text-align: left;"/>
+                        </f:facet>
+
+                        <p:outputLabel for="descripcion1" value="Ingresar Unidad de medida: " />
+                        <p:inputText id="descripcion1" required="true" validatorMessage="El campo ingresar tipo producto solo puede contener letras" label="descripcion" value="#{tipoProductoMainBean.tipoProductoSeleccionado.descripcion}">
+                            <f:validateRegex
+                                pattern="^[A-Za-z\s]+$"/>
+                        </p:inputText>
+                        <p:message for="descripcion1" display="icon" />
+                        
+                        <p:outputLabel for="estatus2" value="Estatus:" />
+                        <p:inputText id="estatus2" validatorMessage="El campo estatus paterno solo puede contener letras" required="true" label="estatus" value="#{tipoProductoMainBean.tipoProductoSeleccionado.estatus}">
+                            <f:validateRegex
+                                pattern="^[A-Za-z\s]+$"/>
+                        </p:inputText>
+                        <p:message for="estatus2" display="icon" />
+                        
+                        <h>Observaciones</h>
+                        <p:inputTextarea  rows="5" cols="30" counter="observacion"  maxlength="100" counterTemplate="{0} letras Maximo ." autoResize="true" value="#{tipoProductoMainBean.tipoProductoSeleccionado.observaciones}"/>
+                        <h:outputText id="observacion"/>
+                        <p:message for="observacion" display="icon" />
+                        
+                        
+                     
+                        <f:facet name="footer">
+                            <p:commandButton value="Guardar" id="guardar" oncomplete="handleLoginRequest(xhr, status, args, 'popupmodificar' )" update="modificarGrid :form:singleDT" action="#{tipoProductoMainBean.actualizarTipoProducto()}"/>
+                        </f:facet>
+                    </h:panelGrid>
+
+                </p:dialog>
+            </h:form>
+                
+                 <!--BOTON ELIMINAR TIPO PRODUCTO-->
+                <p:dialog header="Borrar Tipo Producto" widgetVar="popupborrar" modal="true" id="popupborrar">
+            <h:form>
+                <h:panelGrid   columns="4" cellpadding="5">
+                    <h:outputText value="Esta seguro?" /> 
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Si" id="si" partialSubmit="true" ajax="false" action="#{tipoProductoMainBean.borrarTipoProducto()}"/>
+                        <p:commandButton value="No" id="no"  ajax="false" />
+                    </f:facet>
+                </h:panelGrid>
+            </h:form>
+
+        </p:dialog>
+                
+                <script type="text/javascript">
+    function handleLoginRequest(xhr, status, args, popupname) {
+        if(args.validationFailed ) {
+            PF(popupname).jq.effect("shake", {times:5}, 100);
+        }
+        else {
+            PF(popupname).hide();
+            $('#loginLink').fadeOut();
+        }
+    }
+        </script>
+                
+                
+
+
+            
+        
+    </ui:define>
+
+</ui:composition>

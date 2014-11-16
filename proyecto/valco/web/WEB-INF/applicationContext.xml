@@ -37,5 +37,8 @@
     <bean id="productoDao" class="com.valco.dao.ProductoDAO"/>
     <bean id="unidadesdemedidaDao" class="com.valco.dao.UnidadesDeMedidaDAO"/>
     <bean id="tipoproductoDao" class="com.valco.dao.TipoProductoDAO"/>
+    <bean id="repartidoresDao" class="com.valco.dao.RepartidoresDAO"/>
+    <bean id="ubicacionesDao" class="com.valco.dao.UbicacionesDAO"/>
+    <bean id="usuariosDao" class="com.valco.dao.UsuariosDAO"/>
     
 </beans>

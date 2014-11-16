@@ -6,9 +6,11 @@
 package com.valco.dao;
 
 import com.valco.HibernateUtil;
-import com.valco.pojo.TipoProducto;
+import com.valco.pojo.Usuarios;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -18,103 +20,105 @@ import org.hibernate.Transaction;
  *
  * @author Enrique
  */
-public class TipoProductoDAO {
+public class UsuariosDAO {
     
-    public void insertarTipoProducto(TipoProducto tipoproducto) throws Exception {
+     public void insertarUsuario(Usuarios usuarios) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            session.save(tipoproducto);
+            session.save(usuarios);
             tx.commit();
         } catch (Exception e) {
             if (tx != null) {
                 try {
                     tx.rollback();
                 } catch (HibernateException he) {
-                    throw new Exception("Ocurrió un error al registrar el producto.");
+                    throw new Exception("Ocurrió un error al registrar el usuario.");
                 }
             }
-            throw new Exception("Ocurrió un error al registrar el producto.");
+            throw new Exception("Ocurrió un error al registrar el usuario.");
         } finally {
             try {
                 if(session.isOpen()){
                 session.close();
                 }
             } catch (HibernateException he) {
-                throw new Exception("Ocurrió un error al registrar el producto.");
+                throw new Exception("Ocurrió un error al registrar el usuario.");
             }
         }
     }
-     public void actualizarTipoProducto(TipoProducto tipoProducto) throws Exception {
+     public void actualizarUsuario(Usuarios usuarios) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            session.update(tipoProducto);
+            session.update(usuarios);
             tx.commit();
         } catch (Exception e) {
             if (tx != null) {
                 try {
                     tx.rollback();
                 } catch (HibernateException he) {
-                    throw new Exception("Ocurrió un error al modificar el producto.");
+                    throw new Exception("Ocurrió un error al modificar el usuario.");
                 }
             }
-            throw new Exception("Ocurrió un error al modificar el producto.");
+            throw new Exception("Ocurrió un error al modificar el usuario.");
         } finally {
             try {
                 session.close();
             } catch (HibernateException he) {
-                throw new Exception("Ocurrió un error al modificar el producto.");
+                throw new Exception("Ocurrió un error al modificar el usuario.");
             }
         }
     }
-      public void borrarTipoProducto(TipoProducto tipoProducto) throws Exception {
+      public void borrarUsuario(Usuarios usuarios) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            session.delete(tipoProducto);
+            session.delete(usuarios);
             tx.commit();
         } catch (Exception e) {
             if (tx != null) {
                 try {
                     tx.rollback();
                 } catch (HibernateException he) {
-                    throw new Exception("Ocurrió un error al borrar el producto.");
+                    throw new Exception("Ocurrió un error al borrar el usuario.");
                 }
             }
-            throw new Exception("Ocurrió un error al borrar el producto.");
+            throw new Exception("Ocurrió un error al borrar el usuario.");
         } finally {
             try {
                 if(session.isOpen()){
                 session.close();
                 }
             } catch (HibernateException he) {
-                throw new Exception("Ocurrió un error al borrar el producto.");
+                throw new Exception("Ocurrió un error al borrar el usuario.");
             }
         }
     }
-      public List<TipoProducto> getTipoProducto() throws Exception {
-          Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-          Transaction tx = null;
-          List<TipoProducto> tipoproducto = new ArrayList<TipoProducto>();
-          try {
-              tx = session.beginTransaction();
-              Query q = session.createQuery("FROM TipoProducto");
-              tipoproducto = (List<TipoProducto>) q.list();
-              return tipoproducto;
+     public List<Usuarios> getUsuarios() throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        List<Usuarios> usuarios = new ArrayList<Usuarios>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(Usuarios.class)
+                    .setFetchMode("ubicaciones", FetchMode.JOIN);
 
-          } catch (HibernateException he) {
-              throw new Exception("Ocurrió un error al consultar los producto.");
+            usuarios = (List<Usuarios>) q.list();
+            return usuarios;
 
-          } finally {
-              try {
-                  session.close();
-              } catch (HibernateException he) {
-                  throw new Exception("Ocurrió un error al consultar los producto.");
-              }
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar el usuario.");
+
+        } finally {
+            try {
+                session.close();
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar el usuario.");
+            }
         }
     }
     
