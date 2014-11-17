@@ -8,10 +8,6 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 >
 
-    <ui:define name="top">
-        top
-    </ui:define>
-
     <ui:define name="content">
         content
         <h:form id="form">
@@ -19,7 +15,7 @@
                 <f:facet name="header">
                     Productos
                 </f:facet>
-                <p:column headerText="Descripción">
+                <p:column headerText="Producto">
                     <h:outputText value="#{productos.descripcion}" />
                 </p:column>
                 <p:column headerText="Tipo Producto">

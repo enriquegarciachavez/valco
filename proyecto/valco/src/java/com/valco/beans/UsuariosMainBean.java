@@ -186,7 +186,7 @@ public class UsuariosMainBean {
         nombre.setValue(null);
         apellidoPaterno.setValue(null);
         apellidoMaterno.setValue(null);
-        //password.setValue(null);
+        
     }
     
     

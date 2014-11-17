@@ -7,11 +7,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns="http://www.w3.org/1999/xhtml">
 
-    <ui:define name="top">
-        top
-    </ui:define>
-
-    <ui:define name="content">
+        <ui:define name="content">
         <h:form id="form">
             <p:dataTable id="singleDT" var="cliente" value="#{clienteMainBean.clientesModel}" selectionMode="single" selection="#{clienteMainBean.clienteSeleccionado}" rowKey="#{cliente.codigo}">
                 <f:facet name="header">
@@ -51,7 +47,7 @@
                         </f:facet>
                         
                         <p:outputLabel for="razon" value="Razón Social: " />
-                        <p:inputText id="razon" binding="#{clienteMainBean.razonSocial}" required="true" label="razon" value="#{clienteMainBean.clienteNuevo.razonSocial}" />
+                        <p:inputText id="razon" validator="#{clienteMainBean.validarRazonSocial}" required="true" label="razon" value="#{clienteMainBean.clienteNuevo.razonSocial}" />
                         <p:message for="razon" display="icon" />
 
                         <p:outputLabel for="paterno" value="Apellido Paterno: " />
@@ -168,7 +164,7 @@
                         </f:facet>
 
                         <p:outputLabel for="razon2" value="Razón Social: " />
-                        <p:inputText id="razon2" required="true" label="razon" value="#{clienteMainBean.clienteSeleccionado.razonSocial}" />
+                        <p:inputText id="razon2" validator="#{clienteMainBean.validarModificarRazonSocial}" required="true" label="razon" value="#{clienteMainBean.clienteSeleccionado.razonSocial}" />
                         <p:message for="razon2" display="icon" />
 
                         <p:outputLabel for="paterno2" value="Apellido Paterno: " />

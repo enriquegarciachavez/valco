@@ -12,14 +12,18 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.component.UISelectBoolean;
+import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
+import javax.faces.validator.ValidatorException;
 
 /**
  *
@@ -216,9 +220,10 @@ public class ClienteMainBean implements Serializable {
 
     }
 
-    public void inicializarCliente() {
+    public String inicializarCliente() {
         this.clienteNuevo = new Clientes();
         limpiarIngresarForm();
+        return null;
     }
 
     public DataModel getClientesModel() throws Exception {
@@ -228,7 +233,6 @@ public class ClienteMainBean implements Serializable {
     }
 
     public void limpiarIngresarForm() {
-        razonSocial.setValue(null);
         apellidoPaterno.setValue(null);
         apellidoMaterno.setValue(null);
         nombres.setValue(null);
@@ -314,6 +318,28 @@ public class ClienteMainBean implements Serializable {
         } catch (Exception ex) {
             Logger.getLogger(ClienteMainBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void validarRazonSocial(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        Clientes razon = null;
+        razon = 
+                this.clienteDao.getClientesXRazonSocial(value.toString());
+        if(razon != null){
+            throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe")); 
+        }
+        
+    }
+    
+    public void validarModificarRazonSocial(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        Clientes razon = null;
+        razon
+                = this.clienteDao.getClientesXRazonSocial(value.toString());
+        if (razon != null) {
+            if (razon.getCodigo() != clienteSeleccionado.getCodigo()) {
+                throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe"));
+            }
+        }
+
     }
 
 }
