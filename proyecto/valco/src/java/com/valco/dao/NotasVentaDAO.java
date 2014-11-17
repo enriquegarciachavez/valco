@@ -56,6 +56,7 @@ public class NotasVentaDAO {
             tx = session.beginTransaction();
             session.update(nota);
             for(ProductosInventario producto : nota.getProductosInventarios()){
+                producto.setEstatus("VENDIDO");
                 session.update(producto);
             }
             tx.commit();
@@ -158,7 +159,8 @@ public class NotasVentaDAO {
           List<ProductosInventario> producto = new ArrayList<ProductosInventario>();
           try {
               tx = session.beginTransaction();
-              Criteria q = session.createCriteria(ProductosInventario.class);
+              Criteria q = session.createCriteria(ProductosInventario.class)
+                      .add(Restrictions.eq("estatus", "ACTIVO"));
               producto = (List<ProductosInventario>)q.list();
               return producto;
 

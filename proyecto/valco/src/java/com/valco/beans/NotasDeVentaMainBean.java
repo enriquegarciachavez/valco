@@ -42,46 +42,8 @@ import javax.faces.validator.ValidatorException;
     private NotasDeVenta notaSeleccionada;
     private NotasDeVenta notaNueva;
     private List<ProductosInventario> productosDisponibles;
-
-    public List<ProductosInventario> getProductosDisponibles() {
-        return productosDisponibles;
-    }
-
-    public void setProductosDisponibles(List<ProductosInventario> productosDisponibles) {
-        this.productosDisponibles = productosDisponibles;
-    }
-
-    public List<ProductosInventario> getProductosSeleccionados() {
-        return productosSeleccionados;
-    }
-
-    public void setProductosSeleccionados(List<ProductosInventario> productosSeleccionados) {
-        this.productosSeleccionados = productosSeleccionados;
-    }
-    List<Clientes> clientes;
-    private List<ProductosInventario> productosSeleccionados;
-
+    DataModel modeloNotas;
     
-
-    public ClienteDAO getClienteDao() {
-        return clienteDao;
-    }
-
-    public void setClienteDao(ClienteDAO clienteDao) {
-        this.clienteDao = clienteDao;
-    }
-
-    public List<Clientes> getClientes() {
-        return clientes;
-    }
-
-    public void setClientes(List<Clientes> clientes) {
-        this.clientes = clientes;
-    }
-
-        /**
-     * Creates a new instance of NotasDeVentaMainBean
-     */
     public NotasDeVentaMainBean() {
         this.productosSeleccionados = new ArrayList<ProductosInventario>();
         this.notaNueva = new NotasDeVenta();
@@ -96,47 +58,11 @@ import javax.faces.validator.ValidatorException;
             Logger.getLogger(NotasDeVentaMainBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    public NotasDeVenta getNotaNueva() {
-        return notaNueva;
-    }
-
-    public void setNotaNueva(NotasDeVenta notaNueva) {
-        this.notaNueva = notaNueva;
-    }
-
-    public NotasVentaDAO getNotasDeVentaDao() {
-        return notasDeVentaDao;
-    }
-
-    public void setNotasDeVentaDao(NotasVentaDAO notasDeVentaDao) {
-        this.notasDeVentaDao = notasDeVentaDao;
-    }
-
-    public List<NotasDeVenta> getNotasDeVenta() {
-        return notasDeVenta;
-    }
-
-    public void setNotasDeVenta(List<NotasDeVenta> notasDeVenta) {
-        this.notasDeVenta = notasDeVenta;
-    }
-
-    public NotasDeVenta getNotaSeleccionada() {
-        return notaSeleccionada;
-    }
-
-    public void setNotaSeleccionada(NotasDeVenta notaSeleccionada) {
-        this.notaSeleccionada = notaSeleccionada;
-    }
-
+    
     public DataModel getModeloNotas() throws Exception {
         notasDeVenta = notasDeVentaDao.getNotasDeVenta();
         modeloNotas = new ListDataModel(notasDeVenta);
         return modeloNotas;
-    }
-
-    public void setModeloNotas(DataModel modeloNotas) {
-        this.modeloNotas = modeloNotas;
     }
     
     public void consultaXFolio() throws Exception{
@@ -183,13 +109,94 @@ import javax.faces.validator.ValidatorException;
             return 0.0;
         }else{
             for(ProductosInventario producto : productosSeleccionados){
-                total += producto.getPrecio().doubleValue();
+                total += producto.getPrecio().doubleValue()*producto.getPeso().doubleValue();
             }
             return total;
         }
     }
     
-DataModel modeloNotas;
+    public List<ProductosInventario> getProductosDisponiblesModificar() {
+        for(ProductosInventario producto: notaNueva.getProductosInventariosList()){
+            productosDisponibles.add(producto);
+        }
+        return productosDisponibles;
+    }
+    
+    public List<ProductosInventario> getProductosDisponibles() {
+        return productosDisponibles;
+    }
+
+    public void setProductosDisponibles(List<ProductosInventario> productosDisponibles) {
+        this.productosDisponibles = productosDisponibles;
+    }
+
+    public List<ProductosInventario> getProductosSeleccionados() {
+        return productosSeleccionados;
+    }
+
+    public void setProductosSeleccionados(List<ProductosInventario> productosSeleccionados) {
+        this.productosSeleccionados = productosSeleccionados;
+    }
+    List<Clientes> clientes;
+    private List<ProductosInventario> productosSeleccionados;
+
+    
+
+    public ClienteDAO getClienteDao() {
+        return clienteDao;
+    }
+
+    public void setClienteDao(ClienteDAO clienteDao) {
+        this.clienteDao = clienteDao;
+    }
+
+    public List<Clientes> getClientes() {
+        return clientes;
+    }
+
+    public void setClientes(List<Clientes> clientes) {
+        this.clientes = clientes;
+    }
+
+    public NotasDeVenta getNotaNueva() {
+        return notaNueva;
+    }
+
+    public void setNotaNueva(NotasDeVenta notaNueva) {
+        this.notaNueva = notaNueva;
+    }
+
+    public NotasVentaDAO getNotasDeVentaDao() {
+        return notasDeVentaDao;
+    }
+
+    public void setNotasDeVentaDao(NotasVentaDAO notasDeVentaDao) {
+        this.notasDeVentaDao = notasDeVentaDao;
+    }
+
+    public List<NotasDeVenta> getNotasDeVenta() {
+        return notasDeVenta;
+    }
+
+    public void setNotasDeVenta(List<NotasDeVenta> notasDeVenta) {
+        this.notasDeVenta = notasDeVenta;
+    }
+
+    public NotasDeVenta getNotaSeleccionada() {
+        return notaSeleccionada;
+    }
+
+    public void setNotaSeleccionada(NotasDeVenta notaSeleccionada) {
+        this.notaSeleccionada = notaSeleccionada;
+    }
+
+    public void setModeloNotas(DataModel modeloNotas) {
+        this.modeloNotas = modeloNotas;
+    }
+    
+    
+    
+
 
     
 }

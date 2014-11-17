@@ -2,8 +2,11 @@ package com.valco.pojo;
 // Generated 2/11/2014 06:06:42 PM by Hibernate Tools 4.3.1
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -125,6 +128,21 @@ public class NotasDeVenta  implements java.io.Serializable {
     public void setProductosInventarios(Set<ProductosInventario> productosInventarios) {
         this.productosInventarios = productosInventarios;
     }
+    
+        public List<ProductosInventario> getProductosInventariosList() {
+        if(productosInventarios != null){
+            List<ProductosInventario> productos;
+            productos = new ArrayList<>();
+            Iterator iterator = productosInventarios.iterator();
+            while(iterator.hasNext()){
+                productos.add((ProductosInventario) iterator.next());
+            }
+            return productos;
+        }else{
+            return new ArrayList<ProductosInventario>();
+        }
+    }
+
 
 
 

@@ -2,16 +2,24 @@
 #top {
     position: relative;
     background-color: #036fab;
-    color: white;
+    color: black;
     padding: 5px;
     margin: 0px 0px 10px 0px;
 }
 
 #bottom {
-    position: relative;
+    /*position: relative;
     background-color: #c2dfef;
     padding: 5px;
-    margin: 10px 0px 0px 0px;
+    margin: 10px 0px 0px 0px;*/
+    
+    position:absolute;
+    bottom:0;
+    text-align: center;
+    width: 98%;
+    padding: 5px;
+    height:40px;   /* Height of the footer */
+
 }
 
 #left {
@@ -32,6 +40,7 @@
     position: relative;
     background-color: #dddddd;
     padding: 5px;
+    font-size: 10px;
 }
 
 .left_content {
