@@ -9,13 +9,17 @@ import com.valco.dao.ProveedorDAO;
 import com.valco.pojo.Proveedores;
 import java.util.List;
 import java.util.logging.Level;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
+import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
+import javax.faces.validator.ValidatorException;
 
 /**
  *
@@ -54,7 +58,6 @@ public class ProveedoresMainBean {
     }
     
     public void limpiarIngresarForm() {
-        razonSocial.setValue(null);
         apellidoPaterno.setValue(null);
         apellidoMaterno.setValue(null);
         nombres.setValue(null);
@@ -248,7 +251,29 @@ public class ProveedoresMainBean {
          this.proveedorNuevo = new Proveedores();
         limpiarIngresarForm();}
     
-     
+    public void validarRazonSocial(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        Proveedores razon = null;
+        razon = 
+                this.proveedorDAO.getProveedoresXRazonSocial(value.toString());
+        if(razon != null){
+            throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe")); 
+        }
+        
+    }
+    
+    public void validarModificarRazonSocial(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        Proveedores razon = null;
+        razon
+                = this.proveedorDAO.getProveedoresXRazonSocial(value.toString());
+        if (razon != null) {
+            if (razon.getCodigo() != proveedorSeleccionado.getCodigo()) {
+                throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe"));
+            }
+        }
+
+    }
+
+    
     
                 
 

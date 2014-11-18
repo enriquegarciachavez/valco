@@ -15,6 +15,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -119,6 +120,29 @@ public class UsuariosDAO {
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al consultar el usuario.");
             }
+        }
+    }
+     
+     public Usuarios getUsuariosXCorreo(String correo) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          Usuarios usuario = new Usuarios();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(Usuarios.class)
+                      .add(Restrictions.eq("correo", correo));
+              usuario = (Usuarios)q.uniqueResult();
+              return usuario;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los clientes.");
+
+          } finally {
+              try {
+                  session.close();
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los clientes.");
+              }
         }
     }
     

@@ -49,7 +49,7 @@
                     </f:facet>
 
                     <p:outputLabel for="razon" value="Razón Social: " />
-                    <p:inputText id="razon" binding="#{proveedoresMainBean.razonSocial}" required="true" label="razon" value="#{proveedoresMainBean.proveedorNuevo.razonSocial}" />
+                    <p:inputText id="razon" validator="#{proveedoresMainBean.validarRazonSocial}" required="true" label="razon" value="#{proveedoresMainBean.proveedorNuevo.razonSocial}" />
                     <p:message for="razon" display="icon" />
 
                     <p:outputLabel for="paterno" value="Apellido Paterno: " />
@@ -136,7 +136,7 @@
                     </f:facet>
 
                     <p:outputLabel for="razon2" value="Razón Social: " />
-                    <p:inputText id="razon2" required="true" label="razon" value="#{proveedoresMainBean.proveedorSeleccionado.razonSocial}" />
+                    <p:inputText id="razon2" validator="#{proveedoresMainBean.validarModificarRazonSocial}" required="true" label="razon" value="#{proveedoresMainBean.proveedorSeleccionado.razonSocial}" />
                     <p:message for="razon2" display="icon" />
 
                     <p:outputLabel for="paterno2" value="Apellido Paterno: " />

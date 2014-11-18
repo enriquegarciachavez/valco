@@ -138,13 +138,13 @@ public class ProductoDAO {
               return producto;
 
           } catch (HibernateException he) {
-              throw new Exception("Ocurrió un error al consultar los clientes.");
+              throw new Exception("Ocurrió un error al consultar los productos.");
 
           } finally {
               try {
                   session.close();
               } catch (HibernateException he) {
-                  throw new Exception("Ocurrió un error al consultar los clientes.");
+                  throw new Exception("Ocurrió un error al consultar los productos.");
               }
         }
     }

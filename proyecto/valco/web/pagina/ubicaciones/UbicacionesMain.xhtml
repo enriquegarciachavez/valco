@@ -9,8 +9,7 @@
 
     
     <ui:define name="content">
-        content
-        
+           
         <h:form id="form">
             <p:dataTable id="singleDT" var="ubicacion" value="#{ubicacionesMainBean.modeloUbicaciones}" selectionMode="single" selection="#{ubicacionesMainBean.ubicacionSelecionado}" rowKey="#{ubicacion.codigo}">
                 <f:facet name="header">
@@ -60,7 +59,7 @@
                     <p:message for="ciudad" display="icon" />
                     
                     <p:outputLabel for="oficina" value="Oficina: " />
-                    <p:inputText id="oficina" validatorMessage="El campo Oficina solo puede contener letras" binding="#{ubicacionesMainBean.oficina}" required="true" label="oficina" value="#{ubicacionesMainBean.ubicacionNuevo.oficina}" >
+                    <p:inputText id="oficina" validatorMessage="El campo Oficina solo puede contener letras o se esta duplicando el campo Oficina" validator="#{ubicacionesMainBean.validarOficina}" required="true" label="oficina" value="#{ubicacionesMainBean.ubicacionNuevo.oficina}" >
                         <f:validateRegex
                             pattern="^[A-Za-z\s]*$"/>
                     </p:inputText>
@@ -103,7 +102,7 @@
                         <p:message for="ciudad1" display="icon" />
 
                         <p:outputLabel for="oficina1" value="Oficina" />
-                        <p:inputText id="oficina1" validatorMessage="El campo Oficina solo puede contener letras" required="true" label="oficina1" value="#{ubicacionesMainBean.ubicacionSelecionado.oficina}">
+                        <p:inputText id="oficina1" validatorMessage="El campo Oficina solo puede contener letras o se esta duplicando el campo Oficina" validator="#{ubicacionesMainBean.validarModificarOficina}" required="true" label="oficina1" value="#{ubicacionesMainBean.ubicacionSelecionado.oficina}">
                             <f:validateRegex
                                 pattern="^[A-Za-z\s]+$"/>
                         </p:inputText>

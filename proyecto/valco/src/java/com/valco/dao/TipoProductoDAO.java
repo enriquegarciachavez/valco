@@ -9,10 +9,12 @@ import com.valco.HibernateUtil;
 import com.valco.pojo.TipoProducto;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -114,6 +116,29 @@ public class TipoProductoDAO {
                   session.close();
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los producto.");
+              }
+        }
+    }
+      
+      public TipoProducto getTipoProductoXDescripcion(String tipoProducto) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          TipoProducto tipoproducto = new TipoProducto();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(TipoProducto.class)
+                      .add(Restrictions.eq("descripcion", tipoProducto));
+              tipoproducto = (TipoProducto)q.uniqueResult();
+              return tipoproducto;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los tipo productos.");
+
+          } finally {
+              try {
+                  session.close();
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los tipo productos.");
               }
         }
     }

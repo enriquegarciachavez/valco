@@ -8,12 +8,16 @@ package com.valco.beans;
 import com.valco.dao.UbicacionesDAO;
 import com.valco.pojo.Ubicaciones;
 import java.util.List;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
+import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
+import javax.faces.validator.ValidatorException;
 
 /**
  *
@@ -138,9 +142,30 @@ public class UbicacionesMainBean {
      public void limpiarIngresarForm() {
         estado.setValue(null);
         ciudad.setValue(null);
-        oficina.setValue(null);
+        
        
         }
+     
+    public void validarOficina(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        Ubicaciones oficina = null;
+        oficina
+                = this.ubicacionesDao.getUbicacionesXOficina(value.toString());
+        if (oficina != null) {
+            throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe"));
+        }
+
+    }
+
+    public void validarModificarOficina(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        Ubicaciones oficina = null;
+        oficina
+                = this.ubicacionesDao.getUbicacionesXOficina(value.toString());
+        if (oficina != null) {
+            if (oficina.getCodigo() != ubicacionSelecionado.getCodigo()) {
+                throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe"));
+            }
+        }
+    }
     
     
     

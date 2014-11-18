@@ -9,10 +9,12 @@ import com.valco.HibernateUtil;
 import com.valco.pojo.Ubicaciones;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -105,6 +107,29 @@ public class UbicacionesDAO {
               Query q = session.createQuery("FROM Ubicaciones");
               ubicaciones = (List<Ubicaciones>) q.list();
               return ubicaciones;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar la ubicacion.");
+
+          } finally {
+              try {
+                  session.close();
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar la ubicacion.");
+              }
+        }
+    }
+      
+      public Ubicaciones getUbicacionesXOficina(String oficina) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          Ubicaciones ubicacion = new Ubicaciones();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(Ubicaciones.class)
+                      .add(Restrictions.eq("oficina", oficina));
+              ubicacion = (Ubicaciones)q.uniqueResult();
+              return ubicacion;
 
           } catch (HibernateException he) {
               throw new Exception("Ocurrió un error al consultar la ubicacion.");

@@ -9,8 +9,7 @@
 
 
     <ui:define name="content">
-        content
-        
+         
         <h:form id="form">
             <p:dataTable id="singleDT" var="unidad" value="#{unidadesDeMedidaMainBean.modeloUnidad}" selectionMode="single" selection="#{unidadesDeMedidaMainBean.unidadSeleccionado}" rowKey="#{unidad.codigo}">
                 <f:facet name="header">
@@ -48,14 +47,14 @@
                     </f:facet>
 
                     <p:outputLabel for="descripcion" value="Ingresar Unidad de medida: " />
-                    <p:inputText id="descripcion" validatorMessage="El campo ingresar unidad de medida solo puede contener letras" binding="#{unidadesDeMedidaMainBean.descripcion}" required="true" label="descripcion" value="#{unidadesDeMedidaMainBean.unidadNuevo.descripcion}" >
+                    <p:inputText id="descripcion" validatorMessage="El campo ingresar unidad de medida solo puede contener letras o se esta duplicando el campo descripcion" validator="#{unidadesDeMedidaMainBean.validarDescripcion}" required="true" label="descripcion" value="#{unidadesDeMedidaMainBean.unidadNuevo.descripcion}" >
                         <f:validateRegex
                             pattern="^[A-Za-z\s]+$"/>
                     </p:inputText>
                     <p:message for="descripcion" display="icon" />
 
                     <p:outputLabel for="abreviacion" value="Abreviación: " />
-                    <p:inputText id="abreviacion" validatorMessage="El campo abreviacion solo puede contener letras" binding="#{unidadesDeMedidaMainBean.abreviacion}" required="true" label="descripcion" value="#{unidadesDeMedidaMainBean.unidadNuevo.abreviacion}" >
+                    <p:inputText id="abreviacion" validatorMessage="El campo abreviacion solo puede contener letras o se esta duplicando el campo abreviacion" validator="#{unidadesDeMedidaMainBean.validarAbreviacion}" required="true" label="descripcion" value="#{unidadesDeMedidaMainBean.unidadNuevo.abreviacion}" >
                         <f:validateRegex
                             pattern="^[A-Za-z\s]+$"/>
                     </p:inputText>
@@ -85,14 +84,14 @@
                         </f:facet>
 
                         <p:outputLabel for="descripcion1" value="Ingresar Unidad de medida: " />
-                        <p:inputText id="descripcion1" required="true" validatorMessage="El campo ingresar unidad de medida solo puede contener letras" label="descripcion1" value="#{unidadesDeMedidaMainBean.unidadSeleccionado.descripcion}">
+                        <p:inputText id="descripcion1" validator="#{unidadesDeMedidaMainBean.validarDescripcion}" required="true" validatorMessage="El campo ingresar unidad de medida solo puede contener letras o se esta duplicando el campo descripción" label="descripcion1" value="#{unidadesDeMedidaMainBean.unidadSeleccionado.descripcion}">
                             <f:validateRegex
                                 pattern="^[A-Za-z\s]+$"/>
                         </p:inputText>
                         <p:message for="descripcion1" display="icon" />
                         
                         <p:outputLabel for="abreviacion1" value="Abreviacion: " />
-                        <p:inputText id="abreviacion1" required="true" validatorMessage="El campo abreviacion solo puede contener letras" label="abreviacion1" value="#{unidadesDeMedidaMainBean.unidadSeleccionado.abreviacion}">
+                        <p:inputText id="abreviacion1" validator="#{unidadesDeMedidaMainBean.validarModificarAbreviacion}" required="true" validatorMessage="El campo abreviacion solo puede contener letras o se esta duplicando el campo abreviación" label="abreviacion1" value="#{unidadesDeMedidaMainBean.unidadSeleccionado.abreviacion}">
                             <f:validateRegex
                                 pattern="^[A-Za-z\s]+$"/>
                         </p:inputText>

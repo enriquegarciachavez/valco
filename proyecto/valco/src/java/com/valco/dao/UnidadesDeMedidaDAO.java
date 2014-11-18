@@ -9,10 +9,12 @@ import com.valco.HibernateUtil;
 import com.valco.pojo.UnidadesDeMedida;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -114,6 +116,51 @@ public class UnidadesDeMedidaDAO {
                   session.close();
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar Las unidades de medida.");
+              }
+        }
+    }
+      public UnidadesDeMedida getUnidadesXDescripcion(String descripcion) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          UnidadesDeMedida descrip = new UnidadesDeMedida();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(UnidadesDeMedida.class)
+                      .add(Restrictions.eq("descripcion", descripcion));
+              descrip = (UnidadesDeMedida)q.uniqueResult();
+              return descrip;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los clientes.");
+
+          } finally {
+              try {
+                  session.close();
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los clientes.");
+              }
+        }
+    }
+      
+      public UnidadesDeMedida getUnidadesXAbreviacion(String abreviacion) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          UnidadesDeMedida abrevia = new UnidadesDeMedida();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(UnidadesDeMedida.class)
+                      .add(Restrictions.eq("abreviacion", abreviacion));
+              abrevia = (UnidadesDeMedida)q.uniqueResult();
+              return abrevia;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los clientes.");
+
+          } finally {
+              try {
+                  session.close();
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los clientes.");
               }
         }
     }
