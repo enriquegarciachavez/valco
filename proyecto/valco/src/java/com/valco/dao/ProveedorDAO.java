@@ -11,10 +11,12 @@ import com.valco.pojo.Proveedores;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -103,6 +105,29 @@ public class ProveedorDAO implements Serializable{
               Query q = session.createQuery("FROM Proveedores");
               proveedores = (List<Proveedores>) q.list();
               return proveedores;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los proveedores.");
+
+          } finally {
+              try {
+                  session.close();
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los proveedores.");
+              }
+        }
+    }
+    
+    public Proveedores getProveedoresXRazonSocial(String razonSocial) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          Proveedores proveedor = new Proveedores();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(Proveedores.class)
+                      .add(Restrictions.eq("razonSocial", razonSocial));
+              proveedor = (Proveedores)q.uniqueResult();
+              return proveedor;
 
           } catch (HibernateException he) {
               throw new Exception("Ocurrió un error al consultar los proveedores.");

@@ -59,7 +59,7 @@
                     </f:facet>
                     
                     <p:outputLabel for="correo" value="Correo Electronico:" />
-                    <p:inputText id="correo" validatorMessage="Formato de email incorrecto" binding="#{usuariosMainBean.correo}" required="true" label="correo" value="#{usuariosMainBean.usuarioNuevo.correo}">
+                    <p:inputText id="correo" validatorMessage="Formato de correo incorrecto o el correo que se capturo ya existe" validator="#{usuariosMainBean.validarCorreo}" required="true" label="correo" value="#{usuariosMainBean.usuarioNuevo.correo}">
                             <f:validateRegex
                                     pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
                         </p:inputText>
@@ -136,7 +136,7 @@
                         </f:facet>
                         
                         <p:outputLabel for="correo2" value="Correo Electronico" />
-                        <p:inputText id="correo2" validatorMessage="Formato de email incorrecto" required="true" label="correo2" value="#{usuariosMainBean.usuarioSeleccionado.correo}">
+                        <p:inputText id="correo2" validatorMessage="Formato de email incorrecto o el correo que se capturo ya existe " validator="#{usuariosMainBean.validarModificarCorreo}" required="true" label="correo2" value="#{usuariosMainBean.usuarioSeleccionado.correo}">
                             <f:validateRegex
                                     pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
                         </p:inputText>

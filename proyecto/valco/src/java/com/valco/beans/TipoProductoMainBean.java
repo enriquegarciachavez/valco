@@ -9,12 +9,16 @@ import com.sun.deploy.uitoolkit.impl.fx.ui.UITextArea;
 import com.valco.dao.TipoProductoDAO;
 import com.valco.pojo.TipoProducto;
 import java.util.List;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
+import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
+import javax.faces.validator.ValidatorException;
 
 /**
  *
@@ -129,9 +133,28 @@ public class TipoProductoMainBean {
         limpiarIngresarForm();}
     
      public void limpiarIngresarForm() {
-        descripcion.setValue(null);
+        
        // observaciones.setValue(false);
         //observaciones.setText(null);
         }
+     public void validarDescripcion(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        TipoProducto tipopro = null;
+        tipopro = 
+                this.tipoproductoDao.getTipoProductoXDescripcion(value.toString());
+        if(tipopro != null){
+            throw new ValidatorException(new FacesMessage("La descripcion que capturó ya existe")); 
+        }
+        
+    }
+     public void validarModificarDescripcion(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        TipoProducto tipopro = null;
+        tipopro = 
+                this.tipoproductoDao.getTipoProductoXDescripcion(value.toString());
+        if(tipopro != null){
+            if(tipopro.getCodigo()!= tipoSeleccionado.getCodigo())
+            throw new ValidatorException(new FacesMessage("La descripción que capturó ya existe")); 
+        }
+        
+    }
     
 }

@@ -11,12 +11,16 @@ import com.valco.pojo.Ubicaciones;
 import com.valco.pojo.Usuarios;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
+import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
+import javax.faces.validator.ValidatorException;
 
 /**
  *
@@ -200,6 +204,27 @@ public class UsuariosMainBean {
             this.ubicaciones = ubicacionesDao.getUbicaciones();
             } catch (Exception ex) {
             
+        }
+    }
+    
+    public void validarCorreo(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        Usuarios correo = null;
+        correo = 
+                this.usuariosDao.getUsuariosXCorreo(value.toString());
+        if(correo != null){
+            throw new ValidatorException(new FacesMessage("El correo que capturó ya existe")); 
+        }
+        
+    }
+    
+    public void validarModificarCorreo(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        Usuarios correo = null;
+        correo = 
+                this.usuariosDao.getUsuariosXCorreo(value.toString());
+        if(correo != null){
+            if(correo.getCodigo() != usuarioSeleccionado.getCodigo()){
+            throw new ValidatorException(new FacesMessage("El correo que capturó ya existe")); 
+        }
         }
     }
 

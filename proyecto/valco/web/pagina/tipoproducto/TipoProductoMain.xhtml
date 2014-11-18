@@ -8,7 +8,7 @@
                 xmlns="http://www.w3.org/1999/xhtml">
 
     <ui:define name="content">
-        content
+
         
         <!-- TABLA-->
         <h:form id="form">
@@ -16,7 +16,7 @@
                 <f:facet name="header">
                   Tipo Productos
                 </f:facet>
-                <p:column headerText="Descripción">
+                <p:column headerText="Tipo producto">
                     <h:outputText value="#{tipoproductos.descripcion}" />
                 </p:column>
                 <p:column headerText="Observaciones">
@@ -48,7 +48,7 @@
                     </f:facet>
 
                     <p:outputLabel for="descripcion" value="Ingresar Tipo Producto: " />
-                    <p:inputText id="descripcion" validatorMessage="El campo ingresar Tipo Producto solo puede contener letras" binding="#{tipoProductoMainBean.descripcion}" required="true" label="descripcion" value="#{tipoProductoMainBean.tipoProductoNuevo.descripcion}" >
+                    <p:inputText id="descripcion" validatorMessage="El campo ingresar Tipo Producto solo puede contener letras o se esta duplicando el tipo producto" validator="#{tipoProductoMainBean.validarDescripcion}" required="true" label="descripcion" value="#{tipoProductoMainBean.tipoProductoNuevo.descripcion}" >
                         <f:validateRegex
                             pattern="^[A-Za-z\s]+$"/>
                     </p:inputText>
@@ -78,7 +78,7 @@
                         </f:facet>
 
                         <p:outputLabel for="descripcion1" value="Ingresar Unidad de medida: " />
-                        <p:inputText id="descripcion1" required="true" validatorMessage="El campo ingresar tipo producto solo puede contener letras" label="descripcion" value="#{tipoProductoMainBean.tipoProductoSeleccionado.descripcion}">
+                        <p:inputText id="descripcion1" validator="#{tipoProductoMainBean.validarModificarDescripcion}" required="true" validatorMessage="El campo ingresar tipo producto solo puede contener letras o se esta duplicando el tipo producto" label="descripcion" value="#{tipoProductoMainBean.tipoProductoSeleccionado.descripcion}">
                             <f:validateRegex
                                 pattern="^[A-Za-z\s]+$"/>
                         </p:inputText>

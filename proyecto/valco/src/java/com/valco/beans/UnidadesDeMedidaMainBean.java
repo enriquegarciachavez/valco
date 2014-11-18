@@ -8,12 +8,16 @@ package com.valco.beans;
 import com.valco.pojo.UnidadesDeMedida;
 import com.valco.dao.UnidadesDeMedidaDAO;
 import java.util.List;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
+import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
+import javax.faces.validator.ValidatorException;
 
 /**
  *
@@ -129,9 +133,53 @@ public class UnidadesDeMedidaMainBean {
         limpiarIngresarForm();}
     
      public void limpiarIngresarForm() {
-        descripcion.setValue(null);
-        abreviacion.setValue(null);
+        
         }
+     
+     // Descripcion
+     public void validarDescripcion(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        UnidadesDeMedida descripcion = null;
+        descripcion = 
+                this.unidadesdemedidaDao.getUnidadesXDescripcion(value.toString());
+        if(descripcion != null){
+            throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe")); 
+        }
+     }
+        
+    public void validarModificarDescripcion(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        UnidadesDeMedida descripcion = null;
+        descripcion = 
+                this.unidadesdemedidaDao.getUnidadesXDescripcion(value.toString());
+        if(descripcion != null){
+            if(descripcion.getCodigo() != unidadSeleccionado.getCodigo()){
+        
+            throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe")); 
+        }
+        }  
+    }
+    
+    //Abreviacion
+    public void validarAbreviacion(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        UnidadesDeMedida abreviacion = null;
+        abreviacion = 
+                this.unidadesdemedidaDao.getUnidadesXAbreviacion(value.toString());
+        if(abreviacion != null){
+            throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe")); 
+        }
+     }
+    
+    public void validarModificarAbreviacion(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        UnidadesDeMedida abreviacion = null;
+        abreviacion = 
+                this.unidadesdemedidaDao.getUnidadesXAbreviacion(value.toString());
+        if(abreviacion != null){
+            if(abreviacion.getCodigo() != unidadSeleccionado.getCodigo()){
+        
+            throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe")); 
+        }
+        }  
+    }
+     
      
      
 }

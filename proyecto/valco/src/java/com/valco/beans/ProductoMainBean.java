@@ -13,13 +13,17 @@ import com.valco.pojo.TipoProducto;
 import com.valco.pojo.UnidadesDeMedida;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.component.UISelectBoolean;
+import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
+import javax.faces.validator.ValidatorException;
 
 /**
  *
@@ -188,7 +192,7 @@ public class ProductoMainBean {
     }
     
     public void limpiarIngresarForm() {
-        descripcion.setValue(null);
+        
         incluyeViscera.setValue(false);
         generarSubproducto.setValue(false);
         aplicaInventarioFisico.setValue(false);
@@ -207,6 +211,27 @@ public class ProductoMainBean {
         } catch (Exception ex) {
             
         }
+    }
+    
+    public void validarDescripcion(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        Productos descripcion = null;
+        descripcion = 
+                this.productoDao.getProductosXDescripcion(value.toString());
+        if(descripcion != null){
+            throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe")); 
+        }
+        
+    }
+    public void validarModificarDescripcion(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        Productos descripcion = null;
+        descripcion
+                = this.productoDao.getProductosXDescripcion(value.toString());
+        if (descripcion != null) {
+            if (descripcion.getCodigo() != productoSeleccionado.getCodigo()) {
+                throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe"));
+            }
+        }
+
     }
     
 }
