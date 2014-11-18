@@ -43,7 +43,8 @@ import javax.faces.validator.ValidatorException;
     private NotasDeVenta notaNueva;
     private List<ProductosInventario> productosDisponibles;
     DataModel modeloNotas;
-    
+    private List<ProductosInventario> productosModificacion;
+
     public NotasDeVentaMainBean() {
         this.productosSeleccionados = new ArrayList<ProductosInventario>();
         this.notaNueva = new NotasDeVenta();
@@ -92,7 +93,6 @@ import javax.faces.validator.ValidatorException;
     public void ingresarNotaVendida(){
         for(ProductosInventario producto: productosSeleccionados){
             producto.setNotasDeVenta(notaNueva);
-            this.notaNueva.getProductosInventarios().add(producto);
         }
         try {
             this.notaNueva.setEstatus("ASIGNADA");
@@ -115,11 +115,17 @@ import javax.faces.validator.ValidatorException;
         }
     }
     
-    public List<ProductosInventario> getProductosDisponiblesModificar() {
+    public List<ProductosInventario> getProductosDisponiblesModificar() throws Exception {
         for(ProductosInventario producto: notaNueva.getProductosInventariosList()){
             productosDisponibles.add(producto);
         }
+        
         return productosDisponibles;
+    }
+    
+    public String obtenerProductosModificacio() throws Exception{
+        productosModificacion = notasDeVentaDao.getProductosXNota(notaSeleccionada);
+        return null;
     }
     
     public List<ProductosInventario> getProductosDisponibles() {
@@ -192,6 +198,14 @@ import javax.faces.validator.ValidatorException;
 
     public void setModeloNotas(DataModel modeloNotas) {
         this.modeloNotas = modeloNotas;
+    }
+    
+    public List<ProductosInventario> getProductosModificacion() {
+        return productosModificacion;
+    }
+
+    public void setProductosModificacion(List<ProductosInventario> productosModificacion) {
+        this.productosModificacion = productosModificacion;
     }
     
     

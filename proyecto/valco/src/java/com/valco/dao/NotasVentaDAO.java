@@ -175,4 +175,27 @@ public class NotasVentaDAO {
               }
         }
     }
+      
+      public List<ProductosInventario> getProductosXNota(NotasDeVenta nota) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          List<ProductosInventario> producto = new ArrayList<ProductosInventario>();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(ProductosInventario.class)
+                      .add(Restrictions.eq("notasDeVenta", nota));
+              producto = (List<ProductosInventario>)q.list();
+              return producto;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los clientes.");
+
+          } finally {
+              try {
+                  session.close();
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los clientes.");
+              }
+        }
+    }
 }

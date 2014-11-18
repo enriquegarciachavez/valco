@@ -12,7 +12,8 @@
     <ui:define name="content">
         <h:form id="tableForm">
             <p:menubar>
-                <p:menuitem value="Nuevo" icon="ui-icon-document" onclick="PF('dlg2').show();" partialSubmit="true" />
+                <p:menuitem value="Nuevo" icon="ui-icon-document" onclick="PF('dlg2').show();" partialSubmit="true"/>
+                <p:menuitem value="Modificar" icon="ui-icon-document" action="#{notasDeVentaMainBean.obtenerProductosModificacio()}" update=":formModificar:dlgModificar" process="singleDT" oncomplete="PF('dlgModificar').show();" partialSubmit="true" />
             </p:menubar>
             <p:commandButton value="Print" type="button" icon="ui-icon-print" style="display:block;margin-bottom: 20px">
                 <p:printer target="singleDT" />
@@ -38,7 +39,7 @@
                 <f:facet name="footer">
                 </f:facet>
             </p:dataTable>
-            <p:commandButton value="Dynamic Focus" onclick="PF('dlg2').show();" type="button" icon="ui-icon-extlink" />
+            <p:commandButton value="Modificar" icon="ui-icon-document" action="#{notasDeVentaMainBean.obtenerProductosModificacio()}" update=":formModificar:dlgModificar"  oncomplete="PF('dlgModificar').show();" partialSubmit="true"  />
 
         </h:form>
         
@@ -122,7 +123,7 @@
                             </p:column>
                             <p:columnGroup type="footer">
                                 <p:row>
-                                    <p:column colspan="2" style="text-align:right" footerText="Total:"/>
+                                    <p:column colspan="3" style="text-align:right" footerText="Total:"/>
                                     <p:column id="total" footerText="#{notasDeVentaMainBean.totalSeleccionado}">
                                     </p:column>
                                 </p:row>
@@ -183,7 +184,7 @@
                     <p:calendar required="true" id="fechaModificar" value="#{notasDeVentaMainBean.notaSeleccionada.fechaDeVenta}" />
 
                     <p:outputLabel for="clienteModificar" value="Cliente:"  />
-                    <p:selectOneMenu id="clienteModificar" required="true" value="#{notasDeVentaMainBean.notaSeleccionada.clientes}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
+                    <p:selectOneMenu id="clienteModificar" required="true" value="" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
                                      effect="fade" var="c" style="width:160px" filter="true" filterMatchMode="contains">
                         <f:selectItems value="#{notasDeVentaMainBean.clientes}" var="cliente" itemLabel="#{cliente.codigo} | #{cliente.nombres} #{cliente.apellidoPaterno}" itemValue="#{cliente}" />
 
@@ -199,7 +200,7 @@
                     <p:inputText value="#{notasDeVentaMainBean.notaSeleccionada.flete}" />
 
                     <f:facet name="footer">
-                        <p:dataTable id="productosSeleccionadosModificar" editable="true" editMode="cell" var="producto" value="#{notasDeVentaMainBean.notaSeleccionada.productosInventariosList}">
+                        <p:dataTable id="productosSeleccionadosModificar" editable="true" editMode="cell" var="producto" value="#{notasDeVentaMainBean.productosModificacion}">
                             <f:facet name="header">
                                 Productos seleccionados
                             </f:facet>
@@ -235,7 +236,7 @@
                             </p:column>
                             <p:columnGroup type="footer">
                                 <p:row>
-                                    <p:column colspan="2" style="text-align:right" footerText="Total:"/>
+                                    <p:column colspan="3" style="text-align:right" footerText="Total:"/>
                                     <p:column id="total" footerText="#{notasDeVentaMainBean.totalSeleccionado}">
                                     </p:column>
                                 </p:row>
@@ -283,7 +284,6 @@
         }
     }
             </script>
-        
     </ui:define>
 
 </ui:composition>
