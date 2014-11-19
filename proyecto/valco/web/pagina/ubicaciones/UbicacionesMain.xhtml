@@ -1,162 +1,165 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../clientes/Template1.xhtml"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-    
-    <ui:define name="content">
-           
-        <h:form id="form">
-            <p:dataTable id="singleDT" var="ubicacion" value="#{ubicacionesMainBean.modeloUbicaciones}" selectionMode="single" selection="#{ubicacionesMainBean.ubicacionSelecionado}" rowKey="#{ubicacion.codigo}">
-                <f:facet name="header">
-                    Ubicaciones
-                </f:facet>
-                <p:column headerText="Estado">
-                    <h:outputText value="#{ubicacion.estado}" />
-                </p:column>
-                <p:column headerText="Ciudad">
-                    <h:outputText value="#{ubicacion.ciudad}" />
-                </p:column>
-                <p:column headerText="Oficina">
-                    <h:outputText value="#{ubicacion.oficina}" />
-                </p:column>
-                <f:facet name="footer">
-                    <p:commandButton value="Ingresar" partialSubmit="true" update=":formingresar:popupingresar" oncomplete="PF('popupingresar').show();"  action="#{ubicacionesMainBean.inicializarUbicacion()}"/>
-                    <p:commandButton value="Modificar"  process="singleDT" update=":formmodificar:popupmodificar" oncomplete="PF('popupmodificar').show();"/>
-                    <p:commandButton value="Borrar" process="singleDT" update=":popupborrar" oncomplete="PF('popupborrar').show();" />
-                </f:facet>
-            </p:dataTable>
-        </h:form>
-        
-         <!--BONTON INGRESAR UBICACION-->
-        <h:form id="formingresar">
-            <p:dialog header="Ingresar Ubicacion" widgetVar="popupingresar" modal="true" position="top"
-                      id="popupingresar">
+    <body>
+        <ui:composition template="./../clientes/Template1.xhtml">
 
+            <ui:define name="content">
 
-                <h:panelGrid id="ingresarGrid"  columns="3" cellpadding="5">
-
-                    <f:facet name="header">
-                        <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
-                    </f:facet>
-
-                    <p:outputLabel for="estado" value="Estado: " />
-                    <p:inputText id="estado" validatorMessage="El campo Estado  solo puede contener letras" binding="#{ubicacionesMainBean.estado}" required="true" label="estado" value="#{ubicacionesMainBean.ubicacionNuevo.estado}" >
-                        <f:validateRegex
-                            pattern="^[A-Za-z\s]+$"/>
-                    </p:inputText>
-                    <p:message for="estado" display="icon" />
-
-                    <p:outputLabel for="ciudad" value="Ciudad: " />
-                    <p:inputText id="ciudad" validatorMessage="El campo Ciudad solo puede contener letras" binding="#{ubicacionesMainBean.ciudad}" required="true" label="ciudad" value="#{ubicacionesMainBean.ubicacionNuevo.ciudad}" >
-                        <f:validateRegex
-                            pattern="^[A-Za-z\s]+$"/>
-                    </p:inputText>
-                    <p:message for="ciudad" display="icon" />
-                    
-                    <p:outputLabel for="oficina" value="Oficina: " />
-                    <p:inputText id="oficina" validatorMessage="El campo Oficina solo puede contener letras o se esta duplicando el campo Oficina" validator="#{ubicacionesMainBean.validarOficina}" required="true" label="oficina" value="#{ubicacionesMainBean.ubicacionNuevo.oficina}" >
-                        <f:validateRegex
-                            pattern="^[A-Za-z\s]*$"/>
-                    </p:inputText>
-                    <p:message for="oficina" display="icon" />
-
-                    <f:facet name="footer">
-                        <p:commandButton value="Guardar"  id="guardar1" update="ingresarGrid :form:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'popupingresar' )"  action="#{ubicacionesMainBean.insertarUbicacion()}"/>
-                    </f:facet>
-                </h:panelGrid>
-
-
-            </p:dialog>
-        </h:form>
-         
-         
-         <!-- BOTON MODIFICAR UBICACION-->
-            <!-- <p:commandButton value="Modificar" type="button" onclick="PF('popupmodificar').show();" /> -->
-            
-            <h:form id="formmodificar">
-                <p:dialog header="Modificar Ubicacion" widgetVar="popupmodificar" id="popupmodificar" modal="true" position="top">
-
-                    <h:panelGrid id="modificarGrid"  columns="3" cellpadding="5">
-                        
+                <h:form id="form">
+                    <p:dataTable id="singleDT" var="ubicacion" value="#{ubicacionesMainBean.modeloUbicaciones}" selectionMode="single" selection="#{ubicacionesMainBean.ubicacionSelecionado}" rowKey="#{ubicacion.codigo}">
                         <f:facet name="header">
-                            <p:messages id="msgsmodificar" style="font-size: 12px; text-align: left;"/>
+                            Ubicaciones
                         </f:facet>
-
-                        <p:outputLabel for="estado1" value="Estado: " />
-                        <p:inputText id="estado1" required="true" validatorMessage="El campo Estado  solo puede contener letras" label="estado1" value="#{ubicacionesMainBean.ubicacionSelecionado.estado}">
-                            <f:validateRegex
-                                pattern="^[A-Za-z\s]+$"/>
-                        </p:inputText>
-                        <p:message for="estado1" display="icon" />
-                        
-                        <p:outputLabel for="ciudad1" value=" Ciudad: " />
-                        <p:inputText id="ciudad1" required="true" validatorMessage="El campo Apellido Materno solo puede contener letras" label="ciudad1" value="#{ubicacionesMainBean.ubicacionSelecionado.ciudad}">
-                            <f:validateRegex
-                                pattern="^[A-Za-z\s]+$"/>
-                        </p:inputText>
-                        <p:message for="ciudad1" display="icon" />
-
-                        <p:outputLabel for="oficina1" value="Oficina" />
-                        <p:inputText id="oficina1" validatorMessage="El campo Oficina solo puede contener letras o se esta duplicando el campo Oficina" validator="#{ubicacionesMainBean.validarModificarOficina}" required="true" label="oficina1" value="#{ubicacionesMainBean.ubicacionSelecionado.oficina}">
-                            <f:validateRegex
-                                pattern="^[A-Za-z\s]+$"/>
-                        </p:inputText>
-                        <p:message for="oficina1" display="icon" />
-                        
-                        <p:outputLabel for="estatus" value="Estatus:" />
-                        <p:inputText id="estatus" validatorMessage="El campo Estatus solo puede contener letras" required="true" label="estatus" value="#{ubicacionesMainBean.ubicacionSelecionado.estatus}">
-                            <f:validateRegex
-                                pattern="^[A-Za-z\s]+$"/>
-                        </p:inputText>
-                        <p:message for="estatus" display="icon" />
-
-                        
-
-
+                        <p:column headerText="Estado">
+                            <h:outputText value="#{ubicacion.estado}" />
+                        </p:column>
+                        <p:column headerText="Ciudad">
+                            <h:outputText value="#{ubicacion.ciudad}" />
+                        </p:column>
+                        <p:column headerText="Oficina">
+                            <h:outputText value="#{ubicacion.oficina}" />
+                        </p:column>
                         <f:facet name="footer">
-                            <p:commandButton value="Guardar" id="guardar" oncomplete="handleLoginRequest(xhr, status, args, 'popupmodificar' )" update="modificarGrid :form:singleDT" action="#{ubicacionesMainBean.actualizarUbicacion()}"/>
+                            <p:commandButton value="Ingresar" partialSubmit="true" update=":formingresar:popupingresar" oncomplete="PF('popupingresar').show();"  action="#{ubicacionesMainBean.inicializarUbicacion()}"/>
+                            <p:commandButton value="Modificar"  process="singleDT" update=":formmodificar:popupmodificar" oncomplete="PF('popupmodificar').show();"/>
+                            <p:commandButton value="Borrar" process="singleDT" update=":popupborrar" oncomplete="PF('popupborrar').show();" />
                         </f:facet>
-                    </h:panelGrid>
+                    </p:dataTable>
+                </h:form>
+
+                <!--BONTON INGRESAR UBICACION-->
+                <h:form id="formingresar">
+                    <p:dialog header="Ingresar Ubicacion" widgetVar="popupingresar" modal="true" position="top"
+                              id="popupingresar">
+
+
+                        <h:panelGrid id="ingresarGrid"  columns="3" cellpadding="5">
+
+                            <f:facet name="header">
+                                <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
+                            </f:facet>
+
+                            <p:outputLabel for="estado" value="Estado: " />
+                            <p:inputText id="estado" validatorMessage="El campo Estado  solo puede contener letras" binding="#{ubicacionesMainBean.estado}" required="true" label="estado" value="#{ubicacionesMainBean.ubicacionNuevo.estado}" >
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]+$"/>
+                            </p:inputText>
+                            <p:message for="estado" display="icon" />
+
+                            <p:outputLabel for="ciudad" value="Ciudad: " />
+                            <p:inputText id="ciudad" validatorMessage="El campo Ciudad solo puede contener letras" binding="#{ubicacionesMainBean.ciudad}" required="true" label="ciudad" value="#{ubicacionesMainBean.ubicacionNuevo.ciudad}" >
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]+$"/>
+                            </p:inputText>
+                            <p:message for="ciudad" display="icon" />
+
+                            <p:outputLabel for="oficina" value="Oficina: " />
+                            <p:inputText id="oficina" validatorMessage="El campo Oficina solo puede contener letras o se esta duplicando el campo Oficina" validator="#{ubicacionesMainBean.validarOficina}" required="true" label="oficina" value="#{ubicacionesMainBean.ubicacionNuevo.oficina}" >
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]*$"/>
+                            </p:inputText>
+                            <p:message for="oficina" display="icon" />
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Guardar"  id="guardar1" update="ingresarGrid :form:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'popupingresar' )"  action="#{ubicacionesMainBean.insertarUbicacion()}"/>
+                            </f:facet>
+                        </h:panelGrid>
+
+
+                    </p:dialog>
+                </h:form>
+
+
+                <!-- BOTON MODIFICAR UBICACION-->
+                <!-- <p:commandButton value="Modificar" type="button" onclick="PF('popupmodificar').show();" /> -->
+
+                <h:form id="formmodificar">
+                    <p:dialog header="Modificar Ubicacion" widgetVar="popupmodificar" id="popupmodificar" modal="true" position="top">
+
+                        <h:panelGrid id="modificarGrid"  columns="3" cellpadding="5">
+
+                            <f:facet name="header">
+                                <p:messages id="msgsmodificar" style="font-size: 12px; text-align: left;"/>
+                            </f:facet>
+
+                            <p:outputLabel for="estado1" value="Estado: " />
+                            <p:inputText id="estado1" required="true" validatorMessage="El campo Estado  solo puede contener letras" label="estado1" value="#{ubicacionesMainBean.ubicacionSelecionado.estado}">
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]+$"/>
+                            </p:inputText>
+                            <p:message for="estado1" display="icon" />
+
+                            <p:outputLabel for="ciudad1" value=" Ciudad: " />
+                            <p:inputText id="ciudad1" required="true" validatorMessage="El campo Apellido Materno solo puede contener letras" label="ciudad1" value="#{ubicacionesMainBean.ubicacionSelecionado.ciudad}">
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]+$"/>
+                            </p:inputText>
+                            <p:message for="ciudad1" display="icon" />
+
+                            <p:outputLabel for="oficina1" value="Oficina" />
+                            <p:inputText id="oficina1" validatorMessage="El campo Oficina solo puede contener letras o se esta duplicando el campo Oficina" validator="#{ubicacionesMainBean.validarModificarOficina}" required="true" label="oficina1" value="#{ubicacionesMainBean.ubicacionSelecionado.oficina}">
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]+$"/>
+                            </p:inputText>
+                            <p:message for="oficina1" display="icon" />
+
+                            <p:outputLabel for="estatus" value="Estatus:" />
+                            <p:inputText id="estatus" validatorMessage="El campo Estatus solo puede contener letras" required="true" label="estatus" value="#{ubicacionesMainBean.ubicacionSelecionado.estatus}">
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]+$"/>
+                            </p:inputText>
+                            <p:message for="estatus" display="icon" />
+
+
+
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Guardar" id="guardar" oncomplete="handleLoginRequest(xhr, status, args, 'popupmodificar' )" update="modificarGrid :form:singleDT" action="#{ubicacionesMainBean.actualizarUbicacion()}"/>
+                            </f:facet>
+                        </h:panelGrid>
+
+                    </p:dialog>
+                </h:form>
+
+
+                <!--BOTON ELIMINAR UBICACION-->
+
+                <p:dialog header="Borrar Ubicacion" widgetVar="popupborrar" modal="true" id="popupborrar">
+                    <h:form>
+                        <h:panelGrid   columns="4" cellpadding="5">
+                            <h:outputText value="Esta seguro?" /> 
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Si" id="si" partialSubmit="true" ajax="false" action="#{ubicacionesMainBean.borrarUbicacion()}"/>
+                                <p:commandButton value="No" id="no"  ajax="false" />
+                            </f:facet>
+                        </h:panelGrid>
+                    </h:form>
 
                 </p:dialog>
-            </h:form>
-            
-            
-             <!--BOTON ELIMINAR UBICACION-->
 
-        <p:dialog header="Borrar Ubicacion" widgetVar="popupborrar" modal="true" id="popupborrar">
-            <h:form>
-                <h:panelGrid   columns="4" cellpadding="5">
-                    <h:outputText value="Esta seguro?" /> 
 
-                    <f:facet name="footer">
-                        <p:commandButton value="Si" id="si" partialSubmit="true" ajax="false" action="#{ubicacionesMainBean.borrarUbicacion()}"/>
-                        <p:commandButton value="No" id="no"  ajax="false" />
-                    </f:facet>
-                </h:panelGrid>
-            </h:form>
+                <script type="text/javascript">
+                    function handleLoginRequest(xhr, status, args, popupname) {
+                        if (args.validationFailed) {
+                            PF(popupname).jq.effect("shake", {times: 5}, 100);
+                        }
+                        else {
+                            PF(popupname).hide();
+                            $('#loginLink').fadeOut();
+                        }
+                    }
+                </script>
 
-        </p:dialog>
-         
-         
-         <script type="text/javascript">
-            function handleLoginRequest(xhr, status, args, popupname) {
-            if(args.validationFailed ) {
-            PF(popupname).jq.effect("shake", {times:5}, 100);
-            }
-            else {
-            PF(popupname).hide();
-            $('#loginLink').fadeOut();
-            }
-            }
-        </script>
-        
-        
-    </ui:define>
 
-</ui:composition>
+            </ui:define>
+
+        </ui:composition>
+    </body>
+</html>

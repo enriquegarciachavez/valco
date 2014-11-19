@@ -1,243 +1,245 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../clientes/Template1.xhtml"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <ui:composition template="./../clientes/Template1.xhtml">
+            <ui:define name="content">
+                <h:form id="form">
+                    <p:dataTable id="singleDT" var="proveedor" value="#{proveedoresMainBean.modeloProveedores}" selectionMode="single" selection="#{proveedoresMainBean.proveedorSeleccionado}" rowKey="#{proveedor.codigo}">
+                        <f:facet name="header">
+                            Proveedores
+                        </f:facet>
+                        <p:column headerText="Razón Social">
+                            <h:outputText value="#{proveedor.razonSocial}" />
+                        </p:column>
+                        <p:column headerText="Apellido Paterno">
+                            <h:outputText value="#{proveedor.apellidoPaterno}" />
+                        </p:column>
+                        <p:column headerText="Apellido Materno">
+                            <h:outputText value="#{proveedor.apellidoMaterno}" />
+                        </p:column>
+                        <p:column headerText="Nombres">
+                            <h:outputText value="#{proveedor.nombres}" />
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton value="Ingresar" partialSubmit="true" update=":formingresar:popupingresar" oncomplete="PF('popupingresar').show();"  action="#{proveedoresMainBean.inicializarProveedor()}"/>
+                            <p:commandButton value="Modificar"  process="singleDT" update=":formmodificar:popupmodificar" oncomplete="PF('popupmodificar').show();"/>
+                            <p:commandButton value="Borrar" process="singleDT" update=":popupborrar" oncomplete="PF('popupborrar').show();" />
+                        </f:facet>
+                    </p:dataTable>
+                </h:form>
 
 
-    <ui:define name="content">
-        <h:form id="form">
-            <p:dataTable id="singleDT" var="proveedor" value="#{proveedoresMainBean.modeloProveedores}" selectionMode="single" selection="#{proveedoresMainBean.proveedorSeleccionado}" rowKey="#{proveedor.codigo}">
-                <f:facet name="header">
-                    Proveedores
-                </f:facet>
-                <p:column headerText="Razón Social">
-                    <h:outputText value="#{proveedor.razonSocial}" />
-                </p:column>
-                <p:column headerText="Apellido Paterno">
-                    <h:outputText value="#{proveedor.apellidoPaterno}" />
-                </p:column>
-                <p:column headerText="Apellido Materno">
-                    <h:outputText value="#{proveedor.apellidoMaterno}" />
-                </p:column>
-                <p:column headerText="Nombres">
-                    <h:outputText value="#{proveedor.nombres}" />
-                </p:column>
-                <f:facet name="footer">
-                    <p:commandButton value="Ingresar" partialSubmit="true" update=":formingresar:popupingresar" oncomplete="PF('popupingresar').show();"  action="#{proveedoresMainBean.inicializarProveedor()}"/>
-                    <p:commandButton value="Modificar"  process="singleDT" update=":formmodificar:popupmodificar" oncomplete="PF('popupmodificar').show();"/>
-                    <p:commandButton value="Borrar" process="singleDT" update=":popupborrar" oncomplete="PF('popupborrar').show();" />
-                </f:facet>
-            </p:dataTable>
-        </h:form>
+                <!-- BOTON INGRESAR PROVEEDORES-->
+                <!-- <p:commandButton value="Ingresar" type="button" onclick="PF('popupingresar').show();" /> -->
+                <h:form id="formingresar">
+                    <p:dialog header="Ingresar Proveedor" widgetVar="popupingresar" modal="true" position="top"
+                              id="popupingresar">
 
 
-        <!-- BOTON INGRESAR PROVEEDORES-->
-        <!-- <p:commandButton value="Ingresar" type="button" onclick="PF('popupingresar').show();" /> -->
-        <h:form id="formingresar">
-            <p:dialog header="Ingresar Proveedor" widgetVar="popupingresar" modal="true" position="top"
-                      id="popupingresar">
+                        <h:panelGrid id="ingresarGrid"  columns="6" cellpadding="5">
+
+                            <f:facet name="header">
+                                <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
+                            </f:facet>
+
+                            <p:outputLabel for="razon" value="Razón Social: " />
+                            <p:inputText id="razon" validator="#{proveedoresMainBean.validarRazonSocial}" required="true" label="razon" value="#{proveedoresMainBean.proveedorNuevo.razonSocial}" />
+                            <p:message for="razon" display="icon" />
+
+                            <p:outputLabel for="paterno" value="Apellido Paterno: " />
+                            <p:inputText id="paterno" validatorMessage="El campo apellido paterno solo puede contener letras" binding="#{proveedoresMainBean.apellidoPaterno}" required="true" label="paterno" value="#{proveedoresMainBean.proveedorNuevo.apellidoPaterno}">
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]+$"/>
+                            </p:inputText>
+                            <p:message for="paterno" display="icon" />
+
+                            <p:outputLabel for="materno" value="Apellido Materno: " />
+                            <p:inputText id="materno" validatorMessage="El campo apellido materno solo puede contener letras" binding="#{proveedoresMainBean.apellidoMaterno}"  required="false" label="materno" value="#{proveedoresMainBean.proveedorNuevo.apellidoMaterno}">
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]*$"/>
+                            </p:inputText>
+                            <p:message for="materno" display="icon" />
+
+                            <p:outputLabel for="nombre" value="Nombres: " />
+                            <p:inputText id="nombre" validatorMessage="El campo nombre solo puede contener letras" binding="#{proveedoresMainBean.nombres}" required="true" label="nombre" value="#{proveedoresMainBean.proveedorNuevo.nombres}">
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]+$"/>
+                            </p:inputText>
+                            <p:message for="nombre" display="icon" />
+
+                            <p:outputLabel for="direccion" value="Dirección" />
+                            <p:inputText id="direccion" binding="#{proveedoresMainBean.direccion}" required="true" label="direccion" value="#{proveedoresMainBean.proveedorNuevo.direccion}"/>
+                            <p:message for="direccion" display="icon" />
+
+                            <p:outputLabel for="postal" value="Código Postal" />
+                            <p:inputText id="postal" binding="#{proveedoresMainBean.codigoPostal}" required="false" label="postal" value="#{proveedoresMainBean.proveedorNuevo.codigoPostal}"/>
+                            <p:message for="postal" display="icon" />
+
+                            <p:outputLabel for="ciudad" value="Ciudad" />
+                            <p:inputText id="ciudad" binding="#{proveedoresMainBean.ciudad}" required="true" label="ciudad" value="#{proveedoresMainBean.proveedorNuevo.ciudad}"/>
+                            <p:message for="ciudad" display="icon" />
+
+                            <p:outputLabel for="estado" value="Estado" />
+                            <p:inputText id="estado" binding="#{proveedoresMainBean.estado}"  required="true" label="estado" value="#{proveedoresMainBean.proveedorNuevo.estado}"/>
+                            <p:message for="estado" display="icon" />
+
+                            <p:outputLabel for="rfc" value="RFC" />
+                            <p:inputText id="rfc" binding="#{proveedoresMainBean.rfc}" required="false" label="rfc" value="#{proveedoresMainBean.proveedorNuevo.rfc}"/>
+                            <p:message for="rfc" display="icon" />
+
+                            <p:outputLabel for="posicionpesoinicial" value="Posicion peso inicial" />
+                            <p:inputText id="posicionpesoinicial" binding="#{proveedoresMainBean.posicionPesoInicial}" required="true" label="posicionpesoinicial" value="#{proveedoresMainBean.proveedorNuevo.posicionPesoInicial}"/>
+                            <p:message for="posicionpesoinicial" display="icon" />
+
+                            <p:outputLabel for="posicionpesofinal" value="Posicion peso final" />
+                            <p:inputText id="posicionpesofinal" binding="#{proveedoresMainBean.posicionPesoFinal}" required="true" label="posicionpesofinal" value="#{proveedoresMainBean.proveedorNuevo.posicionPesoFinal}"/>
+                            <p:message for="posicionpesofinal" display="icon" />
+
+                            <p:outputLabel for="posicioncodigofinal" value="Posicion codigo final" />
+                            <p:inputText id="posicioncodigofinal" binding="#{proveedoresMainBean.posicionCodigoFinal}" required="true" label="posicioncodigofinal" value="#{proveedoresMainBean.proveedorNuevo.posicionCodigoFinal}"/>
+                            <p:message for="posicioncodigofinal" display="icon" />
+
+                            <p:outputLabel for="posicioncodigoinicial" value="Posicion codigo inicial" />
+                            <p:inputText id="posicioncodigoinicial" binding="#{proveedoresMainBean.posicionCodigoInicial}" required="true" label="posicioncodigoinicial" value="#{proveedoresMainBean.proveedorNuevo.posicionCodigoInicial}"/>
+                            <p:message for="posicioncodigoinicial" display="icon" />
+
+                            <f:facet name="footer">
+
+                                <p:commandButton value="Guardar"  id="guardar1" update="ingresarGrid :form:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'popupingresar' )"  action="#{proveedoresMainBean.insertarProveedor()}" />
+
+                            </f:facet>
+                        </h:panelGrid>
 
 
-                <h:panelGrid id="ingresarGrid"  columns="6" cellpadding="5">
-
-                    <f:facet name="header">
-                        <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
-                    </f:facet>
-
-                    <p:outputLabel for="razon" value="Razón Social: " />
-                    <p:inputText id="razon" validator="#{proveedoresMainBean.validarRazonSocial}" required="true" label="razon" value="#{proveedoresMainBean.proveedorNuevo.razonSocial}" />
-                    <p:message for="razon" display="icon" />
-
-                    <p:outputLabel for="paterno" value="Apellido Paterno: " />
-                    <p:inputText id="paterno" validatorMessage="El campo apellido paterno solo puede contener letras" binding="#{proveedoresMainBean.apellidoPaterno}" required="true" label="paterno" value="#{proveedoresMainBean.proveedorNuevo.apellidoPaterno}">
-                        <f:validateRegex
-                            pattern="^[A-Za-z\s]+$"/>
-                    </p:inputText>
-                    <p:message for="paterno" display="icon" />
-
-                    <p:outputLabel for="materno" value="Apellido Materno: " />
-                    <p:inputText id="materno" validatorMessage="El campo apellido materno solo puede contener letras" binding="#{proveedoresMainBean.apellidoMaterno}"  required="false" label="materno" value="#{proveedoresMainBean.proveedorNuevo.apellidoMaterno}">
-                        <f:validateRegex
-                            pattern="^[A-Za-z\s]*$"/>
-                    </p:inputText>
-                    <p:message for="materno" display="icon" />
-
-                    <p:outputLabel for="nombre" value="Nombres: " />
-                    <p:inputText id="nombre" validatorMessage="El campo nombre solo puede contener letras" binding="#{proveedoresMainBean.nombres}" required="true" label="nombre" value="#{proveedoresMainBean.proveedorNuevo.nombres}">
-                        <f:validateRegex
-                            pattern="^[A-Za-z\s]+$"/>
-                    </p:inputText>
-                    <p:message for="nombre" display="icon" />
-
-                    <p:outputLabel for="direccion" value="Dirección" />
-                    <p:inputText id="direccion" binding="#{proveedoresMainBean.direccion}" required="true" label="direccion" value="#{proveedoresMainBean.proveedorNuevo.direccion}"/>
-                    <p:message for="direccion" display="icon" />
-
-                    <p:outputLabel for="postal" value="Código Postal" />
-                    <p:inputText id="postal" binding="#{proveedoresMainBean.codigoPostal}" required="false" label="postal" value="#{proveedoresMainBean.proveedorNuevo.codigoPostal}"/>
-                    <p:message for="postal" display="icon" />
-
-                    <p:outputLabel for="ciudad" value="Ciudad" />
-                    <p:inputText id="ciudad" binding="#{proveedoresMainBean.ciudad}" required="true" label="ciudad" value="#{proveedoresMainBean.proveedorNuevo.ciudad}"/>
-                    <p:message for="ciudad" display="icon" />
-
-                    <p:outputLabel for="estado" value="Estado" />
-                    <p:inputText id="estado" binding="#{proveedoresMainBean.estado}"  required="true" label="estado" value="#{proveedoresMainBean.proveedorNuevo.estado}"/>
-                    <p:message for="estado" display="icon" />
-
-                    <p:outputLabel for="rfc" value="RFC" />
-                    <p:inputText id="rfc" binding="#{proveedoresMainBean.rfc}" required="false" label="rfc" value="#{proveedoresMainBean.proveedorNuevo.rfc}"/>
-                    <p:message for="rfc" display="icon" />
-
-                    <p:outputLabel for="posicionpesoinicial" value="Posicion peso inicial" />
-                    <p:inputText id="posicionpesoinicial" binding="#{proveedoresMainBean.posicionPesoInicial}" required="true" label="posicionpesoinicial" value="#{proveedoresMainBean.proveedorNuevo.posicionPesoInicial}"/>
-                    <p:message for="posicionpesoinicial" display="icon" />
-
-                    <p:outputLabel for="posicionpesofinal" value="Posicion peso final" />
-                    <p:inputText id="posicionpesofinal" binding="#{proveedoresMainBean.posicionPesoFinal}" required="true" label="posicionpesofinal" value="#{proveedoresMainBean.proveedorNuevo.posicionPesoFinal}"/>
-                    <p:message for="posicionpesofinal" display="icon" />
-
-                    <p:outputLabel for="posicioncodigofinal" value="Posicion codigo final" />
-                    <p:inputText id="posicioncodigofinal" binding="#{proveedoresMainBean.posicionCodigoFinal}" required="true" label="posicioncodigofinal" value="#{proveedoresMainBean.proveedorNuevo.posicionCodigoFinal}"/>
-                    <p:message for="posicioncodigofinal" display="icon" />
-
-                    <p:outputLabel for="posicioncodigoinicial" value="Posicion codigo inicial" />
-                    <p:inputText id="posicioncodigoinicial" binding="#{proveedoresMainBean.posicionCodigoInicial}" required="true" label="posicioncodigoinicial" value="#{proveedoresMainBean.proveedorNuevo.posicionCodigoInicial}"/>
-                    <p:message for="posicioncodigoinicial" display="icon" />
-
-                    <f:facet name="footer">
-
-                        <p:commandButton value="Guardar"  id="guardar1" update="ingresarGrid :form:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'popupingresar' )"  action="#{proveedoresMainBean.insertarProveedor()}" />
-
-                    </f:facet>
-                </h:panelGrid>
-
-
-            </p:dialog>
-        </h:form>
-
-
-
-
-        <!-- BOTON MODIFICAR PROVEEDORES-->
-        <!-- <p:commandButton value="Modificar" type="button" onclick="PF('popupmodificar').show();" />--> 
-
-        <h:form id="formmodificar">
-            <p:dialog header="Modificar Preoveedor" widgetVar="popupmodificar" id="popupmodificar" modal="true" position="top">
-
-                <h:panelGrid id="modificarGrid"  columns="6" cellpadding="5">
-
-                    <f:facet name="header">
-                        <p:messages id="msgsmodificar" style="font-size: 12px; text-align: left;"/>
-                    </f:facet>
-
-                    <p:outputLabel for="razon2" value="Razón Social: " />
-                    <p:inputText id="razon2" validator="#{proveedoresMainBean.validarModificarRazonSocial}" required="true" label="razon" value="#{proveedoresMainBean.proveedorSeleccionado.razonSocial}" />
-                    <p:message for="razon2" display="icon" />
-
-                    <p:outputLabel for="paterno2" value="Apellido Paterno: " />
-                    <p:inputText id="paterno2" required="true" validatorMessage="El campo apellido paterno solo puede contener letras" label="paterno" value="#{proveedoresMainBean.proveedorSeleccionado.apellidoPaterno}">
-                        <f:validateRegex
-                            pattern="^[A-Za-z\s]+$"/>
-                    </p:inputText>
-                    <p:message for="paterno2" display="icon" />
-
-                    <p:outputLabel for="materno2" value="Apellido Materno: " />
-                    <p:inputText id="materno2" validatorMessage="El campo apellido materno solo puede contener letras" required="false" label="materno" value="#{proveedoresMainBean.proveedorSeleccionado.apellidoMaterno}">
-                        <f:validateRegex
-                            pattern="^[A-Za-z\s]*$"/>
-                    </p:inputText>
-                    <p:message for="materno2" display="icon" />
-
-                    <p:outputLabel for="nombre2" value="Nombres: " style="text-align: right"/>
-                    <p:inputText id="nombre2" validatorMessage="El campo nombres solo puede contener letras" required="true" label="nombre" value="#{proveedoresMainBean.proveedorSeleccionado.nombres}">
-                        <f:validateRegex
-                            pattern="^[A-Za-z\s]+$"/>
-                    </p:inputText>
-                    <p:message for="nombre2" display="icon" />
-
-                    <p:outputLabel for="direccion2" value="Dirección" />
-                    <p:inputText id="direccion2" required="true" label="direccion" value="#{proveedoresMainBean.proveedorSeleccionado.direccion}"/>
-                    <p:message for="direccion2" display="icon" />
-
-                    <p:outputLabel for="postal2" value="Código Postal" />
-                    <p:inputText id="postal2" required="false" label="postal" value="#{proveedoresMainBean.proveedorSeleccionado.codigoPostal}" />
-                    <p:message for="postal2" display="icon" />
-
-                    <p:outputLabel for="ciudad2" value="Ciudad" />
-                    <p:inputText id="ciudad2" required="true" label="ciudad" value="#{proveedoresMainBean.proveedorSeleccionado.ciudad}"/>
-                    <p:message for="ciudad2" display="icon" />
-
-                    <p:outputLabel for="estado2" value="Estado" />
-                    <p:inputText id="estado2" required="true" label="estado" value="#{proveedoresMainBean.proveedorSeleccionado.estado}"/>
-                    <p:message for="estado2" display="icon" />
-
-                    <p:outputLabel for="rfc2" value="RFC" />
-                    <p:inputText id="rfc2" required="false" label="rfc" value="#{proveedoresMainBean.proveedorSeleccionado.rfc}"/>
-                    <p:message for="rfc2" display="icon" />
-
-                    <p:outputLabel for="estatus2" value="Estatus" />
-                    <p:inputText id="estatus2" required="true" label="estatus" value="#{proveedoresMainBean.proveedorSeleccionado.estatus}"/>
-                    <p:message for="estatus2" display="icon" />
-
-                    <p:outputLabel for="posicionpesoinicial2" value="Posicion peso inicial" />
-                    <p:inputText id="posicionpesoinicial2" required="true" label="posicionpesoinicia" value="#{proveedoresMainBean.proveedorSeleccionado.posicionPesoInicial}"/>
-                    <p:message for="posicionpesoinicial2" display="icon" />
-
-                    <p:outputLabel for="posicionpesofinal2" value="Posicion peso final" />
-                    <p:inputText id="posicionpesofinal2" required="true" label="posicionpesofinal" value="#{proveedoresMainBean.proveedorSeleccionado.posicionPesoFinal}"/>
-                    <p:message for="posicionpesofinal2" display="icon" />
-
-                    <p:outputLabel for="posicioncodigofinal2" value="Posicion codigo final" />
-                    <p:inputText id="posicioncodigofinal2" required="true" label="posicioncodigofinal" value="#{proveedoresMainBean.proveedorSeleccionado.posicionCodigoFinal}"/>
-                    <p:message for="posicioncodigofinal2" display="icon" />
-
-                    <p:outputLabel for="posicioncodigoinicial2" value="Posicion codigo inicial" />
-                    <p:inputText id="posicioncodigoinicial2" required="true" label="posicioncodigoinicial" value="#{proveedoresMainBean.proveedorSeleccionado.posicionCodigoInicial}"/>
-                    <p:message for="posicioncodigoinicial2" display="icon" />
-
-                    <f:facet name="footer">
-                        <p:commandButton value="Guardar" id="guardar" oncomplete="handleLoginRequest(xhr, status, args, 'popupmodificar' )" update="modificarGrid :form:singleDT" action="#{proveedoresMainBean.actualizarProveedor()}"/>
-                    </f:facet>
-                </h:panelGrid>
-
-            </p:dialog>
-        </h:form>
+                    </p:dialog>
+                </h:form>
 
 
 
 
-        <!--BOTON ELIMINAR PROVEEDORES-->
+                <!-- BOTON MODIFICAR PROVEEDORES-->
+                <!-- <p:commandButton value="Modificar" type="button" onclick="PF('popupmodificar').show();" />--> 
 
-        <p:dialog header="Borrar Preoveedor" widgetVar="popupborrar" modal="true" id="popupborrar">
-            <h:form>
-                <h:panelGrid   columns="4" cellpadding="5">
-                    <h:outputText value="Esta seguro?" /> 
+                <h:form id="formmodificar">
+                    <p:dialog header="Modificar Preoveedor" widgetVar="popupmodificar" id="popupmodificar" modal="true" position="top">
 
-                    <f:facet name="footer">
-                        <p:commandButton value="Si" id="si" partialSubmit="true" ajax="false" action="#{proveedoresMainBean.borrarProveedor()}"/>
-                        <p:commandButton value="No" id="no"  ajax="false" />
-                    </f:facet>
-                </h:panelGrid>
-            </h:form>
+                        <h:panelGrid id="modificarGrid"  columns="6" cellpadding="5">
 
-        </p:dialog>
+                            <f:facet name="header">
+                                <p:messages id="msgsmodificar" style="font-size: 12px; text-align: left;"/>
+                            </f:facet>
 
-        <script type="text/javascript">
-            function handleLoginRequest(xhr, status, args, popupname) {
-            if(args.validationFailed ) {
-            PF(popupname).jq.effect("shake", {times:5}, 100);
-            }
-            else {
-            PF(popupname).hide();
-            $('#loginLink').fadeOut();
-            }
-            }
-        </script>
-    </ui:define>
+                            <p:outputLabel for="razon2" value="Razón Social: " />
+                            <p:inputText id="razon2" validator="#{proveedoresMainBean.validarModificarRazonSocial}" required="true" label="razon" value="#{proveedoresMainBean.proveedorSeleccionado.razonSocial}" />
+                            <p:message for="razon2" display="icon" />
 
-</ui:composition>
+                            <p:outputLabel for="paterno2" value="Apellido Paterno: " />
+                            <p:inputText id="paterno2" required="true" validatorMessage="El campo apellido paterno solo puede contener letras" label="paterno" value="#{proveedoresMainBean.proveedorSeleccionado.apellidoPaterno}">
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]+$"/>
+                            </p:inputText>
+                            <p:message for="paterno2" display="icon" />
+
+                            <p:outputLabel for="materno2" value="Apellido Materno: " />
+                            <p:inputText id="materno2" validatorMessage="El campo apellido materno solo puede contener letras" required="false" label="materno" value="#{proveedoresMainBean.proveedorSeleccionado.apellidoMaterno}">
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]*$"/>
+                            </p:inputText>
+                            <p:message for="materno2" display="icon" />
+
+                            <p:outputLabel for="nombre2" value="Nombres: " style="text-align: right"/>
+                            <p:inputText id="nombre2" validatorMessage="El campo nombres solo puede contener letras" required="true" label="nombre" value="#{proveedoresMainBean.proveedorSeleccionado.nombres}">
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]+$"/>
+                            </p:inputText>
+                            <p:message for="nombre2" display="icon" />
+
+                            <p:outputLabel for="direccion2" value="Dirección" />
+                            <p:inputText id="direccion2" required="true" label="direccion" value="#{proveedoresMainBean.proveedorSeleccionado.direccion}"/>
+                            <p:message for="direccion2" display="icon" />
+
+                            <p:outputLabel for="postal2" value="Código Postal" />
+                            <p:inputText id="postal2" required="false" label="postal" value="#{proveedoresMainBean.proveedorSeleccionado.codigoPostal}" />
+                            <p:message for="postal2" display="icon" />
+
+                            <p:outputLabel for="ciudad2" value="Ciudad" />
+                            <p:inputText id="ciudad2" required="true" label="ciudad" value="#{proveedoresMainBean.proveedorSeleccionado.ciudad}"/>
+                            <p:message for="ciudad2" display="icon" />
+
+                            <p:outputLabel for="estado2" value="Estado" />
+                            <p:inputText id="estado2" required="true" label="estado" value="#{proveedoresMainBean.proveedorSeleccionado.estado}"/>
+                            <p:message for="estado2" display="icon" />
+
+                            <p:outputLabel for="rfc2" value="RFC" />
+                            <p:inputText id="rfc2" required="false" label="rfc" value="#{proveedoresMainBean.proveedorSeleccionado.rfc}"/>
+                            <p:message for="rfc2" display="icon" />
+
+                            <p:outputLabel for="estatus2" value="Estatus" />
+                            <p:inputText id="estatus2" required="true" label="estatus" value="#{proveedoresMainBean.proveedorSeleccionado.estatus}"/>
+                            <p:message for="estatus2" display="icon" />
+
+                            <p:outputLabel for="posicionpesoinicial2" value="Posicion peso inicial" />
+                            <p:inputText id="posicionpesoinicial2" required="true" label="posicionpesoinicia" value="#{proveedoresMainBean.proveedorSeleccionado.posicionPesoInicial}"/>
+                            <p:message for="posicionpesoinicial2" display="icon" />
+
+                            <p:outputLabel for="posicionpesofinal2" value="Posicion peso final" />
+                            <p:inputText id="posicionpesofinal2" required="true" label="posicionpesofinal" value="#{proveedoresMainBean.proveedorSeleccionado.posicionPesoFinal}"/>
+                            <p:message for="posicionpesofinal2" display="icon" />
+
+                            <p:outputLabel for="posicioncodigofinal2" value="Posicion codigo final" />
+                            <p:inputText id="posicioncodigofinal2" required="true" label="posicioncodigofinal" value="#{proveedoresMainBean.proveedorSeleccionado.posicionCodigoFinal}"/>
+                            <p:message for="posicioncodigofinal2" display="icon" />
+
+                            <p:outputLabel for="posicioncodigoinicial2" value="Posicion codigo inicial" />
+                            <p:inputText id="posicioncodigoinicial2" required="true" label="posicioncodigoinicial" value="#{proveedoresMainBean.proveedorSeleccionado.posicionCodigoInicial}"/>
+                            <p:message for="posicioncodigoinicial2" display="icon" />
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Guardar" id="guardar" oncomplete="handleLoginRequest(xhr, status, args, 'popupmodificar' )" update="modificarGrid :form:singleDT" action="#{proveedoresMainBean.actualizarProveedor()}"/>
+                            </f:facet>
+                        </h:panelGrid>
+
+                    </p:dialog>
+                </h:form>
+
+
+
+
+                <!--BOTON ELIMINAR PROVEEDORES-->
+
+                <p:dialog header="Borrar Preoveedor" widgetVar="popupborrar" modal="true" id="popupborrar">
+                    <h:form>
+                        <h:panelGrid   columns="4" cellpadding="5">
+                            <h:outputText value="Esta seguro?" /> 
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Si" id="si" partialSubmit="true" ajax="false" action="#{proveedoresMainBean.borrarProveedor()}"/>
+                                <p:commandButton value="No" id="no"  ajax="false" />
+                            </f:facet>
+                        </h:panelGrid>
+                    </h:form>
+
+                </p:dialog>
+
+                <script type="text/javascript">
+                    function handleLoginRequest(xhr, status, args, popupname) {
+                        if(args.validationFailed ) {
+                            PF(popupname).jq.effect("shake", {times:5}, 100);
+                    }
+                    el se {
+                        PF(popupname).hide();
+                            $('#loginLink').fadeOut();
+                    }
+                    }
+                </script>
+            </ui:define>
+
+        </ui:composition>
+    </body>
+</html>

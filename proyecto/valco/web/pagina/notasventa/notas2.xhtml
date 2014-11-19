@@ -10,8 +10,8 @@
 
         <ui:composition template="./../clientes/Template1.xhtml">
 
-    <ui:define name="content">
-        <h:form id="tableForm">
+            <ui:define name="content">
+                <h:form id="tableForm">
             <p:menubar>
                 <p:menuitem value="Nuevo" icon="ui-icon-document" onclick="PF('dlg2').show();" partialSubmit="true"/>
                 <p:menuitem value="Modificar" icon="ui-icon-document" action="#{notasDeVentaMainBean.obtenerProductosModificacio()}" update=":formModificar:dlgModificar" process="singleDT" oncomplete="PF('dlgModificar').show();" partialSubmit="true" />
@@ -285,8 +285,9 @@
         }
     }
             </script>
-    </ui:define>
+            </ui:define>
 
-</ui:composition>
- </body>
+        </ui:composition>
+
+    </body>
 </html>

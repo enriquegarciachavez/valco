@@ -1,58 +1,57 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../clientes/Template1.xhtml"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns="http://www.w3.org/1999/xhtml"
-                >
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-    <ui:define name="content">
-        content
-        <h:form id="form">
-            <p:dataTable id="singleDT" var="productos" value="#{productoMainBean.modeloProducto}" selectionMode="single" selection="#{productoMainBean.productoSeleccionado}" rowKey="#{productos.codigo}">
-                <f:facet name="header">
-                    Productos
-                </f:facet>
-                <p:column headerText="Producto">
-                    <h:outputText value="#{productos.descripcion}" />
-                </p:column>
-                <p:column headerText="Tipo Producto">
-                    <h:outputText value="#{productos.tipoProducto.descripcion}" />
-                </p:column>
-                <p:column headerText="Unidades de Medida">
-                    <h:outputText value="#{productos.unidadesDeMedida.descripcion}" />
-                </p:column>
-                <f:facet name="footer">
-                    <p:commandButton value="Ingresar" partialSubmit="true" update=":formingresar:popupingresar" oncomplete="PF('popupingresar').show();"  action="#{productoMainBean.inicializarProducto()}"/>
-                    <p:commandButton value="Modificar"  process="singleDT" update=":formmodificar:popupmodificar" oncomplete="PF('popupmodificar').show();"/>
-                    <p:commandButton value="Borrar" process="singleDT" update=":popupborrar" oncomplete="PF('popupborrar').show();" />
-                </f:facet>
-            </p:dataTable>
-        </h:form>
-
-        <!-- BOTON INGRESAR PRODUCTO-->
-       
-        <h:form id="formingresar">
-            <p:dialog header="Ingresar Producto" widgetVar="popupingresar" modal="true" position="top"
-                      id="popupingresar">
-
-
-                <h:panelGrid id="ingresarGrid"  columns="3" cellpadding="5">
-
+    <body>
+        <ui:composition template="./../clientes/Template1.xhtml">
+        <ui:define name="content">
+            <h:form id="form">
+                <p:dataTable id="singleDT" var="productos" value="#{productoMainBean.modeloProducto}" selectionMode="single" selection="#{productoMainBean.productoSeleccionado}" rowKey="#{productos.codigo}">
                     <f:facet name="header">
-                        <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
+                        Productos
                     </f:facet>
+                    <p:column headerText="Producto">
+                        <h:outputText value="#{productos.descripcion}" />
+                    </p:column>
+                    <p:column headerText="Tipo Producto">
+                        <h:outputText value="#{productos.tipoProducto.descripcion}" />
+                    </p:column>
+                    <p:column headerText="Unidades de Medida">
+                        <h:outputText value="#{productos.unidadesDeMedida.descripcion}" />
+                    </p:column>
+                    <f:facet name="footer">
+                        <p:commandButton value="Ingresar" partialSubmit="true" update=":formingresar:popupingresar" oncomplete="PF('popupingresar').show();"  action="#{productoMainBean.inicializarProducto()}"/>
+                        <p:commandButton value="Modificar"  process="singleDT" update=":formmodificar:popupmodificar" oncomplete="PF('popupmodificar').show();"/>
+                        <p:commandButton value="Borrar" process="singleDT" update=":popupborrar" oncomplete="PF('popupborrar').show();" />
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
 
-                    <p:outputLabel for="descripcion" value="Ingresar Producto: " />
-                    <p:inputText id="descripcion" validatorMessage="El campo ingresar producto solo puede contener letras o se esta duplicando el nombre de un producto" validator="#{productoMainBean.validarDescripcion}" required="true" label="descripcion" value="#{productoMainBean.productoNuevo.descripcion}" >
-                        <f:validateRegex
-                            pattern="^[A-Za-z\s]+$"/>
-                    </p:inputText>
-                    <p:message for="descripcion" display="icon" />
-                    
-                    <p:outputLabel for="tipoproducto1" value="Tipo Producto:"  />
+            <!-- BOTON INGRESAR PRODUCTO-->
+
+            <h:form id="formingresar">
+                <p:dialog header="Ingresar Producto" widgetVar="popupingresar" modal="true" position="top"
+                          id="popupingresar">
+
+
+                    <h:panelGrid id="ingresarGrid"  columns="3" cellpadding="5">
+
+                        <f:facet name="header">
+                            <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
+                        </f:facet>
+
+                        <p:outputLabel for="descripcion" value="Ingresar Producto: " />
+                        <p:inputText id="descripcion" validatorMessage="El campo ingresar producto solo puede contener letras o se esta duplicando el nombre de un producto" validator="#{productoMainBean.validarDescripcion}" required="true" label="descripcion" value="#{productoMainBean.productoNuevo.descripcion}" >
+                            <f:validateRegex
+                                pattern="^[A-Za-z\s]+$"/>
+                        </p:inputText>
+                        <p:message for="descripcion" display="icon" />
+
+                        <p:outputLabel for="tipoproducto1" value="Tipo Producto:"  />
                         <p:selectOneMenu id="tipoproducto1" value="#{productoMainBean.productoNuevo.tipoProducto}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
                                          effect="fade" style="width:160px" >
 
@@ -60,7 +59,7 @@
 
                         </p:selectOneMenu>
                         <p:message for="tipoproducto1" display="icon" />
-                        
+
                         <p:outputLabel for="unidadmedida1" value="Unidad de medida:"  />
                         <p:selectOneMenu id="unidadmedida1" value="#{productoMainBean.productoNuevo.unidadesDeMedida}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
                                          effect="fade"  style="width:160px" >
@@ -70,49 +69,49 @@
                         </p:selectOneMenu>
                         <p:message for="unidadmedida1" display="icon" />
 
-                    <h:outputText value="Incluye Viscera: " />
-                    <p:selectBooleanCheckbox value="#{productoMainBean.productoNuevo.incluyeVicera}" binding="#{productoMainBean.incluyeViscera}" id="incluyeviscera"/>
-                    <p:message for="incluyeviscera" display="icon"/>
+                        <h:outputText value="Incluye Viscera: " />
+                        <p:selectBooleanCheckbox value="#{productoMainBean.productoNuevo.incluyeVicera}" binding="#{productoMainBean.incluyeViscera}" id="incluyeviscera"/>
+                        <p:message for="incluyeviscera" display="icon"/>
 
-                    <h:outputText value="Generar Subproducto: " />
-                    <p:selectBooleanCheckbox value="#{productoMainBean.productoNuevo.generarSubproducto}" id="generarsubproducto" binding="#{productoMainBean.generarSubproducto}"/>
-                    <p:message for="generarsubproducto" display="icon"/>
+                        <h:outputText value="Generar Subproducto: " />
+                        <p:selectBooleanCheckbox value="#{productoMainBean.productoNuevo.generarSubproducto}" id="generarsubproducto" binding="#{productoMainBean.generarSubproducto}"/>
+                        <p:message for="generarsubproducto" display="icon"/>
 
-                    <h:outputText value="Aplicar Inventario Fisico: " />
-                    <p:selectBooleanCheckbox value="#{productoMainBean.productoNuevo.aplicaInventarioFisico}" id="aplicainventario" binding="#{productoMainBean.aplicaInventarioFisico}"/>
-                    <p:message for="aplicainventario" display="icon"/>
+                        <h:outputText value="Aplicar Inventario Fisico: " />
+                        <p:selectBooleanCheckbox value="#{productoMainBean.productoNuevo.aplicaInventarioFisico}" id="aplicainventario" binding="#{productoMainBean.aplicaInventarioFisico}"/>
+                        <p:message for="aplicainventario" display="icon"/>
 
-                    <f:facet name="footer">
+                        <f:facet name="footer">
 
-                        <p:commandButton value="Guardar"  id="guardar1" update="ingresarGrid :form:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'popupingresar' )"  action="#{productoMainBean.insertarProducto()}"/>
+                            <p:commandButton value="Guardar"  id="guardar1" update="ingresarGrid :form:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'popupingresar' )"  action="#{productoMainBean.insertarProducto()}"/>
 
-                    </f:facet>
-                </h:panelGrid>
+                        </f:facet>
+                    </h:panelGrid>
 
 
-            </p:dialog>
-        </h:form>
+                </p:dialog>
+            </h:form>
 
-        <script type="text/javascript">
-    function handleLoginRequest(xhr, status, args, popupname) {
-        if(args.validationFailed ) {
-            PF(popupname).jq.effect("shake", {times:5}, 100);
-        }
-        else {
-            PF(popupname).hide();
-            $('#loginLink').fadeOut();
-        }
-    }
-        </script>
-        
-        <!-- BOTON MODIFICAR PRODUCTO-->
+            <script type="text/javascript">
+                function handleLoginRequest(xhr, status, args, popupname) {
+                    if (args.validationFailed) {
+                        PF(popupname).jq.effect("shake", {times: 5}, 100);
+                    }
+                    else {
+                        PF(popupname).hide();
+                        $('#loginLink').fadeOut();
+                    }
+                }
+            </script>
+
+            <!-- BOTON MODIFICAR PRODUCTO-->
             <!-- <p:commandButton value="Modificar" type="button" onclick="PF('popupmodificar').show();" /> -->
-            
+
             <h:form id="formmodificar">
                 <p:dialog header="Modificar Producto" widgetVar="popupmodificar" id="popupmodificar" modal="true" position="top">
 
                     <h:panelGrid id="modificarGrid"  columns="3" cellpadding="5">
-                        
+
                         <f:facet name="header">
                             <p:messages id="msgsmodificar" style="font-size: 12px; text-align: left;"/>
                         </f:facet>
@@ -130,7 +129,7 @@
                                 pattern="^[A-Za-z\s]+$"/>
                         </p:inputText>
                         <p:message for="estatus2" display="icon" />
-                        
+
                         <p:outputLabel for="tipoproducto" value="Tipo Producto:"  />
                         <p:selectOneMenu id="tipoproducto" value="#{productoMainBean.productoSeleccionado.tipoProducto}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
                                          effect="fade"  style="width:160px" >
@@ -139,7 +138,7 @@
 
                         </p:selectOneMenu>
                         <p:message for="tipoproducto" display="icon" />
-                        
+
                         <p:outputLabel for="unidadmedida" value="Unidad de medida:"  />
                         <p:selectOneMenu id="unidadmedida" value="#{productoMainBean.productoSeleccionado.unidadesDeMedida}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
                                          effect="fade"  style="width:160px">
@@ -156,7 +155,7 @@
                         <h:outputText value="Generar Subproducto: " />
                         <p:selectBooleanCheckbox id="generarsubproducto1" value="#{productoMainBean.productoSeleccionado.generarSubproducto}" />
                         <p:message for="generarsubproducto1" display="icon"/>
-                        
+
                         <h:outputText value="Aplicar Inventario Fisico: " />
                         <p:selectBooleanCheckbox id="aplicainventario1" value="#{productoMainBean.productoSeleccionado.aplicaInventarioFisico}" />
                         <p:message for="aplicainventario1" display="icon"/>
@@ -169,7 +168,7 @@
 
                 </p:dialog>
             </h:form>
-            
+
             <!--BOTON ELIMINAR PRODUCTO-->
 
             <p:dialog header="Borrar Producto" widgetVar="popupborrar" modal="true" id="popupborrar">
@@ -179,7 +178,7 @@
 
                         <f:facet name="footer">
                             <p:commandButton value="Si" id="si" partialSubmit="true" ajax="false" action="#{productoMainBean.borrarProducto()}"/>
-                        <p:commandButton value="No" id="no"  ajax="false" />
+                            <p:commandButton value="No" id="no"  ajax="false" />
                         </f:facet>
                     </h:panelGrid>
                 </h:form>
@@ -189,6 +188,8 @@
 
 
 
-    </ui:define>
+        </ui:define>
 
-</ui:composition>
+        </ui:composition>
+    </body>
+</html>

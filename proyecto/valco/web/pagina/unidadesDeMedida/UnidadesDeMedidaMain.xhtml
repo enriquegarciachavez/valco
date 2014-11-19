@@ -1,148 +1,151 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../clientes/Template1.xhtml"
-                 xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
+    <body>
+        <ui:composition template="./../clientes/Template1.xhtml">
 
-    <ui:define name="content">
-         
-        <h:form id="form">
-            <p:dataTable id="singleDT" var="unidad" value="#{unidadesDeMedidaMainBean.modeloUnidad}" selectionMode="single" selection="#{unidadesDeMedidaMainBean.unidadSeleccionado}" rowKey="#{unidad.codigo}">
-                <f:facet name="header">
-                    Unidades de Medida
-                </f:facet>
-                <p:column headerText="Descripcion">
-                    <h:outputText value="#{unidad.descripcion}" />
-                </p:column>
-                <p:column headerText=" Abreviacion">
-                    <h:outputText value="#{unidad.abreviacion}" />
-                </p:column>
-                <p:column headerText=" Estatus">
-                    <h:outputText value="#{unidad.estatus}" />
-                </p:column>
-                
-                <f:facet name="footer">
-                    <p:commandButton value="Ingresar" partialSubmit="true" update=":formingresar:popupingresar" oncomplete="PF('popupingresar').show();"  action="#{unidadesDeMedidaMainBean.inicializarUnidad()}"/>
-                    <p:commandButton value="Modificar"  process="singleDT" update=":formmodificar:popupmodificar" oncomplete="PF('popupmodificar').show();"/>
-                    <p:commandButton value="Borrar" process="singleDT" update=":popupborrar" oncomplete="PF('popupborrar').show();" /> 
-                </f:facet>
-            </p:dataTable>
-        </h:form>
-        
-        <!--BONTON INGRESAR UNIDAD-->
-        
-        <h:form id="formingresar">
-            <p:dialog header="Ingresar Unidad de Medida" widgetVar="popupingresar" modal="true" position="top"
-                      id="popupingresar">
+            <ui:define name="content">
 
-
-                <h:panelGrid id="ingresarGrid"  columns="3" cellpadding="5">
-
-                    <f:facet name="header">
-                        <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
-                    </f:facet>
-
-                    <p:outputLabel for="descripcion" value="Ingresar Unidad de medida: " />
-                    <p:inputText id="descripcion" validatorMessage="El campo ingresar unidad de medida solo puede contener letras o se esta duplicando el campo descripcion" validator="#{unidadesDeMedidaMainBean.validarDescripcion}" required="true" label="descripcion" value="#{unidadesDeMedidaMainBean.unidadNuevo.descripcion}" >
-                        <f:validateRegex
-                            pattern="^[A-Za-z\s]+$"/>
-                    </p:inputText>
-                    <p:message for="descripcion" display="icon" />
-
-                    <p:outputLabel for="abreviacion" value="Abreviación: " />
-                    <p:inputText id="abreviacion" validatorMessage="El campo abreviacion solo puede contener letras o se esta duplicando el campo abreviacion" validator="#{unidadesDeMedidaMainBean.validarAbreviacion}" required="true" label="descripcion" value="#{unidadesDeMedidaMainBean.unidadNuevo.abreviacion}" >
-                        <f:validateRegex
-                            pattern="^[A-Za-z\s]+$"/>
-                    </p:inputText>
-                    <p:message for="descripcion" display="icon" />
-
-                    <f:facet name="footer">
-
-                        <p:commandButton value="Guardar"  id="guardar1" update="ingresarGrid :form:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'popupingresar' )"  action="#{unidadesDeMedidaMainBean.insertarUnidad()}"/>
-
-                    </f:facet>
-                </h:panelGrid>
-
-
-            </p:dialog>
-        </h:form>
-        
-        <!-- BOTON MODIFICAR UNIDAD-->
-            <!-- <p:commandButton value="Modificar" type="button" onclick="PF('popupmodificar').show();" /> -->
-            
-            <h:form id="formmodificar">
-                <p:dialog header="Modificar Unidad de Medida" widgetVar="popupmodificar" id="popupmodificar" modal="true" position="top">
-
-                    <h:panelGrid id="modificarGrid"  columns="3" cellpadding="5">
-                        
+                <h:form id="form">
+                    <p:dataTable id="singleDT" var="unidad" value="#{unidadesDeMedidaMainBean.modeloUnidad}" selectionMode="single" selection="#{unidadesDeMedidaMainBean.unidadSeleccionado}" rowKey="#{unidad.codigo}">
                         <f:facet name="header">
-                            <p:messages id="msgsmodificar" style="font-size: 12px; text-align: left;"/>
+                            Unidades de Medida
                         </f:facet>
-
-                        <p:outputLabel for="descripcion1" value="Ingresar Unidad de medida: " />
-                        <p:inputText id="descripcion1" validator="#{unidadesDeMedidaMainBean.validarDescripcion}" required="true" validatorMessage="El campo ingresar unidad de medida solo puede contener letras o se esta duplicando el campo descripción" label="descripcion1" value="#{unidadesDeMedidaMainBean.unidadSeleccionado.descripcion}">
-                            <f:validateRegex
-                                pattern="^[A-Za-z\s]+$"/>
-                        </p:inputText>
-                        <p:message for="descripcion1" display="icon" />
-                        
-                        <p:outputLabel for="abreviacion1" value="Abreviacion: " />
-                        <p:inputText id="abreviacion1" validator="#{unidadesDeMedidaMainBean.validarModificarAbreviacion}" required="true" validatorMessage="El campo abreviacion solo puede contener letras o se esta duplicando el campo abreviación" label="abreviacion1" value="#{unidadesDeMedidaMainBean.unidadSeleccionado.abreviacion}">
-                            <f:validateRegex
-                                pattern="^[A-Za-z\s]+$"/>
-                        </p:inputText>
-                        <p:message for="abreviacion1" display="icon" />
-
-                        <p:outputLabel for="estatus2" value="Estatus:" />
-                        <p:inputText id="estatus2" validatorMessage="El campo estatus paterno solo puede contener letras" required="true" label="estatus" value="#{unidadesDeMedidaMainBean.unidadSeleccionado.estatus}">
-                            <f:validateRegex
-                                pattern="^[A-Za-z\s]+$"/>
-                        </p:inputText>
-                        <p:message for="estatus2" display="icon" />
-
-                        
-
+                        <p:column headerText="Descripcion">
+                            <h:outputText value="#{unidad.descripcion}" />
+                        </p:column>
+                        <p:column headerText=" Abreviacion">
+                            <h:outputText value="#{unidad.abreviacion}" />
+                        </p:column>
+                        <p:column headerText=" Estatus">
+                            <h:outputText value="#{unidad.estatus}" />
+                        </p:column>
 
                         <f:facet name="footer">
-                            <p:commandButton value="Guardar" id="guardar" oncomplete="handleLoginRequest(xhr, status, args, 'popupmodificar' )" update="modificarGrid :form:singleDT" action="#{unidadesDeMedidaMainBean.actualizarUnidad()}"/>
+                            <p:commandButton value="Ingresar" partialSubmit="true" update=":formingresar:popupingresar" oncomplete="PF('popupingresar').show();"  action="#{unidadesDeMedidaMainBean.inicializarUnidad()}"/>
+                            <p:commandButton value="Modificar"  process="singleDT" update=":formmodificar:popupmodificar" oncomplete="PF('popupmodificar').show();"/>
+                            <p:commandButton value="Borrar" process="singleDT" update=":popupborrar" oncomplete="PF('popupborrar').show();" /> 
                         </f:facet>
-                    </h:panelGrid>
-
-                </p:dialog>
-            </h:form>
-            
-            <!--BOTON ELIMINAR UNIDAD-->
-
-            <p:dialog header="Borrar Unidad de Medida" widgetVar="popupborrar" modal="true" id="popupborrar">
-                <h:form>
-                    <h:panelGrid   columns="4" cellpadding="5">
-                        <h:outputText value="Esta seguro?" /> 
-
-                        <f:facet name="footer">
-                            <p:commandButton value="Si" id="si" partialSubmit="true" ajax="false" action="#{unidadesDeMedidaMainBean.borrarUnidad()}"/>
-                        <p:commandButton value="No" id="no"  ajax="false" />
-                        </f:facet>
-                    </h:panelGrid>
+                    </p:dataTable>
                 </h:form>
 
-            </p:dialog>
-        
-        
-        <script type="text/javascript">
-    function handleLoginRequest(xhr, status, args, popupname) {
-        if(args.validationFailed ) {
-            PF(popupname).jq.effect("shake", {times:5}, 100);
-        }
-        else {
-            PF(popupname).hide();
-            $('#loginLink').fadeOut();
-        }
-    }
-        </script>
-    </ui:define>
+                <!--BONTON INGRESAR UNIDAD-->
 
-</ui:composition>
+                <h:form id="formingresar">
+                    <p:dialog header="Ingresar Unidad de Medida" widgetVar="popupingresar" modal="true" position="top"
+                              id="popupingresar">
+
+
+                        <h:panelGrid id="ingresarGrid"  columns="3" cellpadding="5">
+
+                            <f:facet name="header">
+                                <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
+                            </f:facet>
+
+                            <p:outputLabel for="descripcion" value="Ingresar Unidad de medida: " />
+                            <p:inputText id="descripcion" validatorMessage="El campo ingresar unidad de medida solo puede contener letras o se esta duplicando el campo descripcion" validator="#{unidadesDeMedidaMainBean.validarDescripcion}" required="true" label="descripcion" value="#{unidadesDeMedidaMainBean.unidadNuevo.descripcion}" >
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]+$"/>
+                            </p:inputText>
+                            <p:message for="descripcion" display="icon" />
+
+                            <p:outputLabel for="abreviacion" value="Abreviación: " />
+                            <p:inputText id="abreviacion" validatorMessage="El campo abreviacion solo puede contener letras o se esta duplicando el campo abreviacion" validator="#{unidadesDeMedidaMainBean.validarAbreviacion}" required="true" label="descripcion" value="#{unidadesDeMedidaMainBean.unidadNuevo.abreviacion}" >
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]+$"/>
+                            </p:inputText>
+                            <p:message for="descripcion" display="icon" />
+
+                            <f:facet name="footer">
+
+                                <p:commandButton value="Guardar"  id="guardar1" update="ingresarGrid :form:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'popupingresar' )"  action="#{unidadesDeMedidaMainBean.insertarUnidad()}"/>
+
+                            </f:facet>
+                        </h:panelGrid>
+
+
+                    </p:dialog>
+                </h:form>
+
+                <!-- BOTON MODIFICAR UNIDAD-->
+                <!-- <p:commandButton value="Modificar" type="button" onclick="PF('popupmodificar').show();" /> -->
+
+                <h:form id="formmodificar">
+                    <p:dialog header="Modificar Unidad de Medida" widgetVar="popupmodificar" id="popupmodificar" modal="true" position="top">
+
+                        <h:panelGrid id="modificarGrid"  columns="3" cellpadding="5">
+
+                            <f:facet name="header">
+                                <p:messages id="msgsmodificar" style="font-size: 12px; text-align: left;"/>
+                            </f:facet>
+
+                            <p:outputLabel for="descripcion1" value="Ingresar Unidad de medida: " />
+                            <p:inputText id="descripcion1" validator="#{unidadesDeMedidaMainBean.validarDescripcion}" required="true" validatorMessage="El campo ingresar unidad de medida solo puede contener letras o se esta duplicando el campo descripción" label="descripcion1" value="#{unidadesDeMedidaMainBean.unidadSeleccionado.descripcion}">
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]+$"/>
+                            </p:inputText>
+                            <p:message for="descripcion1" display="icon" />
+
+                            <p:outputLabel for="abreviacion1" value="Abreviacion: " />
+                            <p:inputText id="abreviacion1" validator="#{unidadesDeMedidaMainBean.validarModificarAbreviacion}" required="true" validatorMessage="El campo abreviacion solo puede contener letras o se esta duplicando el campo abreviación" label="abreviacion1" value="#{unidadesDeMedidaMainBean.unidadSeleccionado.abreviacion}">
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]+$"/>
+                            </p:inputText>
+                            <p:message for="abreviacion1" display="icon" />
+
+                            <p:outputLabel for="estatus2" value="Estatus:" />
+                            <p:inputText id="estatus2" validatorMessage="El campo estatus paterno solo puede contener letras" required="true" label="estatus" value="#{unidadesDeMedidaMainBean.unidadSeleccionado.estatus}">
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]+$"/>
+                            </p:inputText>
+                            <p:message for="estatus2" display="icon" />
+
+
+
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Guardar" id="guardar" oncomplete="handleLoginRequest(xhr, status, args, 'popupmodificar' )" update="modificarGrid :form:singleDT" action="#{unidadesDeMedidaMainBean.actualizarUnidad()}"/>
+                            </f:facet>
+                        </h:panelGrid>
+
+                    </p:dialog>
+                </h:form>
+
+                <!--BOTON ELIMINAR UNIDAD-->
+
+                <p:dialog header="Borrar Unidad de Medida" widgetVar="popupborrar" modal="true" id="popupborrar">
+                    <h:form>
+                        <h:panelGrid   columns="4" cellpadding="5">
+                            <h:outputText value="Esta seguro?" /> 
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Si" id="si" partialSubmit="true" ajax="false" action="#{unidadesDeMedidaMainBean.borrarUnidad()}"/>
+                                <p:commandButton value="No" id="no"  ajax="false" />
+                            </f:facet>
+                        </h:panelGrid>
+                    </h:form>
+
+                </p:dialog>
+
+
+                <script type="text/javascript">
+                    function handleLoginRequest(xhr, status, args, popupname) {
+                        if (args.validationFailed) {
+                            PF(popupname).jq.effect("shake", {times: 5}, 100);
+                        }
+                        else {
+                            PF(popupname).hide();
+                            $('#loginLink').fadeOut();
+                        }
+                    }
+                </script>
+            </ui:define>
+
+        </ui:composition>
+    </body>
+</html>
