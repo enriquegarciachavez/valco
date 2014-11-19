@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      template="./../clientes/Template1.xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      >
+
+    <body>
+
+        <ui:composition template="./../clientes/Template1.xhtml">
+
+            <ui:define name="content">
+              
+                <h:form id="formAsignar">
+                    <h:panelGrid id="ingresarGrid"  columns="10" cellpadding="5"> 
+                        <f:facet name="header">
+                            <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
+                        </f:facet>
+
+                        <p:outputLabel for="inicial"   value="Nota de Venta inicial: " />
+                        <p:inputText id="inicial" required="true"  value="#{asignacionNotasMainBean.folioInicial}"/>
+                        <p:message for="inicial" display="icon" />
+
+                        <p:outputLabel for="final"  value="Nota de Venta final:  " />
+                        <p:inputText id="final" required="true" value="#{asignacionNotasMainBean.folioFinal}"/>
+                        <p:message for="final" display="icon" />
+
+                        <p:outputLabel for="repartidor" value="Repartidor:"  />
+                        <p:selectOneMenu id="repartidor" required="true" value="#{asignacionNotasMainBean.repartidor}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
+                                         effect="fade" style="width:160px" >
+
+                            <f:selectItems value="#{asignacionNotasMainBean.repartidores}" var="repartidor" itemLabel="#{repartidor.codigo} | #{repartidor.nombres} #{repartidor.apellidoPaterno}"  itemValue="#{repartidor}" />
+                        </p:selectOneMenu>
+                        <p:message for="repartidor" display="icon" />
+
+
+                        <p:commandButton value="Ingresar" partialSubmit="true" update=":formAsignar :tableForm:singleDT" action="#{asignacionNotasMainBean.asignarNotas()}"  />
+
+                    </h:panelGrid>
+                </h:form>
+                <p:separator/>
+                <!-- Tabla de las notas de vanta -->
+                <h:form id="tableForm">               
+             
+            <p:dataTable id="singleDT" var="asignacion" value="#{asignacionNotasMainBean.modeloAsignacion}" selectionMode="single" selection="#{asignacionNotasMainBean.asignacionSeleccionado}" rowKey="#{asignacion.codigo}">
+                <f:facet name="header">
+                  Asignacion de Notas de venta
+                </f:facet>
+                <p:column headerText="folio">
+                    <p:outputLabel value="#{asignacion.folio}" />
+                </p:column>
+                <p:column headerText="fecha">
+                    <p:outputLabel value="#{asignacion.fechaDeVenta}" />
+                </p:column>
+                <p:column headerText="Estatus">
+                    <p:outputLabel value="#{asignacion.estatus}" />
+                </p:column>
+                <p:column headerText="repartidor">
+                    <p:outputLabel value="#{asignacion.repartidores.nombres} #{asignacion.repartidores.apellidoPaterno}" />
+                </p:column>
+                <f:facet name="footer">
+                </f:facet>
+            </p:dataTable>
+            
+            
+          </h:form>
+                
+                
+                
+                
+            </ui:define>
+
+            
+
+        </ui:composition>
+
+    </body>
+</html>

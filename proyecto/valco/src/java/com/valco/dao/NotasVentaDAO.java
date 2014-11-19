@@ -49,6 +49,35 @@ public class NotasVentaDAO {
             }
         }
     }
+    
+    public void insertarNotas(List<NotasDeVenta> notas) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            for (NotasDeVenta nota : notas) {
+                session.save(nota);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al registrar el cliente.");
+                }
+            }
+            throw new Exception("Ocurrió un error al registrar el cliente.");
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al registrar el cliente.");
+            }
+        }
+    }
      public void actualizarNotaDeVenta(NotasDeVenta nota) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
@@ -113,6 +142,31 @@ public class NotasVentaDAO {
                       .setFetchMode("repartidores", FetchMode.JOIN);
               q.setFetchMode("productosInventarios", FetchMode.SELECT)
                       .add(Restrictions.eq("estatus", "ASIGNADA"));
+              notas = (List<NotasDeVenta>) q.list();
+              return notas;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los clientes.");
+
+          } finally {
+              try {
+                  session.close();
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los clientes.");
+              }
+        }
+    }
+      
+      public List<NotasDeVenta> getAsignacionNotasDeVenta() throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          List<NotasDeVenta> notas = new ArrayList<NotasDeVenta>();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(NotasDeVenta.class)
+                      .setFetchMode("repartidores", FetchMode.JOIN);
+              q.setFetchMode("productosInventarios", FetchMode.SELECT);
+                      
               notas = (List<NotasDeVenta>) q.list();
               return notas;
 
