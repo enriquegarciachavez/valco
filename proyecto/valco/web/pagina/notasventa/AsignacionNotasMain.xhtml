@@ -37,18 +37,31 @@
                         <p:message for="repartidor" display="icon" />
 
 
-                        <p:commandButton value="Ingresar" partialSubmit="true" update=":formAsignar :tableForm:singleDT" action="#{asignacionNotasMainBean.asignarNotas()}"  />
+                        <p:commandButton 
+                            value="Ingresar" 
+                            partialSubmit="true" 
+                            update=":formAsignar :tableForm:singleDT" 
+                            action="#{asignacionNotasMainBean.asignarNotas()}"  />
+                        
+
 
                     </h:panelGrid>
                 </h:form>
                 <p:separator/>
                 <!-- Tabla de las notas de vanta -->
                 <h:form id="tableForm">               
-             
-            <p:dataTable id="singleDT" var="asignacion" value="#{asignacionNotasMainBean.modeloAsignacion}" selectionMode="single" selection="#{asignacionNotasMainBean.asignacionSeleccionado}" rowKey="#{asignacion.codigo}">
+             <p:commandButton 
+                            value="Borrar notas seleccionadas"
+                            process="tableForm"
+                            partialSubmit="true"
+                            update=":formAsignar singleDT" 
+                            action="#{asignacionNotasMainBean.borrarNotas()}" 
+                            />
+                    <p:dataTable id="singleDT" var="asignacion" value="#{asignacionNotasMainBean.modeloAsignacion}" selection="#{asignacionNotasMainBean.notasSeleccionadas}" rowKey="#{asignacion.codigo}">
                 <f:facet name="header">
                   Asignacion de Notas de venta
                 </f:facet>
+                <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
                 <p:column headerText="folio">
                     <p:outputLabel value="#{asignacion.folio}" />
                 </p:column>

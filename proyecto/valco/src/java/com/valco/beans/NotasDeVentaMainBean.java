@@ -10,6 +10,7 @@ import com.valco.dao.NotasVentaDAO;
 import com.valco.pojo.Clientes;
 import com.valco.pojo.NotasDeVenta;
 import com.valco.pojo.ProductosInventario;
+import com.valco.utility.MsgUtility;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +23,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
@@ -42,6 +44,10 @@ import javax.faces.validator.ValidatorException;
     private NotasDeVenta notaSeleccionada;
     private NotasDeVenta notaNueva;
     private List<ProductosInventario> productosDisponibles;
+    private List<ProductosInventario> productosDisponiblesModificacion;
+    private UIInput flete;
+
+    
     DataModel modeloNotas;
     private List<ProductosInventario> productosModificacion;
 
@@ -90,9 +96,16 @@ import javax.faces.validator.ValidatorException;
         }
         }
     }
-    public void ingresarNotaVendida(){
+    public void ingresarNotaVendida() throws Exception{
+        if(productosSeleccionados == null ||
+                productosSeleccionados.isEmpty()){
+            
+            MsgUtility.showWarnMeage("Debe eleccionar porlomenos un producto.");
+            return;
+        }
         for(ProductosInventario producto: productosSeleccionados){
             producto.setNotasDeVenta(notaNueva);
+            notaNueva.getProductosInventarios().add(producto);
         }
         try {
             this.notaNueva.setEstatus("ASIGNADA");
@@ -103,12 +116,34 @@ import javax.faces.validator.ValidatorException;
         }
     }
     
-    public double getTotalSeleccionado(){
+    public void modificarNota(){
+        if(notaSeleccionada.getProductosInventariosList() == null ||
+                notaSeleccionada.getProductosInventariosList().isEmpty()){
+            flete.setValid(false);
+            MsgUtility.showWarnMeage("Debe eleccionar porlomenos un producto.");
+            FacesContext.getCurrentInstance().validationFailed();
+            return;
+        }
+        for(ProductosInventario producto: notaSeleccionada.getProductosInventarios()){
+            producto.setNotasDeVenta(null);
+        }
+        for(ProductosInventario producto: notaSeleccionada.getProductosInventariosList()){
+            producto.setNotasDeVenta(notaSeleccionada);
+        }
+        try {
+            this.notasDeVentaDao.actualizarNotaDeVentaVendida(notaSeleccionada);
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage("Ocurriò un error al guardar la nota de venta"));
+        }
+    }
+    
+    public double getTotalSeleccionado(List<ProductosInventario> productos){
         double total = 0.00;
-        if(productosSeleccionados == null || productosSeleccionados.isEmpty()){
+        if(productos == null || productos.isEmpty()){
             return 0.0;
         }else{
-            for(ProductosInventario producto : productosSeleccionados){
+            for(ProductosInventario producto : productos){
                 total += producto.getPrecio().doubleValue()*producto.getPeso().doubleValue();
             }
             return total;
@@ -124,10 +159,39 @@ import javax.faces.validator.ValidatorException;
     }
     
     public String obtenerProductosModificacio() throws Exception{
-        productosModificacion = notasDeVentaDao.getProductosXNota(notaSeleccionada);
+        notaSeleccionada.setProductosInventariosList(notasDeVentaDao.getProductosXNota(notaSeleccionada));
+        productosDisponiblesModificacion = notasDeVentaDao.getProductosDisponibles();
+        productosDisponiblesModificacion.addAll(0,notaSeleccionada.getProductosInventariosList());
         return null;
     }
     
+    public void cancelarNotaVendida(){
+        if(notaSeleccionada == null || notaSeleccionada.getCodigo() ==null){
+            MsgUtility.showWarnMeage("Debe seleccionar una nota.");
+            return;
+        }
+        try {
+            notasDeVentaDao.cancelarNotaVendida(notaSeleccionada);
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage("Ocurriò un error al cancelar la nota"));
+        }
+    }
+    
+    public void validaProductosSeleccionadosAlta(FacesContext context, UIComponent component, Object value) throws ValidatorException{
+        if(productosSeleccionados == null ||
+                productosSeleccionados.isEmpty()){         
+            throw new ValidatorException(MsgUtility.getWarnMessage("Debe seleccionar porlomenos un producto."));
+        }
+    }
+    
+    public void validaProductosSeleccionadosModificacion(FacesContext context, UIComponent component, Object value) throws ValidatorException{
+        if(notaSeleccionada.getProductosInventariosList() == null ||
+                notaSeleccionada.getProductosInventariosList().isEmpty()){         
+            throw new ValidatorException(MsgUtility.getWarnMessage("Debe seleccionar porlomenos un producto."));
+        }
+    }
+        
     public List<ProductosInventario> getProductosDisponibles() {
         return productosDisponibles;
     }
@@ -208,7 +272,21 @@ import javax.faces.validator.ValidatorException;
         this.productosModificacion = productosModificacion;
     }
     
+    public List<ProductosInventario> getProductosDisponiblesModificacion() {
+        return productosDisponiblesModificacion;
+    }
+
+    public void setProductosDisponiblesModificacion(List<ProductosInventario> productosDisponiblesModificacion) {
+        this.productosDisponiblesModificacion = productosDisponiblesModificacion;
+    }
     
+    public UIInput getFlete() {
+        return flete;
+    }
+
+    public void setFlete(UIInput flete) {
+        this.flete = flete;
+    }
     
 
 

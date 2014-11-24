@@ -8,6 +8,10 @@
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
     </context-param>
+    <context-param>
+        <param-name>primefaces.FONT_AWESOME</param-name>
+        <param-value>true</param-value>
+    </context-param>
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>

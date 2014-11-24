@@ -245,10 +245,20 @@ public class Clientes  implements java.io.Serializable {
     public void setNotasCreditos(Set<NotasCredito> notasCreditos) {
         this.notasCreditos = notasCreditos;
     }
-
-
-
-
+    
+    @Override
+    public boolean equals(Object o) {
+        if( o != null){
+        if((o instanceof Clientes) && (((Clientes) o).getCodigo() == this.getCodigo())){
+            return true;
+        }else{
+            return false;
+           }
+        }else{
+            return false;
+        }
+    }
+    
 }
 
 

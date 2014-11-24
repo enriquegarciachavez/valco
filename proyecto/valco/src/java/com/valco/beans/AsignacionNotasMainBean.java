@@ -43,8 +43,90 @@ public class AsignacionNotasMainBean {
     Integer folioInicial;
     Integer folioFinal;
     DataModel modeloAsignacion;
-    
+    private List<NotasDeVenta> notasSeleccionadas;
 
+    public DataModel getModeloAsignacion() throws Exception {
+        notasDeVenta = notadeVentaDao.getAsignacionNotasDeVenta();
+        modeloAsignacion = new ListDataModel(notasDeVenta);
+        return modeloAsignacion;
+    }
+
+    public void setModeloAsignacion(DataModel modeloAsignacion) {
+        this.modeloAsignacion = modeloAsignacion;
+    }
+    
+    @PostConstruct
+    public void init(){
+        try {
+          this.repartidores = repartidoresDao.getRepartidores();
+        } catch (Exception ex) {
+            
+        }
+    }
+    public void asignarNotas() {
+        List<NotasDeVenta> notas = new ArrayList<NotasDeVenta>();
+        List<NotasDeVenta> notasExistentes = new ArrayList<NotasDeVenta>();
+        if (folioFinal < folioInicial) {
+            FacesMessage msg = null;
+            msg = new FacesMessage("El Folio final debe ser "
+                    + "mayor que el folio inicial");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+        
+        try {
+            notasExistentes
+                    = notadeVentaDao.getNotasXRangoFolio(folioInicial, folioFinal);
+            if (notasExistentes != null && !notasExistentes.isEmpty()) {
+                FacesMessage msg = null;
+                msg = new FacesMessage("El rango indicado incluye folios que "
+                        + "ya se encuentran asignados.");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+                return;
+            }
+        } catch (Exception ex) {
+            FacesMessage msg = null;
+            msg = new FacesMessage("Ocurrió un error al verificar si las "
+                    + "notas ya se hbían asignado.");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return;
+        }
+
+        for (int x = folioInicial; x <= folioFinal; x++) {
+            Usuarios usuario = new Usuarios();
+            usuario.setCodigo(1);
+            NotasDeVenta notaNueva = new NotasDeVenta();
+            notaNueva.setEstatus("ACTIVO");
+            notaNueva.setFolio(x);
+            notaNueva.setRepartidores(repartidor);
+            notaNueva.setUsuarios(usuario);
+            notas.add(notaNueva);
+
+        }
+        try {
+            notadeVentaDao.insertarNotas(notas);
+        } catch (Exception ex) {
+            FacesMessage msg = null;
+            msg = new FacesMessage(ex.getMessage());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+
+        }
+
+    }
+    
+    public void borrarNotas(){
+        try {
+            notadeVentaDao.borrarNotasDeVenta(notasSeleccionadas);
+            FacesMessage msg = null;
+            msg = new FacesMessage("Las notas se borraron correctamente.");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } catch (Exception ex) {
+            FacesMessage msg = null;
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN,"","Ocurrió un error al borrar las notas.");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+    
     /**
      * Creates a new instance of AsignacionNotasMainBean
      */
@@ -129,54 +211,13 @@ public class AsignacionNotasMainBean {
     public void setAsignacionSeleccionado(NotasDeVenta asignacionSeleccionado) {
         this.asignacionSeleccionado = asignacionSeleccionado;
     }
-
-    public DataModel getModeloAsignacion() throws Exception {
-        notasDeVenta = notadeVentaDao.getAsignacionNotasDeVenta();
-        modeloAsignacion = new ListDataModel(notasDeVenta);
-        return modeloAsignacion;
+    
+    public List<NotasDeVenta> getNotasSeleccionadas() {
+        return notasSeleccionadas;
     }
 
-    public void setModeloAsignacion(DataModel modeloAsignacion) {
-        this.modeloAsignacion = modeloAsignacion;
+    public void setNotasSeleccionadas(List<NotasDeVenta> notasSeleccionadas) {
+        this.notasSeleccionadas = notasSeleccionadas;
     }
-    
-    @PostConstruct
-    public void init(){
-        try {
-          this.repartidores = repartidoresDao.getRepartidores();
-        } catch (Exception ex) {
-            
-        }
-    }
-    public void asignarNotas(){
-      List<NotasDeVenta> notas = new ArrayList<NotasDeVenta>() ;
-        if (folioFinal < folioInicial) {
-            FacesMessage msg = null;
-            msg = new FacesMessage("El Folio final debe ser mayor que el folio inicial");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            return;
-        }
-        
-      for(int x =folioInicial;x<=folioFinal; x++){
-          Usuarios usuario=new Usuarios();
-          usuario.setCodigo(1);
-          NotasDeVenta notaNueva = new NotasDeVenta();
-          notaNueva.setEstatus("ACTIVO");
-          notaNueva.setFolio(x);
-          notaNueva.setRepartidores(repartidor);
-          notaNueva.setUsuarios(usuario);
-          notas.add(notaNueva);
-          
-      }
-        try {
-            notadeVentaDao.insertarNotas(notas);
-        } catch (Exception ex) {
-            FacesMessage msg = null;
-            msg = new FacesMessage(ex.getMessage());
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            
-        }
-      
-    }
-    
+
 }

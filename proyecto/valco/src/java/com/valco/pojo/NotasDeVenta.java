@@ -26,6 +26,7 @@ public class NotasDeVenta  implements java.io.Serializable {
      private String estatus;
      private Set<CuentasXCobrar> cuentasXCobrars = new HashSet<CuentasXCobrar>(0);
      private Set<ProductosInventario> productosInventarios = new HashSet<ProductosInventario>(0);
+     private List<ProductosInventario> productosInventariosList = new ArrayList<ProductosInventario>(0);
 
     public NotasDeVenta() {
     }
@@ -129,21 +130,16 @@ public class NotasDeVenta  implements java.io.Serializable {
         this.productosInventarios = productosInventarios;
     }
     
-        public List<ProductosInventario> getProductosInventariosList() {
-        if(productosInventarios != null){
-            List<ProductosInventario> productos;
-            productos = new ArrayList<>();
-            Iterator iterator = productosInventarios.iterator();
-            while(iterator.hasNext()){
-                productos.add((ProductosInventario) iterator.next());
-            }
-            return productos;
-        }else{
-            return new ArrayList<ProductosInventario>();
-        }
+        
+    
+
+    public List<ProductosInventario> getProductosInventariosList() {
+        return productosInventariosList;
     }
 
-
+    public void setProductosInventariosList(List<ProductosInventario> productosInventariosList) {
+        this.productosInventariosList = productosInventariosList;
+    }
 
 
 

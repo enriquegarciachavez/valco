@@ -5,7 +5,6 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-
     <body>
 
         <ui:composition template="./../clientes/Template1.xhtml">
@@ -13,45 +12,71 @@
     <ui:define name="content">
         <h:form id="tableForm">
             <p:menubar>
-                <p:menuitem value="Nuevo" icon="ui-icon-document" onclick="PF('dlg2').show();" partialSubmit="true"/>
-                <p:menuitem value="Modificar" icon="ui-icon-document" action="#{notasDeVentaMainBean.obtenerProductosModificacio()}" update=":formModificar:dlgModificar" process="singleDT" oncomplete="PF('dlgModificar').show();" partialSubmit="true" />
+                <p:menuitem 
+                    value="Capturar" 
+                    icon="ui-icon-plusthick"
+                    onclick="PF('dlg2').show();" 
+                    partialSubmit="true"/>
+                <p:menuitem 
+                    value="Modificar" 
+                    icon="ui-icon-pencil"
+                    action="#{notasDeVentaMainBean.obtenerProductosModificacio()}" 
+                    update=":formModificar:dlgModificar :formSelecMod:productosPopUpModificar"  
+                    oncomplete="PF('dlgModificar').show();" 
+                    partialSubmit="true"/>
+                <p:menuitem 
+                    value="Cancelar" 
+                    icon="ui-icon-circle-close"  
+                    oncomplete="PF('popupborrar').show();" 
+                    partialSubmit="true"/>
             </p:menubar>
-            <p:commandButton value="Print" type="button" icon="ui-icon-print" style="display:block;margin-bottom: 20px">
-                <p:printer target="singleDT" />
+            <p:commandButton 
+                value="Print" 
+                icon="ui-icon-print" 
+                style="display:block;margin-bottom: 20px">
+                <p:printer 
+                    target="singleDT" />
             </p:commandButton>
 
             <!-- Tabla de las notas de vanta --> 
-            <p:dataTable id="singleDT" var="nota" value="#{notasDeVentaMainBean.modeloNotas}" selectionMode="single" selection="#{notasDeVentaMainBean.notaSeleccionada}" rowKey="#{nota.codigo}">
+            <p:dataTable 
+                id="singleDT" 
+                var="nota" 
+                value="#{notasDeVentaMainBean.modeloNotas}" 
+                selectionMode="single" selection="#{notasDeVentaMainBean.notaSeleccionada}" 
+                rowKey="#{nota.codigo}">
                 <f:facet name="header">
                     Notas de venta
                 </f:facet>
-                <p:column headerText="folio">
+                <p:column headerText="Folio">
                     <p:outputLabel value="#{nota.folio}" />
                 </p:column>
-                <p:column headerText="fecha">
+                <p:column headerText="Fecha de venta">
                     <p:outputLabel value="#{nota.fechaDeVenta}" />
                 </p:column>
                 <p:column headerText="Estatus">
                     <p:outputLabel value="#{nota.estatus}" />
                 </p:column>
-                <p:column headerText="repartidor">
+                <p:column headerText="Repartidor">
                     <p:outputLabel value="#{nota.repartidores.nombres} #{nota.repartidores.apellidoPaterno}" />
+                </p:column>
+                <p:column headerText="Cliente">
+                    <p:outputLabel value="#{nota.clientes.nombres} #{nota.clientes.apellidoPaterno}" />
                 </p:column>
                 <f:facet name="footer">
                 </f:facet>
             </p:dataTable>
-            <p:commandButton value="Modificar" icon="ui-icon-document" action="#{notasDeVentaMainBean.obtenerProductosModificacio()}" update=":formModificar:dlgModificar"  oncomplete="PF('dlgModificar').show();" partialSubmit="true"  />
 
         </h:form>
         
         <!-- Popup de nota nueva --> 
         <h:form id="form1">
-            <p:dialog header="Modal Dialog" resizable="false" modal="true"  closeOnEscape="false" widgetVar="dlg2" 
+            <p:dialog header="Ingresar nota vedida" resizable="false" modal="true"  closeOnEscape="false" widgetVar="dlg2" 
                       width="1000" position="top" height="500"   id="dlg2">
 
                 <h:panelGrid   columns="4" cellpadding="5" id="grid1">
                     <f:facet name="header">
-                        <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
+                        <p:messages id="msgs" showDetail="true" style="font-size: 12px; text-align: left;"/>
                     </f:facet>
                     <f:facet name="header">
                         <p:commandButton value="Guardar"  id="guardar1" update="grid1 :tableForm:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'dlg2' )"  action="#{notasDeVentaMainBean.ingresarNotaVendida()}"/>
@@ -85,10 +110,16 @@
                     </p:selectOneMenu>
 
                     <p:outputLabel   value="Flete: " />
-                    <p:inputText value="#{notasDeVentaMainBean.notaNueva.flete}" />
+                    <p:inputText 
+                        value="#{notasDeVentaMainBean.notaNueva.flete}"
+                        validator="#{notasDeVentaMainBean.validaProductosSeleccionadosAlta}"/>
 
                     <f:facet name="footer">
-                        <p:dataTable id="productosSeleccionados" editable="true" editMode="cell" var="producto" value="#{notasDeVentaMainBean.productosSeleccionados}">
+                        <p:dataTable 
+                            id="productosSeleccionados" 
+                            editable="true" editMode="cell" 
+                            var="producto" 
+                            value="#{notasDeVentaMainBean.productosSeleccionados}">
                             <f:facet name="header">
                                 Productos seleccionados
                             </f:facet>
@@ -103,7 +134,9 @@
                                         <h:outputText value="#{producto.peso}" />
                                     </f:facet>
                                     <f:facet name="input">
-                                        <p:inputText id="pesoInput" value="#{producto.peso}"/>
+                                        <p:inputText id="pesoInput" value="#{producto.peso}">
+                                            <p:ajax event="change" update="productosSeleccionados"/>
+                                        </p:inputText>
                                     </f:facet>
                                 </p:cellEditor>
                             </p:column>
@@ -125,7 +158,7 @@
                             <p:columnGroup type="footer">
                                 <p:row>
                                     <p:column colspan="3" style="text-align:right" footerText="Total:"/>
-                                    <p:column id="total" footerText="#{notasDeVentaMainBean.totalSeleccionado}">
+                                    <p:column id="total" footerText="#{notasDeVentaMainBean.getTotalSeleccionado(notasDeVentaMainBean.productosSeleccionados)}">
                                     </p:column>
                                 </p:row>
                             </p:columnGroup>
@@ -163,15 +196,20 @@
         
         <!-- Popup de modificar nota --> 
         <h:form id="formModificar">
-            <p:dialog header="Modal Dialog" resizable="false" modal="true"  closeOnEscape="false" widgetVar="dlgModificar" 
+            <p:dialog header="Modificar nota vendida" resizable="false" modal="true"  closeOnEscape="false" widgetVar="dlgModificar" 
                       width="1000" position="top" height="500"   id="dlgModificar">
 
                 <h:panelGrid   columns="4" cellpadding="5" id="gridModificar">
                     <f:facet name="header">
-                        <p:messages id="msgsModificar" style="font-size: 12px; text-align: left;"/>
+                        <p:messages id="msgsModificar" showDetail="true" style="font-size: 12px; text-align: left;"/>
                     </f:facet>
                     <f:facet name="header">
-                        <p:commandButton value="Guardar"  id="guardarModificar" update="gridModificar :tableForm:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'dlgModificar' )"  action="#{notasDeVentaMainBean.ingresarNotaVendida()}"/>
+                        <p:commandButton 
+                            value="Guardar"  
+                            id="guardarModificar" 
+                            update="gridModificar :tableForm:singleDT" 
+                            oncomplete="handleLoginRequest(xhr, status, args, 'dlgModificar' )"  
+                            action="#{notasDeVentaMainBean.modificarNota()}"/>
 
                     </f:facet>
                     <p:outputLabel  value="Folio: " />
@@ -185,8 +223,17 @@
                     <p:calendar required="true" id="fechaModificar" value="#{notasDeVentaMainBean.notaSeleccionada.fechaDeVenta}" />
 
                     <p:outputLabel for="clienteModificar" value="Cliente:"  />
-                    <p:selectOneMenu id="clienteModificar" required="true" value="" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
-                                     effect="fade" var="c" style="width:160px" filter="true" filterMatchMode="contains">
+                    <p:selectOneMenu 
+                        id="clienteModificar" 
+                        required="true" 
+                        converter="omnifaces.SelectItemsConverter" 
+                        panelStyle="width:180px"
+                        effect="fade" 
+                        var="c" 
+                        style="width:160px" 
+                        filter="true" 
+                        filterMatchMode="contains"
+                        value="#{notasDeVentaMainBean.notaSeleccionada.clientes}">
                         <f:selectItems value="#{notasDeVentaMainBean.clientes}" var="cliente" itemLabel="#{cliente.codigo} | #{cliente.nombres} #{cliente.apellidoPaterno}" itemValue="#{cliente}" />
 
                         <p:column style="width:10%">
@@ -198,10 +245,12 @@
                     </p:selectOneMenu>
 
                     <p:outputLabel   value="Flete: " />
-                    <p:inputText value="#{notasDeVentaMainBean.notaSeleccionada.flete}" />
+                    <p:inputText 
+                        value="#{notasDeVentaMainBean.notaSeleccionada.flete}" 
+                        validator="#{notasDeVentaMainBean.validaProductosSeleccionadosModificacion}"/>
 
                     <f:facet name="footer">
-                        <p:dataTable id="productosSeleccionadosModificar" editable="true" editMode="cell" var="producto" value="#{notasDeVentaMainBean.productosModificacion}">
+                        <p:dataTable id="productosSeleccionadosModificar" editable="true" editMode="cell" var="producto" value="#{notasDeVentaMainBean.notaSeleccionada.productosInventariosList}">
                             <f:facet name="header">
                                 Productos seleccionados
                             </f:facet>
@@ -216,7 +265,9 @@
                                         <h:outputText value="#{producto.peso}" />
                                     </f:facet>
                                     <f:facet name="input">
-                                        <p:inputText id="pesoInputModificar" value="#{producto.peso}"/>
+                                        <p:inputText id="pesoInputModificar" value="#{producto.peso}">
+                                            <p:ajax event="change" update="productosSeleccionadosModificar"/>
+                                        </p:inputText>
                                     </f:facet>
                                 </p:cellEditor>
                             </p:column>
@@ -238,12 +289,16 @@
                             <p:columnGroup type="footer">
                                 <p:row>
                                     <p:column colspan="3" style="text-align:right" footerText="Total:"/>
-                                    <p:column id="total" footerText="#{notasDeVentaMainBean.totalSeleccionado}">
+                                    <p:column id="total" footerText="#{notasDeVentaMainBean.getTotalSeleccionado(notasDeVentaMainBean.notaSeleccionada.productosInventariosList)}">
                                     </p:column>
                                 </p:row>
                             </p:columnGroup>
                             <f:facet name="footer">
-                                <p:commandButton value="Seleccionar productos" onclick="PF('productosPopUpModificar').show();" />
+                                <p:commandButton 
+                                    value="Seleccionar productos"
+                                    oncomplete="PF('productosPopUpModificar').show();"
+                                    update=":formSelecMod:productosPopUpModificar"
+                                    />
                             </f:facet>
                         </p:dataTable>
                     </f:facet>
@@ -252,11 +307,11 @@
         </h:form>
         
         <!-- Tabla de productos disponibles --> 
-        <h:form>
+        <h:form id="formSelecMod">
             <p:dialog id="productosPopUpModificar" widgetVar="productosPopUpModificar" modal="true" height="400px" width="700">
                 <p:commandButton value="Seleccionar" id="btnSeleccionar" oncomplete="handleLoginRequest(xhr, status, args, 'productosPopUpModificar' )" process="productosPopUpModificar" update=":formModificar:gridModificar"/>
                 <p:sticky target="btnSeleccionar" />
-                <p:dataTable id="productosDisponibles" var="producto" value="#{notasDeVentaMainBean.productosDisponiblesModificar}" selection="#{notasDeVentaMainBean.notaSeleccionada.productosInventariosList}" rowKey="#{producto.codigo}">
+                <p:dataTable id="productosDisponibles" var="producto" value="#{notasDeVentaMainBean.productosDisponiblesModificacion}" selection="#{notasDeVentaMainBean.notaSeleccionada.productosInventariosList}"  rowKey="#{producto.codigo}">
                     <f:facet name="header">
                         Productos disponibles
                     </f:facet>
@@ -274,18 +329,23 @@
             </p:dialog>
         </h:form>
         
-        <script type="text/javascript">
-    function handleLoginRequest(xhr, status, args, popupname) {
-        if(args.validationFailed ) {
-            PF(popupname).jq.effect("shake", {times:5}, 100);
-        }
-        else {
-            PF(popupname).hide();
-            $('#loginLink').fadeOut();
-        }
-    }
-            </script>
+        <p:dialog header="Cancelar nota" widgetVar="popupborrar" modal="true" id="popupborrar">
+                    <h:form>
+                        <h:panelGrid   columns="4" cellpadding="5">
+                            <h:outputText value="¿Esta seguro que desea cancelar la nota?" /> 
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Si" id="si" partialSubmit="true" ajax="false" action="#{notasDeVentaMainBean.cancelarNotaVendida()}"/>
+                                <p:commandButton value="No" id="no"  ajax="false" />
+                            </f:facet>
+                        </h:panelGrid>
+                    </h:form>
+
+                </p:dialog>
+        
     </ui:define>
+            
+            
 
 </ui:composition>
  </body>

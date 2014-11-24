@@ -8,7 +8,7 @@
             <column name="CODIGO" />
             <generator class="identity" />
         </id>
-        <many-to-one name="clientes" class="com.valco.pojo.Clientes" fetch="select">
+        <many-to-one name="clientes" class="com.valco.pojo.Clientes" lazy="false" fetch="select">
             <column name="CLIENTES_CODIGO" not-null="true" />
         </many-to-one>
         <many-to-one name="facturas" class="com.valco.pojo.Facturas" fetch="select">
@@ -38,7 +38,7 @@
             </key>
             <one-to-many class="com.valco.pojo.CuentasXCobrar" />
         </set>
-        <set name="productosInventarios" table="PRODUCTOS_INVENTARIO" inverse="true" lazy="true" fetch="select">
+        <set name="productosInventarios" table="PRODUCTOS_INVENTARIO" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="NOTAS_DE_VENTA_CODIGO" not-null="true" />
             </key>

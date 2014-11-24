@@ -43,7 +43,9 @@ public class NotasVentaDAO {
             throw new Exception("Ocurrió un error al registrar el cliente.");
         } finally {
             try {
-                session.close();
+                if (session.isOpen()) {
+                    session.close();
+                }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al registrar el cliente.");
             }
@@ -100,7 +102,7 @@ public class NotasVentaDAO {
             throw new Exception("Ocurrió un error al modificar el cliente.");
         } finally {
             try {
-                if(session.isOpen()){
+                if (session.isOpen()) {
                     session.close();
                 }
             } catch (HibernateException he) {
@@ -108,6 +110,80 @@ public class NotasVentaDAO {
             }
         }
     }
+     
+     public void cancelarNotaVendida(NotasDeVenta nota) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            nota.setEstatus("ACTIVO");
+            nota.setClientes(null);
+            nota.setFechaDeVenta(null);
+            nota.setFlete(null);
+            session.update(nota);
+            for(ProductosInventario producto : nota.getProductosInventarios()){
+                producto.setEstatus("ACTIVO");
+                producto.setNotasDeVenta(null);
+                session.update(producto);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al modificar el cliente.");
+                }
+            }
+            throw new Exception("Ocurrió un error al modificar el cliente.");
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al modificar el cliente.");
+            }
+        }
+    }
+     
+     public void actualizarNotaDeVentaVendida(NotasDeVenta nota) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.update(nota);
+            for(ProductosInventario producto : nota.getProductosInventarios()){
+                if(!nota.getProductosInventariosList().contains(producto)){
+                    producto.setEstatus("ACTIVO");
+                    session.update(producto);
+                }
+            }
+            for(ProductosInventario producto : nota.getProductosInventariosList()){
+                producto.setEstatus("VENDIDO");
+                session.update(producto);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al modificar el cliente.");
+                }
+            }
+            throw new Exception("Ocurrió un error al modificar el cliente.");
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al modificar el cliente.");
+            }
+        }
+    }
+     
       public void borrarNotaDeVenta(NotasDeVenta nota) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
@@ -126,12 +202,44 @@ public class NotasVentaDAO {
             throw new Exception("Ocurrió un error al borrar el cliente.");
         } finally {
             try {
-                session.close();
+                if (session.isOpen()) {
+                    session.close();
+                }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al borrar el cliente.");
             }
         }
     }
+      
+      public void borrarNotasDeVenta(List<NotasDeVenta> notas) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            for(NotasDeVenta nota : notas){
+                session.delete(nota);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al borrar el cliente.");
+                }
+            }
+            throw new Exception("Ocurrió un error al borrar el cliente.");
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al borrar el cliente.");
+            }
+        }
+    }
+      
       public List<NotasDeVenta> getNotasDeVenta() throws Exception {
           Session session = HibernateUtil.getSessionFactory().openSession();
           Transaction tx = null;
@@ -150,7 +258,35 @@ public class NotasVentaDAO {
 
           } finally {
               try {
-                  session.close();
+                if (session.isOpen()) {
+                    session.close();
+                }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los clientes.");
+              }
+        }
+    }
+      
+      public List<NotasDeVenta> getNotasXRangoFolio(Integer folioInicial, Integer folioFinal) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          List<NotasDeVenta> notas = new ArrayList<NotasDeVenta>();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(NotasDeVenta.class)
+                      .add(Restrictions.ge("folio", folioInicial))
+                      .add(Restrictions.le("folio", folioFinal));
+              notas = (List<NotasDeVenta>) q.list();
+              return notas;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los clientes.");
+
+          } finally {
+              try {
+                  if(session.isOpen()){
+                    session.close();
+                  }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los clientes.");
               }
@@ -175,7 +311,9 @@ public class NotasVentaDAO {
 
           } finally {
               try {
-                  session.close();
+                if (session.isOpen()) {
+                    session.close();
+                }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los clientes.");
               }
@@ -200,7 +338,9 @@ public class NotasVentaDAO {
 
           } finally {
               try {
-                  session.close();
+                  if (session.isOpen()) {
+                      session.close();
+                  }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los clientes.");
               }
@@ -223,7 +363,9 @@ public class NotasVentaDAO {
 
           } finally {
               try {
-                  session.close();
+                  if (session.isOpen()) {
+                      session.close();
+                  }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los clientes.");
               }
@@ -246,7 +388,9 @@ public class NotasVentaDAO {
 
           } finally {
               try {
-                  session.close();
+                  if (session.isOpen()) {
+                      session.close();
+                  }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los clientes.");
               }
