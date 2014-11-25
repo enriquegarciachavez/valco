@@ -6,7 +6,11 @@
 package com.valco.dao;
 
 import com.valco.HibernateUtil;
+import com.valco.pojo.OrdenesCompra;
 import com.valco.pojo.Productos;
+import com.valco.pojo.ProductosHasProveedores;
+import com.valco.pojo.ProductosInventario;
+import com.valco.pojo.Proveedores;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Criteria;
@@ -68,7 +72,9 @@ public class ProductoDAO {
             throw new Exception("Ocurrió un error al modificar el producto.");
         } finally {
             try {
-                session.close();
+                if(session.isOpen()){
+                    session.close();
+                  }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al modificar el producto.");
             }
@@ -119,7 +125,9 @@ public class ProductoDAO {
 
         } finally {
             try {
-                session.close();
+                if(session.isOpen()){
+                    session.close();
+                  }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al consultar los producto.");
             }
@@ -142,11 +150,71 @@ public class ProductoDAO {
 
           } finally {
               try {
-                  session.close();
+                  if(session.isOpen()){
+                    session.close();
+                  }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los productos.");
               }
         }
+    }
+    
+    public ProductosHasProveedores getProductoXProveYCodigo(Proveedores proveedor, String codigo) throws Exception{
+        Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          ProductosHasProveedores producto = new ProductosHasProveedores();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(ProductosHasProveedores.class)
+                      .add(Restrictions.eq("proveedores", proveedor))
+                      .add(Restrictions.eq("codigoProveedor", codigo));
+              producto = (ProductosHasProveedores)q.uniqueResult();
+              return producto;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los productos.");
+
+          } finally {
+              try {
+                  if(session.isOpen()){
+                    session.close();
+                  }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los productos.");
+              }
+        }
+    }
+    
+    public void recibirProductos(List<ProductosInventario> productos, OrdenesCompra orden) throws Exception{
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.save(orden);
+            for(ProductosInventario producto : productos){
+                producto.setOrdenesCompra(orden);
+                session.save(producto);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al registrar el producto.");
+                }
+            }
+            throw new Exception("Ocurrió un error al registrar el producto.");
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al registrar el producto.");
+            }
+        }
+    
     }
 
 }
