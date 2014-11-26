@@ -80,6 +80,35 @@ public class ProductoDAO {
             }
         }
     }
+    
+    public void actualizarProductosInventario(List<ProductosInventario> productos) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            for(ProductosInventario producto : productos){
+                session.update(producto);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al modificar el producto.");
+                }
+            }
+            throw new Exception("Ocurrió un error al modificar el producto.");
+        } finally {
+            try {
+                if(session.isOpen()){
+                    session.close();
+                  }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al modificar el producto.");
+            }
+        }
+    }
 
     public void borrarProducto(Productos productos) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -143,6 +172,31 @@ public class ProductoDAO {
               Criteria q = session.createCriteria(Productos.class)
                       .add(Restrictions.eq("descripcion", descripcion));
               producto = (Productos)q.uniqueResult();
+              return producto;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los productos.");
+
+          } finally {
+              try {
+                  if(session.isOpen()){
+                    session.close();
+                  }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los productos.");
+              }
+        }
+    }
+    
+    public ProductosInventario getProductosXCodigoBarras(String codigo) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          ProductosInventario producto = new ProductosInventario();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(ProductosInventario.class)
+                      .add(Restrictions.eq("codigoBarras", codigo));
+              producto = (ProductosInventario)q.uniqueResult();
               return producto;
 
           } catch (HibernateException he) {

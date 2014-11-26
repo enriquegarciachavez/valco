@@ -20,7 +20,7 @@
             <ui:insert name="top">
                 <h:form>
                     <p:menubar>
-                        <p:submenu label="Catàlogos">
+                        <p:submenu label="Catálogos">
                             <p:menuitem value="Clientes" url="../clientes/ClientesMain.xhtml" /> 
                             <p:menuitem value="Productos" url="../productos/ProductosMain.xhtml" />
                             <p:menuitem value="Proveedores" url="../proveedores/ProveedoresMain.xhtml" />
@@ -33,6 +33,10 @@
                         <p:submenu label="Notas de venta">
                             <p:menuitem value="Notas de venta" url="../notasventa/NotasVentaMain.xhtml" />
                             <p:menuitem value="Asignación de notas" url="../notasventa/AsignacionNotasMain.xhtml" />
+                        </p:submenu>
+                        <p:submenu label="Productos">
+                            <p:menuitem value="Recepción de productos" url="../productos/RecepcionProductos.xhtml" />
+                            <p:menuitem value="Producto no vendido" url="../productos/ProductoNoVendido.xhtml" />
                         </p:submenu>
                         <f:facet name="options">
                             <p:inputText style="margin-right:10px" placeholder="Search"/>

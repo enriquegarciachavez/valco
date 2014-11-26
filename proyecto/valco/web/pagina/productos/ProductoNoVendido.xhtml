@@ -20,29 +20,6 @@
                         <p:outputLabel for="codigo"   value="Codigo de barras: " />
                         <p:inputText id="codigo"  required="true"  value="#{productoNoVendido.codigoDeBarras}"/>
 
-                        <p:outputLabel for="repartidor" value="Repartidor:"  />
-                        <p:selectOneMenu 
-                            id="repartidor" 
-                            required="true" 
-                            value="#{productoNoVendido.proveedorSeleccionado}" 
-                            converter="omnifaces.SelectItemsConverter" 
-                            panelStyle="width:180px"
-                            effect="fade" 
-                            style="width:160px" 
-                            filter="true" 
-                            filterMatchMode="contains"
-                            var="c">
-
-                            <f:selectItems value="#{productoNoVendido.proveedores}" var="proveedor" itemLabel="#{proveedor.codigo} | #{proveedor.nombres} #{proveedor.apellidoPaterno}"  itemValue="#{proveedor}" />
-                            <p:column style="width:10%">
-                                <h:outputText value="#{c.codigo}" />
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{c.nombres} #{c.apellidoPaterno}" />
-                            </p:column>
-                        </p:selectOneMenu>
-
-
                         <p:commandButton 
                             value="Ingresar" 
                             update="formAsignar" 

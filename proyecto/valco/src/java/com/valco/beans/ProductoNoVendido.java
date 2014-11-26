@@ -31,7 +31,7 @@ import javax.faces.bean.ViewScoped;
  */
 @ManagedBean
 @ViewScoped
-public class RecepcionProductoBean {
+public class ProductoNoVendido {
 
     @ManagedProperty(value = "#{productoDao}")
     private ProductoDAO productoDao;
@@ -48,7 +48,7 @@ public class RecepcionProductoBean {
     /**
      * Creates a new instance of productoNoVendido
      */
-    public RecepcionProductoBean() {
+    public ProductoNoVendido() {
     }
     
     @PostConstruct
@@ -61,46 +61,36 @@ public class RecepcionProductoBean {
         }
     }
     
-    public void agregarProducto() throws Exception{
-        
-        ProductosHasProveedores productoHasProveedores = null;
-        
-        String codigoProducto = 
-                codigoDeBarras.substring(proveedorSeleccionado.getPosicionCodigoInicial(), 
-                        proveedorSeleccionado.getPosicionCodigoFinal());
-        String peso =
-                codigoDeBarras.substring(proveedorSeleccionado.getPosicionPesoInicial(),
-                        proveedorSeleccionado.getPosicionPesoFinal());
+    public void agregarProducto(){
+        ProductosInventario producto = null;
         try {
-            productoHasProveedores =
-                    productoDao.getProductoXProveYCodigo(proveedorSeleccionado, codigoProducto);
+            producto = 
+                    productoDao.getProductosXCodigoBarras(codigoDeBarras);
         } catch (Exception ex) {
-            MsgUtility.showErrorMeage("Ocurrió un error al consultar el producto.");
+            MsgUtility.showErrorMeage("Ocurrió un error al consultar el producto");
+        }
+        if(producto == null){
+            MsgUtility.showWarnMeage("No se encontró el producto buscado");
+        }else{
+            if(!producto.getEstatus().equals("EN RUTA")){
+                MsgUtility.showWarnMeage("El producto buscado no se encuentra en ruta");
+            }else{
+                productosInventario.add(producto);
+            }
         }
         
-        if(productoHasProveedores == null){
-            MsgUtility.showWarnMeage("No se encontro un producto con el código especificado");
-        }else{
-            ProductosInventario productoNuevo = new ProductosInventario();
-            productoNuevo.setPeso(new BigDecimal(peso));
-            productoNuevo.setCodigoBarras(codigoDeBarras);
-            productoNuevo.setProductosHasProveedores(productoHasProveedores);
-            productoNuevo.setPrecio(BigDecimal.ZERO);
-            productoNuevo.setUbicaciones(ubicacionesDao.getUbicaciones().get(0));
-            productoNuevo.setEstatus("ACTIVO");
-            productosInventario.add(productoNuevo);
-        }
     }
     
     public void recibirProductos() throws Exception{
-        OrdenesCompra orden = new OrdenesCompra();
-        orden.setEstatus("ACTIVO");
-        orden.setFecha(new Date());
-        orden.setProveedores(proveedorSeleccionado);
-        orden.setTotal(BigDecimal.ZERO);
-        orden.setUsuarios(usuariosDao.getUsuarios().get(0));
+        if(productosInventario == null || productosInventario.isEmpty()){
+            MsgUtility.showWarnMeage("Debe ingresar productos no vendidos.");
+        }else{
+            for(ProductosInventario producto : productosInventario){
+                producto.setEstatus("ACTIVO");
+            }
+        }
         try{
-        productoDao.recibirProductos(productosInventario, orden);
+        productoDao.actualizarProductosInventario(productosInventario);
         }catch(Exception e){
             MsgUtility.showErrorMeage("Ocurrió un error al recibir los productos.");
         }
@@ -169,7 +159,5 @@ public class RecepcionProductoBean {
     public void setUsuariosDao(UsuariosDAO usuariosDao) {
         this.usuariosDao = usuariosDao;
     }
-    
-    
     
 }
