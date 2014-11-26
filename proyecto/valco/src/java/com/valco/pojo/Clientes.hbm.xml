@@ -68,7 +68,7 @@
         <property name="banco" type="string">
             <column name="BANCO" length="100" />
         </property>
-        <set name="notasDeVentas" table="NOTAS_DE_VENTA" inverse="true" lazy="true" fetch="select">
+        <set name="notasDeVentas" table="NOTAS_DE_VENTA" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="CLIENTES_CODIGO" not-null="true" />
             </key>

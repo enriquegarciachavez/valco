@@ -15,9 +15,12 @@
             <ui:define name="content">
               
                 <h:form id="formAsignar">
-                    <h:panelGrid id="ingresarGrid"  columns="10" cellpadding="5"> 
+                    <h:panelGrid id="ingresarGrid"  
+                                 columns="10"
+                                 cellpadding="5"> 
                         <f:facet name="header">
-                            <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
+                            <p:messages id="msgs" 
+                                        style="font-size: 12px; text-align: left;"/>
                         </f:facet>
 
                         <p:outputLabel for="inicial"   value="Nota de Venta inicial: " />
@@ -32,6 +35,7 @@
                         <p:selectOneMenu id="repartidor" required="true" value="#{asignacionNotasMainBean.repartidor}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
                                          effect="fade" style="width:160px" >
 
+                            <f:selectItem itemLabel="Selecciona uno" itemValue="" />
                             <f:selectItems value="#{asignacionNotasMainBean.repartidores}" var="repartidor" itemLabel="#{repartidor.codigo} | #{repartidor.nombres} #{repartidor.apellidoPaterno}"  itemValue="#{repartidor}" />
                         </p:selectOneMenu>
                         <p:message for="repartidor" display="icon" />

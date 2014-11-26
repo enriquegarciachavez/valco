@@ -40,5 +40,6 @@
     <bean id="repartidoresDao" class="com.valco.dao.RepartidoresDAO"/>
     <bean id="ubicacionesDao" class="com.valco.dao.UbicacionesDAO"/>
     <bean id="usuariosDao" class="com.valco.dao.UsuariosDAO"/>
+    <bean id="abonoscuentascobrarDAO" class="com.valco.dao.AbonosCuentasXCobrarDAO"/>
     
 </beans>

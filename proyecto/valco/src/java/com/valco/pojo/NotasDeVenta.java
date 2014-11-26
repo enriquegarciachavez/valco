@@ -27,6 +27,7 @@ public class NotasDeVenta  implements java.io.Serializable {
      private Set<CuentasXCobrar> cuentasXCobrars = new HashSet<CuentasXCobrar>(0);
      private Set<ProductosInventario> productosInventarios = new HashSet<ProductosInventario>(0);
      private List<ProductosInventario> productosInventariosList = new ArrayList<ProductosInventario>(0);
+     private CuentasXCobrar cuentaXCobrar;
 
     public NotasDeVenta() {
     }
@@ -141,6 +142,18 @@ public class NotasDeVenta  implements java.io.Serializable {
         this.productosInventariosList = productosInventariosList;
     }
 
+    public CuentasXCobrar getCuentaXCobrar() {
+        for(CuentasXCobrar cuenta : cuentasXCobrars){
+            this.cuentaXCobrar = cuenta;
+        }
+        return this.cuentaXCobrar;
+    }
+
+    public void setCuentaXCobrar(CuentasXCobrar cuentaXCobrar) {
+        this.cuentaXCobrar = cuentaXCobrar;
+    }
+    
+    
 
 
 }
