@@ -101,6 +101,8 @@ public class RecepcionProductoBean {
         orden.setUsuarios(usuariosDao.getUsuarios().get(0));
         try{
         productoDao.recibirProductos(productosInventario, orden);
+        productosInventario.clear();
+        MsgUtility.showInfoMeage("El producto se ingresó correctamente");
         }catch(Exception e){
             MsgUtility.showErrorMeage("Ocurrió un error al recibir los productos.");
         }

@@ -87,12 +87,16 @@ public class ProductoNoVendido {
         }else{
             for(ProductosInventario producto : productosInventario){
                 producto.setEstatus("ACTIVO");
+                producto.setRepartidor(null);
             }
         }
         try{
         productoDao.actualizarProductosInventario(productosInventario);
+        productosInventario.clear();
+        MsgUtility.showInfoMeage("El producto se recibió en el inventario correctamente.");
         }catch(Exception e){
             MsgUtility.showErrorMeage("Ocurrió un error al recibir los productos.");
+            
         }
     }
 
