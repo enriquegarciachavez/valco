@@ -18,22 +18,22 @@
                         </f:facet>
 
                         <p:outputLabel for="codigo"   value="Codigo de barras: " />
-                        <p:inputText id="codigo"  required="true"  value="#{productoNoVendido.codigoDeBarras}"/>
+                        <p:inputText id="codigo"  required="true"  value="#{asignacionProductoRepartidor.codigoDeBarras}"/>
 
                         <p:commandButton 
                             value="Ingresar" 
                             update="formAsignar" 
-                            action="#{productoNoVendido.agregarProducto()}"  />
+                            action="#{asignacionProductoRepartidor.agregarProducto()}"  />
                         
                         <p:commandButton 
                             value="Ingresar" 
                             update="formAsignar" 
-                            action="#{productoNoVendido.recibirProductos()}"  />
+                            action="#{asignacionProductoRepartidor.recibirProductos()}"  />
                         
 
 
                     </h:panelGrid>
-                    <p:dataTable id="productos" var="producto" value="#{productoNoVendido.productosInventario}" rowKey="#{producto.codigo}">
+                    <p:dataTable id="productos" var="producto" value="#{asignacionProductoRepartidor.productosInventario}" rowKey="#{producto.codigo}">
                         <f:facet name="header">
                             Productos por ingresar
                         </f:facet>

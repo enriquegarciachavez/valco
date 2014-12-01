@@ -7,12 +7,14 @@ package com.valco.beans;
 
 import com.valco.dao.ProductoDAO;
 import com.valco.dao.ProveedorDAO;
+import com.valco.dao.RepartidoresDAO;
 import com.valco.dao.UbicacionesDAO;
 import com.valco.dao.UsuariosDAO;
 import com.valco.pojo.OrdenesCompra;
 import com.valco.pojo.ProductosHasProveedores;
 import com.valco.pojo.ProductosInventario;
 import com.valco.pojo.Proveedores;
+import com.valco.pojo.Repartidores;
 import com.valco.utility.MsgUtility;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.inject.Named;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
@@ -29,80 +32,65 @@ import javax.faces.bean.ViewScoped;
  *
  * @author Karlitha
  */
-@ManagedBean
 @ViewScoped
-public class RecepcionProductoBean {
+@ManagedBean
+public class AsignacionProductoRepartidor {
 
     @ManagedProperty(value = "#{productoDao}")
     private ProductoDAO productoDao;
-    @ManagedProperty(value = "#{proveedorDAO}")
-    private ProveedorDAO proveedorDAO;
+    @ManagedProperty(value = "#{repartidoresDao}")
+    private RepartidoresDAO repartidoresDao;
     @ManagedProperty(value = "#{ubicacionesDao}")
     private UbicacionesDAO ubicacionesDao;
     @ManagedProperty(value = "#{usuariosDao}")
     private UsuariosDAO usuariosDao;
     private List<ProductosInventario> productosInventario;
-    private List<Proveedores> proveedores;
-    private Proveedores proveedorSeleccionado;
+    private List<Repartidores> repartidores;
+    private Repartidores repartidorSeleccionado;
     private String codigoDeBarras;
     /**
      * Creates a new instance of asignacionProductoRepartidor
      */
-    public RecepcionProductoBean() {
+    public AsignacionProductoRepartidor() {
     }
     
     @PostConstruct
     public void init(){
         try {
             productosInventario = new ArrayList<ProductosInventario>();
-            proveedores = proveedorDAO.getProveedores();
+            repartidores = repartidoresDao.getRepartidores();
         } catch (Exception ex) {
             MsgUtility.showErrorMeage("Ocurrió un error al consultar los proveedores.");
         }
     }
     
     public void agregarProducto() throws Exception{
-        
-        ProductosHasProveedores productoHasProveedores = null;
-        
-        String codigoProducto = 
-                codigoDeBarras.substring(proveedorSeleccionado.getPosicionCodigoInicial(), 
-                        proveedorSeleccionado.getPosicionCodigoFinal());
-        String peso =
-                codigoDeBarras.substring(proveedorSeleccionado.getPosicionPesoInicial(),
-                        proveedorSeleccionado.getPosicionPesoFinal());
+        ProductosInventario producto = null;
         try {
-            productoHasProveedores =
-                    productoDao.getProductoXProveYCodigo(proveedorSeleccionado, codigoProducto);
+            producto = 
+                    productoDao.getProductosXCodigoBarras(codigoDeBarras);
         } catch (Exception ex) {
-            MsgUtility.showErrorMeage("Ocurrió un error al consultar el producto.");
+            MsgUtility.showErrorMeage("Ocurrió un error al consultar el producto");
+        }
+        if(producto == null){
+            MsgUtility.showWarnMeage("No se encontró el producto buscado");
+        }else{
+            if(!producto.getEstatus().equals("ACTIVO")){
+                MsgUtility.showWarnMeage("El producto buscado no se encuentra en inventario");
+            }else{
+                productosInventario.add(producto);
+            }
         }
         
-        if(productoHasProveedores == null){
-            MsgUtility.showWarnMeage("No se encontro un producto con el código especificado");
-        }else{
-            ProductosInventario productoNuevo = new ProductosInventario();
-            productoNuevo.setPeso(new BigDecimal(peso));
-            productoNuevo.setCodigoBarras(codigoDeBarras);
-            productoNuevo.setProductosHasProveedores(productoHasProveedores);
-            productoNuevo.setPrecio(BigDecimal.ZERO);
-            productoNuevo.setUbicaciones(ubicacionesDao.getUbicaciones().get(0));
-            productoNuevo.setEstatus("ACTIVO");
-            productosInventario.add(productoNuevo);
-        }
     }
     
     public void recibirProductos() throws Exception{
-        OrdenesCompra orden = new OrdenesCompra();
-        orden.setEstatus("ACTIVO");
-        orden.setFecha(new Date());
-        orden.setProveedores(proveedorSeleccionado);
-        orden.setTotal(BigDecimal.ZERO);
-        orden.setUsuarios(usuariosDao.getUsuarios().get(0));
+        for(ProductosInventario producto : productosInventario){
+            producto.setRepartidor(repartidorSeleccionado);
+            producto.setEstatus("EN RUTA");
+        }
         try{
-        productoDao.recibirProductos(productosInventario, orden);
-        productosInventario.clear();
-        MsgUtility.showInfoMeage("El producto se ingresó correctamente");
+        productoDao.actualizarProductosInventario(productosInventario);
         }catch(Exception e){
             MsgUtility.showErrorMeage("Ocurrió un error al recibir los productos.");
         }
@@ -124,13 +112,15 @@ public class RecepcionProductoBean {
         this.productosInventario = productosInventario;
     }
 
-    public List<Proveedores> getProveedores() {
-        return proveedores;
+    public List<Repartidores> getRepartidores() {
+        return repartidores;
     }
 
-    public void setProveedores(List<Proveedores> proveedores) {
-        this.proveedores = proveedores;
+    public void setRepartidores(List<Repartidores> repartidores) {
+        this.repartidores = repartidores;
     }
+
+    
 
     public String getCodigoDeBarras() {
         return codigoDeBarras;
@@ -140,20 +130,20 @@ public class RecepcionProductoBean {
         this.codigoDeBarras = codigoDeBarras;
     }
 
-    public ProveedorDAO getProveedorDAO() {
-        return proveedorDAO;
+    public RepartidoresDAO getRepartidoresDao() {
+        return repartidoresDao;
     }
 
-    public void setProveedorDAO(ProveedorDAO proveedorDAO) {
-        this.proveedorDAO = proveedorDAO;
+    public void setRepartidoresDao(RepartidoresDAO repartidoresDao) {
+        this.repartidoresDao = repartidoresDao;
     }
 
-    public Proveedores getProveedorSeleccionado() {
-        return proveedorSeleccionado;
+    public Repartidores getRepartidorSeleccionado() {
+        return repartidorSeleccionado;
     }
 
-    public void setProveedorSeleccionado(Proveedores proveedorSeleccionado) {
-        this.proveedorSeleccionado = proveedorSeleccionado;
+    public void setRepartidorSeleccionado(Repartidores repartidorSeleccionado) {
+        this.repartidorSeleccionado = repartidorSeleccionado;
     }
 
     public UbicacionesDAO getUbicacionesDao() {
