@@ -21,6 +21,7 @@ public class ProductosInventario  implements java.io.Serializable {
      private BigDecimal precio;
      private String codigoBarras;
      private String estatus;
+     private Repartidores repartidor;
 
     public String getEstatus() {
         return estatus;
@@ -116,6 +117,14 @@ public class ProductosInventario  implements java.io.Serializable {
     
     public void setCodigoBarras(String codigoBarras) {
         this.codigoBarras = codigoBarras;
+    }
+
+    public Repartidores getRepartidor() {
+        return repartidor;
+    }
+
+    public void setRepartidor(Repartidores repartidor) {
+        this.repartidor = repartidor;
     }
     
     @Override

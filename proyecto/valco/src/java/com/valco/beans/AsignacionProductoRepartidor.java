@@ -91,6 +91,8 @@ public class AsignacionProductoRepartidor {
         }
         try{
         productoDao.actualizarProductosInventario(productosInventario);
+        productosInventario.clear();
+        MsgUtility.showInfoMeage("El producto se asignó correctamente");
         }catch(Exception e){
             MsgUtility.showErrorMeage("Ocurrió un error al recibir los productos.");
         }
