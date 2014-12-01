@@ -23,6 +23,9 @@
         <many-to-one name="ubicaciones" class="com.valco.pojo.Ubicaciones" fetch="select">
             <column name="UBICACIONES_CODIGO" not-null="true" />
         </many-to-one>
+         <many-to-one name="repartidor" class="com.valco.pojo.Repartidores" fetch="select">
+            <column name="REPARTIDORES_CODIGO" not-null="true" />
+         </many-to-one>
         <property name="peso" type="big_decimal">
             <column name="PESO" precision="4" not-null="true" />
         </property>
@@ -35,5 +38,6 @@
         <property name="estatus" type="string">
             <column name="ESTATUS" length="20" />
         </property>
+   
     </class>
 </hibernate-mapping>

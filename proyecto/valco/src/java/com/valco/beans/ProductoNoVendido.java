@@ -46,7 +46,7 @@ public class ProductoNoVendido {
     private Proveedores proveedorSeleccionado;
     private String codigoDeBarras;
     /**
-     * Creates a new instance of productoNoVendido
+     * Creates a new instance of asignacionProductoRepartidor
      */
     public ProductoNoVendido() {
     }
