@@ -7,9 +7,11 @@ package com.valco.dao;
 
 import com.valco.HibernateUtil;
 import com.valco.pojo.Clientes;
+import com.valco.pojo.CuentasXCobrar;
 import com.valco.pojo.NotasDeVenta;
 import com.valco.pojo.ProductosInventario;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
@@ -86,6 +88,12 @@ public class NotasVentaDAO {
         try {
             tx = session.beginTransaction();
             session.update(nota);
+            CuentasXCobrar cuenta = new CuentasXCobrar();
+            cuenta.setEstatus("ACTIVO");
+            cuenta.setFecha(new Date());
+            cuenta.setImporte(nota.getTotal());
+            cuenta.setNotasDeVenta(nota);
+            session.save(cuenta);
             for(ProductosInventario producto : nota.getProductosInventarios()){
                 producto.setEstatus("VENDIDO");
                 session.update(producto);

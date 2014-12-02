@@ -6,12 +6,14 @@
 package com.valco.dao;
 
 import com.valco.HibernateUtil;
+import com.valco.pojo.CuentasXPagar;
 import com.valco.pojo.OrdenesCompra;
 import com.valco.pojo.Productos;
 import com.valco.pojo.ProductosHasProveedores;
 import com.valco.pojo.ProductosInventario;
 import com.valco.pojo.Proveedores;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
@@ -245,6 +247,12 @@ public class ProductoDAO {
         try {
             tx = session.beginTransaction();
             session.save(orden);
+            CuentasXPagar cuenta = new CuentasXPagar();
+            cuenta.setEstatus("ACTIVO");
+            cuenta.setFecha(new Date());
+            cuenta.setOrdenesCompra(orden);
+            cuenta.setImporte(orden.getTotal());
+            session.save(cuenta);
             for(ProductosInventario producto : productos){
                 producto.setOrdenesCompra(orden);
                 session.save(producto);

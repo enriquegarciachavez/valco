@@ -2,6 +2,9 @@ package com.valco.pojo;
 // Generated 2/11/2014 06:06:42 PM by Hibernate Tools 4.3.1
 
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -28,6 +31,7 @@ public class NotasDeVenta  implements java.io.Serializable {
      private Set<ProductosInventario> productosInventarios = new HashSet<ProductosInventario>(0);
      private List<ProductosInventario> productosInventariosList = new ArrayList<ProductosInventario>(0);
      private CuentasXCobrar cuentaXCobrar;
+     private BigDecimal total;
 
     public NotasDeVenta() {
     }
@@ -152,8 +156,19 @@ public class NotasDeVenta  implements java.io.Serializable {
     public void setCuentaXCobrar(CuentasXCobrar cuentaXCobrar) {
         this.cuentaXCobrar = cuentaXCobrar;
     }
-    
-    
+
+    public BigDecimal getTotal() {
+        total = new BigDecimal(0.00);
+        total.setScale(2, RoundingMode.HALF_EVEN);
+        for(ProductosInventario producto : this.getProductosInventarios()){
+            total.add(producto.getPeso().multiply(producto.getPrecio()));
+        }
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
 
 
 }
