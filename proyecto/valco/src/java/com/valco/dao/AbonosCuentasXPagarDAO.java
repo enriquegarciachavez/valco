@@ -6,9 +6,8 @@
 package com.valco.dao;
 
 import com.valco.HibernateUtil;
-import com.valco.pojo.AbonosCuentasXCobrar;
-import com.valco.pojo.Clientes;
-import com.valco.pojo.NotasDeVenta;
+import com.valco.pojo.AbonosCuentasXPagar;
+import com.valco.pojo.OrdenesCompra;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.HibernateException;
@@ -20,9 +19,11 @@ import org.hibernate.Transaction;
  *
  * @author Enrique
  */
-public class AbonosCuentasXCobrarDAO {
+public class AbonosCuentasXPagarDAO {
     
-    public void insertarAbono(AbonosCuentasXCobrar abono) throws Exception {
+    
+    
+     public void insertarAbono(AbonosCuentasXPagar abono) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
@@ -49,8 +50,8 @@ public class AbonosCuentasXCobrarDAO {
         }
     }
     
-    
-    public void actualizarAbono(AbonosCuentasXCobrar abono) throws Exception {
+     
+     public void actualizarAbono(AbonosCuentasXPagar abono) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
@@ -62,20 +63,22 @@ public class AbonosCuentasXCobrarDAO {
                 try {
                     tx.rollback();
                 } catch (HibernateException he) {
-                    throw new Exception("Ocurrió un error al modificar el cliente.");
+                    throw new Exception("Ocurrió un error al registrar el abono.");
                 }
             }
-            throw new Exception("Ocurrió un error al modificar el cliente.");
+            throw new Exception("Ocurrió un error al registrar el abono.");
         } finally {
             try {
-                session.close();
+                if (session.isOpen()) {
+                    session.close();
+                }
             } catch (HibernateException he) {
-                throw new Exception("Ocurrió un error al modificar el cliente.");
+                throw new Exception("Ocurrió un error al registrar el abono.");
             }
         }
     }
-    
-    public void borrarAbono(AbonosCuentasXCobrar abono) throws Exception {
+     
+     public void borrarAbono(AbonosCuentasXPagar abono) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
@@ -87,29 +90,30 @@ public class AbonosCuentasXCobrarDAO {
                 try {
                     tx.rollback();
                 } catch (HibernateException he) {
-                    throw new Exception("Ocurrió un error al borrar el abono.");
+                    throw new Exception("Ocurrió un error al registrar el abono.");
                 }
             }
-            throw new Exception("Ocurrió un error al borrar el abono.");
+            throw new Exception("Ocurrió un error al registrar el abono.");
         } finally {
             try {
-                if(session.isOpen()){
-                session.close();
+                if (session.isOpen()) {
+                    session.close();
                 }
             } catch (HibernateException he) {
-                throw new Exception("Ocurrió un error al borrar el abono.");
+                throw new Exception("Ocurrió un error al registrar el abono.");
             }
         }
     }
-    
-    public List<AbonosCuentasXCobrar> getAbonosCuentasXCobrar() throws Exception {
+     
+     
+     public List<AbonosCuentasXPagar> getAbonosCuentasXCobrar() throws Exception {
           Session session = HibernateUtil.getSessionFactory().getCurrentSession();
           Transaction tx = null;
-          List<AbonosCuentasXCobrar> abonos = new ArrayList<AbonosCuentasXCobrar>();
+          List<AbonosCuentasXPagar> abonos = new ArrayList<AbonosCuentasXPagar>();
           try {
               tx = session.beginTransaction();
-              Query q = session.createQuery("FROM AbonosCuentasXCobrar");
-              abonos = (List<AbonosCuentasXCobrar>) q.list();
+              Query q = session.createQuery("FROM AbonosCuentasXPagar");
+              abonos = (List<AbonosCuentasXPagar>) q.list();
               return abonos;
 
           } catch (HibernateException he) {
@@ -123,16 +127,17 @@ public class AbonosCuentasXCobrarDAO {
               }
         }
     }
-    
-    public List<NotasDeVenta> getNotasDeVenta() throws Exception {
+     
+     
+     public List<OrdenesCompra> getOrdenesCompras() throws Exception {
           Session session = HibernateUtil.getSessionFactory().getCurrentSession();
           Transaction tx = null;
-          List<NotasDeVenta> notas = new ArrayList<NotasDeVenta>();
+          List<OrdenesCompra> ordenes = new ArrayList<OrdenesCompra>();
           try {
               tx = session.beginTransaction();
-              Query q = session.createQuery("FROM NotasDeVenta");
-              notas = (List<NotasDeVenta>) q.list();
-              return notas;
+              Query q = session.createQuery("FROM OrdenesCompra");
+              ordenes = (List<OrdenesCompra>) q.list();
+              return ordenes;
 
           } catch (HibernateException he) {
               throw new Exception("Ocurrió un error al consultar los clientes.");
@@ -145,10 +150,4 @@ public class AbonosCuentasXCobrarDAO {
               }
         }
     }
-    
-    
-    
-    
-    
-    
 }

@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../clientes/Template1.xhtml">
+
+          <ui:define name="content">
+                content
+                <h:form id="formAbonar">
+                    
+                    <p:menubar>
+                        
+                        <p:menuitem 
+                            value="Abonar" 
+                            icon="ui-icon-plusthick"                      
+                            partialSubmit="true"/>
+                        <p:menuitem 
+                          value="Cancelar Abono" 
+                            icon="ui-icon-circle-close"
+                            partialSubmit="true"
+                            
+                           /> 
+                    </p:menubar>
+                    
+                    <h:panelGrid id="ingresarGrid"  
+                                 columns="10"
+                                 cellpadding="5"> 
+                        <f:facet name="header">
+                            <p:messages id="msgs" 
+                                        style="font-size: 12px; text-align: left;"/>
+                        </f:facet>
+
+                        <p:outputLabel for="proveedor" value="Proveedor:"  />
+                        <p:selectOneMenu id="proveedor" 
+                                         value="#{abonosCuentasXPagarMainBean.proveedorSelecionado}" 
+                                         converter="omnifaces.SelectItemsConverter" 
+                                         panelStyle="width:180px"
+                                         effect="fade"  
+                                         style="width:160px" 
+                                         required="false">
+
+                            <f:selectItem itemLabel="Selecciona uno" itemValue="" />
+                            <f:selectItems value="#{abonosCuentasXPagarMainBean.proveedor}" 
+                                           var="proveedor" 
+                                           itemLabel="#{proveedor.codigo} | #{proveedor.nombres} #{proveedor.apellidoPaterno} " 
+                                           itemValue="#{proveedor}" /> 
+                            <p:ajax event="change" 
+                                    update="tablaAbno"  />             
+
+                        </p:selectOneMenu>
+                        <p:message for="proveedor" display="icon" />
+
+                        <p:outputLabel for="popup" value="Fecha:" />
+                        <p:calendar id="popup" 
+                                    required="false" 
+                                    value="#{abonosCuentasXPagarMainBean.abonoSeleccionado.fecha}"
+                                    navigator="true" 
+                                    />
+
+                        <p:message for="popup" display="icon" />
+
+                        <p:outputLabel for="importe"   value="Importe " />
+                        <p:inputText id="importe" 
+                                     required="false"  
+                                     value="#{abonosCuentasXPagarMainBean.abonoSeleccionado.importe}"/>
+                        <p:message for="importe" 
+                                   display="icon" />
+
+                    </h:panelGrid>
+                    
+                    <!-- TABLA-->
+
+                    <p:dataTable id="tablaAbno" 
+                                 var="orden" 
+                                 value="#{abonosCuentasXPagarMainBean.proveedorSelecionado.ordenesCompras}"
+                                 selectionMode="single" 
+                                 selection="#{abonosCuentasXPagarMainBean.ordenSeleccionado}"
+                                 rowKey="#{ordenes.codigo}"
+                                 scrollHeight="150"
+                                 lazy="true"
+                                 style="margin-bottom:40px"
+                                 paginator="true"
+                                 
+                                 >
+
+                        <f:facet name="header">
+                            Cuentas por Pagar
+                        </f:facet>
+
+                        <p:column  sortBy="#{orden.fecha}" >
+                            <f:facet name="header">
+                             <h:outputText value="Fecha de orden de compra" />   
+                            </f:facet>
+                            <h:outputText value="#{orden.fecha}" />
+                        </p:column>
+                        
+                        <p:column headerText="Orden de Compra"  sortBy="#{orden.codigo}" >
+                            <h:outputText value="#{orden.codigo}" />
+                        </p:column>
+                        
+                        <p:column headerText="Importe" sortBy="#{orden.cuentaXPagar.importe}" >
+                            <h:outputText value="#{orden.cuentaXPagar.importe}" />
+                        </p:column>
+
+                        <p:column headerText="Importe Abonado " sortBy="#{orden.cuentaXPagar.importeAbonado}" >
+                            <h:outputText value="#{orden.cuentaXPagar.importeAbonado}" />
+                        </p:column>
+                        <p:column headerText="Saldo a la fecha " sortBy="#{orden.cuentaXPagar.importe}">
+                            <h:outputText value="#{orden.cuentaXPagar.importe - orden.cuentaXPagar.importeAbonado}" />
+                        </p:column>
+                        
+                    </p:dataTable>
+                    
+                    </h:form>
+                
+                
+            </ui:define>
+
+            
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -20,6 +20,7 @@ public class CuentasXPagar  implements java.io.Serializable {
      private String observaciones;
      private String estatus;
      private Set<AbonosCuentasXPagar> abonosCuentasXPagars = new HashSet<AbonosCuentasXPagar>(0);
+     private Double importeAbonado;
 
     public CuentasXPagar() {
     }
@@ -89,6 +90,27 @@ public class CuentasXPagar  implements java.io.Serializable {
     public void setAbonosCuentasXPagars(Set<AbonosCuentasXPagar> abonosCuentasXPagars) {
         this.abonosCuentasXPagars = abonosCuentasXPagars;
     }
+
+    public Double getImporteAbonado() {
+        importeAbonado=0.0;
+        for (AbonosCuentasXPagar abono : abonosCuentasXPagars) {
+            
+           if (abono.getEstatus().equals("ACTIVO")){
+              importeAbonado+=abono.getImporte().doubleValue();        
+            
+            }
+                
+            
+            
+        }
+        return importeAbonado;
+    }
+
+    public void setImporteAbonado(Double importeAbonado) {
+        this.importeAbonado = importeAbonado;
+    }
+    
+    
 
 
 

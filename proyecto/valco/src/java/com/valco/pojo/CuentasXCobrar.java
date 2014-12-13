@@ -93,10 +93,18 @@ public class CuentasXCobrar  implements java.io.Serializable {
     public Double getImporteAbonado() {
         importeAbonado=0.0;
         for (AbonosCuentasXCobrar abono : abonosCuentasXCobrars) {
-            importeAbonado+=abono.getImporte().doubleValue();
+            
+           if (abono.getEstatus().equals("ACTIVO")){
+              importeAbonado+=abono.getImporte().doubleValue();        
+            
+            }
+                
+            
+            
         }
         return importeAbonado;
     }
+    
 
     public void setImporteAbonado(Double importeAbonado) {
         this.importeAbonado = importeAbonado;

@@ -17,6 +17,7 @@ public class AbonosCuentasXCobrar  implements java.io.Serializable {
      private BigDecimal importe;
      private String observaciones;
      private String estatus;
+     private Date fechaUltimoAbono;
 
     public AbonosCuentasXCobrar() {
     }

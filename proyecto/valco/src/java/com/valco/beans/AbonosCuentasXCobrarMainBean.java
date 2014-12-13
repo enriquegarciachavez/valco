@@ -10,10 +10,14 @@ import com.valco.pojo.Clientes;
 import com.valco.dao.AbonosCuentasXCobrarDAO;
 import com.valco.dao.NotasVentaDAO;
 import com.valco.pojo.AbonosCuentasXCobrar;
+import com.valco.pojo.CuentasXCobrar;
 import com.valco.pojo.NotasDeVenta;
+import com.valco.utility.MsgUtility;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -46,6 +50,8 @@ public class AbonosCuentasXCobrarMainBean {
     List<AbonosCuentasXCobrar> abonos;
     AbonosCuentasXCobrar abonoNuevo;
     AbonosCuentasXCobrar abonoSeleccionado;
+    CuentasXCobrar cuentaSeleccionado;
+    CuentasXCobrar cuentaNuevo;
     Clientes clienteSelecionado;
     NotasDeVenta notaSeleccionado;
     DataModel modeloAbono;
@@ -63,6 +69,24 @@ public class AbonosCuentasXCobrarMainBean {
     public AbonosCuentasXCobrarMainBean() {
        
     }
+
+    public CuentasXCobrar getCuentaSeleccionado() {
+        return cuentaSeleccionado;
+    }
+
+    public void setCuentaSeleccionado(CuentasXCobrar cuentaSeleccionado) {
+        this.cuentaSeleccionado = cuentaSeleccionado;
+    }
+
+    public CuentasXCobrar getCuentaNuevo() {
+        return cuentaNuevo;
+    }
+
+    public void setCuentaNuevo(CuentasXCobrar cuentaNuevo) {
+        this.cuentaNuevo = cuentaNuevo;
+    }
+    
+    
 
     public NotasDeVenta getNotaSeleccionado() {
         return notaSeleccionado;
@@ -102,9 +126,7 @@ public class AbonosCuentasXCobrarMainBean {
         this.nota = nota;
     }
     
-    
-    
-     public void onDateSelect(SelectEvent event) {
+    public void onDateSelect(SelectEvent event) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Date Selected", format.format(event.getObject())));
@@ -140,11 +162,7 @@ public class AbonosCuentasXCobrarMainBean {
     public void setAbonoscuentascobrarDAO(AbonosCuentasXCobrarDAO abonoscuentascobrarDAO) {
         this.abonoscuentascobrarDAO = abonoscuentascobrarDAO;
     }
-    
-    
-
-    
-
+   
     public ClienteDAO getClienteDao() {
         return clienteDao;
     }
@@ -217,11 +235,36 @@ public class AbonosCuentasXCobrarMainBean {
     public void init(){
         try {
             this.date1 = new Date();
+            this.abonoSeleccionado = new AbonosCuentasXCobrar();
             this.nota = notasDeVentaDao.getNotasDeVenta();
             this.clientes = clienteDao.getClientes();
         } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+    }
+    
+    public void insertarAbono() {
+        try {
+            
+            abonoSeleccionado.setEstatus("ACTIVO");
+            abonoSeleccionado.setCuentasXCobrar(notaSeleccionado.getCuentaXCobrar());
+            abonoscuentascobrarDAO.insertarAbono(abonoSeleccionado);
+           
+            
+        } catch (Exception ex) {
             
         }
+    }
+    
+    public void actualizarAbono() {
+        try {
+            abonoSeleccionado.setEstatus("CANCELADO");
+            abonoscuentascobrarDAO.actualizarAbono(abonoSeleccionado);
+            
+        } catch (Exception ex) {
+            Logger.getLogger(ClienteMainBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
     
     

@@ -22,6 +22,7 @@ public class OrdenesCompra  implements java.io.Serializable {
      private String estatus;
      private Set<CuentasXPagar> cuentasXPagars = new HashSet<CuentasXPagar>(0);
      private Set<ProductosInventario> productosInventarios = new HashSet<ProductosInventario>(0);
+     private CuentasXPagar cuentaXPagar;
 
     public OrdenesCompra() {
     }
@@ -109,6 +110,18 @@ public class OrdenesCompra  implements java.io.Serializable {
         this.productosInventarios = productosInventarios;
     }
 
+    public CuentasXPagar getCuentaXPagar() {
+        
+        for(CuentasXPagar cuenta : cuentasXPagars){
+            this.cuentaXPagar = cuenta;
+        }
+        return cuentaXPagar;
+    }
+
+    public void setCuentaXPagar(CuentasXPagar cuentaXPagar) {
+        this.cuentaXPagar = cuentaXPagar;
+    }
+    
 
 
 
