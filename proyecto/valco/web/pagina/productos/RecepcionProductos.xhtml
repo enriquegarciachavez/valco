@@ -18,13 +18,13 @@
                         </f:facet>
 
                         <p:outputLabel for="codigo"   value="Codigo de barras: " />
-                        <p:inputText id="codigo"  required="true"  value="#{recepcionProductosBean.codigoDeBarras}"/>
+                        <p:inputText id="codigo"  required="true"  value="#{recepcionProductoBean.codigoDeBarras}"/>
 
                         <p:outputLabel for="proveedor" value="Proveedor:"  />
                         <p:selectOneMenu 
                             id="proveedor" 
                             required="true" 
-                            value="#{recepcionProductosBean.proveedorSeleccionado}" 
+                            value="#{recepcionProductoBean.proveedorSeleccionado}" 
                             converter="omnifaces.SelectItemsConverter" 
                             panelStyle="width:180px"
                             effect="fade" 
@@ -33,7 +33,7 @@
                             filterMatchMode="contains"
                             var="c">
 
-                            <f:selectItems value="#{recepcionProductosBean.proveedores}" var="proveedor" itemLabel="#{proveedor.codigo} | #{proveedor.nombres} #{proveedor.apellidoPaterno}"  itemValue="#{proveedor}" />
+                            <f:selectItems value="#{recepcionProductoBean.proveedores}" var="proveedor" itemLabel="#{proveedor.codigo} | #{proveedor.nombres} #{proveedor.apellidoPaterno}"  itemValue="#{proveedor}" />
                             <p:column style="width:10%">
                                 <h:outputText value="#{c.codigo}" />
                             </p:column>
@@ -46,17 +46,17 @@
                         <p:commandButton 
                             value="Ingresar" 
                             update="formAsignar" 
-                            action="#{recepcionProductosBean.agregarProducto()}"  />
+                            action="#{recepcionProductoBean.agregarProducto()}"  />
                         
                         <p:commandButton 
                             value="Ingresar" 
                             update="formAsignar" 
-                            action="#{recepcionProductosBean.recibirProductos()}"  />
+                            action="#{recepcionProductoBean.recibirProductos()}"  />
                         
 
 
                     </h:panelGrid>
-                    <p:dataTable id="productos" var="producto" value="#{recepcionProductosBean.productosInventario}" rowKey="#{producto.codigo}">
+                    <p:dataTable id="productos" var="producto" value="#{recepcionProductoBean.productosInventario}" rowKey="#{producto.codigo}">
                         <f:facet name="header">
                             Productos por ingresar
                         </f:facet>

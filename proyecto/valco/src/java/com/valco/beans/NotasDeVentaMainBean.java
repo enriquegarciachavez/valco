@@ -11,6 +11,10 @@ import com.valco.pojo.Clientes;
 import com.valco.pojo.NotasDeVenta;
 import com.valco.pojo.ProductosInventario;
 import com.valco.utility.MsgUtility;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -106,6 +110,7 @@ import javax.faces.validator.ValidatorException;
         for(ProductosInventario producto: productosSeleccionados){
             producto.setNotasDeVenta(notaNueva);
             notaNueva.getProductosInventarios().add(producto);
+            productosDisponibles.remove(producto);
         }
         try {
             this.notaNueva.setEstatus("ASIGNADA");
@@ -138,16 +143,17 @@ import javax.faces.validator.ValidatorException;
         }
     }
     
-    public double getTotalSeleccionado(List<ProductosInventario> productos){
-        double total = 0.00;
-        if(productos == null || productos.isEmpty()){
-            return 0.0;
-        }else{
+    public BigDecimal getTotalSeleccionado(List<ProductosInventario> productos){
+        DecimalFormat df = new DecimalFormat("0.00");
+        BigDecimal total = new BigDecimal(BigInteger.ZERO,2);
+        total.setScale(2, BigDecimal.ROUND_HALF_UP);
+        if(productos != null && !productos.isEmpty()){
             for(ProductosInventario producto : productos){
-                total += producto.getPrecio().doubleValue()*producto.getPeso().doubleValue();
+                total = total.add(producto.getPrecio().multiply(producto.getPeso()));
             }
-            return total;
         }
+            return total;
+        
     }
     
     public List<ProductosInventario> getProductosDisponiblesModificar() throws Exception {

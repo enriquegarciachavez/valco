@@ -17,6 +17,9 @@
         <property name="descripcion" type="string">
             <column name="DESCRIPCION" length="45" not-null="true" unique="true" />
         </property>
+        <property name="precioSugerido" type="big_decimal">
+            <column name="PRECIO_SUGERIDO" precision="7" not-null="true" />
+        </property>
         <property name="incluyeVicera" type="boolean">
             <column name="INCLUYE_VICERA" not-null="true" />
         </property>

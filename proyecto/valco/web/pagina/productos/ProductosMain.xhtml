@@ -53,6 +53,11 @@
                                 pattern="^[A-Za-z\s]+$"/>
                         </p:inputText>
                         <p:message for="descripcion" display="icon" />
+                        
+                        <p:outputLabel for="precioSugerido" value="Precio sugerido: " />
+                        <p:inputText id="precioSugerido"  required="true" label="precioSugerido" value="#{productoMainBean.productoNuevo.precioSugerido}" >
+                        </p:inputText>
+                        <p:message for="precioSugerido" display="icon" />
 
                         
                         <p:outputLabel for="tipoproducto1" value="Tipo Producto:"  />
@@ -105,18 +110,6 @@
                 </p:dialog>
             </h:form>
 
-            <script type="text/javascript">
-                function handleLoginRequest(xhr, status, args, popupname) {
-                    if (args.validationFailed) {
-                        PF(popupname).jq.effect("shake", {times: 5}, 100);
-                    }
-                    else {
-                        PF(popupname).hide();
-                        $('#loginLink').fadeOut();
-                    }
-                }
-            </script>
-
             <!-- BOTON MODIFICAR PRODUCTO-->
             <!-- <p:commandButton value="Modificar" type="button" onclick="PF('popupmodificar').show();" /> -->
 
@@ -135,6 +128,13 @@
                                 pattern="^[A-Za-z\s]+$"/>
                         </p:inputText>
                         <p:message for="descripcion1" display="icon" />
+                        
+                        <p:outputLabel for="precioSugerido2" value="Precio sugerido: " />
+                        <p:inputText id="precioSugerido2" validatorMessage="El campo precio sugerido solo puede contener nùmeros"  required="true" label="precioSugerido" value="#{productoMainBean.productoSeleccionado.precioSugerido}" >
+                            <f:validateRegex
+                                pattern="^[0-9.]+$"/>
+                        </p:inputText>
+                        <p:message for="precioSugerido2" display="icon" />
 
                         <p:outputLabel for="estatus2" value="Estatus" />
                         <p:inputText id="estatus2" validatorMessage="El campo estatus solo puede contener letras" required="true" label="estatus" value="#{productoMainBean.productoSeleccionado.estatus}">

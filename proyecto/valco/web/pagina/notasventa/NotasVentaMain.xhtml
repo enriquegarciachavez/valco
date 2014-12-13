@@ -134,9 +134,9 @@
                                         <h:outputText value="#{producto.peso}" />
                                     </f:facet>
                                     <f:facet name="input">
-                                        <p:inputText id="pesoInput" value="#{producto.peso}">
+                                        <p:inputMask id="pesoInput" value="#{producto.peso}" mask="999.99">
                                             <p:ajax event="change" update="productosSeleccionados"/>
-                                        </p:inputText>
+                                        </p:inputMask>
                                     </f:facet>
                                 </p:cellEditor>
                             </p:column>
@@ -146,9 +146,9 @@
                                         <h:outputText value="#{producto.precio}" />
                                     </f:facet>
                                     <f:facet name="input">
-                                        <p:inputText id="precioInput" value="#{producto.precio}">
+                                        <p:inputMask id="precioInput" value="#{producto.precio}" mask="999.99">
                                             <p:ajax event="change" update="productosSeleccionados"/>
-                                        </p:inputText>
+                                        </p:inputMask>
                                     </f:facet>
                                 </p:cellEditor>
                             </p:column>
@@ -265,9 +265,9 @@
                                         <h:outputText value="#{producto.peso}" />
                                     </f:facet>
                                     <f:facet name="input">
-                                        <p:inputText id="pesoInputModificar" value="#{producto.peso}">
+                                        <p:inputMask id="pesoInputModificar" value="#{producto.peso}" mask="999.99">
                                             <p:ajax event="change" update="productosSeleccionadosModificar"/>
-                                        </p:inputText>
+                                        </p:inputMask>
                                     </f:facet>
                                 </p:cellEditor>
                             </p:column>
@@ -277,9 +277,9 @@
                                         <h:outputText value="#{producto.precio}" />
                                     </f:facet>
                                     <f:facet name="input">
-                                        <p:inputText id="precioInputModificar" value="#{producto.precio}">
+                                        <p:inputMask id="precioInputModificar" value="#{producto.precio}" mask="999.99">
                                             <p:ajax event="change" update="productosSeleccionadosModificar"/>
-                                        </p:inputText>
+                                        </p:inputMask>
                                     </f:facet>
                                 </p:cellEditor>
                             </p:column>

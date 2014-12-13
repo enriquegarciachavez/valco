@@ -2,6 +2,7 @@ package com.valco.pojo;
 // Generated 2/11/2014 06:06:42 PM by Hibernate Tools 4.3.1
 
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ public class ProductosHasProveedores  implements java.io.Serializable {
      private Productos productos;
      private Proveedores proveedores;
      private String codigoProveedor;
+     private BigDecimal precioSugerido;
      private Set<ProductosInventario> productosInventarios = new HashSet<ProductosInventario>(0);
 
     public ProductosHasProveedores() {
@@ -67,6 +69,14 @@ public class ProductosHasProveedores  implements java.io.Serializable {
     
     public void setProductosInventarios(Set<ProductosInventario> productosInventarios) {
         this.productosInventarios = productosInventarios;
+    }
+
+    public BigDecimal getPrecioSugerido() {
+        return precioSugerido;
+    }
+
+    public void setPrecioSugerido(BigDecimal precioSugerdio) {
+        this.precioSugerido = precioSugerdio;
     }
 
 

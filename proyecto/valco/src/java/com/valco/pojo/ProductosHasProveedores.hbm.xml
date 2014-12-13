@@ -17,6 +17,9 @@
         <property name="codigoProveedor" type="string">
             <column name="CODIGO_PROVEEDOR" length="45" not-null="true" />
         </property>
+        <property name="precioSugerido" type="big_decimal">
+            <column name="PRECIO_SUGERIDO" precision="7" not-null="true" />
+        </property>
         <set name="productosInventarios" table="PRODUCTOS_INVENTARIO" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="PRODUCTOS_has_PROVEEDORES_CODIGO" not-null="true" />

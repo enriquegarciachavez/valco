@@ -3,6 +3,7 @@ package com.valco.pojo;
 
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 /**
@@ -43,6 +44,8 @@ public class ProductosInventario  implements java.io.Serializable {
         this.ubicaciones = ubicaciones;
         this.peso = peso;
         this.precio = precio;
+        this.peso.setScale(2, RoundingMode.HALF_EVEN);
+        this.precio.setScale(2, RoundingMode.HALF_EVEN);
     }
     public ProductosInventario(NotasDeVenta notasDeVenta, OrdenesCompra ordenesCompra, ProductosHasProveedores productosHasProveedores, Tranferencias tranferencias, Ubicaciones ubicaciones, BigDecimal peso, BigDecimal precio, String codigoBarras) {
        this.notasDeVenta = notasDeVenta;
@@ -53,6 +56,8 @@ public class ProductosInventario  implements java.io.Serializable {
        this.peso = peso;
        this.precio = precio;
        this.codigoBarras = codigoBarras;
+       this.peso.setScale(2, RoundingMode.HALF_EVEN);
+       this.precio.setScale(2, RoundingMode.HALF_EVEN);
     }
    
     public Integer getCodigo() {
