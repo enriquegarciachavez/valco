@@ -12,6 +12,36 @@
 
             <ui:define name="content">
                 <h:form id="form">
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" />
+                     <p:menubar>
+                        
+                        <p:menuitem 
+                            value="Ingresar" 
+                            icon="ui-icon-plusthick"                      
+                            partialSubmit="true"
+                            oncomplete="PF('popupingresar').show();;"
+                            update=":formingresar:popupingresar"                           
+                            action="#{clienteMainBean.inicializarCliente()}"/>
+                            
+                        <p:menuitem 
+                            value="Modificar"  
+                            process="singleDT" 
+                            update=":formmodificar:popupmodificar" 
+                            oncomplete="PF('popupmodificar').show();" 
+                            icon="ui-icon-pencil"
+                            partialSubmit="true"
+                            />
+                        <p:menuitem 
+                            value="Borrar " 
+                            icon="ui-icon-circle-close"
+                            partialSubmit="true"
+                            process="singleDT" 
+                            update=":popupborrar" 
+                            oncomplete="PF('popupborrar').show();" 
+                            
+                           /> 
+                    </p:menubar>
+                    
                     <p:dataTable id="singleDT" var="cliente" value="#{clienteMainBean.clientesModel}" selectionMode="single" selection="#{clienteMainBean.clienteSeleccionado}" rowKey="#{cliente.codigo}">
                         <f:facet name="header">
                             Clientes
@@ -28,11 +58,7 @@
                         <p:column headerText="Nombres">
                             <h:outputText value="#{cliente.nombres}" />
                         </p:column>
-                        <f:facet name="footer">
-                            <p:commandButton value="Ingresar" partialSubmit="true" update=":formingresar:popupingresar" oncomplete="PF('popupingresar').show();"  action="#{clienteMainBean.inicializarCliente()}"/>
-                            <p:commandButton value="Modificar"  process="singleDT" update=":formmodificar:popupmodificar" oncomplete="PF('popupmodificar').show();"/>
-                            <p:commandButton value="Borrar" process="singleDT" update=":popupborrar" oncomplete="PF('popupborrar').show();" />
-                        </f:facet>
+                        
                     </p:dataTable>
                 </h:form>
 
@@ -232,7 +258,8 @@
                             <p:message for="rfc2" display="icon" />
 
                             <p:outputLabel for="correo2" value="Correo Electronico" />
-                            <p:inputText id="correo2" required="false" label="correo" value="#{clienteMainBean.clienteSeleccionado.correoElectronico}"/>
+                                                    
+                            <p:inputText id="correo2" required="false" label="correo2" value="#{clienteMainBean.clienteSeleccionado.correoElectronico}"/>
                             <p:message for="correo2" display="icon" />
 
                             <p:outputLabel for="bancaria2" value="Cuenta Bancaria" />

@@ -11,7 +11,10 @@ import com.valco.dao.UnidadesDeMedidaDAO;
 import com.valco.pojo.Productos;
 import com.valco.pojo.TipoProducto;
 import com.valco.pojo.UnidadesDeMedida;
+import com.valco.utility.MsgUtility;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -123,10 +126,15 @@ public class ProductoMainBean {
         this.productoSeleccionado = productoSeleccionado;
     }
 
-    public DataModel getModeloProducto() throws Exception {
-       productos = productoDao.getProductos();
-        modeloProducto = new ListDataModel(productos);
-        return modeloProducto;
+    public DataModel getModeloProducto() {
+        try {
+            productos = productoDao.getProductos();
+            modeloProducto = new ListDataModel(productos);
+            return modeloProducto;
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+            return modeloProducto;
+        }
     }
 
     public void setModeloProducto(DataModel modeloProducto) {
@@ -168,8 +176,9 @@ public class ProductoMainBean {
     public void actualizarProducto() {
         try {
             productoDao.actualizarProducto(productoSeleccionado);
+            MsgUtility.showInfoMeage("El producto se actualizó con éxito");
         } catch (Exception ex) {
-            
+            MsgUtility.showErrorMeage(ex.getMessage());
         }
 
     }
@@ -178,16 +187,18 @@ public class ProductoMainBean {
         try {
             productoNuevo.setEstatus("ACTIVO");
             productoDao.insertarProducto(productoNuevo);
+            MsgUtility.showInfoMeage("El producto se insertó con éxito");
         } catch (Exception ex) {
-            
+            MsgUtility.showErrorMeage(ex.getMessage());
         }
     }
 
     public void borrarProducto() {
         try {
             productoDao.borrarProducto(productoSeleccionado);
+            MsgUtility.showInfoMeage("El producto se borró con éxito");
         } catch (Exception ex) {
-            
+            MsgUtility.showErrorMeage(ex.getMessage());
         }
     }
     
@@ -209,7 +220,7 @@ public class ProductoMainBean {
             this.unidadesDeMedida = unidadesdemedidaDao.getUnidadesDeMedida();
             this.tipoProducto = tipoproductoDao.getTipoProducto();
         } catch (Exception ex) {
-            
+            MsgUtility.showErrorMeage(ex.getMessage());
         }
     }
     

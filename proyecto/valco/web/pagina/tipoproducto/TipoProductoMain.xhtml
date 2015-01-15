@@ -13,6 +13,37 @@
 
                 <!-- TABLA-->
                 <h:form id="form">
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" />
+                    
+                     <p:menubar>
+                        
+                         <p:menuitem 
+                             value="Ingresar" 
+                             partialSubmit="true" 
+                             update=":formingresar:popupingresar"
+                             oncomplete="PF('popupingresar').show();"  
+                             action="#{tipoProductoMainBean.inicializarTipo()}"
+                             icon="ui-icon-plusthick"                      
+                             />
+                            
+                         <p:menuitem 
+                             value="Modificar"  
+                             process="singleDT" 
+                             update=":formmodificar:popupmodificar" 
+                             oncomplete="PF('popupmodificar').show();"  
+                             icon="ui-icon-pencil"
+                             partialSubmit="true"
+                             />
+                         <p:menuitem 
+                             value="Borrar" 
+                             process="singleDT" 
+                             update=":popupborrar" 
+                             oncomplete="PF('popupborrar').show();"
+                             icon="ui-icon-circle-close"
+                             partialSubmit="true"
+                             /> 
+                    </p:menubar>
+                    
                     <p:dataTable id="singleDT" var="tipoproductos" value="#{tipoProductoMainBean.modeloTipoProducto}" selectionMode="single" selection="#{tipoProductoMainBean.tipoProductoSeleccionado}" rowKey="#{tipoproductos.codigo}">
                         <f:facet name="header">
                             Tipo Productos
@@ -27,11 +58,21 @@
                             <h:outputText value="#{tipoproductos.estatus}" />
                         </p:column>
 
-                        <f:facet name="footer">
-                            <p:commandButton value="Ingresar" partialSubmit="true" update=":formingresar:popupingresar" oncomplete="PF('popupingresar').show();"  action="#{tipoProductoMainBean.inicializarTipo()}"/>
-                            <p:commandButton value="Modificar"  process="singleDT" update=":formmodificar:popupmodificar" oncomplete="PF('popupmodificar').show();"/>
-                            <p:commandButton value="Borrar" process="singleDT" update=":popupborrar" oncomplete="PF('popupborrar').show();" />
-                        </f:facet>
+                   <!--     <f:facet name="footer">
+                            <p:commandButton value="Ingresar" 
+                                             partialSubmit="true" 
+                                             update=":formingresar:popupingresar"
+                                             oncomplete="PF('popupingresar').show();"  
+                                             action=""/>
+                            <p:commandButton value="Modificar"  
+                                             process="singleDT" 
+                                             update=":formmodificar:popupmodificar" 
+                                             oncomplete="PF('popupmodificar').show();"/>
+                            <p:commandButton value="Borrar" 
+                                             process="singleDT" 
+                                             update=":popupborrar" 
+                                             oncomplete="PF('popupborrar').show();" />
+                        </f:facet>   -->
                     </p:dataTable>
                 </h:form>
 

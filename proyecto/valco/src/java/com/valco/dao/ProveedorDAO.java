@@ -7,11 +7,13 @@ package com.valco.dao;
 
 import com.valco.HibernateUtil;
 import com.valco.pojo.Clientes;
+import com.valco.pojo.OrdenesCompra;
 import com.valco.pojo.Proveedores;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -41,7 +43,9 @@ public class ProveedorDAO implements Serializable{
             throw new Exception("Ocurrió un error al registrar el proveedor.");
         } finally {
             try {
-                session.close();
+                if (session.isOpen()) {
+                    session.close();
+                }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al registrar el proveedor.");
             }
@@ -66,7 +70,9 @@ public class ProveedorDAO implements Serializable{
             throw new Exception("Ocurrió un error al registrar el proveedor.");
         } finally {
             try {
-                session.close();
+                if (session.isOpen()) {
+                    session.close();
+                }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al registrar el proveedor.");
             }
@@ -90,7 +96,9 @@ public class ProveedorDAO implements Serializable{
             throw new Exception("Ocurrió un error al borrar el proveedor.");
         } finally {
             try {
-                session.close();
+                if (session.isOpen()) {
+                    session.close();
+                }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al borrar el proveedor.");
             }
@@ -111,7 +119,9 @@ public class ProveedorDAO implements Serializable{
 
           } finally {
               try {
-                  session.close();
+                  if (session.isOpen()) {
+                    session.close();
+                }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los proveedores.");
               }
@@ -134,7 +144,44 @@ public class ProveedorDAO implements Serializable{
 
           } finally {
               try {
-                  session.close();
+                  if (session.isOpen()) {
+                    session.close();
+                }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los proveedores.");
+              }
+        }
+    }
+    
+    public List<Proveedores> getOdenesProveedores() throws Exception{
+    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+          Transaction tx = null;
+          List<Proveedores> proveedores = new ArrayList<Proveedores>();
+          try {
+              tx = session.beginTransaction();
+              Query q = session.createQuery("FROM Proveedores");
+              proveedores = (List<Proveedores>) q.list();
+              for (Proveedores proveedor : proveedores) {
+
+                  for (OrdenesCompra orden : proveedor.getOrdenesCompras()) {
+
+                      Hibernate.initialize(orden);
+
+                      Hibernate.initialize(orden.getCuentasXPagars());
+
+                  }
+
+              }
+              return proveedores;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los proveedores.");
+
+          } finally {
+              try {
+                  if (session.isOpen()) {
+                    session.close();
+                }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los proveedores.");
               }

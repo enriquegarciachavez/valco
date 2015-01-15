@@ -7,7 +7,10 @@ package com.valco.beans;
 
 import com.valco.dao.UbicacionesDAO;
 import com.valco.pojo.Ubicaciones;
+import com.valco.utility.MsgUtility;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -76,10 +79,15 @@ public class UbicacionesMainBean {
         this.ubicacionSelecionado = ubicacionSelecionado;
     }
 
-    public DataModel getModeloUbicaciones() throws Exception {
-        ubicaciones = ubicacionesDao.getUbicaciones();
-        modeloUbicaciones = new ListDataModel(ubicaciones);
-        return modeloUbicaciones;
+    public DataModel getModeloUbicaciones() {
+        try {
+            ubicaciones = ubicacionesDao.getUbicaciones();
+            modeloUbicaciones = new ListDataModel(ubicaciones);
+            return modeloUbicaciones;
+        } catch (Exception ex) {
+             MsgUtility.showErrorMeage(ex.getMessage());
+             return modeloUbicaciones;
+        }
     }
 
     public void setModeloUbicaciones(DataModel modeloUbicaciones) {
@@ -114,24 +122,26 @@ public class UbicacionesMainBean {
         try {
             ubicacionNuevo.setEstatus("ACTIVO");
             ubicacionesDao.insertarUbicacion(ubicacionNuevo);
-           
+            MsgUtility.showInfoMeage("La ubicación se insertó con éxito");
         } catch (Exception ex) {
-            
+           MsgUtility.showErrorMeage(ex.getMessage());  
         }
     }    
     
     public void borrarUbicacion(){
         try {
             ubicacionesDao.borrarUbicacion(ubicacionSelecionado);
+            MsgUtility.showInfoMeage("La ubicación se borró con éxito");
         } catch (Exception ex) {
-          
+           MsgUtility.showErrorMeage(ex.getMessage());
         }
     }
     public void actualizarUbicacion(){
         try {
             ubicacionesDao.actualizarUbicacion(ubicacionSelecionado);
+            MsgUtility.showInfoMeage("La ubicación se actualizó con éxito");
         } catch (Exception ex) {
-            
+           MsgUtility.showErrorMeage(ex.getMessage());  
         }
         
     }

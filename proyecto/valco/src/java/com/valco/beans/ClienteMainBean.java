@@ -7,6 +7,7 @@ package com.valco.beans;
 
 import com.valco.dao.ClienteDAO;
 import com.valco.pojo.Clientes;
+import com.valco.utility.MsgUtility;
 import java.awt.event.ActionEvent;
 import java.io.Serializable;
 import java.util.List;
@@ -226,10 +227,15 @@ public class ClienteMainBean implements Serializable {
         return null;
     }
 
-    public DataModel getClientesModel() throws Exception {
-        clientes = clienteDao.getClientes();
-        modeloClientes = new ListDataModel(clientes);
-        return modeloClientes;
+    public DataModel getClientesModel() {
+        try {
+            clientes = clienteDao.getClientes();
+            modeloClientes = new ListDataModel(clientes);
+            return modeloClientes;
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+            return modeloClientes;
+        }
     }
 
     public void limpiarIngresarForm() {
@@ -297,8 +303,9 @@ public class ClienteMainBean implements Serializable {
     public void actualizarCliente() {
         try {
             clienteDao.actualizarCliente(clienteSeleccionado);
+            MsgUtility.showInfoMeage("El cliente se actualizó con éxito");
         } catch (Exception ex) {
-            Logger.getLogger(ClienteMainBean.class.getName()).log(Level.SEVERE, null, ex);
+            MsgUtility.showErrorMeage(ex.getMessage());
         }
 
     }
@@ -307,16 +314,18 @@ public class ClienteMainBean implements Serializable {
         try {
             clienteNuevo.setEstatus("ACTIVO");
             clienteDao.insertarCliente(clienteNuevo);
+            MsgUtility.showInfoMeage("El cliente se ingresó con éxito");
         } catch (Exception ex) {
-            Logger.getLogger(ClienteMainBean.class.getName()).log(Level.SEVERE, null, ex);
+            MsgUtility.showErrorMeage(ex.getMessage());
         }
     }
 
     public void borrarCliente() {
         try {
             clienteDao.borrarCliente(clienteSeleccionado);
+            MsgUtility.showInfoMeage("El cliente se borro con éxito");
         } catch (Exception ex) {
-            Logger.getLogger(ClienteMainBean.class.getName()).log(Level.SEVERE, null, ex);
+           MsgUtility.showErrorMeage(ex.getMessage());
         }
     }
     

@@ -12,6 +12,37 @@
             <ui:define name="content">
 
                 <h:form id="form">
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" />
+                    
+                    <p:menubar>
+                        
+                        <p:menuitem 
+                            value="Ingresar" 
+                            partialSubmit="true" 
+                            update=":formingresar:popupingresar" 
+                            oncomplete="PF('popupingresar').show();" 
+                            action="#{ubicacionesMainBean.inicializarUbicacion()}"
+                            icon="ui-icon-plusthick"                      
+                            />
+                            
+                        <p:menuitem 
+                            value="Modificar"  
+                            process="singleDT" 
+                            update=":formmodificar:popupmodificar" 
+                            oncomplete="PF('popupmodificar').show();" 
+                            icon="ui-icon-pencil"
+                            partialSubmit="true"
+                            />
+                        <p:menuitem 
+                            value="Borrar" 
+                            process="singleDT" 
+                            update=":popupborrar" 
+                            oncomplete="PF('popupborrar').show();" 
+                            icon="ui-icon-circle-close"
+                            partialSubmit="true"
+                            /> 
+                    </p:menubar>
+                    
                     <p:dataTable id="singleDT" var="ubicacion" value="#{ubicacionesMainBean.modeloUbicaciones}" selectionMode="single" selection="#{ubicacionesMainBean.ubicacionSelecionado}" rowKey="#{ubicacion.codigo}">
                         <f:facet name="header">
                             Ubicaciones
@@ -25,11 +56,21 @@
                         <p:column headerText="Oficina">
                             <h:outputText value="#{ubicacion.oficina}" />
                         </p:column>
-                        <f:facet name="footer">
-                            <p:commandButton value="Ingresar" partialSubmit="true" update=":formingresar:popupingresar" oncomplete="PF('popupingresar').show();"  action="#{ubicacionesMainBean.inicializarUbicacion()}"/>
-                            <p:commandButton value="Modificar"  process="singleDT" update=":formmodificar:popupmodificar" oncomplete="PF('popupmodificar').show();"/>
-                            <p:commandButton value="Borrar" process="singleDT" update=":popupborrar" oncomplete="PF('popupborrar').show();" />
-                        </f:facet>
+                       <!-- <f:facet name="footer">
+                            <p:commandButton value="Ingresar" 
+                                             partialSubmit="true" 
+                                             update=":formingresar:popupingresar" 
+                                             oncomplete="PF('popupingresar').show();" 
+                                             action=""/>
+                            <p:commandButton value="Modificar"  
+                                             process="singleDT" 
+                                             update=":formmodificar:popupmodificar" 
+                                             oncomplete="PF('popupmodificar').show();"/>
+                            <p:commandButton value="Borrar" 
+                                             process="singleDT" 
+                                             update=":popupborrar" 
+                                             oncomplete="PF('popupborrar').show();" />
+                        </f:facet>  -->
                     </p:dataTable>
                 </h:form>
 

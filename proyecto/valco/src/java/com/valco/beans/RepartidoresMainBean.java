@@ -7,7 +7,10 @@ package com.valco.beans;
 
 import com.valco.dao.RepartidoresDAO;
 import com.valco.pojo.Repartidores;
+import com.valco.utility.MsgUtility;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.bean.ManagedProperty;
@@ -42,10 +45,15 @@ public class RepartidoresMainBean {
     public RepartidoresMainBean() {
     }
     
-    public DataModel getModeloRepartidores() throws Exception {
-        repartidores = repartidoresDao.getRepartidores();
-        modeloRepartidores = new ListDataModel(repartidores);
-        return modeloRepartidores;
+    public DataModel getModeloRepartidores() {
+        try {
+            repartidores = repartidoresDao.getRepartidores();
+            modeloRepartidores = new ListDataModel(repartidores);
+            return modeloRepartidores;
+        } catch (Exception ex) {
+           MsgUtility.showErrorMeage(ex.getMessage());
+           return modeloRepartidores;
+        }
     }
 
     public void setModeloRepartidores(DataModel modeloRepartidores) {
@@ -114,24 +122,26 @@ public class RepartidoresMainBean {
         try {
             repartidorNuevo.setEstatus("ACTIVO");
             repartidoresDao.insertarRepartidores(repartidorNuevo);
-           
+           MsgUtility.showInfoMeage("El repartidor se insertó con éxito");
         } catch (Exception ex) {
-            
+         MsgUtility.showErrorMeage(ex.getMessage());   
         }
     }    
     
     public void borrarRepartidor(){
         try {
             repartidoresDao.borrarRepartidor(repartidorSeleccionado);
+            MsgUtility.showInfoMeage("El repartidor se borró con éxito");
         } catch (Exception ex) {
-          
+          MsgUtility.showErrorMeage(ex.getMessage());
         }
     }
     public void actualizarRepartidor(){
         try {
             repartidoresDao.actualizarRepartidor(repartidorSeleccionado);
+            MsgUtility.showInfoMeage("El repartidor se actualizó con éxito");
         } catch (Exception ex) {
-            
+           MsgUtility.showErrorMeage(ex.getMessage()); 
         }
         
     }

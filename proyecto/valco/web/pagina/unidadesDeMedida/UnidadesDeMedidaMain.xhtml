@@ -12,6 +12,38 @@
             <ui:define name="content">
 
                 <h:form id="form">
+                    
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" />
+                    
+                     <p:menubar>
+                        
+                         <p:menuitem 
+                             value="Ingresar" 
+                             partialSubmit="true" 
+                             update=":formingresar:popupingresar" 
+                             oncomplete="PF('popupingresar').show();"  
+                             action="#{unidadesDeMedidaMainBean.inicializarUnidad()}"
+                             icon="ui-icon-plusthick"                      
+                             />
+                            
+                         <p:menuitem 
+                             value="Modificar"  
+                             process="singleDT" 
+                             update=":formmodificar:popupmodificar" 
+                             oncomplete="PF('popupmodificar').show();"
+                             icon="ui-icon-pencil"
+                             partialSubmit="true"
+                             />
+                         <p:menuitem 
+                             value="Borrar" 
+                             process="singleDT" 
+                             update=":popupborrar" 
+                             oncomplete="PF('popupborrar').show();"
+                             icon="ui-icon-circle-close"
+                             partialSubmit="true"
+                             /> 
+                    </p:menubar>
+                    
                     <p:dataTable id="singleDT" var="unidad" value="#{unidadesDeMedidaMainBean.modeloUnidad}" selectionMode="single" selection="#{unidadesDeMedidaMainBean.unidadSeleccionado}" rowKey="#{unidad.codigo}">
                         <f:facet name="header">
                             Unidades de Medida
@@ -26,11 +58,21 @@
                             <h:outputText value="#{unidad.estatus}" />
                         </p:column>
 
-                        <f:facet name="footer">
-                            <p:commandButton value="Ingresar" partialSubmit="true" update=":formingresar:popupingresar" oncomplete="PF('popupingresar').show();"  action="#{unidadesDeMedidaMainBean.inicializarUnidad()}"/>
-                            <p:commandButton value="Modificar"  process="singleDT" update=":formmodificar:popupmodificar" oncomplete="PF('popupmodificar').show();"/>
-                            <p:commandButton value="Borrar" process="singleDT" update=":popupborrar" oncomplete="PF('popupborrar').show();" /> 
-                        </f:facet>
+<!--                        <f:facet name="footer">
+                            <p:commandButton value="Ingresar" 
+                                             partialSubmit="true" 
+                                             update=":formingresar:popupingresar" 
+                                             oncomplete="PF('popupingresar').show();"  
+                                             action="#{unidadesDeMedidaMainBean.inicializarUnidad()}"/>
+                            <p:commandButton value="Modificar"  
+                                             process="singleDT" 
+                                             update=":formmodificar:popupmodificar" 
+                                             oncomplete="PF('popupmodificar').show();"/>
+                            <p:commandButton value="Borrar" 
+                                             process="singleDT" 
+                                             update=":popupborrar" 
+                                             oncomplete="PF('popupborrar').show();" /> 
+                        </f:facet>   -->
                     </p:dataTable>
                 </h:form>
 
@@ -85,7 +127,7 @@
                             </f:facet>
 
                             <p:outputLabel for="descripcion1" value="Ingresar Unidad de medida: " />
-                            <p:inputText id="descripcion1" validator="#{unidadesDeMedidaMainBean.validarDescripcion}" required="true" validatorMessage="El campo ingresar unidad de medida solo puede contener letras o se esta duplicando el campo descripción" label="descripcion1" value="#{unidadesDeMedidaMainBean.unidadSeleccionado.descripcion}">
+                            <p:inputText id="descripcion1" validator="#{unidadesDeMedidaMainBean.validarModificarDescripcion}" required="true" validatorMessage="El campo ingresar unidad de medida solo puede contener letras o se esta duplicando el campo descripción" label="descripcion1" value="#{unidadesDeMedidaMainBean.unidadSeleccionado.descripcion}">
                                 <f:validateRegex
                                     pattern="^[A-Za-z\s]+$"/>
                             </p:inputText>

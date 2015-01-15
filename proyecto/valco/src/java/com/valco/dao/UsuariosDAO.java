@@ -67,7 +67,9 @@ public class UsuariosDAO {
             throw new Exception("Ocurrió un error al modificar el usuario.");
         } finally {
             try {
+                if(session.isOpen()){
                 session.close();
+                }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al modificar el usuario.");
             }
@@ -116,7 +118,9 @@ public class UsuariosDAO {
 
         } finally {
             try {
+                if(session.isOpen()){
                 session.close();
+                }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al consultar el usuario.");
             }
@@ -139,7 +143,9 @@ public class UsuariosDAO {
 
           } finally {
               try {
-                  session.close();
+                  if(session.isOpen()){
+                session.close();
+                }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los clientes.");
               }

@@ -7,11 +7,13 @@ package com.valco.dao;
 
 import com.valco.HibernateUtil;
 import com.valco.pojo.Clientes;
+import com.valco.pojo.NotasDeVenta;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -68,7 +70,9 @@ public class ClienteDAO implements Serializable{
             throw new Exception("Ocurrió un error al modificar el cliente.");
         } finally {
             try {
-                session.close();
+                if (session.isOpen()) {
+                    session.close();
+                }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al modificar el cliente.");
             }
@@ -106,8 +110,14 @@ public class ClienteDAO implements Serializable{
           List<Clientes> clientes = new ArrayList<Clientes>();
           try {
               tx = session.beginTransaction();
-              Query q = session.createQuery("FROM Clientes");
+              Criteria q = session.createCriteria(Clientes.class);
               clientes = (List<Clientes>) q.list();
+              for(Clientes cliente : clientes){
+                  for(NotasDeVenta nota : cliente.getNotasDeVentas()){
+                      Hibernate.initialize(nota);
+                      Hibernate.initialize(nota.getCuentaXCobrar());
+                  }
+              }
               return clientes;
 
           } catch (HibernateException he) {
@@ -138,7 +148,9 @@ public class ClienteDAO implements Serializable{
 
           } finally {
               try {
-                  session.close();
+                  if (session.isOpen()) {
+                    session.close();
+                }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los clientes.");
               }

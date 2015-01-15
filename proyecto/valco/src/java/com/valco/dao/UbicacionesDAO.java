@@ -66,7 +66,9 @@ public class UbicacionesDAO {
             throw new Exception("Ocurrió un error al modificar la ubicacion.");
         } finally {
             try {
+                if(session.isOpen()){
                 session.close();
+                }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al modificar la ubicacion.");
             }
@@ -113,7 +115,9 @@ public class UbicacionesDAO {
 
           } finally {
               try {
-                  session.close();
+                  if(session.isOpen()){
+                session.close();
+                }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar la ubicacion.");
               }
@@ -136,7 +140,9 @@ public class UbicacionesDAO {
 
           } finally {
               try {
-                  session.close();
+                 if(session.isOpen()){
+                session.close();
+                }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar la ubicacion.");
               }

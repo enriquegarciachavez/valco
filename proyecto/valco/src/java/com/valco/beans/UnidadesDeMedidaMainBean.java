@@ -7,7 +7,10 @@ package com.valco.beans;
 
 import com.valco.pojo.UnidadesDeMedida;
 import com.valco.dao.UnidadesDeMedidaDAO;
+import com.valco.utility.MsgUtility;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -74,10 +77,15 @@ public class UnidadesDeMedidaMainBean {
         this.unidadSeleccionado = unidadSeleccionado;
     }
 
-    public DataModel getModeloUnidad() throws Exception {
-        unidadesdemedida = unidadesdemedidaDao.getUnidadesDeMedida();
-        modeloUnidad = new ListDataModel(unidadesdemedida);
-        return modeloUnidad;
+    public DataModel getModeloUnidad()  {
+        try {
+            unidadesdemedida = unidadesdemedidaDao.getUnidadesDeMedida();
+            modeloUnidad = new ListDataModel(unidadesdemedida);
+            return modeloUnidad;
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+            return modeloUnidad;
+        }
     }
 
     public void setModeloUnidad(DataModel modeloUnidad) {
@@ -107,24 +115,26 @@ public class UnidadesDeMedidaMainBean {
         try {
             unidadNuevo.setEstatus("ACTIVO");
             unidadesdemedidaDao.insertarUnidadesDeMedida(unidadNuevo);
-           
+           MsgUtility.showInfoMeage("La unidad se insertó con éxito");
         } catch (Exception ex) {
-            
+          MsgUtility.showErrorMeage(ex.getMessage());  
         }
     }    
     
     public void borrarUnidad(){
         try {
             unidadesdemedidaDao.borrarUnidadesDeMedida(unidadSeleccionado);
+            MsgUtility.showInfoMeage("La unidad se borró con éxito");
         } catch (Exception ex) {
-          
+          MsgUtility.showErrorMeage(ex.getMessage());
         }
     }
     public void actualizarUnidad(){
         try {
             unidadesdemedidaDao.actualizarUnidadesDeMedida(unidadSeleccionado);
+            MsgUtility.showInfoMeage("La unidad se actualizó con éxito");
         } catch (Exception ex) {
-            
+            MsgUtility.showErrorMeage(ex.getMessage());
         }
         
     }

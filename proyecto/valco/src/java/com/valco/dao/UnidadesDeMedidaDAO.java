@@ -66,7 +66,9 @@ public class UnidadesDeMedidaDAO {
             throw new Exception("Ocurrió un error al modificar La unidad de medida.");
         } finally {
             try {
+                if(session.isOpen()){
                 session.close();
+                }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al modificar La unidad de medida.");
             }
@@ -113,7 +115,9 @@ public class UnidadesDeMedidaDAO {
 
           } finally {
               try {
-                  session.close();
+                 if(session.isOpen()){
+                session.close();
+                }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar Las unidades de medida.");
               }
@@ -135,7 +139,9 @@ public class UnidadesDeMedidaDAO {
 
           } finally {
               try {
-                  session.close();
+                 if(session.isOpen()){
+                session.close();
+                }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los clientes.");
               }
@@ -158,7 +164,9 @@ public class UnidadesDeMedidaDAO {
 
           } finally {
               try {
-                  session.close();
+                  if(session.isOpen()){
+                session.close();
+                }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los clientes.");
               }

@@ -66,7 +66,9 @@ public class TipoProductoDAO {
             throw new Exception("Ocurrió un error al modificar el producto.");
         } finally {
             try {
-                session.close();
+                if (session.isOpen()) {
+                    session.close();
+                }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al modificar el producto.");
             }
@@ -113,7 +115,9 @@ public class TipoProductoDAO {
 
           } finally {
               try {
-                  session.close();
+                  if (session.isOpen()) {
+                    session.close();
+                }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los producto.");
               }
@@ -136,7 +140,9 @@ public class TipoProductoDAO {
 
           } finally {
               try {
-                  session.close();
+                 if (session.isOpen()) {
+                    session.close();
+                }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los tipo productos.");
               }

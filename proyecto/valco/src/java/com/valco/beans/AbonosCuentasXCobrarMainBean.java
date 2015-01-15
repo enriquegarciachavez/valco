@@ -249,10 +249,11 @@ public class AbonosCuentasXCobrarMainBean {
             abonoSeleccionado.setEstatus("ACTIVO");
             abonoSeleccionado.setCuentasXCobrar(notaSeleccionado.getCuentaXCobrar());
             abonoscuentascobrarDAO.insertarAbono(abonoSeleccionado);
+            MsgUtility.showInfoMeage("El abono se insertó con éxito");
            
             
         } catch (Exception ex) {
-            
+           MsgUtility.showErrorMeage(ex.getMessage());  
         }
     }
     
@@ -260,6 +261,7 @@ public class AbonosCuentasXCobrarMainBean {
         try {
             abonoSeleccionado.setEstatus("CANCELADO");
             abonoscuentascobrarDAO.actualizarAbono(abonoSeleccionado);
+            MsgUtility.showInfoMeage("El abono se actualizó con éxito");
             
         } catch (Exception ex) {
             Logger.getLogger(ClienteMainBean.class.getName()).log(Level.SEVERE, null, ex);
