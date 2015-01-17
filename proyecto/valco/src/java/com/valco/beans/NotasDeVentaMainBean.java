@@ -50,6 +50,8 @@ import javax.faces.validator.ValidatorException;
     private List<ProductosInventario> productosDisponibles;
     private List<ProductosInventario> productosDisponiblesModificacion;
     private UIInput flete;
+    private UIInput nota;
+    private UIInput fecha;
 
     
     DataModel modeloNotas;
@@ -68,6 +70,15 @@ import javax.faces.validator.ValidatorException;
         } catch (Exception ex) {
             Logger.getLogger(NotasDeVentaMainBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public String resetNotaNueva(){
+        notaNueva = new NotasDeVenta();
+        productosSeleccionados = new ArrayList<ProductosInventario>();
+        flete.setValue(null);
+        fecha.setValue(null);
+        nota.setValue(null);
+        return null;
     }
     
     public DataModel getModeloNotas() throws Exception {
@@ -100,12 +111,12 @@ import javax.faces.validator.ValidatorException;
         }
         }
     }
-    public void ingresarNotaVendida() throws Exception{
+    public String ingresarNotaVendida() throws Exception{
         if(productosSeleccionados == null ||
                 productosSeleccionados.isEmpty()){
             
             MsgUtility.showWarnMeage("Debe eleccionar porlomenos un producto.");
-            return;
+            return null;
         }
         for(ProductosInventario producto: productosSeleccionados){
             producto.setNotasDeVenta(notaNueva);
@@ -115,10 +126,12 @@ import javax.faces.validator.ValidatorException;
         try {
             this.notaNueva.setEstatus("ASIGNADA");
             this.notasDeVentaDao.actualizarNotaDeVenta(notaNueva);
+            MsgUtility.showInfoMeage("La nota se capturó correctamente.");
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage("Ocurriò un error al guardar la nota de venta"));
         }
+        return null;
     }
     
     public void modificarNota(){
@@ -149,7 +162,11 @@ import javax.faces.validator.ValidatorException;
         total.setScale(2, BigDecimal.ROUND_HALF_UP);
         if(productos != null && !productos.isEmpty()){
             for(ProductosInventario producto : productos){
-                total = total.add(producto.getPrecio().multiply(producto.getPeso()));
+                if(producto.getPeso() != null && producto.getPrecio() != null){
+                    total = total.add(producto.getPeso().multiply(producto.getPrecio()));
+                }else{
+                    MsgUtility.showWarnMeage("Presione enter después de capturar un precio o un peso, de lo contrario el total podía no mostrarse bien");
+                }
             }
         }
             return total;
@@ -292,6 +309,22 @@ import javax.faces.validator.ValidatorException;
 
     public void setFlete(UIInput flete) {
         this.flete = flete;
+    }
+
+    public UIInput getNota() {
+        return nota;
+    }
+
+    public void setNota(UIInput nota) {
+        this.nota = nota;
+    }
+
+    public UIInput getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(UIInput fecha) {
+        this.fecha = fecha;
     }
     
 

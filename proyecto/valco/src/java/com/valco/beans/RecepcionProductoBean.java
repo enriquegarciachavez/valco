@@ -85,7 +85,7 @@ public class RecepcionProductoBean {
             productoNuevo.setPeso(new BigDecimal(peso));
             productoNuevo.setCodigoBarras(codigoDeBarras);
             productoNuevo.setProductosHasProveedores(productoHasProveedores);
-            productoNuevo.setPrecio(BigDecimal.ZERO);
+            productoNuevo.setPrecio(productoHasProveedores.getPrecioSugerido());
             productoNuevo.setUbicaciones(ubicacionesDao.getUbicaciones().get(0));
             productoNuevo.setEstatus("ACTIVO");
             productosInventario.add(productoNuevo);
@@ -97,7 +97,11 @@ public class RecepcionProductoBean {
         orden.setEstatus("ACTIVO");
         orden.setFecha(new Date());
         orden.setProveedores(proveedorSeleccionado);
-        orden.setTotal(BigDecimal.ZERO);
+        BigDecimal total = BigDecimal.ZERO;
+        for(ProductosInventario producto : orden.getProductosInventarios()){
+            total = total.add(producto.getPrecio().multiply(producto.getPeso()));
+        }
+        orden.setTotal(total);
         orden.setUsuarios(usuariosDao.getUsuarios().get(0));
         try{
         productoDao.recibirProductos(productosInventario, orden);

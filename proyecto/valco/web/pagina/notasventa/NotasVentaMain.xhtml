@@ -11,11 +11,14 @@
 
     <ui:define name="content">
         <h:form id="tableForm">
+            <p:messages id="messages" showDetail="true" autoUpdate="true" />
             <p:menubar>
                 <p:menuitem 
                     value="Capturar" 
                     icon="ui-icon-plusthick"
-                    onclick="PF('dlg2').show();" 
+                    oncomplete="PF('dlg2').show();" 
+                    action="#{notasDeVentaMainBean.resetNotaNueva}"
+                    update=":form1:grid1"
                     partialSubmit="true"/>
                 <p:menuitem 
                     value="Modificar" 
@@ -86,6 +89,7 @@
                     <p:inputText id="folio" required="true" label="folio" 
                                  value="#{notasDeVentaMainBean.notaNueva.folio}"
                                  validator="#{notasDeVentaMainBean.validaEstatusActivo}"
+                                 binding="#{notasDeVentaMainBean.nota}"
                                  >
                         <p:ajax event="change" update="repartidorOut" listener="#{notasDeVentaMainBean.consultaXFolio}" />
                     </p:inputText>
@@ -94,7 +98,8 @@
                     <p:outputLabel id="repartidorOut"  value="#{notasDeVentaMainBean.notaNueva.repartidores.nombres} #{notasDeVentaMainBean.notaNueva.repartidores.apellidoPaterno}" />
 
                     <p:outputLabel for="fecha"   value="fecha: " />
-                    <p:calendar required="true" id="fecha" value="#{notasDeVentaMainBean.notaNueva.fechaDeVenta}" />
+                    <p:calendar required="true" id="fecha" value="#{notasDeVentaMainBean.notaNueva.fechaDeVenta}" 
+                                binding="#{notasDeVentaMainBean.fecha}"/>
 
                     <p:outputLabel for="cliente" value="Cliente:"  />
                     <p:selectOneMenu id="cliente" required="true" value="#{notasDeVentaMainBean.notaNueva.clientes}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
@@ -112,7 +117,8 @@
                     <p:outputLabel   value="Flete: " />
                     <p:inputText 
                         value="#{notasDeVentaMainBean.notaNueva.flete}"
-                        validator="#{notasDeVentaMainBean.validaProductosSeleccionadosAlta}"/>
+                        validator="#{notasDeVentaMainBean.validaProductosSeleccionadosAlta}"
+                        binding="#{notasDeVentaMainBean.flete}"/>
 
                     <f:facet name="footer">
                         <p:dataTable 

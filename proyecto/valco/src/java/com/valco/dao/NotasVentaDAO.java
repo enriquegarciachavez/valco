@@ -6,6 +6,7 @@
 package com.valco.dao;
 
 import com.valco.HibernateUtil;
+import com.valco.pojo.AbonosCuentasXCobrar;
 import com.valco.pojo.Clientes;
 import com.valco.pojo.CuentasXCobrar;
 import com.valco.pojo.NotasDeVenta;
@@ -15,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -257,6 +259,7 @@ public class NotasVentaDAO {
               Criteria q = session.createCriteria(NotasDeVenta.class)
                       .setFetchMode("repartidores", FetchMode.JOIN);
               q.setFetchMode("productosInventarios", FetchMode.SELECT)
+                      .setFetchMode("clientes", FetchMode.JOIN)
                       .add(Restrictions.eq("estatus", "ASIGNADA"));
               notas = (List<NotasDeVenta>) q.list();
               return notas;
@@ -354,6 +357,62 @@ public class NotasVentaDAO {
               }
         }
     }
+      
+      public List<NotasDeVenta> getNotasDeVentaXCliente(Clientes cliente) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          List<NotasDeVenta> notas = new ArrayList<NotasDeVenta>();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(NotasDeVenta.class)
+                      .setFetchMode("cuentasXCobrars", FetchMode.JOIN)
+                      .add(Restrictions.eq("clientes", cliente));
+              notas = (List<NotasDeVenta>)q.list();
+              for(NotasDeVenta nota : notas){
+                  for(CuentasXCobrar cuenta : nota.getCuentasXCobrars()){
+                      Hibernate.initialize(cuenta);
+                  }
+              }
+              return notas;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los clientes.");
+
+          } finally {
+              try {
+                  if (session.isOpen()) {
+                      //session.close();
+                  }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los clientes.");
+              }
+        }
+    }
+      
+      public List<AbonosCuentasXCobrar> getAbonosXCuenta(CuentasXCobrar cuenta) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          List<AbonosCuentasXCobrar> abonos = new ArrayList<AbonosCuentasXCobrar>();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(AbonosCuentasXCobrar.class)
+                      .add(Restrictions.eq("cuentasXCobrar", cuenta));
+              abonos = (List<AbonosCuentasXCobrar>)q.list();
+              return abonos;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los abonos.");
+
+          } finally {
+              try {
+                  if (session.isOpen()) {
+                      session.close();
+                  }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los abonos.");
+              }
+        }
+      }
       
       public List<ProductosInventario> getProductosDisponibles() throws Exception {
           Session session = HibernateUtil.getSessionFactory().openSession();

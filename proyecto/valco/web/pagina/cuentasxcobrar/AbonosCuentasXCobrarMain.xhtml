@@ -13,7 +13,7 @@
             <ui:define name="content">
 
                 <h:form id="formAsignar">
-                    
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" />
                     <p:menubar>
                         
                         <p:menuitem 
@@ -36,10 +36,7 @@
                     <h:panelGrid id="ingresarGrid"  
                                  columns="10"
                                  cellpadding="5"> 
-                        <f:facet name="header">
-                            <p:messages id="msgs" 
-                                        style="font-size: 12px; text-align: left;"/>
-                        </f:facet>
+
 
                         <p:outputLabel for="clientes" value="Cliente:"  />
                         <p:selectOneMenu id="clientes" 
@@ -48,7 +45,8 @@
                                          panelStyle="width:180px"
                                          effect="fade"  
                                          style="width:160px" 
-                                         required="false">
+                                         required="true"
+                                         requiredMessage="Debe seleccionar un cliente">
 
                             <f:selectItem itemLabel="Selecciona uno" itemValue="" />
                             <f:selectItems value="#{abonosCuentasXCobrarMainBean.clientes}" 
@@ -63,7 +61,8 @@
 
                         <p:outputLabel for="popup" value="Fecha:" />
                         <p:calendar id="popup" 
-                                    required="false" 
+                                    required="true"
+                                    requiredMessage="Debe capturar una fecha"
                                     value="#{abonosCuentasXCobrarMainBean.abonoSeleccionado.fecha}"
                                     navigator="true" 
                                     />
@@ -71,22 +70,22 @@
                         <p:message for="popup" display="icon" />
 
                         <p:outputLabel for="importe"   value="Importe " />
-                        <p:inputText id="importe" 
-                                     required="false"  
-                                     value="#{abonosCuentasXCobrarMainBean.abonoSeleccionado.importe}"/>
+                        <p:inputMask id="importe" 
+                                     required="true"
+                                     requiredMessage="Debe capturar un monto"
+                                     value="#{abonosCuentasXCobrarMainBean.abonoSeleccionado.importe}"
+                                      mask="99999.99"/>
                         <p:message for="importe" 
                                    display="icon" />
 
                         <p:commandButton 
                             id="guardar"
                             value="Abonar" 
-                            partialSubmit="true" 
                             icon="ui-icon-plusthick"
-                            update="tabla"
+                            partialSubmit="false"
+                            update="formAsignar :formAsignar:tabla"
                             action="#{abonosCuentasXCobrarMainBean.insertarAbono()}"
-
                             />
-                        <p:message for="guardar" display="icon" />
 
 
                     </h:panelGrid>
@@ -96,15 +95,12 @@
                     <!-- TABLA-->
 
                     <p:dataTable id="tabla" 
-                                 var="notas" 
+                                 var="nota" 
                                  value="#{abonosCuentasXCobrarMainBean.clienteSelecionado.notasDeVentas}"
                                  selectionMode="single" 
                                  selection="#{abonosCuentasXCobrarMainBean.notaSeleccionado}"
-                                 rowKey="#{notas.codigo}"
-                                 scrollHeight="150"
-                                 lazy="true"
+                                 rowKey="#{nota.codigo}"
                                  style="margin-bottom:40px"
-                                 paginator="true"
                                  
                                  >
 
@@ -112,26 +108,26 @@
                             Cuentas por Cobrar
                         </f:facet>
 
-                        <p:column  sortBy="#{notas.fechaDeVenta}" >
+                        <p:column  sortBy="#{nota.fechaDeVenta}" >
                             <f:facet name="header">
                              <h:outputText value="Fecha Venta" />   
                             </f:facet>
-                            <h:outputText value="#{notas.fechaDeVenta}" />
+                            <h:outputText value="#{nota.fechaDeVenta}" />
                         </p:column>
                         
-                        <p:column headerText="Nota de Venta"  sortBy="#{notas.folio}" >
-                            <h:outputText value="#{notas.folio}" />
+                        <p:column headerText="Nota de Venta"  sortBy="#{nota.folio}" >
+                            <h:outputText value="#{nota.folio}" />
                         </p:column>
                         
-                        <p:column headerText="Importe" sortBy="#{notas.cuentaXCobrar.importe}" >
-                            <h:outputText value="#{notas.cuentaXCobrar.importe}" />
+                        <p:column headerText="Importe" >
+                            <h:outputText value="#{nota.cuentaXCobrar.importe}" />
                         </p:column>
 
-                        <p:column headerText="Importe Abonado " sortBy="#{notas.cuentaXCobrar.importeAbonado}" >
-                            <h:outputText value="#{notas.cuentaXCobrar.importeAbonado}" />
+                        <p:column headerText="Importe Abonado " >
+                            <h:outputText value="#{nota.cuentaXCobrar.importeAbonado}" />
                         </p:column>
-                        <p:column headerText="Saldo a la fecha " sortBy="#{notas.cuentaXCobrar.importe}">
-                            <h:outputText value="#{notas.cuentaXCobrar.importe - notas.cuentaXCobrar.importeAbonado}" />
+                        <p:column headerText="Saldo a la fecha " >
+                            <h:outputText value="#{nota.cuentaXCobrar.importe - nota.cuentaXCobrar.importeAbonado}" />
                         </p:column>
 
 
@@ -201,7 +197,7 @@
                     </p:dataTable>
                         
                     </p:dialog>
-                </h:form>>
+                </h:form>
             </ui:define>
 
 

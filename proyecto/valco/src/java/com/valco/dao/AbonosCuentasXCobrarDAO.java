@@ -68,7 +68,9 @@ public class AbonosCuentasXCobrarDAO {
             throw new Exception("Ocurrió un error al modificar el cliente.");
         } finally {
             try {
+                if(session.isOpen()){
                 session.close();
+                }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al modificar el cliente.");
             }

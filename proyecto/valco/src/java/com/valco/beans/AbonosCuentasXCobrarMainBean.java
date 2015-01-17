@@ -14,6 +14,7 @@ import com.valco.pojo.CuentasXCobrar;
 import com.valco.pojo.NotasDeVenta;
 import com.valco.utility.MsgUtility;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -61,7 +62,6 @@ public class AbonosCuentasXCobrarMainBean {
     
     
     
-    
 
     /**
      * Creates a new instance of CuentasXCobrarMainBean
@@ -99,8 +99,10 @@ public class AbonosCuentasXCobrarMainBean {
     
 
     public DataModel getModeloNotas() throws Exception {
-        nota = notasDeVentaDao.getNotasDeVenta();
+        if(clienteSelecionado != null){
+        nota.addAll(clienteSelecionado.getNotasDeVentas());
         modeloNotas = new ListDataModel(nota);
+        }
         return modeloNotas;
     }
 
@@ -234,10 +236,10 @@ public class AbonosCuentasXCobrarMainBean {
     @PostConstruct
     public void init(){
         try {
+            nota = new ArrayList<>();
             this.date1 = new Date();
             this.abonoSeleccionado = new AbonosCuentasXCobrar();
-            this.nota = notasDeVentaDao.getNotasDeVenta();
-            this.clientes = clienteDao.getClientes();
+            this.clientes = clienteDao.getClientesConAdeudo();
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
@@ -250,9 +252,9 @@ public class AbonosCuentasXCobrarMainBean {
             abonoSeleccionado.setCuentasXCobrar(notaSeleccionado.getCuentaXCobrar());
             abonoscuentascobrarDAO.insertarAbono(abonoSeleccionado);
            
-            
+            MsgUtility.showInfoMeage("Se realizó el abono correctamente.");
         } catch (Exception ex) {
-            
+            MsgUtility.showErrorMeage(ex.getMessage());
         }
     }
     
@@ -260,9 +262,9 @@ public class AbonosCuentasXCobrarMainBean {
         try {
             abonoSeleccionado.setEstatus("CANCELADO");
             abonoscuentascobrarDAO.actualizarAbono(abonoSeleccionado);
-            
+            MsgUtility.showInfoMeage("Se canceló el abono correctamente.");
         } catch (Exception ex) {
-            Logger.getLogger(ClienteMainBean.class.getName()).log(Level.SEVERE, null, ex);
+            MsgUtility.showErrorMeage(ex.getMessage());
         }
 
     }
