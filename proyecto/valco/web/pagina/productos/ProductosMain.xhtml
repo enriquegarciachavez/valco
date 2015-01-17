@@ -10,6 +10,38 @@
         <ui:composition template="./../clientes/Template1.xhtml">
         <ui:define name="content">
             <h:form id="form">
+                <p:messages id="messages" showDetail="true" autoUpdate="true" />
+                <p:menubar>
+                        
+                    <p:menuitem 
+
+                        icon="ui-icon-plusthick"                      
+                        value="Ingresar" 
+                        partialSubmit="true" 
+                        update=":formingresar:popupingresar" 
+                        oncomplete="PF('popupingresar').show();"  
+                        action="#{productoMainBean.inicializarProducto()}"/>
+                            
+                    <p:menuitem 
+                        icon="ui-icon-pencil"
+                        value="Modificar"  
+                        process="singleDT" 
+                        update=":formmodificar:popupmodificar" 
+                        oncomplete="PF('popupmodificar').show();"
+
+                        partialSubmit="true"
+                        />
+                    <p:menuitem 
+
+                        icon="ui-icon-circle-close"
+                        value="Borrar" 
+                        process="singleDT" 
+                        update=":popupborrar" 
+                        oncomplete="PF('popupborrar').show();" 
+
+                        /> 
+                    </p:menubar>
+                
                 <p:dataTable id="singleDT" var="productos" value="#{productoMainBean.modeloProducto}" 
                              selectionMode="single" 
                              selection="#{productoMainBean.productoSeleccionado}" 
@@ -26,11 +58,21 @@
                     <p:column headerText="Unidades de Medida">
                         <h:outputText value="#{productos.unidadesDeMedida.descripcion}" />
                     </p:column>
-                    <f:facet name="footer">
-                        <p:commandButton value="Ingresar" partialSubmit="true" update=":formingresar:popupingresar" oncomplete="PF('popupingresar').show();"  action="#{productoMainBean.inicializarProducto()}"/>
-                        <p:commandButton value="Modificar"  process="singleDT" update=":formmodificar:popupmodificar" oncomplete="PF('popupmodificar').show();"/>
-                        <p:commandButton value="Borrar" process="singleDT" update=":popupborrar" oncomplete="PF('popupborrar').show();" />
-                    </f:facet>
+                  <!--  <f:facet name="footer">
+                        <p:commandButton value="Ingresar" 
+                                         partialSubmit="true" 
+                                         update=":formingresar:popupingresar" 
+                                         oncomplete="PF('popupingresar').show();"  
+                                         action=""/>
+                        <p:commandButton value="Modificar"  
+                                         process="singleDT" 
+                                         update=":formmodificar:popupmodificar" 
+                                         oncomplete="PF('popupmodificar').show();"/>
+                        <p:commandButton value="Borrar" 
+                                         process="singleDT" 
+                                         update=":popupborrar" 
+                                         oncomplete="PF('popupborrar').show();" />
+                    </f:facet> -->
                 </p:dataTable>
             </h:form>
 

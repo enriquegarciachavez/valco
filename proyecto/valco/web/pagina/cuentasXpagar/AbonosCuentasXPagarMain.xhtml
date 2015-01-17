@@ -13,17 +13,23 @@
           <ui:define name="content">
                 content
                 <h:form id="formAbonar">
-                    
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" />
                     <p:menubar>
                         
                         <p:menuitem 
                             value="Abonar" 
                             icon="ui-icon-plusthick"                      
-                            partialSubmit="true"/>
-                        <p:menuitem 
-                          value="Cancelar Abono" 
-                            icon="ui-icon-circle-close"
                             partialSubmit="true"
+                            update="tablaAbno"
+                            action="#{abonosCuentasXPagarMainBean.insertarAbono()}"/>
+                            
+                        <p:menuitem 
+                            value="Cancelar Abono" 
+                            icon="ui-icon-circle-close"
+                            oncomplete="PF('cancelar').show();;" 
+                            partialSubmit="true"
+                            update=":formpop:popcancelar"
+                            process="tablaAbno"
                             
                            /> 
                     </p:menubar>
@@ -43,7 +49,7 @@
                                          panelStyle="width:180px"
                                          effect="fade"  
                                          style="width:160px" 
-                                         required="false">
+                                         required="true">
 
                             <f:selectItem itemLabel="Selecciona uno" itemValue="" />
                             <f:selectItems value="#{abonosCuentasXPagarMainBean.proveedor}" 
@@ -51,14 +57,14 @@
                                            itemLabel="#{proveedor.codigo} | #{proveedor.nombres} #{proveedor.apellidoPaterno} " 
                                            itemValue="#{proveedor}" /> 
                             <p:ajax event="change" 
-                                    update="tablaAbno"  />             
+                                    update=":formAbonar:tablaAbno"  />             
 
                         </p:selectOneMenu>
                         <p:message for="proveedor" display="icon" />
 
                         <p:outputLabel for="popup" value="Fecha:" />
                         <p:calendar id="popup" 
-                                    required="false" 
+                                    required="true" 
                                     value="#{abonosCuentasXPagarMainBean.abonoSeleccionado.fecha}"
                                     navigator="true" 
                                     />
@@ -81,7 +87,7 @@
                                  value="#{abonosCuentasXPagarMainBean.proveedorSelecionado.ordenesCompras}"
                                  selectionMode="single" 
                                  selection="#{abonosCuentasXPagarMainBean.ordenSeleccionado}"
-                                 rowKey="#{ordenes.codigo}"
+                                 rowKey="#{orden.codigo}"
                                  scrollHeight="150"
                                  lazy="true"
                                  style="margin-bottom:40px"
@@ -118,6 +124,66 @@
                     </p:dataTable>
                     
                     </h:form>
+                
+                <!--POP CANCELAR ABONO-->
+                <h:form id="formpop"> 
+                    <p:dialog 
+                        id="popcancelar"
+                        header="Abonos" 
+                        widgetVar="cancelar" 
+                        modal="true" 
+                        >
+                        
+                        <p:commandButton 
+                            id="Cancelar"
+                            value="Cancelar Abono" 
+                            partialSubmit="true" 
+                            icon="ui-icon-plusthick" 
+                            update=":formpop:tablapop"
+                            action="#{abonosCuentasXPagarMainBean.actualizarAbono()}"
+                            ></p:commandButton>
+                            
+                            
+                          
+                        
+                        
+                        <p:dataTable id="tablapop" 
+                                 var="abonos" 
+                                 value="#{abonosCuentasXPagarMainBean.ordenSeleccionado.cuentaXPagar.abonosCuentasXPagars}"
+                                 selectionMode="single" 
+                                 selection="#{abonosCuentasXPagarMainBean.abonoSeleccionado}"
+                                 rowKey="#{abonos.codigo}"
+                                 scrollHeight="150"
+                                 lazy="true"
+                                 
+                                      
+                                 >
+
+                        <f:facet name="header">
+                            Abonos
+                        </f:facet>
+
+                                             
+                        <p:column headerText="Fecha del abono"  sortBy="#{abonos.fecha}" >
+                            <h:outputText value="#{abonos.fecha}" />
+                        </p:column>
+                        
+                        <p:column headerText="Estatus" sortBy="#{abonos.estatus}" >
+                            <h:outputText value="#{abonos.estatus}" />
+                        </p:column>
+                        <p:column headerText="Saldo a la fecha " sortBy="#{abonos.importe}">
+                            <h:outputText value="#{abonos.importe}" />
+                        </p:column>
+
+
+
+                        <f:facet name="footer">
+
+                        </f:facet>
+                    </p:dataTable>
+                        
+                    </p:dialog>
+                </h:form>>
                 
                 
             </ui:define>

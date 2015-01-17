@@ -7,8 +7,10 @@ package com.valco.beans;
 
 import com.valco.dao.ProveedorDAO;
 import com.valco.pojo.Proveedores;
+import com.valco.utility.MsgUtility;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -107,10 +109,15 @@ public class ProveedoresMainBean {
         this.proveedorNuevo = proveedorNuevo;
     }
 
-    public DataModel getModeloProveedores() throws Exception {
-        proveedores = proveedorDAO.getProveedores();
-        modeloProveedores = new ListDataModel(proveedores);
-        return modeloProveedores;
+    public DataModel getModeloProveedores()  {
+        try {
+            proveedores = proveedorDAO.getProveedores();
+            modeloProveedores = new ListDataModel(proveedores);
+            return modeloProveedores;
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+            return modeloProveedores;
+        }
     }
 
     public void setModeloProveedores(DataModel modeloProveedores) {
@@ -226,24 +233,27 @@ public class ProveedoresMainBean {
         try {
             proveedorNuevo.setEstatus("ACTIVO");
             proveedorDAO.insertarProveedor(proveedorNuevo);
+            MsgUtility.showInfoMeage("El proveedor se insertó con éxito");
            
         } catch (Exception ex) {
-            
+            MsgUtility.showErrorMeage(ex.getMessage());
         }
     }
     public void borrarProveedor(){
         try {
             proveedorDAO.borrarProveedor(proveedorSeleccionado);
+            MsgUtility.showInfoMeage("El cliente se borró con éxito");
         } catch (Exception ex) {
-          
+          MsgUtility.showErrorMeage(ex.getMessage());
         }
     }
     
      public void actualizarProveedor(){
         try {
             proveedorDAO.actualizarProveedor(proveedorSeleccionado);
+            MsgUtility.showInfoMeage("El proveedor se actualizó con éxito");
         } catch (Exception ex) {
-            
+            MsgUtility.showErrorMeage(ex.getMessage());
         }
         
     }

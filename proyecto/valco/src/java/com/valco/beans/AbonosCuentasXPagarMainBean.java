@@ -224,8 +224,7 @@ public class AbonosCuentasXPagarMainBean {
         try {
             this.date = new Date();
             this.abonoSeleccionado = new AbonosCuentasXPagar();
-           this.orden = ordenescompraDAO.getOrdenesCompras();
-            this.proveedor = proveedorDAO.getProveedores();
+            this.proveedor = proveedorDAO.getOdenesProveedores();
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
@@ -237,10 +236,11 @@ public class AbonosCuentasXPagarMainBean {
             abonoSeleccionado.setEstatus("ACTIVO");
             abonoSeleccionado.setCuentasXPagar(ordenSeleccionado.getCuentaXPagar());
             abonoscuentaspagarDAO.insertarAbono(abonoSeleccionado);
+            MsgUtility.showInfoMeage("El abono se insertó con éxito");
            
             
         } catch (Exception ex) {
-            
+          MsgUtility.showErrorMeage(ex.getMessage());  
         }  
 }
     
@@ -248,9 +248,10 @@ public class AbonosCuentasXPagarMainBean {
         try {
             abonoSeleccionado.setEstatus("CANCELADO");
             abonoscuentaspagarDAO.actualizarAbono(abonoSeleccionado);
+            MsgUtility.showInfoMeage("El abono se canceló con éxito");
             
         } catch (Exception ex) {
-            Logger.getLogger(ClienteMainBean.class.getName()).log(Level.SEVERE, null, ex);
+            MsgUtility.showErrorMeage(ex.getMessage());
         }
 
     }

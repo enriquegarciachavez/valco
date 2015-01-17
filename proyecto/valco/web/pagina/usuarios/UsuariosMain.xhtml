@@ -11,6 +11,38 @@
 
             <ui:define name="content">
                 <h:form id="form">
+                    
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" />
+                    
+                     <p:menubar>
+                        
+                         <p:menuitem 
+                             value="Ingresar" 
+                             partialSubmit="true" 
+                             update=":formingresar:popupingresar" 
+                             oncomplete="PF('popupingresar').show();"  
+                             action="#{usuariosMainBean.inicializarUsuario()}"
+                             icon="ui-icon-plusthick"                      
+                             />
+                            
+                         <p:menuitem 
+                             value="Modificar"  
+                             process="singleDT" 
+                             update=":formmodificar:popupmodificar" 
+                             oncomplete="PF('popupmodificar').show();"
+                             icon="ui-icon-pencil"
+                             partialSubmit="true"
+                             />
+                         <p:menuitem 
+                             value="Borrar" 
+                             process="singleDT" 
+                             update=":popupborrar" 
+                             oncomplete="PF('popupborrar').show();" 
+                             icon="ui-icon-circle-close"
+                             partialSubmit="true"
+                             /> 
+                    </p:menubar>
+                    
                     <p:dataTable id="singleDT" var="usuarios" value="#{usuariosMainBean.modeloUsuarios}" selectionMode="single" selection="#{usuariosMainBean.usuarioSeleccionado}" rowKey="#{usuarios.codigo}">
                         <f:facet name="header">
                             Usuarios
@@ -37,11 +69,21 @@
                             <h:outputText value="#{usuarios.ubicaciones.oficina}" />
                         </p:column>
 
-                        <f:facet name="footer">
-                            <p:commandButton value="Ingresar" partialSubmit="true" update=":formingresar:popupingresar" oncomplete="PF('popupingresar').show();"  action="#{usuariosMainBean.inicializarUsuario()}"/>
-                            <p:commandButton value="Modificar"  process="singleDT" update=":formmodificar:popupmodificar" oncomplete="PF('popupmodificar').show();"/>
-                            <p:commandButton value="Borrar" process="singleDT" update=":popupborrar" oncomplete="PF('popupborrar').show();" />
-                        </f:facet>
+                      <!--  <f:facet name="footer">
+                            <p:commandButton value="Ingresar" 
+                                             partialSubmit="true" 
+                                             update=":formingresar:popupingresar" 
+                                             oncomplete="PF('popupingresar').show();"  
+                                             action=""/>
+                            <p:commandButton value="Modificar"  
+                                             process="singleDT" 
+                                             update=":formmodificar:popupmodificar" 
+                                             oncomplete="PF('popupmodificar').show();"/>
+                            <p:commandButton value="Borrar" 
+                                             process="singleDT" 
+                                             update=":popupborrar" 
+                                             oncomplete="PF('popupborrar').show();" />
+                        </f:facet>  -->
                     </p:dataTable>
                 </h:form>
 
@@ -104,6 +146,7 @@
                             <p:outputLabel for="ubicacionn0" value="Ubicación:"  />
                             <p:selectOneMenu id="ubicacionn0" required="true" value="#{usuariosMainBean.usuarioNuevo.ubicaciones}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
                                              effect="fade" style="width:160px" >
+                                <f:selectItem itemLabel="Selecciona uno" itemValue="" />
                                 <f:selectItems value="#{usuariosMainBean.ubicaciones}" var="ubicaciones" itemLabel="#{ubicaciones.codigo} | #{ubicaciones.oficina}" itemValue="#{ubicaciones}" />
                             </p:selectOneMenu>
                             <p:message for="ubicacionn0" display="icon" /> 
@@ -180,6 +223,7 @@
                             <p:outputLabel for="ubicacion2" value="Ubicacion Oficina"  />
                             <p:selectOneMenu id="ubicacion2" value="#{usuariosMainBean.usuarioSeleccionado.ubicaciones}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
                                              effect="fade"  style="width:160px">
+                                <f:selectItem itemLabel="Selecciona uno" itemValue="" />
                                 <f:selectItems value="#{usuariosMainBean.ubicaciones}" var="ubicaciones" itemLabel="#{ubicaciones.codigo} | #{ubicaciones.oficina}" itemValue="#{ubicaciones}" />
                             </p:selectOneMenu>
                             <p:message for="ubicacion2" display="icon" />

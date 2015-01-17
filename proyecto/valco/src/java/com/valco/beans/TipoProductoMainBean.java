@@ -8,7 +8,10 @@ package com.valco.beans;
 import com.sun.deploy.uitoolkit.impl.fx.ui.UITextArea;
 import com.valco.dao.TipoProductoDAO;
 import com.valco.pojo.TipoProducto;
+import com.valco.utility.MsgUtility;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -44,10 +47,15 @@ public class TipoProductoMainBean {
     public TipoProductoMainBean() {
     }
 
-    public DataModel getModeloTipoProducto() throws Exception {
-        tipoproducto = tipoproductoDao.getTipoProducto();
-        modeloTipoProducto = new ListDataModel(tipoproducto);
-        return modeloTipoProducto;
+    public DataModel getModeloTipoProducto(){
+        try {
+            tipoproducto = tipoproductoDao.getTipoProducto();
+            modeloTipoProducto = new ListDataModel(tipoproducto);
+            return modeloTipoProducto;
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+            return modeloTipoProducto;
+        }
     }
 
     public void setModeloTipoProducto(DataModel modeloTipoProducto) {
@@ -107,8 +115,10 @@ public class TipoProductoMainBean {
         try {
             tipoNuevo.setEstatus("ACTIVO");
             tipoproductoDao.insertarTipoProducto(tipoNuevo);
+           MsgUtility.showInfoMeage("El tipo producto se insertó con éxito");
            
         } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
             
         }
     }    
@@ -116,14 +126,18 @@ public class TipoProductoMainBean {
     public void borrarTipoProducto(){
         try {
             tipoproductoDao.borrarTipoProducto(tipoSeleccionado);
+            MsgUtility.showInfoMeage("El tipo producto se borró con éxito");
         } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
           
         }
     }
     public void actualizarTipoProducto(){
         try {
             tipoproductoDao.actualizarTipoProducto(tipoSeleccionado);
+            MsgUtility.showInfoMeage("El tipo producto se actualizó con éxito");
         } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
             
         }
         

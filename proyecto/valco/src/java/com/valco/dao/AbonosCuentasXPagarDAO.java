@@ -140,13 +140,13 @@ public class AbonosCuentasXPagarDAO {
               return ordenes;
 
           } catch (HibernateException he) {
-              throw new Exception("Ocurrió un error al consultar los clientes.");
+              throw new Exception("Ocurrió un error al consultar las OrdenesCompra.");
 
           } finally {
               try {
                   session.close();
               } catch (HibernateException he) {
-                  throw new Exception("Ocurrió un error al consultar los clientes.");
+                  throw new Exception("Ocurrió un error al consultar las OrdenesCompra.");
               }
         }
     }

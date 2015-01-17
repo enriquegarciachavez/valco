@@ -9,7 +9,10 @@ import com.valco.dao.UbicacionesDAO;
 import com.valco.dao.UsuariosDAO;
 import com.valco.pojo.Ubicaciones;
 import com.valco.pojo.Usuarios;
+import com.valco.utility.MsgUtility;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -105,10 +108,15 @@ public class UsuariosMainBean {
         this.usuarioSeleccionado = usuarioSeleccionado;
     }
 
-    public DataModel getModeloUsuarios() throws Exception {
-        usuarios = usuariosDao.getUsuarios();
-        modeloUsuarios = new ListDataModel(usuarios);
-        return modeloUsuarios;
+    public DataModel getModeloUsuarios() {
+        try {
+            usuarios = usuariosDao.getUsuarios();
+            modeloUsuarios = new ListDataModel(usuarios);
+            return modeloUsuarios;
+        } catch (Exception ex) {
+             MsgUtility.showErrorMeage(ex.getMessage());
+             return modeloUsuarios;
+        }
     }
 
     public void setModeloUsuarios(DataModel modeloUsuarios) {
@@ -162,8 +170,9 @@ public class UsuariosMainBean {
         try {
             usuarioNuevo.setEstatus("ACTIVO");
             usuariosDao.insertarUsuario(usuarioNuevo);
+            MsgUtility.showInfoMeage("El usuario se insertó con éxito");
         } catch (Exception ex) {
-            
+           MsgUtility.showErrorMeage(ex.getMessage());  
         }
     }
     
@@ -171,8 +180,9 @@ public class UsuariosMainBean {
     public void actualizarUsuario() {
         try {
             usuariosDao.actualizarUsuario(usuarioSeleccionado);
+            MsgUtility.showInfoMeage("El usuario se actualizó con éxito");
         } catch (Exception ex) {
-            
+           MsgUtility.showErrorMeage(ex.getMessage());  
         }
 
     }
@@ -180,8 +190,9 @@ public class UsuariosMainBean {
     public void borrarUsuario() {
         try {
             usuariosDao.borrarUsuario(usuarioSeleccionado);
+            MsgUtility.showInfoMeage("El usuario se borró con éxito");
         } catch (Exception ex) {
-            
+             MsgUtility.showErrorMeage(ex.getMessage());
         }
     }
     

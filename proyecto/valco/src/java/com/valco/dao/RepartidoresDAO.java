@@ -64,7 +64,9 @@ public class RepartidoresDAO {
             throw new Exception("Ocurrió un error al modificar el repartidor.");
         } finally {
             try {
-                session.close();
+                if (session.isOpen()) {
+                    session.close();
+                }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al modificar el repartidor    .");
             }
