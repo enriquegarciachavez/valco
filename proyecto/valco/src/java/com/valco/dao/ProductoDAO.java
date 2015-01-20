@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -199,6 +200,35 @@ public class ProductoDAO {
               Criteria q = session.createCriteria(ProductosInventario.class)
                       .add(Restrictions.eq("codigoBarras", codigo));
               producto = (ProductosInventario)q.uniqueResult();
+              return producto;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los productos.");
+
+          } finally {
+              try {
+                  if(session.isOpen()){
+                    session.close();
+                  }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los productos.");
+              }
+        }
+    }
+    
+    public ProductosInventario getProductosXCodigoBarrastransferencia(String codigo) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          ProductosInventario producto = new ProductosInventario();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(ProductosInventario.class)
+                      .add(Restrictions.eq("codigoBarras", codigo));
+              producto = (ProductosInventario)q.uniqueResult();
+              if(producto != null){
+                Hibernate.initialize(producto.getTranferencias());
+                Hibernate.initialize(producto.getTranferencias().getUbicacionesByDestino());
+              }
               return producto;
 
           } catch (HibernateException he) {

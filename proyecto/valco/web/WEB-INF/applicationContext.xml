@@ -43,4 +43,5 @@
     <bean id="abonoscuentascobrarDAO" class="com.valco.dao.AbonosCuentasXCobrarDAO"/>
     <bean id="abonoscuentaspagarDAO" class="com.valco.dao.AbonosCuentasXPagarDAO"/>
     <bean id="ordenescompraDAO" class="com.valco.dao.OrdenesCompraDAO"/>
+    <bean id="transferenciasDAO" class="com.valco.dao.TransferenciasDAO"/>
 </beans>
