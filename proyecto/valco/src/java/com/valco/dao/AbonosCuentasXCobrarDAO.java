@@ -10,11 +10,16 @@ import com.valco.pojo.AbonosCuentasXCobrar;
 import com.valco.pojo.Clientes;
 import com.valco.pojo.NotasDeVenta;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -144,6 +149,55 @@ public class AbonosCuentasXCobrarDAO {
                   session.close();
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los clientes.");
+              }
+        }
+    }
+    
+    public List<NotasDeVenta> getNotasDeVenta(Date fechaInicial, Date fechaFinal, 
+                                                Clientes cliente, Integer numeroNota, 
+                                                String estatus) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+          Transaction tx = null;
+          List<NotasDeVenta> notas = new ArrayList<NotasDeVenta>();
+          try {
+              tx = session.beginTransaction();
+              Criteria criteria = session.createCriteria(NotasDeVenta.class);
+              if(fechaInicial != null && fechaFinal != null){
+                  criteria.add(Restrictions.between("fechaDeVenta",fechaInicial,fechaFinal));
+              }else if(fechaInicial != null){
+                  criteria.add(Restrictions.eq("fechaDeVenta", fechaInicial));
+              }else if(fechaFinal != null){
+                  criteria.add(Restrictions.eq("fechaDeVenta", fechaFinal));
+              }
+              
+              if(cliente != null){
+                  criteria.add(Restrictions.eq("clientes", cliente));
+              }
+              if(numeroNota != null){
+                  criteria.add(Restrictions.eq("folio", numeroNota));
+              }
+              if(estatus != null){
+                  criteria.add(Restrictions.eq("estatus", estatus));
+              }
+              notas = (List<NotasDeVenta>) criteria.list();
+              for(NotasDeVenta nota : notas){
+                  Hibernate.initialize(nota.getCuentaXCobrar());
+                  if(nota.getCuentaXCobrar() != null){
+                    Hibernate.initialize(nota.getCuentaXCobrar().getAbonosCuentasXCobrars());
+                  }
+              }
+              return notas;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los abonos.");
+
+          } finally {
+              try {
+                  if(session.isOpen()){
+                    session.close();
+                  }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los abonos.");
               }
         }
     }
