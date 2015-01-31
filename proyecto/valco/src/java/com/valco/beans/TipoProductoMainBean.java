@@ -5,7 +5,6 @@
  */
 package com.valco.beans;
 
-import com.sun.deploy.uitoolkit.impl.fx.ui.UITextArea;
 import com.valco.dao.TipoProductoDAO;
 import com.valco.pojo.TipoProducto;
 import com.valco.utility.MsgUtility;
@@ -37,7 +36,7 @@ public class TipoProductoMainBean {
     TipoProducto tipoNuevo;
     TipoProducto tipoSeleccionado;
     UIInput descripcion;
-    UITextArea observaciones;
+    UIInput observaciones;
     DataModel modeloTipoProducto;
     
 
@@ -103,11 +102,11 @@ public class TipoProductoMainBean {
         this.descripcion = descripcion;
     }
 
-    public UITextArea getObservaciones() {
+    public UIInput getObservaciones() {
         return observaciones;
     }
 
-    public void setObservaciones(UITextArea observaciones) {
+    public void setObservaciones(UIInput observaciones) {
         this.observaciones = observaciones;
     }
     
