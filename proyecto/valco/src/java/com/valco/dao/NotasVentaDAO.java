@@ -11,6 +11,7 @@ import com.valco.pojo.Clientes;
 import com.valco.pojo.CuentasXCobrar;
 import com.valco.pojo.NotasDeVenta;
 import com.valco.pojo.ProductosInventario;
+import com.valco.pojo.Repartidores;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -461,6 +462,49 @@ public class NotasVentaDAO {
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los clientes.");
               }
+        }
+    }
+      
+      public List<NotasDeVenta> getNotasDeVenta(Repartidores repartidor,
+                                                Date fechaInicial,
+                                                Date fechaFinal,
+                                                String estatus) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        List<NotasDeVenta> notas = new ArrayList<NotasDeVenta>();
+        try {
+            tx = session.beginTransaction();
+            Criteria criteria = session.createCriteria(NotasDeVenta.class)
+                    .add(Restrictions.eq("repartidores", repartidor));
+            if(fechaInicial != null && fechaFinal != null){
+                criteria.add(Restrictions.between("fechaDeVenta", fechaInicial, fechaFinal));
+            }else if(fechaInicial != null){
+                criteria.add(Restrictions.eq("fechaDeVenta", fechaInicial));
+            }else if(fechaFinal != null){
+                criteria.add(Restrictions.eq("fechaDeVenta", fechaFinal));
+            }
+            if(estatus != null){
+                criteria.add(Restrictions.eq("estatus", estatus));
+            }
+            notas = (List<NotasDeVenta>) criteria.list();
+            for (NotasDeVenta nota : notas) {
+                for (CuentasXCobrar cuenta : nota.getCuentasXCobrars()) {
+                    Hibernate.initialize(cuenta);
+                }
+            }
+            return notas;
+
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar las notas.");
+
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar las notas.");
+            }
         }
     }
 }

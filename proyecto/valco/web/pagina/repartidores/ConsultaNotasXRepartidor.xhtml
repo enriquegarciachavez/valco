@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../clientes/Template1.xhtml">
+
+            <ui:define name="title">
+                Consulta de notas por repartidor
+            </ui:define>
+
+            <ui:define name="content">
+                <p:messages id="messages" showDetail="true" autoUpdate="true" />
+                <h:form id="form">
+                    <h:panelGrid columns="4"
+                                 cellpadding="5"
+                                 cellspacing="5"
+                                 style="text-align: right; margin: 0 auto; ">
+                        
+                            <p:outputLabel for="repartidor" value="Repartidor:"  />
+                            <p:selectOneMenu 
+                                id="repartidor" 
+                                converter="omnifaces.SelectItemsConverter" 
+                                panelStyle="width:180px"
+                                effect="fade" 
+                                required="true"
+                                var="c" 
+                                style="width:100%" 
+                                filter="true" 
+                                filterMatchMode="contains"
+                                value="#{consultaNotasXRepartidorBean.repartidorSeleccionado}">
+                                <f:selectItem itemLabel="Seleccionar repartidor" itemValue="" />
+                                <f:selectItems value="#{consultaNotasXRepartidorBean.repartidores}" var="repartidor" itemLabel="#{repartidor.codigo} | #{repartidor.nombres} #{repartidor.apellidoPaterno}" itemValue="#{repartidor}" />
+
+                                <p:column style="width:10%">
+                                    <h:outputText value="#{c.codigo}" />
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{c.nombres} #{c.apellidoPaterno}" />
+                                </p:column>
+                            </p:selectOneMenu>
+                        <p:outputLabel for="fechaInicial" value="Fecha Inicial:" />
+                        <p:calendar id="fechaInicial"  showOn="button" value="#{consultaNotasXRepartidorBean.fechaInicial}" />
+
+                        <p:outputLabel for="fechaFinal" value="Fecha Final:" />
+                        <p:calendar id="fechaFinal"  showOn="button" value="#{consultaNotasXRepartidorBean.fechaFinal}" />
+                        
+                        
+                        <p:outputLabel for="estatus" value="Estatus:" style="text-align: right;"/>
+                        <p:selectOneMenu 
+                            id="estatus" 
+                            converter="omnifaces.SelectItemsConverter" 
+                            panelStyle="width:180px"
+                            effect="fade"
+                            style="width:100%" 
+                            value="#{consultaNotasXRepartidorBean.estatus}">
+                            <f:selectItem itemLabel="Seleccionar estatus" itemValue="" />
+                            <f:selectItem itemLabel="Asignada" itemValue="ASIGNADA" />
+                            <f:selectItem itemLabel="Activo" itemValue="ACTIVO" />
+                        </p:selectOneMenu>
+                        
+                        <f:facet name="footer">
+                            <p:commandButton id="btnBuscar"
+                                             value="Buscar"
+                                             update="tablaNotas"
+                                             action="#{consultaNotasXRepartidorBean.consultarNotas()}"/>
+                        </f:facet>
+                        
+                    </h:panelGrid>
+                    
+                    <p:dataTable id="tablaNotas" 
+                                 var="nota" 
+                                 value="#{consultaNotasXRepartidorBean.notas}"
+                                 style="margin-bottom:40px"
+                                 >
+
+                        <f:facet name="header">
+                            Notas de ventas
+                        </f:facet>
+                        
+                        <p:column headerText="Nota de Venta"  sortBy="#{nota.folio}" >
+                            <h:outputText value="#{nota.folio}" />
+                        </p:column>
+
+                        <p:column  sortBy="#{nota.fechaDeVenta}" >
+                            <f:facet name="header">
+                             <h:outputText value="Fecha Venta" />   
+                            </f:facet>
+                            <h:outputText value="#{nota.fechaDeVenta}" />
+                        </p:column>
+                        
+                        <p:column headerText="Importe" >
+                            <h:outputText value="#{nota.cuentaXCobrar.importe}" />
+                        </p:column>
+
+                        <p:column headerText="Importe Abonado " >
+                            <h:outputText value="#{nota.cuentaXCobrar.importeAbonado}" />
+                        </p:column>
+                        
+                        <p:column headerText="Saldo a la fecha " >
+                            <h:outputText value="#{nota.cuentaXCobrar.importe - nota.cuentaXCobrar.importeAbonado}" />
+                        </p:column>
+                        
+                        <p:column headerText="Estatus " >
+                            <h:outputText value="#{nota.estatus}" />
+                        </p:column>
+
+                    </p:dataTable>
+
+                    <p:blockUI block="form" trigger="btnBuscar">
+                        Cargando.... Espere porfavor<br />
+                        <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
+                        
+                    </p:blockUI>
+
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
