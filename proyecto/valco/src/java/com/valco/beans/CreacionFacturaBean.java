@@ -6,9 +6,21 @@
 package com.valco.beans;
 
 import com.sun.xml.rpc.processor.modeler.j2ee.xml.string;
+import com.valco.dao.ClienteDAO;
+import com.valco.dao.NotasVentaDAO;
+import com.valco.pojo.Clientes;
+import com.valco.pojo.NotasDeVenta;
+import com.valco.utility.MsgUtility;
 import https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import org.primefaces.model.DualListModel;
 
 /**
  *
@@ -17,11 +29,38 @@ import javax.faces.bean.ViewScoped;
 @ManagedBean
 @ViewScoped
 public class CreacionFacturaBean {
-
+    @ManagedProperty(value="#{notadeVentaDao}")
+    private NotasVentaDAO notasDeVentaDao;
+    @ManagedProperty(value="#{clienteDao}")
+    private ClienteDAO clienteDao;
+    private DualListModel<NotasDeVenta> notasDeVenta;
+    private List<Clientes> clientes;
+    private Clientes clienteSeleccionado;
     /**
      * Creates a new instance of CreacionFacturaBean
      */
     public CreacionFacturaBean() {
+    }
+    
+    @PostConstruct
+    public void inicializar(){
+        try{
+            notasDeVenta = new DualListModel();
+            clientes = clienteDao.getClientes();
+        }catch(Exception ex){
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+    }
+    
+    public void consultarNotasXCliente(){
+        try {
+            List<NotasDeVenta> notasDisponibles = notasDeVentaDao.getNotasDeVentaXCliente(clienteSeleccionado);
+            List<NotasDeVenta> notasSeleccionadas = new ArrayList<>();
+            notasDeVenta.setSource(notasDisponibles);
+            notasDeVenta.setTarget(notasSeleccionadas);
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
     }
     
     public void facturar(){
@@ -40,7 +79,48 @@ public class CreacionFacturaBean {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
     }
+
+    public NotasVentaDAO getNotasDeVentaDao() {
+        return notasDeVentaDao;
+    }
+
+    public void setNotasDeVentaDao(NotasVentaDAO notasDeVentaDao) {
+        this.notasDeVentaDao = notasDeVentaDao;
+    }
+
+    public ClienteDAO getClienteDao() {
+        return clienteDao;
+    }
+
+    public void setClienteDao(ClienteDAO clienteDao) {
+        this.clienteDao = clienteDao;
+    }
+
+    public DualListModel<NotasDeVenta> getNotasDeVenta() {
+        return notasDeVenta;
+    }
+
+    public void setNotasDeVenta(DualListModel<NotasDeVenta> notasDeVenta) {
+        this.notasDeVenta =  notasDeVenta;
+    }
+
+    public List<Clientes> getClientes() {
+        return clientes;
+    }
+
+    public void setClientes(List<Clientes> clientes) {
+        this.clientes = clientes;
+    }
+
+    public Clientes getClienteSeleccionado() {
+        return clienteSeleccionado;
+    }
+
+    public void setClienteSeleccionado(Clientes clienteSeleccionado) {
+        this.clienteSeleccionado = clienteSeleccionado;
+    }
+    
+    
     
 }
