@@ -33,5 +33,6 @@
     <mapping resource="com/valco/pojo/CuentasXCobrar.hbm.xml"/>
     <mapping resource="com/valco/pojo/ProductosInventario.hbm.xml"/>
     <mapping resource="com/valco/pojo/Repartidores.hbm.xml"/>
+    <mapping resource="com/valco/pojo/ParametrosGenerales.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

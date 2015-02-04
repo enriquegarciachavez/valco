@@ -26,4 +26,5 @@
   <table-filter match-name="USUARIOS"/>
   <table-filter match-name="CUENTAS_X_COBRAR"/>
   <table-filter match-name="NOTAS_DE_VENTA"/>
+  <table-filter match-name="PARAMETROS_GENERALES"/>
 </hibernate-reverse-engineering>
