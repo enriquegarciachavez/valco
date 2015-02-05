@@ -20,6 +20,8 @@ public class Facturas  implements java.io.Serializable {
      private BigDecimal total;
      private String observaciones;
      private String estatus;
+     private String xml;
+     private String formaPago;
      private Set<NotasDeVenta> notasDeVentas = new HashSet<NotasDeVenta>(0);
 
     public Facturas() {
@@ -100,7 +102,23 @@ public class Facturas  implements java.io.Serializable {
         this.notasDeVentas = notasDeVentas;
     }
 
+    public String getXml() {
+        return xml;
+    }
 
+    public void setXml(String xml) {
+        this.xml = xml;
+    }
+
+    public String getFormaPago() {
+        return formaPago;
+    }
+
+    public void setFormaPago(String formaPago) {
+        this.formaPago = formaPago;
+    }
+
+    
 
 
 }

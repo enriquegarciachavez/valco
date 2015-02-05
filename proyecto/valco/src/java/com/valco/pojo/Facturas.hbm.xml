@@ -8,6 +8,12 @@
             <column name="CODIGO" />
             <generator class="identity" />
         </id>
+        <property name="xml" type="string">
+            <column name="XML" />
+        </property>
+        <property name="formaPago" type="string">
+            <column name="FORMA_PAGO" />
+        </property>
         <property name="fecha" type="date">
             <column name="FECHA" length="10" not-null="true" />
         </property>

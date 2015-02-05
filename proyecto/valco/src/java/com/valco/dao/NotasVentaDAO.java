@@ -372,7 +372,9 @@ public class NotasVentaDAO {
               for(NotasDeVenta nota : notas){
                   for(CuentasXCobrar cuenta : nota.getCuentasXCobrars()){
                       Hibernate.initialize(cuenta);
+                      
                   }
+                  Hibernate.initialize(nota.getProductosInventarios());
               }
               return notas;
 
@@ -382,7 +384,7 @@ public class NotasVentaDAO {
           } finally {
               try {
                   if (session.isOpen()) {
-                      //session.close();
+                      session.close();
                   }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los clientes.");
