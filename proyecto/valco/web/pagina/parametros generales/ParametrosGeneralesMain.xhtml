@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../clientes/Template1.xhtml">
+
+            <ui:define name="content">
+                
+                   <h:form id="form">
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" />
+                     <p:menubar>
+                        
+                        <p:menuitem 
+                            value="Ingresar" 
+                            icon="ui-icon-plusthick"                      
+                            partialSubmit="true"
+                            oncomplete="PF('popupingresar').show();;" 
+                            update=":formingresar:popupingresar"
+                            action="#{parametrosGeneralesMainBean.inicializarParametro}"/>
+                        <p:menuitem 
+                            value="Modificar"  
+                            icon="ui-icon-pencil"
+                            partialSubmit="true"
+                            oncomplete="PF('popupmodificar').show();"
+                            process="singleDT" 
+                            update=":formmodificar:popupmodificar"
+                          />
+                           
+                        <p:menuitem 
+                            value="Borrar " 
+                            icon="ui-icon-circle-close"
+                            partialSubmit="true"
+                            oncomplete="PF('popupborrar').show();" 
+                            process="singleDT"
+                            update=":popupborrar"
+                             />    
+                    </p:menubar>
+                    
+                    
+                    <p:dataTable id="singleDT" var="parametros" value="#{parametrosGeneralesMainBean.modeloParametros}" selectionMode="single" selection="#{parametrosGeneralesMainBean.parametroSeleccionado}" rowKey="#{parametros.codigo}">
+                        <f:facet name="header">
+                            Parametros
+                        </f:facet>
+                        <p:column headerText="Clave">
+                            <h:outputText value="#{parametros.clave}" />
+                        </p:column>
+                        <p:column headerText="Valor">
+                            <h:outputText value="#{parametros.valor}" />
+                        </p:column>
+                        <p:column headerText="Estatus">
+                            <h:outputText value="#{parametros.estatus}" />
+                        </p:column>
+                    </p:dataTable>
+                     </h:form>
+                
+                <!-- BOTON INGRESAR PARAMETRO-->
+                <!-- <p:commandButton value="Ingresar" type="button" onclick="PF('popupingresar').show();" /> -->
+                <h:form id="formingresar">
+                    <p:dialog header="Ingresar Cliente" widgetVar="popupingresar" modal="true" position="top"
+                              id="popupingresar">
+
+
+                        <h:panelGrid id="ingresarGrid"  columns="1" cellpadding="5">
+
+                            <f:facet name="header">
+                                <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
+                            </f:facet>
+
+                            <p:outputLabel for="clave" value=" Clave: " />
+                            <p:inputText id="clave" binding="#{parametrosGeneralesMainBean.clave}" required="true" label="clave" value="#{parametrosGeneralesMainBean.parametroNuevo.clave}" />
+                            <p:message for="clave" display="icon" />
+
+                            <p:outputLabel for="valor" value="Valor:" />
+                            <p:inputText id="valor" binding="#{parametrosGeneralesMainBean.valor}" required="true" label="valor" value="#{parametrosGeneralesMainBean.parametroNuevo.valor}"/>
+                            <p:message for="valor" display="icon" />
+
+                            
+
+                            <f:facet name="footer">
+
+                                <p:commandButton value="Guardar"  id="guardar1" update="ingresarGrid :form:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'popupingresar' )"  action="#{parametrosGeneralesMainBean.insertarParametro()}"/>
+
+                            </f:facet>
+                        </h:panelGrid>
+                        </p:dialog>
+                    </h:form>
+                
+                <!-- BOTON MODIFICAR pARAMETROS-->
+                <!-- <p:commandButton value="Modificar" type="button" onclick="PF('popupmodificar').show();" /> -->
+
+                <h:form id="formmodificar">
+                    <p:dialog header="Modificar Cliente" widgetVar="popupmodificar" id="popupmodificar" modal="true" position="top">
+
+                        <h:panelGrid id="modificarGrid"  columns="1" cellpadding="5">
+
+                            <f:facet name="header">
+                                <p:messages id="msgsmodificar" style="font-size: 12px; text-align: left;"/>
+                            </f:facet>
+
+                            <p:outputLabel for="clave2" value="Clave: " />
+                            <p:inputText id="clave2" 
+                                         required="true" 
+                                         label="clave" 
+                                         value="#{parametrosGeneralesMainBean.parametroSeleccionado.clave}" />
+                            <p:message for="clave2" display="icon" />
+
+                            
+                            <p:outputLabel for="valor2" value="Valor:" />
+                            <p:inputText id="valor2" 
+                                         required="true" 
+                                         label="valor" 
+                                         value="#{parametrosGeneralesMainBean.parametroSeleccionado.valor}"/>
+                            <p:message for="valor2" display="icon" />
+
+                            
+                            
+                            
+                            
+                            <p:outputLabel for="estatus3" value="Estatus:"  />
+                            <p:selectOneMenu id="estatus3" value="#{parametrosGeneralesMainBean.parametroSeleccionado.estatus}" 
+                                             converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
+                                             effect="fade"  style="width:160px">
+
+                                <f:selectItem itemLabel="Selecciona uno" itemValue="" />
+                                <f:selectItem  itemLabel="ACTIVO" itemValue="ACTIVO"/>
+                                <f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO" />
+
+                            </p:selectOneMenu>
+                            <p:message for="estatus3" display="icon" />
+
+                            
+                            <f:facet name="footer">
+                                <p:commandButton value="Guardar" id="guardar" oncomplete="handleLoginRequest(xhr, status, args, 'popupmodificar' )" update="modificarGrid :form:singleDT" action="#{parametrosGeneralesMainBean.actualizarParametro()}"/>
+                            </f:facet>
+                        </h:panelGrid>
+
+                    </p:dialog>
+                </h:form>
+                
+                
+                 <!--BOTON ELIMINAR PARAMETRO-->
+                <p:dialog header="Borrar parametro" widgetVar="popupborrar" modal="true" id="popupborrar">
+                    <h:form>
+                        <h:panelGrid   columns="4" cellpadding="5">
+                            <h:outputText value="Esta seguro?" /> 
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Si" id="si" partialSubmit="true" ajax="false" action="#{parametrosGeneralesMainBean.borrarParametro()}"/>
+                                <p:commandButton value="No" id="no"  ajax="false" />
+                            </f:facet>
+                        </h:panelGrid>
+                    </h:form>
+
+                </p:dialog>
+                </ui:define>
+
+            
+            
+
+        </ui:composition>
+
+    </body>
+</html>

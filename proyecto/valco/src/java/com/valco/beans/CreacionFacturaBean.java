@@ -6,7 +6,7 @@
 package com.valco.beans;
 
 import com.sun.xml.rpc.processor.modeler.j2ee.xml.string;
-import https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX;
+//import https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -32,11 +32,11 @@ public class CreacionFacturaBean {
             java.lang.String sNombre = "WSDL_PAX";
             java.lang.String sContraseña = "wqfCr8O3xLfEhMOHw4nEjMSrxJnvv7bvvr4cVcKuKkBEM++/ke+/gCPvv4nvvrfvvaDvvb/vvqTvvoA=";
             java.lang.String sVersion = "3.2";
-            https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX service = new https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX();
-            https.test_paxfacturacion_com_mx._453.WcfRecepcionASMXSoap port = service.getWcfRecepcionASMXSoap();
+           // https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX service = new https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX();
+           // https.test_paxfacturacion_com_mx._453.WcfRecepcionASMXSoap port = service.getWcfRecepcionASMXSoap();
             // TODO process result here
-            java.lang.String result = port.fnEnviarXML(psComprobante, psTipoDocumento, pnIdEstructura, sNombre, sContraseña, sVersion);
-            System.out.println("Result = " + result);
+          //  java.lang.String result = port.fnEnviarXML(psComprobante, psTipoDocumento, pnIdEstructura, sNombre, sContraseña, sVersion);
+           // System.out.println("Result = " + result);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
