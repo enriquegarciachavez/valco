@@ -5,6 +5,7 @@
   <table-filter match-name="CLIENTES"/>
   <table-filter match-name="TELEFONOS"/>
   <table-filter match-name="PRODUCTOS_INVENTARIO"/>
+  <table-filter match-name="CONCEPTOS_FACTURA"/>
   <table-filter match-name="FACTURAS"/>
   <table-filter match-name="TRANFERENCIAS"/>
   <table-filter match-name="PROVEEDORES"/>

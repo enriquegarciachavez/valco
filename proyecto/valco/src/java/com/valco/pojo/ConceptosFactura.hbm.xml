@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 8/02/2015 10:57:26 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="valco" name="com.valco.pojo.ConceptosFactura" optimistic-lock="version" table="CONCEPTOS_FACTURA">
+    <id name="codigo" type="java.lang.Integer">
+      <column name="CODIGO"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="com.valco.pojo.Facturas" fetch="select" name="facturas">
+      <column name="FACTURAS_CODIGO" not-null="true"/>
+    </many-to-one>
+    <property name="cantidad" type="big_decimal">
+      <column name="CANTIDAD" not-null="true" precision="6"/>
+    </property>
+    <property name="clave" type="int">
+      <column name="CLAVE" not-null="true"/>
+    </property>
+    <property name="descripcion" type="string">
+      <column length="200" name="DESCRIPCION" not-null="true"/>
+    </property>
+    <property name="unidad" type="string">
+      <column length="20" name="UNIDAD" not-null="true"/>
+    </property>
+    <property name="precioUnitario" type="big_decimal">
+      <column name="PRECIO_UNITARIO" not-null="true" precision="8"/>
+    </property>
+    <property name="importeTotal" type="big_decimal">
+      <column name="IMPORTE_TOTAL" not-null="true" precision="9"/>
+    </property>
+  </class>
+</hibernate-mapping>

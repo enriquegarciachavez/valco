@@ -1,42 +1,98 @@
-<?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 2/11/2014 06:06:43 PM by Hibernate Tools 4.3.1 -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 8/02/2015 02:03:45 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="com.valco.pojo.Facturas" table="FACTURAS" catalog="valco" optimistic-lock="version">
-        <id name="codigo" type="java.lang.Integer">
-            <column name="CODIGO" />
-            <generator class="identity" />
-        </id>
-        <property name="xml" type="string">
-            <column name="XML" />
-        </property>
-        <property name="formaPago" type="string">
-            <column name="FORMA_PAGO" />
-        </property>
-        <property name="fecha" type="date">
-            <column name="FECHA" length="10" not-null="true" />
-        </property>
-        <property name="subtotal" type="big_decimal">
-            <column name="SUBTOTAL" precision="7" not-null="true" />
-        </property>
-        <property name="iva" type="big_decimal">
-            <column name="IVA" precision="7" not-null="true" />
-        </property>
-        <property name="total" type="big_decimal">
-            <column name="TOTAL" precision="7" not-null="true" />
-        </property>
-        <property name="observaciones" type="string">
-            <column name="OBSERVACIONES" length="65535" />
-        </property>
-        <property name="estatus" type="string">
-            <column name="ESTATUS" length="20" not-null="true" />
-        </property>
-        <set name="notasDeVentas" table="NOTAS_DE_VENTA" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="FACTURAS_CODIGO" not-null="true" />
-            </key>
-            <one-to-many class="com.valco.pojo.NotasDeVenta" />
-        </set>
-    </class>
+  <class catalog="valco" name="com.valco.pojo.Facturas" optimistic-lock="version" table="FACTURAS">
+    <id name="codigo" type="java.lang.Integer">
+      <column name="CODIGO"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="com.valco.pojo.NotasDeVenta" fetch="select" name="notasDeVenta">
+      <column name="NOTAS_DE_VENTA_CODIGO" not-null="true"/>
+    </many-to-one>
+    <property name="lugar" type="string">
+      <column length="100" name="LUGAR" not-null="true"/>
+    </property>
+    <property name="fecha" type="timestamp">
+      <column length="19" name="FECHA" not-null="true"/>
+    </property>
+    <property name="folio" type="int">
+      <column name="FOLIO" not-null="true"/>
+    </property>
+    <property name="folioFiscal" type="string">
+      <column length="100" name="FOLIO_FISCAL" not-null="true"/>
+    </property>
+    <property name="fechaTimbrado" type="string">
+      <column length="40" name="FECHA_TIMBRADO" not-null="true"/>
+    </property>
+    <property name="noSerieCertSat" type="string">
+      <column length="100" name="NO_SERIE_CERT_SAT" not-null="true"/>
+    </property>
+    <property name="observaciones" type="string">
+      <column length="65535" name="OBSERVACIONES"/>
+    </property>
+    <property name="estatus" type="string">
+      <column length="20" name="ESTATUS" not-null="true"/>
+    </property>
+    <property name="xml" type="string">
+      <column name="XML" not-null="true"/>
+    </property>
+    <property name="formaPago" type="string">
+      <column length="100" name="FORMA_PAGO" not-null="true"/>
+    </property>
+    <property name="noSeieCertEmisor" type="string">
+      <column length="100" name="NO_SEIE_CERT_EMISOR" not-null="true"/>
+    </property>
+    <property name="metodoPago" type="string">
+      <column length="100" name="METODO_PAGO" not-null="true"/>
+    </property>
+    <property name="moneda" type="string">
+      <column length="20" name="MONEDA" not-null="true"/>
+    </property>
+    <property name="noCliente" type="int">
+      <column name="NO_CLIENTE" not-null="true"/>
+    </property>
+    <property name="banco" type="string">
+      <column length="20" name="BANCO" not-null="true"/>
+    </property>
+    <property name="subtotal" type="big_decimal">
+      <column name="SUBTOTAL" not-null="true" precision="8"/>
+    </property>
+    <property name="iva" type="big_decimal">
+      <column name="IVA" not-null="true" precision="3"/>
+    </property>
+    <property name="total" type="big_decimal">
+      <column name="TOTAL" not-null="true" precision="8"/>
+    </property>
+    <property name="importeLetra" type="string">
+      <column length="200" name="IMPORTE_LETRA"/>
+    </property>
+    <property name="selloCdfi" type="string">
+      <column length="300" name="SELLO_CDFI" not-null="true"/>
+    </property>
+    <property name="selloSat" type="string">
+      <column length="300" name="SELLO_SAT" not-null="true"/>
+    </property>
+    <property name="cadenaOriginal" type="string">
+      <column length="400" name="CADENA_ORIGINAL" not-null="true"/>
+    </property>
+    <property name="cadenaCompromiso" type="string">
+      <column length="65535" name="CADENA_COMPROMISO"/>
+    </property>
+    <property name="condicionPago" type="string">
+      <column length="20" name="CONDICION_PAGO" not-null="true"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="notasDeVentas" table="NOTAS_DE_VENTA">
+      <key>
+        <column name="FACTURAS_CODIGO"/>
+      </key>
+      <one-to-many class="com.valco.pojo.NotasDeVenta"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="conceptosFacturas" table="CONCEPTOS_FACTURA">
+      <key>
+        <column name="FACTURAS_CODIGO" not-null="true"/>
+      </key>
+      <one-to-many class="com.valco.pojo.ConceptosFactura"/>
+    </set>
+  </class>
 </hibernate-mapping>
