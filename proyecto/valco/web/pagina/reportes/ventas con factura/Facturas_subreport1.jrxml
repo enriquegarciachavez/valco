@@ -51,7 +51,7 @@ WHERE FACTURAS.`FECHA` =$P{fecha}]]>
 				</line>
 				<textField pattern="$ #,##0.00">
 					<reportElement x="201" y="1" width="100" height="20" uuid="f75f5f39-6c27-4d8b-bf8f-7947ea0bff68"/>
-					<textElement textAlignment="Right"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
 					<textFieldExpression><![CDATA[$V{totalImporte}]]></textFieldExpression>
 				</textField>
 			</band>

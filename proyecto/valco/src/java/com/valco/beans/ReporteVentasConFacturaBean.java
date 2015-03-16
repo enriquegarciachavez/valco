@@ -31,7 +31,7 @@ public class ReporteVentasConFacturaBean {
     
     public void mostrarXls(){
         try {
-            Faces.redirect("/valco/ReportesXls?reporte=%s&fechaInicialDate=%s&fechaFinalDate=%s",
+            Faces.redirect("/valco/ReportesXls?reporte=%s&fecha_inicialDate=%s&fecha_finalDate=%s",
                     "//pagina//reportes//ventas con factura//Facturas.jrxml",
                     fechaInicial.toString(),
                     fechaFinal.toString());
