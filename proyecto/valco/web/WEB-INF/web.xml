@@ -28,14 +28,6 @@
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-    <servlet>
-        <servlet-name>ReportesXls</servlet-name>
-        <servlet-class>com.valco.servlets.ReportesXls</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ReportesPdf</servlet-name>
-        <servlet-class>com.valco.servlets.ReportesPdf</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>*.htm</url-pattern>
@@ -43,14 +35,6 @@
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>/faces/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ReportesXls</servlet-name>
-        <url-pattern>/ReportesXls</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ReportesPdf</servlet-name>
-        <url-pattern>/ReportesPdf</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
