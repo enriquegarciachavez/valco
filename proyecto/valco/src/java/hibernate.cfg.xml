@@ -35,5 +35,6 @@
     <mapping resource="com/valco/pojo/Repartidores.hbm.xml"/>
     <mapping resource="com/valco/pojo/ParametrosGenerales.hbm.xml"/>
     <mapping resource="com/valco/pojo/ConceptosFactura.hbm.xml"/>
+    <mapping resource="com/valco/pojo/Impuestos.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

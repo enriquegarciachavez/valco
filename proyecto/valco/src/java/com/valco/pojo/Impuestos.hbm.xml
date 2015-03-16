@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 15/03/2015 09:49:33 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.valco.pojo.Impuestos" table="IMPUESTOS" catalog="valco" optimistic-lock="version">
+        <id name="codigo" type="java.lang.Integer">
+            <column name="CODIGO" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="facturas" class="com.valco.pojo.Facturas" fetch="select">
+            <column name="FACTURAS_CODIGO" not-null="true" />
+        </many-to-one>
+        <property name="impuesto" type="string">
+            <column name="IMPUESTO" length="45" not-null="true" unique="true" />
+        </property>
+        <property name="tasa" type="big_decimal">
+            <column name="TASA" precision="4" not-null="true" />
+        </property>
+        <property name="importe" type="big_decimal">
+            <column name="IMPORTE" precision="7" scale="6" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

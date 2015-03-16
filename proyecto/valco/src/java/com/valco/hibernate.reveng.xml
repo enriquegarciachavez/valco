@@ -28,4 +28,5 @@
   <table-filter match-name="CUENTAS_X_COBRAR"/>
   <table-filter match-name="NOTAS_DE_VENTA"/>
   <table-filter match-name="PARAMETROS_GENERALES"/>
+  <table-filter match-name="IMPUESTOS"/>
 </hibernate-reverse-engineering>
