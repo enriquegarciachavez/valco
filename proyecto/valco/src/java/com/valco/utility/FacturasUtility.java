@@ -25,6 +25,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
@@ -177,17 +178,17 @@ public class FacturasUtility {
     }
     
     public void facturar(Facturas factura, Clientes cliente){
-        this.formaXmlFactura("A", factura.getFolio(), factura.getFecha(), 
-                factura.getFormaPago(), factura.getTotal(), factura.getSubtotal(),
+        this.formaXmlFactura("A",Integer.toString(factura.getFolio()), factura.getFecha(), 
+                factura.getFormaPago(), factura.getTotal().toString(), factura.getSubtotal().toString(),
                 factura.getMoneda(), factura.getMetodoPago(), factura.getLugar(),
-                cliente.getCuentaBancaria().toString(), factura.getNoSeieCertEmisor(), factura.getTpoComprobante,
-                factura.getrfcEmisor, nombre del emisor, calle del emisor, num ext emisor,
-                        num inte emisor, colonia emisor, localidad emisor, referencia emisor,
-                        municipio emisor, estado emisor, pais emisor, cp emisor,
-                        regimen emisor, cliente.getRfc(), cliente.getNombres(), cliente.getDireccion(), 
-                        cliente.getNumeroExterior(), cliente.getNumeroInterior(), cliente.getColonia(),
+                cliente.getCuentaBancaria().toString(), factura.getNoSeieCertEmisor(), "INGRESO",
+                "DCV9612126N6", "DISTRIBUIDORA DE CARNES VALCO S.A. DE C.V.", "PARRAL", "246",
+                        "N/A", "REVOLUCION", "CHIHUAHUA", "N/A",
+                        "CHIHUAHUA", "CHIHUAHUA", "MÉXICO", "31110",
+                        "REGIMEN", cliente.getRfc(), cliente.getNombres(), cliente.getDireccion(), 
+                        Integer.toString(cliente.getNumeroExterior()), cliente.getNumeroInterior(), cliente.getColonia(),
                         cliente.getCiudad(), cliente.getEstado(), cliente.getPais(), 
-                        cliente.getCodigoPostal(), factura.get, factura.getImpuestoses().iterator());
+                        Integer.toString(cliente.getCodigoPostal()), new HashSet<ConceptosFactura>().iterator(), factura.getImpuestoses().iterator());
         
     }
     
