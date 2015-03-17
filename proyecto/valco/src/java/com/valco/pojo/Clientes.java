@@ -1,5 +1,5 @@
 package com.valco.pojo;
-// Generated 2/11/2014 06:06:42 PM by Hibernate Tools 4.3.1
+// Generated 16/03/2015 07:32:10 PM by Hibernate Tools 4.3.1
 
 
 import java.util.HashSet;
@@ -16,10 +16,10 @@ public class Clientes  implements java.io.Serializable {
      private String apellidoPaterno;
      private String apellidoMaterno;
      private String nombres;
-     private String direccion;
+     private String calle;
      private String colonia;
      private String numeroInterior;
-     private Integer numeroExterior;
+     private int numeroExterior;
      private Integer codigoPostal;
      private String ciudad;
      private String estado;
@@ -30,7 +30,7 @@ public class Clientes  implements java.io.Serializable {
      private Boolean incobrable;
      private Boolean foreano;
      private String estatus;
-     private Integer cuentaBancaria;
+     private String cuentaBancaria;
      private String banco;
      private Set<NotasDeVenta> notasDeVentas = new HashSet<NotasDeVenta>(0);
      private Set<Telefonos> telefonoses = new HashSet<Telefonos>(0);
@@ -40,23 +40,23 @@ public class Clientes  implements java.io.Serializable {
     }
 
 	
-    public Clientes(String razonSocial, String apellidoPaterno, String nombres, String direccion, int numeroExterior, String ciudad, String estado, String pais, String estatus) {
+    public Clientes(String razonSocial, String apellidoPaterno, String nombres, String calle, int numeroExterior, String ciudad, String estado, String pais, String estatus) {
         this.razonSocial = razonSocial;
         this.apellidoPaterno = apellidoPaterno;
         this.nombres = nombres;
-        this.direccion = direccion;
+        this.calle = calle;
         this.numeroExterior = numeroExterior;
         this.ciudad = ciudad;
         this.estado = estado;
         this.pais = pais;
         this.estatus = estatus;
     }
-    public Clientes(String razonSocial, String apellidoPaterno, String apellidoMaterno, String nombres, String direccion, String colonia, String numeroInterior, int numeroExterior, Integer codigoPostal, String ciudad, String estado, String pais, Integer limiteCredito, String rfc, String correoElectronico, Boolean incobrable, Boolean foreano, String estatus, Integer cuentaBancaria, String banco, Set<NotasDeVenta> notasDeVentas, Set<Telefonos> telefonoses, Set<NotasCredito> notasCreditos) {
+    public Clientes(String razonSocial, String apellidoPaterno, String apellidoMaterno, String nombres, String calle, String colonia, String numeroInterior, int numeroExterior, Integer codigoPostal, String ciudad, String estado, String pais, Integer limiteCredito, String rfc, String correoElectronico, Boolean incobrable, Boolean foreano, String estatus, String cuentaBancaria, String banco, Set<NotasDeVenta> notasDeVentas) {
        this.razonSocial = razonSocial;
        this.apellidoPaterno = apellidoPaterno;
        this.apellidoMaterno = apellidoMaterno;
        this.nombres = nombres;
-       this.direccion = direccion;
+       this.calle = calle;
        this.colonia = colonia;
        this.numeroInterior = numeroInterior;
        this.numeroExterior = numeroExterior;
@@ -112,12 +112,12 @@ public class Clientes  implements java.io.Serializable {
     public void setNombres(String nombres) {
         this.nombres = nombres;
     }
-    public String getDireccion() {
-        return this.direccion;
+    public String getCalle() {
+        return this.calle;
     }
     
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
+    public void setCalle(String calle) {
+        this.calle = calle;
     }
     public String getColonia() {
         return this.colonia;
@@ -210,11 +210,11 @@ public class Clientes  implements java.io.Serializable {
     public void setEstatus(String estatus) {
         this.estatus = estatus;
     }
-    public Integer getCuentaBancaria() {
+    public String getCuentaBancaria() {
         return this.cuentaBancaria;
     }
     
-    public void setCuentaBancaria(Integer cuentaBancaria) {
+    public void setCuentaBancaria(String cuentaBancaria) {
         this.cuentaBancaria = cuentaBancaria;
     }
     public String getBanco() {
@@ -231,22 +231,27 @@ public class Clientes  implements java.io.Serializable {
     public void setNotasDeVentas(Set<NotasDeVenta> notasDeVentas) {
         this.notasDeVentas = notasDeVentas;
     }
+
     public Set<Telefonos> getTelefonoses() {
-        return this.telefonoses;
+        return telefonoses;
     }
-    
+
     public void setTelefonoses(Set<Telefonos> telefonoses) {
         this.telefonoses = telefonoses;
     }
+
     public Set<NotasCredito> getNotasCreditos() {
-        return this.notasCreditos;
+        return notasCreditos;
     }
-    
+
     public void setNotasCreditos(Set<NotasCredito> notasCreditos) {
         this.notasCreditos = notasCreditos;
     }
+
+    public String getNombreCompleto(){
+        return this.getNombres()+" "+this.getApellidoPaterno() +" "+this.getApellidoMaterno();
+    }
     
-    @Override
     public boolean equals(Object o) {
         if( o != null){
         if((o instanceof Clientes) && (((Clientes) o).getCodigo() == this.getCodigo())){
@@ -258,7 +263,8 @@ public class Clientes  implements java.io.Serializable {
             return false;
         }
     }
-    
+
+
 }
 
 

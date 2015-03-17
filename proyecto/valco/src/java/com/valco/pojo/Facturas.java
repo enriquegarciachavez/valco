@@ -1,5 +1,5 @@
 package com.valco.pojo;
-// Generated 15/03/2015 09:49:32 PM by Hibernate Tools 4.3.1
+// Generated 16/03/2015 07:32:10 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -19,7 +19,7 @@ public class Facturas  implements java.io.Serializable {
      private Date fecha;
      private int folio;
      private String folioFiscal;
-     private String fechaTimbrado;
+     private Date fechaTimbrado;
      private String noSerieCertSat;
      private String observaciones;
      private String estatus;
@@ -39,14 +39,16 @@ public class Facturas  implements java.io.Serializable {
      private String cadenaOriginal;
      private String cadenaCompromiso;
      private String condicionPago;
+     private String serie;
      private Set<NotasDeVenta> notasDeVentas = new HashSet<NotasDeVenta>(0);
+     private Set<ConceptosFactura> conceptosFacturas = new HashSet<ConceptosFactura>(0);
      private Set<Impuestos> impuestoses = new HashSet<Impuestos>(0);
 
     public Facturas() {
     }
 
 	
-    public Facturas(NotasDeVenta notasDeVenta, String lugar, Date fecha, int folio, String folioFiscal, String fechaTimbrado, String noSerieCertSat, String estatus, String xml, String formaPago, String noSeieCertEmisor, String metodoPago, String moneda, int noCliente, String banco, BigDecimal subtotal, BigDecimal iva, BigDecimal total, String selloCdfi, String selloSat, String cadenaOriginal, String condicionPago) {
+    public Facturas(NotasDeVenta notasDeVenta, String lugar, Date fecha, int folio, String folioFiscal, Date fechaTimbrado, String noSerieCertSat, String estatus, String xml, String formaPago, String noSeieCertEmisor, String metodoPago, String moneda, int noCliente, String banco, BigDecimal subtotal, BigDecimal iva, BigDecimal total, String selloCdfi, String selloSat, String cadenaOriginal, String condicionPago) {
         this.notasDeVenta = notasDeVenta;
         this.lugar = lugar;
         this.fecha = fecha;
@@ -70,7 +72,7 @@ public class Facturas  implements java.io.Serializable {
         this.cadenaOriginal = cadenaOriginal;
         this.condicionPago = condicionPago;
     }
-    public Facturas(NotasDeVenta notasDeVenta, String lugar, Date fecha, int folio, String folioFiscal, String fechaTimbrado, String noSerieCertSat, String observaciones, String estatus, String xml, String formaPago, String noSeieCertEmisor, String metodoPago, String moneda, int noCliente, String banco, BigDecimal subtotal, BigDecimal iva, BigDecimal total, String importeLetra, String selloCdfi, String selloSat, String cadenaOriginal, String cadenaCompromiso, String condicionPago, Set<NotasDeVenta> notasDeVentas, Set<Impuestos> impuestoses) {
+    public Facturas(NotasDeVenta notasDeVenta, String lugar, Date fecha, int folio, String folioFiscal, Date fechaTimbrado, String noSerieCertSat, String observaciones, String estatus, String xml, String formaPago, String noSeieCertEmisor, String metodoPago, String moneda, int noCliente, String banco, BigDecimal subtotal, BigDecimal iva, BigDecimal total, String importeLetra, String selloCdfi, String selloSat, String cadenaOriginal, String cadenaCompromiso, String condicionPago, String serie, Set<NotasDeVenta> notasDeVentas, Set<ConceptosFactura> conceptosFacturas) {
        this.notasDeVenta = notasDeVenta;
        this.lugar = lugar;
        this.fecha = fecha;
@@ -96,7 +98,9 @@ public class Facturas  implements java.io.Serializable {
        this.cadenaOriginal = cadenaOriginal;
        this.cadenaCompromiso = cadenaCompromiso;
        this.condicionPago = condicionPago;
+       this.serie = serie;
        this.notasDeVentas = notasDeVentas;
+       this.conceptosFacturas = conceptosFacturas;
        this.impuestoses = impuestoses;
     }
    
@@ -142,11 +146,11 @@ public class Facturas  implements java.io.Serializable {
     public void setFolioFiscal(String folioFiscal) {
         this.folioFiscal = folioFiscal;
     }
-    public String getFechaTimbrado() {
+    public Date getFechaTimbrado() {
         return this.fechaTimbrado;
     }
     
-    public void setFechaTimbrado(String fechaTimbrado) {
+    public void setFechaTimbrado(Date fechaTimbrado) {
         this.fechaTimbrado = fechaTimbrado;
     }
     public String getNoSerieCertSat() {
@@ -282,6 +286,13 @@ public class Facturas  implements java.io.Serializable {
     public void setCondicionPago(String condicionPago) {
         this.condicionPago = condicionPago;
     }
+    public String getSerie() {
+        return this.serie;
+    }
+    
+    public void setSerie(String serie) {
+        this.serie = serie;
+    }
     public Set<NotasDeVenta> getNotasDeVentas() {
         return this.notasDeVentas;
     }
@@ -289,6 +300,14 @@ public class Facturas  implements java.io.Serializable {
     public void setNotasDeVentas(Set<NotasDeVenta> notasDeVentas) {
         this.notasDeVentas = notasDeVentas;
     }
+    public Set<ConceptosFactura> getConceptosFacturas() {
+        return this.conceptosFacturas;
+    }
+    
+    public void setConceptosFacturas(Set<ConceptosFactura> conceptosFacturas) {
+        this.conceptosFacturas = conceptosFacturas;
+    }
+
     public Set<Impuestos> getImpuestoses() {
         return this.impuestoses;
     }
@@ -296,8 +315,6 @@ public class Facturas  implements java.io.Serializable {
     public void setImpuestoses(Set<Impuestos> impuestoses) {
         this.impuestoses = impuestoses;
     }
-
-
 
 
 }

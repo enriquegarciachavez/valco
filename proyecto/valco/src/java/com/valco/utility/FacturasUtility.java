@@ -44,8 +44,8 @@ import sun.misc.BASE64Encoder;
  * @author Administrador
  */
 public class FacturasUtility {
-    
-    public OutputStream getCadenaOriginal(String cadenaOriginalDir, String xml){
+
+    public OutputStream getCadenaOriginal(String cadenaOriginalDir, String xml) {
         StreamSource sourceXSL = new StreamSource(new File("cadenaOriginalDir"));
         StringReader reader = new StringReader(xml);
         StringWriter writer = new StringWriter();
@@ -62,7 +62,7 @@ public class FacturasUtility {
             transformer.transform(new StreamSource(reader), new StreamResult(output));
         } catch (TransformerException ex) {
         }
-        
+
         return output;
     }
 
@@ -101,56 +101,56 @@ public class FacturasUtility {
     }
 
     private String formaXmlFactura(String serie,
-                                    String folio,
-                                    Date fecha,
-                                    String formaPago,
-                                    String total,
-                                    String subTotal,
-                                    String moneda,
-                                    String metodoPago,
-                                    String lugarExpedicion,
-                                    String numCtaPago,
-                                    String noCertificado,
-                                    String tipoDeComprobante,
-                                    String rfcEmisor,
-                                    String nombreEmisor,
-                                    String calleEmisor,
-                                    String numExtEmisor,
-                                    String numInteriorEmisor,
-                                    String coloniaEmisor,
-                                    String localidadEmisor,
-                                    String referenciaEmisor,
-                                    String municipioEmisor,
-                                    String estadoEmisor,
-                                    String paisEmisor,
-                                    String cpEmisor,
-                                    String regimenEmisor,
-                                    String rfcReceptor,
-                                    String nombreReceptor,
-                                    String calleReceptor,
-                                    String numExtReceptor,
-                                    String numInteriorReceptor,
-                                    String coloniaReceptor,
-                                    String municipioReceptor,
-                                    String estadoReceptor,
-                                    String paisReceptor,
-                                    String cpReceptor,
-                                    Iterator<ConceptosFactura> conceptosFactura,
-                                    Iterator<Impuestos> impuestos) {
-        
-        String factura = "<cfdi:Comprobante xmlns:cfdi=\"http://www.sat.gob.mx/cfd/3\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd \" version=\"3.2\" serie= \""+serie+"\" folio= \""+folio+"\" fecha=\""+fecha+"\" formaDePago= \""+formaPago+"\"\n"
-                + "total=\""+total+"\" subTotal=\""+subTotal+"\" certificado=\"AQUIVAELCERTIFICADO\" Moneda= \""+moneda+"\" metodoDePago= \""+metodoPago+"\" LugarExpedicion= \""+lugarExpedicion+"\" NumCtaPago= \""+numCtaPago+"\" noCertificado=\""+noCertificado+"\" tipoDeComprobante=\""+tipoDeComprobante+"\">\n"
-                + "<cfdi:Emisor rfc= \""+rfcEmisor+"\" nombre= \""+nombreEmisor+"\">\n"
-                + "		<cfdi:DomicilioFiscal calle= \""+calleEmisor+"\" noExterior= \""+numExtEmisor+"\" noInterior= \""+numInteriorEmisor+"\" colonia= \""+coloniaEmisor+"\" localidad= \""+localidadEmisor+"\" referencia= \""+referenciaEmisor+"\" municipio= \""+municipioEmisor+"\" estado= \""+estadoEmisor+"\" pais= \""+paisEmisor+"\" codigoPostal= \""+cpEmisor+"\" />\n"
-                + "		<cfdi:RegimenFiscal Regimen= \""+regimenEmisor+"\" />\n"
+            String folio,
+            Date fecha,
+            String formaPago,
+            String total,
+            String subTotal,
+            String moneda,
+            String metodoPago,
+            String lugarExpedicion,
+            String numCtaPago,
+            String noCertificado,
+            String tipoDeComprobante,
+            String rfcEmisor,
+            String nombreEmisor,
+            String calleEmisor,
+            String numExtEmisor,
+            String numInteriorEmisor,
+            String coloniaEmisor,
+            String localidadEmisor,
+            String referenciaEmisor,
+            String municipioEmisor,
+            String estadoEmisor,
+            String paisEmisor,
+            String cpEmisor,
+            String regimenEmisor,
+            String rfcReceptor,
+            String nombreReceptor,
+            String calleReceptor,
+            String numExtReceptor,
+            String numInteriorReceptor,
+            String coloniaReceptor,
+            String municipioReceptor,
+            String estadoReceptor,
+            String paisReceptor,
+            String cpReceptor,
+            Iterator<ConceptosFactura> conceptosFactura,
+            Iterator<Impuestos> impuestos) {
+
+        String factura = "<cfdi:Comprobante xmlns:cfdi=\"http://www.sat.gob.mx/cfd/3\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd \" version=\"3.2\" serie= \"" + serie + "\" folio= \"" + folio + "\" fecha=\"" + fecha + "\" formaDePago= \"" + formaPago + "\"\n"
+                + "total=\"" + total + "\" subTotal=\"" + subTotal + "\" certificado=\"AQUIVAELCERTIFICADO\" Moneda= \"" + moneda + "\" metodoDePago= \"" + metodoPago + "\" LugarExpedicion= \"" + lugarExpedicion + "\" NumCtaPago= \"" + numCtaPago + "\" noCertificado=\"" + noCertificado + "\" tipoDeComprobante=\"" + tipoDeComprobante + "\">\n"
+                + "<cfdi:Emisor rfc= \"" + rfcEmisor + "\" nombre= \"" + nombreEmisor + "\">\n"
+                + "		<cfdi:DomicilioFiscal calle= \"" + calleEmisor + "\" noExterior= \"" + numExtEmisor + "\" noInterior= \"" + numInteriorEmisor + "\" colonia= \"" + coloniaEmisor + "\" localidad= \"" + localidadEmisor + "\" referencia= \"" + referenciaEmisor + "\" municipio= \"" + municipioEmisor + "\" estado= \"" + estadoEmisor + "\" pais= \"" + paisEmisor + "\" codigoPostal= \"" + cpEmisor + "\" />\n"
+                + "		<cfdi:RegimenFiscal Regimen= \"" + regimenEmisor + "\" />\n"
                 + "	</cfdi:Emisor>\n"
-                + "<cfdi:Receptor rfc= \""+rfcReceptor+"\" nombre= \""+nombreReceptor+"\">\n"
-                + "		<cfdi:Domicilio calle= \""+calleReceptor+"\" noExterior= \""+numExtReceptor+"\" noInterior= \""+numInteriorReceptor+"\" colonia= \""+coloniaReceptor+"\" municipio= \""+municipioReceptor+"\" estado= \""+estadoReceptor+"\" pais= \""+paisReceptor+"\" codigoPostal= \""+cpReceptor+"\" />\n"
+                + "<cfdi:Receptor rfc= \"" + rfcReceptor + "\" nombre= \"" + nombreReceptor + "\">\n"
+                + "		<cfdi:Domicilio calle= \"" + calleReceptor + "\" noExterior= \"" + numExtReceptor + "\" noInterior= \"" + numInteriorReceptor + "\" colonia= \"" + coloniaReceptor + "\" municipio= \"" + municipioReceptor + "\" estado= \"" + estadoReceptor + "\" pais= \"" + paisReceptor + "\" codigoPostal= \"" + cpReceptor + "\" />\n"
                 + "</cfdi:Receptor>\n"
                 + "<cfdi:Conceptos>\n"
                 + this.formaXmlConceptos(conceptosFactura)
                 + "</cfdi:Conceptos>\n"
-                + "<cfdi:Impuestos totalImpuestosTrasladados= \""+this.getTotalImpuestos(impuestos)+"\">\n"
+                + "<cfdi:Impuestos totalImpuestosTrasladados= \"" + this.getTotalImpuestos(impuestos) + "\">\n"
                 + "		<cfdi:Traslados>\n"
                 + this.formaXmlImpuestos(impuestos)
                 + "		</cfdi:Traslados>\n"
@@ -158,43 +158,44 @@ public class FacturasUtility {
                 + "</cfdi:Comprobante>";
         return null;
     }
-    
-    public String formaXmlConceptos(Iterator<ConceptosFactura> conceptos){
+
+    public String formaXmlConceptos(Iterator<ConceptosFactura> conceptos) {
         String cadena = "";
-        while(conceptos.hasNext()){
+        while (conceptos.hasNext()) {
             ConceptosFactura concepto = conceptos.next();
-            cadena += "<cfdi:Concepto cantidad= \""+concepto.getCantidad()+"\" unidad= \""+concepto.getUnidad()+"\" noIdentificacion= \""+concepto.getClave()+"\" descripcion= \""+concepto.getDescripcion()+"\" valorUnitario= \""+concepto.getPrecioUnitario()+"\" importe= \""+concepto.getImporteTotal()+"\"/>\n";
+            cadena += "<cfdi:Concepto cantidad= \"" + concepto.getCantidad() + "\" unidad= \"" + concepto.getUnidad() + "\" noIdentificacion= \"" + concepto.getClave() + "\" descripcion= \"" + concepto.getDescripcion() + "\" valorUnitario= \"" + concepto.getPrecioUnitario() + "\" importe= \"" + concepto.getImporteTotal() + "\"/>\n";
         }
         return cadena;
     }
-    
-    public String formaXmlImpuestos(Iterator<Impuestos> impuestos){
+
+    public String formaXmlImpuestos(Iterator<Impuestos> impuestos) {
         String cadena = "";
-        while(impuestos.hasNext()){
+        while (impuestos.hasNext()) {
             Impuestos impuesto = impuestos.next();
-            cadena += "<cfdi:Traslado impuesto= \""+impuesto.getImpuesto()+"\" tasa= \""+impuesto.getTasa()+"\" importe= \""+impuesto.getImporte()+"\"/>\n";
+            cadena += "<cfdi:Traslado impuesto= \"" + impuesto.getImpuesto() + "\" tasa= \"" + impuesto.getTasa() + "\" importe= \"" + impuesto.getImporte() + "\"/>\n";
         }
         return cadena;
     }
-    
-    public void facturar(Facturas factura, Clientes cliente){
-        this.formaXmlFactura("A",Integer.toString(factura.getFolio()), factura.getFecha(), 
+
+    public void facturar(Facturas factura) {
+        Clientes cliente = factura.getNotasDeVenta().getClientes();
+        String xml = this.formaXmlFactura(factura.getSerie(), Integer.toString(factura.getFolio()), factura.getFecha(),
                 factura.getFormaPago(), factura.getTotal().toString(), factura.getSubtotal().toString(),
                 factura.getMoneda(), factura.getMetodoPago(), factura.getLugar(),
                 cliente.getCuentaBancaria().toString(), factura.getNoSeieCertEmisor(), "INGRESO",
                 "DCV9612126N6", "DISTRIBUIDORA DE CARNES VALCO S.A. DE C.V.", "PARRAL", "246",
-                        "N/A", "REVOLUCION", "CHIHUAHUA", "N/A",
-                        "CHIHUAHUA", "CHIHUAHUA", "MÉXICO", "31110",
-                        "REGIMEN", cliente.getRfc(), cliente.getNombres(), cliente.getDireccion(), 
-                        Integer.toString(cliente.getNumeroExterior()), cliente.getNumeroInterior(), cliente.getColonia(),
-                        cliente.getCiudad(), cliente.getEstado(), cliente.getPais(), 
-                        Integer.toString(cliente.getCodigoPostal()), new HashSet<ConceptosFactura>().iterator(), factura.getImpuestoses().iterator());
-        
+                "N/A", "REVOLUCION", "CHIHUAHUA", "N/A",
+                "CHIHUAHUA", "CHIHUAHUA", "MÉXICO", "31110",
+                "REGIMEN", cliente.getRfc(), cliente.getNombreCompleto(), cliente.getCalle(),
+                Integer.toString(cliente.getNumeroExterior()), cliente.getNumeroInterior(), cliente.getColonia(),
+                cliente.getCiudad(), cliente.getEstado(), cliente.getPais(),
+                Integer.toString(cliente.getCodigoPostal()), factura.getConceptosFacturas().iterator(), factura.getImpuestoses().iterator());
+
     }
-    
-    public Double getTotalImpuestos(Iterator<Impuestos> impuestos){
+
+    public Double getTotalImpuestos(Iterator<Impuestos> impuestos) {
         Double totalImpuesto = 0.000000;
-        while(impuestos.hasNext()){
+        while (impuestos.hasNext()) {
             Impuestos impuesto = impuestos.next();
             totalImpuesto += impuesto.getImporte().doubleValue();
         }
