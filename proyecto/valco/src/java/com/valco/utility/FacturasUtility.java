@@ -9,10 +9,12 @@ import com.valco.pojo.Clientes;
 import com.valco.pojo.ConceptosFactura;
 import com.valco.pojo.Facturas;
 import com.valco.pojo.Impuestos;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -67,7 +69,7 @@ public class FacturasUtility {
     }
 
     private byte[] getBytesPrivateKey(String directorio) throws Exception {
-        try (InputStream inputstream = new FileInputStream("C:/SAT/aaa010101aaa__csd_01.key");) {
+        try (InputStream inputstream = new FileInputStream(directorio);) {
             return getBytes(inputstream);
         } catch (FileNotFoundException ex) {
             throw new FileNotFoundException("No se encuentra la llave privada en el "
@@ -156,7 +158,7 @@ public class FacturasUtility {
                 + "		</cfdi:Traslados>\n"
                 + "</cfdi:Impuestos>\n"
                 + "</cfdi:Comprobante>";
-        return null;
+        return factura;
     }
 
     public String formaXmlConceptos(Iterator<ConceptosFactura> conceptos) {
@@ -177,7 +179,7 @@ public class FacturasUtility {
         return cadena;
     }
 
-    public void facturar(Facturas factura) {
+    public String getFacturaConSello(Facturas factura) throws Exception {
         Clientes cliente = factura.getNotasDeVenta().getClientes();
         String xml = this.formaXmlFactura(factura.getSerie(), Integer.toString(factura.getFolio()), factura.getFecha(),
                 factura.getFormaPago(), factura.getTotal().toString(), factura.getSubtotal().toString(),
@@ -190,7 +192,38 @@ public class FacturasUtility {
                 Integer.toString(cliente.getNumeroExterior()), cliente.getNumeroInterior(), cliente.getColonia(),
                 cliente.getCiudad(), cliente.getEstado(), cliente.getPais(),
                 Integer.toString(cliente.getCodigoPostal()), factura.getConceptosFacturas().iterator(), factura.getImpuestoses().iterator());
-
+        OutputStream cadenaOriginal = this.getCadenaOriginal("C:/SAT/cadenaoriginal_3_2.xslt", xml);
+        byte[] bytesKey = null;
+        try {
+            bytesKey = this.getBytesPrivateKey("C:/SAT/aaa010101aaa__csd_01.key");
+        } catch (Exception ex) {
+            throw new Exception("Ocurrio un error al obtener la llave privada");
+        }
+        java.security.PrivateKey pk = this.getPrivateKey(bytesKey, "12345678a");
+        byte[] bytesCadenaFirmada = this.getBytesCadenaFirmada(pk, cadenaOriginal);
+        String selloBase64 = this.getSelloBase64(bytesCadenaFirmada);
+        xml = xml.replace("AQUIVAELCERTIFICADO", selloBase64);
+        return xml;
+    }
+    
+    public void facturar(Facturas factura) throws Exception{
+        String facturaXml = this.getFacturaConSello(factura);
+        java.lang.String psTipoDocumento = "factura";
+            int pnIdEstructura = 0;
+            java.lang.String sNombre = "WSDL_PAX";
+            java.lang.String sContraseña = "wqfCr8O3xLfEhMOHw4nEjMSrxJnvv7bvvr4cVcKuKkBEM++/ke+/gCPvv4nvvrfvvaDvvb/vvqTvvoA=";
+            java.lang.String sVersion = "3.2";
+            https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX service = new https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX();
+            https.test_paxfacturacion_com_mx._453.WcfRecepcionASMXSoap port = service.getWcfRecepcionASMXSoap();
+            String result = port.fnEnviarXML(facturaXml, psTipoDocumento, pnIdEstructura, sNombre, sContraseña, sVersion);
+            System.out.println("Result = " + result);
+       
+          File file = new File("C:/SAT/desdejava.xml");
+            try (BufferedWriter output2 = new BufferedWriter(new FileWriter(file))) {
+                output2.write(result);
+                output2.close();
+            }
+        
     }
 
     public Double getTotalImpuestos(Iterator<Impuestos> impuestos) {
