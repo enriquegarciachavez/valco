@@ -8,7 +8,7 @@
 
     <body>
 
-        <ui:composition template="./../clientes/Template1.xhtml">
+        <ui:composition template="../templates/Template1.xhtml">
 
             <ui:define name="content">
                 <h:form id="form">
@@ -101,7 +101,7 @@
                             <p:message for="nombre" display="icon" />
 
                             <p:outputLabel for="direccion" value="Dirección" />
-                            <p:inputText id="direccion" binding="#{clienteMainBean.direccion}" required="true" label="direccion" value="#{clienteMainBean.clienteNuevo.direccion}"/>
+                            <p:inputText id="direccion" binding="#{clienteMainBean.direccion}" required="true" label="direccion" value="#{clienteMainBean.clienteNuevo.calle}"/>
                             <p:message for="direccion" display="icon" />
 
                             <p:outputLabel for="colonia" value="Colonia" />
@@ -218,7 +218,7 @@
                             <p:message for="nombre2" display="icon" />
 
                             <p:outputLabel for="direccion2" value="Dirección" />
-                            <p:inputText id="direccion2" required="true" label="direccion" value="#{clienteMainBean.clienteSeleccionado.direccion}"/>
+                            <p:inputText id="direccion2" required="true" label="direccion" value="#{clienteMainBean.clienteSeleccionado.calle}"/>
                             <p:message for="direccion2" display="icon" />
 
                             <p:outputLabel for="colonia2" value="Colonia" />

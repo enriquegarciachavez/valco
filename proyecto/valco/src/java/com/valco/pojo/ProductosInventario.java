@@ -103,14 +103,20 @@ public class ProductosInventario  implements java.io.Serializable {
         this.ubicaciones = ubicaciones;
     }
     public BigDecimal getPeso() {
-        return this.peso;
+        BigDecimal peso = new BigDecimal("0.00");
+        RoundingMode RM = RoundingMode.HALF_EVEN;
+        peso = peso.add(this.peso.setScale(2, RM));
+        return peso;
     }
     
     public void setPeso(BigDecimal peso) {
         this.peso = peso;
     }
     public BigDecimal getPrecio() {
-        return this.precio;
+        BigDecimal precio = new BigDecimal("0.00");
+        RoundingMode RM = RoundingMode.HALF_EVEN;
+        precio = precio.add(this.precio.setScale(2, RM));
+        return precio;
     }
     
     public void setPrecio(BigDecimal precio) {

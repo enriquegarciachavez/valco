@@ -11,13 +11,18 @@ import com.valco.dao.FacturasDAO;
 import com.valco.dao.NotasVentaDAO;
 import com.valco.pojo.Clientes;
 import com.valco.pojo.Facturas;
+import com.valco.pojo.Impuestos;
 import com.valco.pojo.NotasDeVenta;
+import com.valco.utility.FacturasUtility;
 import com.valco.utility.MsgUtility;
 import https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -45,6 +50,8 @@ public class CreacionFacturaBean {
     private Double iva;
     private String metodoPago;
     private String observaciones;
+    private Set<Impuestos> impuestosDisponibles;
+    private Set<Impuestos> impuestosSeleccionados;
     /**
      * Creates a new instance of CreacionFacturaBean
      */
@@ -54,6 +61,12 @@ public class CreacionFacturaBean {
     @PostConstruct
     public void inicializar(){
         try{
+            impuestosDisponibles = new HashSet();
+            Impuestos impuesto = new Impuestos();
+            impuesto.setImpuesto("IVA");
+            impuesto.setTasa(new BigDecimal(16.00).setScale(2, RoundingMode.HALF_EVEN));
+            impuesto.setImporte(new BigDecimal("0.160000").setScale(6, RoundingMode.HALF_EVEN));
+            impuestosDisponibles.add(impuesto);
             notasDeVenta = new DualListModel();
             clientes = clienteDao.getClientes();
         }catch(Exception ex){
@@ -82,13 +95,23 @@ public class CreacionFacturaBean {
                 Facturas factura = new Facturas();
                 factura.setFecha(new Date());
                 factura.setEstatus("ACTIVO");
+                factura.setSerie("A");
                 factura.setFormaPago(metodoPago);
-                factura.setIva(new BigDecimal(iva));
+                factura.setMetodoPago("EFECTIVO");
+                factura.setImpuestoses(this.impuestosSeleccionados);
                 factura.setObservaciones(observaciones);
                 factura.setSubtotal(nota.getTotal());
-                factura.setTotal(new BigDecimal(nota.getTotal().doubleValue()*(iva+1)));
+                factura.setTotal(nota.getTotal());
                 factura.setXml(metodoPago);
+                factura.setLugar("CHIHUAHUA,CHIHUAHUA,MEXICO");
+                factura.setMoneda("MXN");
+                factura.setNoSeieCertEmisor("20001000000100005867");
+                factura.setFolio(1);
                 nota.setFacturas(factura);
+                nota.setClientes(clienteSeleccionado);
+                factura.setNotasDeVenta(nota);
+                factura.setConceptosFacturas(FacturasUtility.convierteProductosAConceptos(nota.getProductosInventarios().iterator()));
+                FacturasUtility.facturar(factura);
             }
             facturasDao.insertarFacturasYActualizarNotas(notasDeVenta.getTarget());
             MsgUtility.showInfoMeage("Las facturas se generaron corectamente.");
@@ -168,6 +191,25 @@ public class CreacionFacturaBean {
     public void setFacturasDao(FacturasDAO facturasDao) {
         this.facturasDao = facturasDao;
     }
+
+    public Set<Impuestos> getImpuestosDisponibles() {
+        return impuestosDisponibles;
+    }
+
+    public void setImpuestosDisponibles(Set<Impuestos> impuestosDisponibles) {
+        this.impuestosDisponibles = impuestosDisponibles;
+    }
+
+    public Set<Impuestos> getImpuestosSeleccionados() {
+        return impuestosSeleccionados;
+    }
+
+    public void setImpuestosSeleccionados(Set<Impuestos> impuestosSeleccionados) {
+        this.impuestosSeleccionados = impuestosSeleccionados;
+    }
+
+    
+    
     
     
     
