@@ -15,6 +15,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -22,14 +23,14 @@ import org.hibernate.Transaction;
  *
  * @author Administrador
  */
-public class FacturasDAO implements Serializable{
-    
+public class FacturasDAO implements Serializable {
+
     public void insertarFacturas(List<Facturas> facturas) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            for(Facturas factura: facturas){
+            for (Facturas factura : facturas) {
                 session.save(factura);
             }
             tx.commit();
@@ -44,23 +45,23 @@ public class FacturasDAO implements Serializable{
             throw new Exception("Ocurrió un error al crear las facturas.");
         } finally {
             try {
-                if(session.isOpen()){
-                session.close();
+                if (session.isOpen()) {
+                    session.close();
                 }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al crear las facturas.");
             }
         }
     }
-    
+
     public void insertarFacturasYActualizarNotas(List<NotasDeVenta> notas) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            for(NotasDeVenta nota: notas){    
+            for (NotasDeVenta nota : notas) {
                 session.update(nota);
-                session.save(nota.getFacturas());  
+                session.save(nota.getFacturas());
             }
             tx.commit();
         } catch (Exception e) {
@@ -74,21 +75,21 @@ public class FacturasDAO implements Serializable{
             throw new Exception("Ocurrió un error al crear las facturas.");
         } finally {
             try {
-                if(session.isOpen()){
-                session.close();
+                if (session.isOpen()) {
+                    session.close();
                 }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al crear las facturas.");
             }
         }
     }
-    
-     public void actualizarCliente(List<Facturas> facturas) throws Exception {
+
+    public void actualizarCliente(List<Facturas> facturas) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            for(Facturas factura: facturas){
+            for (Facturas factura : facturas) {
                 session.update(factura);
             }
             tx.commit();
@@ -111,12 +112,13 @@ public class FacturasDAO implements Serializable{
             }
         }
     }
-      public void borrarCliente(List<Facturas> facturas) throws Exception {
+
+    public void borrarCliente(List<Facturas> facturas) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            for(Facturas factura: facturas){
+            for (Facturas factura : facturas) {
                 session.delete(factura);
             }
             tx.commit();
@@ -131,40 +133,63 @@ public class FacturasDAO implements Serializable{
             throw new Exception("Ocurrió un error al borrar el cliente.");
         } finally {
             try {
-                if(session.isOpen()){
-                session.close();
+                if (session.isOpen()) {
+                    session.close();
                 }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al borrar el cliente.");
             }
         }
     }
-      public List<Clientes> getFacturas() throws Exception {
-          Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-          Transaction tx = null;
-          List<Clientes> clientes = new ArrayList<Clientes>();
-          try {
-              tx = session.beginTransaction();
-              Criteria q = session.createCriteria(Clientes.class);
-              clientes = (List<Clientes>) q.list();
-              for(Clientes cliente : clientes){
-                  for(NotasDeVenta nota : cliente.getNotasDeVentas()){
-                      Hibernate.initialize(nota);
-                      Hibernate.initialize(nota.getCuentaXCobrar());
-                  }
-              }
-              return clientes;
 
-          } catch (HibernateException he) {
-              throw new Exception("Ocurrió un error al consultar las facturas.");
+    public List<Clientes> getFacturas() throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        List<Clientes> clientes = new ArrayList<Clientes>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(Clientes.class);
+            clientes = (List<Clientes>) q.list();
+            for (Clientes cliente : clientes) {
+                for (NotasDeVenta nota : cliente.getNotasDeVentas()) {
+                    Hibernate.initialize(nota);
+                    Hibernate.initialize(nota.getCuentaXCobrar());
+                }
+            }
+            return clientes;
 
-          } finally {
-              try {
-                  session.close();
-              } catch (HibernateException he) {
-                  throw new Exception("Ocurrió un error al consultar las facturas.");
-              }
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar las facturas.");
+
+        } finally {
+            try {
+                session.close();
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar las facturas.");
+            }
         }
     }
-    
+
+    public Integer getConsecutivo() throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            Query query = session.createQuery("SELECT SECUENCIA\n"
+                    + "FROM SECUENCIAS\n"
+                    + "WHERE TABLE_NAME = 'FACTURAS'");
+            Integer consecutivo = (Integer) query.uniqueResult();
+            return consecutivo;
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar el número consecutivo.");
+
+        } finally {
+            try {
+                session.close();
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar el número consecutivo.");
+            }
+        }
+    }
+
 }

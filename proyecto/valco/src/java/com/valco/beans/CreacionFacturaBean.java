@@ -105,13 +105,18 @@ public class CreacionFacturaBean {
                 factura.setXml(metodoPago);
                 factura.setLugar("CHIHUAHUA,CHIHUAHUA,MEXICO");
                 factura.setMoneda("MXN");
+                factura.setBanco("Santander");
+                factura.setCondicionPago("contado");
+                factura.setIva(BigDecimal.ZERO);
                 factura.setNoSeieCertEmisor("20001000000100005867");
                 factura.setFolio(1);
                 nota.setFacturas(factura);
                 nota.setClientes(clienteSeleccionado);
                 factura.setNotasDeVenta(nota);
                 factura.setConceptosFacturas(FacturasUtility.convierteProductosAConceptos(nota.getProductosInventarios().iterator()));
-                FacturasUtility.facturar(factura);
+                String xml = FacturasUtility.facturar(factura);
+                FacturasUtility.agregarDatosDeTimbrado(factura,xml);
+                FacturasUtility.guardaXml(nota.getClientes().getRfc()+"-"+facturasDao.getConsecutivo()+".xml", xml, "C:/SAT/");
             }
             facturasDao.insertarFacturasYActualizarNotas(notasDeVenta.getTarget());
             MsgUtility.showInfoMeage("Las facturas se generaron corectamente.");

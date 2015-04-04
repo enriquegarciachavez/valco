@@ -106,5 +106,9 @@ public class ConceptosFactura implements java.io.Serializable {
             return false;
         }
     }
+    
+    public int hashCode(){
+        return this.clave;
+    }
 
 }

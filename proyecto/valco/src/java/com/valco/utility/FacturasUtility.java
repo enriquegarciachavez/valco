@@ -5,12 +5,14 @@
  */
 package com.valco.utility;
 
+import com.lowagie.text.Document;
 import com.valco.pojo.Clientes;
 import com.valco.pojo.ConceptosFactura;
 import com.valco.pojo.Facturas;
 import com.valco.pojo.Impuestos;
 import com.valco.pojo.ProductosInventario;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,6 +40,9 @@ import java.util.ListIterator;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -46,6 +51,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.ssl.PKCS8Key;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 import sun.misc.BASE64Encoder;
 
 /**
@@ -200,7 +209,7 @@ public class FacturasUtility {
                 cliente.getCiudad(), cliente.getEstado(), cliente.getPais(),
                 Integer.toString(cliente.getCodigoPostal()), factura.getConceptosFacturas().iterator(), factura.getImpuestoses());
         OutputStream cadenaOriginal = getCadenaOriginal("C:/SAT/cadenaoriginal_3_2.xslt", new String(xml.getBytes("Windows-1252")));
-        System.out.println(cadenaOriginal);
+        factura.setCadenaOriginal(cadenaOriginal.toString());
         byte[] bytesKey = null;
         try {
             bytesKey = getBytesPrivateKey("C:/SAT/aaa010101aaa__csd_01.key");
@@ -214,7 +223,7 @@ public class FacturasUtility {
         return xml;
     }
     
-    public static void facturar(Facturas factura) throws Exception{
+    public static String facturar(Facturas factura) throws Exception{
         String facturaXml = null;
         try {
             facturaXml = getFacturaConSello(factura);
@@ -253,6 +262,49 @@ public class FacturasUtility {
             }else if(result.startsWith("403")){
                 throw new Exception("La fecha de emisión es anterior al primero de enero del 2011.");
             }
+            
+            return result;
+    }
+    
+    public static void agregarDatosDeTimbrado(Facturas factura,String xml) throws ParserConfigurationException, SAXException, IOException, ParseException{
+        String folioFiscal = null;
+        Date fechaTimbrado = new Date();
+        String selloCFD = null;
+        String noCertificadoSat = null;
+        String selloSat = null;
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        InputStream inputXml = new ByteArrayInputStream(xml.getBytes("UTF-8"));
+        org.w3c.dom.Document doc = dBuilder.parse(inputXml);
+        doc.getDocumentElement().normalize();
+        
+        NodeList nList = doc.getElementsByTagName("tfd:TimbreFiscalDigital");
+        
+        for (int temp = 0; temp < nList.getLength(); temp++) {
+ 
+		Node nNode = nList.item(temp);
+ 
+		System.out.println("\nCurrent Element :" + nNode.getNodeName());
+ 
+		if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+ 
+			Element eElement = (Element) nNode;
+ 
+			folioFiscal = eElement.getAttribute("UUID");
+                        fechaTimbrado = formatDate.parse(eElement.getAttribute("FechaTimbrado"));
+                        selloCFD = eElement.getAttribute("selloCFD");
+                        noCertificadoSat = eElement.getAttribute("noCertificadoSAT");
+                        selloSat = eElement.getAttribute("selloSAT");
+                        
+                        factura.setFolioFiscal(folioFiscal);
+                        factura.setFechaTimbrado(fechaTimbrado);
+                        factura.setSelloCdfi(selloCFD);
+                        factura.setNoSerieCertSat(noCertificadoSat);
+                        factura.setSelloSat(selloSat);
+		}
+	}
     }
     
     public static Set<ConceptosFactura> convierteProductosAConceptos(Iterator<ProductosInventario> productos){
@@ -260,20 +312,22 @@ public class FacturasUtility {
         while(productos.hasNext()){
             ProductosInventario producto = productos.next();
             ConceptosFactura concepto = new ConceptosFactura();
+            concepto.setPrecioUnitario(new BigDecimal("0.00").setScale(3, RoundingMode.HALF_EVEN));
+            
             concepto.setClave(producto.getProductosHasProveedores().getProductos().getCodigo());
             concepto.setCantidad(new BigDecimal("1.00").setScale(2, RoundingMode.HALF_EVEN));
             concepto.setDescripcion(producto.getProductosHasProveedores().getProductos().getDescripcion());
-            concepto.setPrecioUnitario(producto.getPrecio().divide(producto.getPeso(),RoundingMode.HALF_EVEN));
+            concepto.setPrecioUnitario(producto.getPrecio());
             concepto.setCantidad(producto.getPeso());
             concepto.setUnidad("KG");
-            concepto.setImporteTotal(concepto.getPrecioUnitario().multiply(concepto.getCantidad()).setScale(2, RoundingMode.HALF_EVEN));
+            concepto.setImporteTotal(producto.getPrecio().multiply(producto.getPeso()));
             if(!conceptos.contains(concepto)){
                 conceptos.add(concepto);
             }else{
                 for(ConceptosFactura conceptoRepetio: conceptos){
                     if(conceptoRepetio.equals(concepto)){
                         conceptoRepetio.setCantidad(conceptoRepetio.getCantidad().add(concepto.getCantidad()));
-                        conceptoRepetio.setImporteTotal(conceptoRepetio.getCantidad().multiply(conceptoRepetio.getPrecioUnitario()));
+                        conceptoRepetio.setImporteTotal(conceptoRepetio.getImporteTotal().add(concepto.getImporteTotal()));
                     }
                 }
             }
@@ -306,5 +360,25 @@ public class FacturasUtility {
         is.close();
 
         return buffer;
+    }
+    
+    public static void guardaXml(String name,String content,String path) throws IOException{
+ 
+			File file = new File(path+name);
+ 
+			// if file doesnt exists, then create it
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+ 
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(content);
+			bw.close();
+ 
+    }
+    
+    public static void guardaPdf(){
+        
     }
 }
