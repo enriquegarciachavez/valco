@@ -9,6 +9,7 @@ import com.valco.HibernateUtil;
 import com.valco.pojo.Clientes;
 import com.valco.pojo.ConceptosFactura;
 import com.valco.pojo.Facturas;
+import com.valco.pojo.Impuestos;
 import com.valco.pojo.NotasDeVenta;
 import com.valco.servlets.ReportesXls;
 import java.io.OutputStream;
@@ -93,6 +94,42 @@ public class FacturasDAO implements Serializable {
                 }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al crear las facturas.");
+            }
+        }
+    }
+    
+    public void insertarFacturaYActualizarNota(NotasDeVenta nota) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+                session.update(nota);
+                session.save(nota.getFacturas());
+                for(ConceptosFactura concepto: nota.getFacturas().getConceptosFacturas()){
+                    concepto.setFacturas(nota.getFacturas());
+                    session.save(concepto);
+                }
+                for(Impuestos impuesto: nota.getFacturas().getImpuestoses()){
+                    impuesto.setFacturas(nota.getFacturas());
+                    session.save(impuesto);
+                }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Factura "+this.getConsecutivo()+": Ocurrió un error al crear la factura.");
+                }
+            }
+            throw new Exception("Factura "+this.getConsecutivo()+":Ocurrió un error al crear la factura.");
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Factura "+this.getConsecutivo()+":Ocurrió un error al crear las facturas.");
             }
         }
     }

@@ -76,23 +76,15 @@ import sun.misc.BASE64Encoder;
  */
 public class FacturasUtility {
 
-    public static OutputStream getCadenaOriginal(String cadenaOriginalDir, String xml) {
+    public static OutputStream getCadenaOriginal(String cadenaOriginalDir, String xml) throws Exception {
         StreamSource sourceXSL = new StreamSource(new File(cadenaOriginalDir));
         StringReader reader = new StringReader(xml);
         TransformerFactory tFactory = TransformerFactory.newInstance();
         Transformer transformer = null;
-        try {
-            transformer = tFactory.newTransformer(sourceXSL);
-            transformer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
-        } catch (TransformerConfigurationException ex) {
-        }
-
+        transformer = tFactory.newTransformer(sourceXSL);
+        transformer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
         OutputStream output = new ByteArrayOutputStream();
-
-        try {
-            transformer.transform(new StreamSource(reader), new StreamResult(output));
-        } catch (TransformerException ex) {
-        }
+        transformer.transform(new StreamSource(reader), new StreamResult(output));
 
         return output;
     }
@@ -111,7 +103,6 @@ public class FacturasUtility {
     private static java.security.PrivateKey getPrivateKey(byte[] bytesClave, String clave) throws GeneralSecurityException {
         PKCS8Key pkcs8 = null;
         pkcs8 = new PKCS8Key(bytesClave, clave.toCharArray());
-
         java.security.PrivateKey pk;
         pk = pkcs8.getPrivateKey();
         return pk;
@@ -209,39 +200,57 @@ public class FacturasUtility {
     }
 
     public static String getFacturaConSello(Facturas factura) throws Exception {
+
         Clientes cliente = factura.getNotasDeVenta().getClientes();
-        String xml = formaXmlFactura(factura.getSerie(), Integer.toString(factura.getFolio()), factura.getFecha(),
-                factura.getFormaPago(), factura.getTotal().setScale(2, RoundingMode.HALF_EVEN).toString(), factura.getSubtotal().setScale(2, RoundingMode.HALF_EVEN).toString(),
-                factura.getMoneda(), factura.getMetodoPago(), factura.getLugar(),
-                cliente.getCuentaBancaria().toString(), factura.getNoSeieCertEmisor(), "ingreso",
-                "AAA010101AAA", "DISTRIBUIDORA DE CARNES VALCO S.A. DE C.V.", "PARRAL", "246",
-                "123", "REVOLUCION", "CHIHUAHUA", "referencia",
-                "CHIHUAHUA", "CHIHUAHUA", "MÉXICO", "31110",
-                "REGIMEN", cliente.getRfc(), cliente.getNombreCompleto(), cliente.getCalle(),
-                Integer.toString(cliente.getNumeroExterior()), cliente.getNumeroInterior(), cliente.getColonia(),
-                cliente.getCiudad(), cliente.getEstado(), cliente.getPais(),
-                Integer.toString(cliente.getCodigoPostal()), factura.getConceptosFacturas().iterator(), factura.getImpuestoses());
-        OutputStream cadenaOriginal = getCadenaOriginal("C:/SAT/cadenaoriginal_3_2.xslt", new String(xml.getBytes("Windows-1252")));
+        String xml = null;
+        try {
+            xml = formaXmlFactura(factura.getSerie(), Integer.toString(factura.getFolio()), factura.getFecha(),
+                    factura.getFormaPago(), factura.getTotal().setScale(2, RoundingMode.HALF_EVEN).toString(), factura.getSubtotal().setScale(2, RoundingMode.HALF_EVEN).toString(),
+                    factura.getMoneda(), factura.getMetodoPago(), factura.getLugar(),
+                    cliente.getCuentaBancaria().toString(), factura.getNoSeieCertEmisor(), "ingreso",
+                    "AAA010101AAA", "DISTRIBUIDORA DE CARNES VALCO S.A. DE C.V.", "PARRAL", "246",
+                    "123", "REVOLUCION", "CHIHUAHUA", "referencia",
+                    "CHIHUAHUA", "CHIHUAHUA", "MÉXICO", "31110",
+                    "REGIMEN", cliente.getRfc(), cliente.getNombreCompleto(), cliente.getCalle(),
+                    Integer.toString(cliente.getNumeroExterior()), cliente.getNumeroInterior(), cliente.getColonia(),
+                    cliente.getCiudad(), cliente.getEstado(), cliente.getPais(),
+                    Integer.toString(cliente.getCodigoPostal()), factura.getConceptosFacturas().iterator(), factura.getImpuestoses());
+        } catch (ParseException ex) {
+            throw new Exception("Ocurrió un error al formar el XML de la factura");
+        }
+        OutputStream cadenaOriginal = null;
+        try {
+            cadenaOriginal = getCadenaOriginal("C:/SAT/cadenaoriginal_3_2.xslt", new String(xml.getBytes("Windows-1252")));
+        } catch (UnsupportedEncodingException ex) {
+            throw new Exception("Ocurrió un error al obtener la cadena original");
+        }
         factura.setCadenaOriginal(cadenaOriginal.toString());
         byte[] bytesKey = null;
+        java.security.PrivateKey pk = null;
         try {
             bytesKey = getBytesPrivateKey("C:/SAT/aaa010101aaa__csd_01.key");
-        } catch (Exception ex) {
-            throw new Exception("Ocurrio un error al obtener la llave privada");
+            pk = getPrivateKey(bytesKey, "12345678a");
+        } catch (GeneralSecurityException ex) {
+            throw new Exception(ex);
         }
-        java.security.PrivateKey pk = getPrivateKey(bytesKey, "12345678a");
-        byte[] bytesCadenaFirmada = getBytesCadenaFirmada(pk, cadenaOriginal);
+        byte[] bytesCadenaFirmada = null;
+        try {
+            bytesCadenaFirmada = getBytesCadenaFirmada(pk, cadenaOriginal);
+        } catch (Exception ex) {
+            throw new Exception("Ocurrió un error al ofirmar la cadena original");
+        }
         String selloBase64 = getSelloBase64(bytesCadenaFirmada);
         xml = xml.replace("AQUIVAELSELLO", selloBase64);
         return xml;
+
     }
 
-    public static String facturar(Facturas factura) throws Exception {
+    public static String facturar(Facturas factura, Integer facturaId) throws Exception {
         String facturaXml = null;
         try {
             facturaXml = getFacturaConSello(factura);
         } catch (Exception ex) {
-            Logger.getLogger(FacturasUtility.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception("Factura " + facturaId + ": "+ex.getMessage());
         }
         java.lang.String psTipoDocumento = "factura";
         int pnIdEstructura = 0;
@@ -375,23 +384,25 @@ public class FacturasUtility {
         return buffer;
     }
 
-    public static void guardaXml(String name, String content, String path) throws IOException {
+    public static void guardaXml(String name, String content, String path, Integer facturaId) throws Exception {
+        try {
+            File file = new File(path + name);
+            // if file doesnt exists, then create it
+            if (!file.exists()) {
+                file.createNewFile();
+            }
 
-        File file = new File(path + name);
-
-        // if file doesnt exists, then create it
-        if (!file.exists()) {
-            file.createNewFile();
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(content);
+            bw.close();
+        } catch (Exception ex) {
+            throw new Exception("Factura " + facturaId + ": Ocurrio un error al generar el PDF.");
         }
-
-        FileWriter fw = new FileWriter(file.getAbsoluteFile());
-        BufferedWriter bw = new BufferedWriter(fw);
-        bw.write(content);
-        bw.close();
 
     }
 
-    public static void guardaPdf(Integer facturaId, String name, String path) {
+    public static void guardaPdf(Integer facturaId, String name, String path) throws Exception {
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
         } catch (ClassNotFoundException ex) {
@@ -414,13 +425,11 @@ public class FacturasUtility {
             Map mapa = new HashMap();
             mapa.put("FacturaId", facturaId);
             jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
-            
-            JasperExportManager.exportReportToPdfFile(jasperPrint, path+name);
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(FacturasUtility.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JRException ex) {
-            Logger.getLogger(FacturasUtility.class.getName()).log(Level.SEVERE, null, ex);
+
+            JasperExportManager.exportReportToPdfFile(jasperPrint, path + name);
+
+        } catch (Exception ex) {
+            throw new Exception("Factura " + facturaId + ": Ocurrio un error al generar el PDF.");
         }
     }
 }

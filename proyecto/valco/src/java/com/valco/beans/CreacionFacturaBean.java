@@ -16,8 +16,10 @@ import com.valco.pojo.NotasDeVenta;
 import com.valco.utility.FacturasUtility;
 import com.valco.utility.MsgUtility;
 import https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -29,7 +31,9 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.xml.parsers.ParserConfigurationException;
 import org.primefaces.model.DualListModel;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -86,12 +90,10 @@ public class CreacionFacturaBean {
     }
     
     public void facturar(){
-        try{
             if(notasDeVenta.getTarget().isEmpty()){
                 MsgUtility.showInfoMeage("Debe de seleccionar una nota de venta para facturar.");
                 return;
             }
-            List<Facturas> facturas = new ArrayList<>();
             for(NotasDeVenta nota : notasDeVenta.getTarget()){
                 Facturas factura = new Facturas();
                 factura.setFecha(new Date());
@@ -115,19 +117,40 @@ public class CreacionFacturaBean {
                 nota.setClientes(clienteSeleccionado);
                 factura.setNotasDeVenta(nota);
                 factura.setConceptosFacturas(FacturasUtility.convierteProductosAConceptos(nota.getProductosInventarios().iterator()));
-                String xml = FacturasUtility.facturar(factura);
-                FacturasUtility.agregarDatosDeTimbrado(factura,xml);
-                FacturasUtility.guardaXml(nota.getClientes().getRfc()+"-"+facturasDao.getConsecutivo()+".xml", xml, "C:/SAT/");
-                facturas.add(factura);
+                String xml = null;
+                try {
+                    xml = FacturasUtility.facturar(factura,facturasDao.getConsecutivo());
+                    MsgUtility.showInfoMeage("Factura "+facturasDao.getConsecutivo()+": Facturada correctamente.");
+                } catch (Exception ex) {
+                    MsgUtility.showErrorMeage(ex.getMessage());
+                    continue;
+                }
+                try {
+                    FacturasUtility.agregarDatosDeTimbrado(factura,xml);
+                    MsgUtility.showInfoMeage("Factura "+facturasDao.getConsecutivo()+": Datos de timbrado obtenidos correctamente.");
+                } catch (Exception ex) {
+                    MsgUtility.showErrorMeage(ex.getMessage());
+                } 
+                try {
+                    facturasDao.insertarFacturaYActualizarNota(nota);
+                    MsgUtility.showInfoMeage("Factura "+factura.getCodigo()+": Guardada correctamente en el sistema.");
+                } catch (Exception ex) {
+                    MsgUtility.showErrorMeage(ex.getMessage());
+                }
+                try {
+                    FacturasUtility.guardaXml(nota.getClientes().getRfc()+"-"+factura.getCodigo()+".xml", xml, "C:/SAT/", factura.getCodigo());
+                    MsgUtility.showInfoMeage("Factura "+factura.getCodigo()+": XML guardado correctamente.");
+                } catch (Exception ex) {
+                    MsgUtility.showErrorMeage(ex.getMessage());
+                }
+                try {
+                    FacturasUtility.guardaPdf(factura.getCodigo(),factura.getNotasDeVenta().getClientes().getRfc()+"-"+factura.getCodigo()+".pdf" ,"C:/SAT/");
+                    MsgUtility.showInfoMeage("Factura "+factura.getCodigo()+": PDF guardado correctamente.");
+                } catch (Exception ex) {
+                    MsgUtility.showErrorMeage(ex.getMessage());
+                }
             }
-            facturasDao.insertarFacturasYActualizarNotas(notasDeVenta.getTarget());
-            for(Facturas factura: facturas){
-                FacturasUtility.guardaPdf(factura.getCodigo(),factura.getNotasDeVenta().getClientes().getRfc()+"-"+factura.getCodigo()+".pdf" ,"C:/SAT/");
-            }
-            MsgUtility.showInfoMeage("Las facturas se generaron corectamente.");
-        }catch(Exception e){
-            MsgUtility.showErrorMeage(e.getMessage());
-        }
+
     }
 
     public NotasVentaDAO getNotasDeVentaDao() {
