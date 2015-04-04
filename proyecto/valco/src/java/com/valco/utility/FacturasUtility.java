@@ -5,12 +5,12 @@
  */
 package com.valco.utility;
 
-import com.lowagie.text.Document;
 import com.valco.pojo.Clientes;
 import com.valco.pojo.ConceptosFactura;
 import com.valco.pojo.Facturas;
 import com.valco.pojo.Impuestos;
 import com.valco.pojo.ProductosInventario;
+import com.valco.servlets.ReportesXls;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -31,15 +30,22 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Signature;
 import java.security.SignatureException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.ListIterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.faces.context.FacesContext;
+import static javax.rmi.PortableRemoteObject.connect;
+import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -50,6 +56,13 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 import org.apache.commons.ssl.PKCS8Key;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -189,7 +202,7 @@ public class FacturasUtility {
 
     public static String formaXmlImpuestos(Set<Impuestos> impuestos) {
         String cadena = "";
-        for(Impuestos impuesto : impuestos) {
+        for (Impuestos impuesto : impuestos) {
             cadena += "<cfdi:Traslado impuesto= \"" + impuesto.getImpuesto() + "\" tasa= \"" + impuesto.getTasa() + "\" importe= \"" + impuesto.getImporte() + "\"/>\n";
         }
         return cadena;
@@ -222,8 +235,8 @@ public class FacturasUtility {
         xml = xml.replace("AQUIVAELSELLO", selloBase64);
         return xml;
     }
-    
-    public static String facturar(Facturas factura) throws Exception{
+
+    public static String facturar(Facturas factura) throws Exception {
         String facturaXml = null;
         try {
             facturaXml = getFacturaConSello(factura);
@@ -231,89 +244,89 @@ public class FacturasUtility {
             Logger.getLogger(FacturasUtility.class.getName()).log(Level.SEVERE, null, ex);
         }
         java.lang.String psTipoDocumento = "factura";
-            int pnIdEstructura = 0;
-            java.lang.String sNombre = "WSDL_PAX";
-            java.lang.String sContraseña = "wqfCr8O3xLfEhMOHw4nEjMSrxJnvv7bvvr4cVcKuKkBEM++/ke+/gCPvv4nvvrfvvaDvvb/vvqTvvoA=";
-            java.lang.String sVersion = "3.2";
-            https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX service = new https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX();
-            https.test_paxfacturacion_com_mx._453.WcfRecepcionASMXSoap port = service.getWcfRecepcionASMXSoap();
-            String result = port.fnEnviarXML(facturaXml, psTipoDocumento, pnIdEstructura, sNombre, sContraseña, sVersion);
-            
-            if(result.startsWith("301")){
-                throw new Exception("El xml se encuentra mal formado.");
-            }else if(result.startsWith("302")){
-                throw new Exception("El sello de la factura está mal formado.");
-            }else if(result.startsWith("303")){
-                throw new Exception("El xml se encuentra mal formado.");
-            }else if(result.startsWith("304")){
-                throw new Exception("El Sello no corresponde al emisor o ya caducó.");
-            }else if(result.startsWith("305")){
-                throw new Exception("El certificado fue revocado o está caduco.");
-            }else if(result.startsWith("306")){
-                throw new Exception("La fecha de emisión no está dentro de la vigencia del CSD del Emisor.");
-            }else if(result.startsWith("307")){
-                throw new Exception("El CDFI tiene un timbre previo.");
-            }else if(result.startsWith("308")){
-                throw new Exception("Certificado no expedido or el SAT.");
-            }else if(result.startsWith("401")){
-                throw new Exception("El rango de la fecha de generación es mayor a 72 horas para la emisión del timbre.");
-            }else if(result.startsWith("402")){
-                throw new Exception("El RFC del emisor no existe.");
-            }else if(result.startsWith("403")){
-                throw new Exception("La fecha de emisión es anterior al primero de enero del 2011.");
-            }
-            
-            return result;
+        int pnIdEstructura = 0;
+        java.lang.String sNombre = "WSDL_PAX";
+        java.lang.String sContraseña = "wqfCr8O3xLfEhMOHw4nEjMSrxJnvv7bvvr4cVcKuKkBEM++/ke+/gCPvv4nvvrfvvaDvvb/vvqTvvoA=";
+        java.lang.String sVersion = "3.2";
+        https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX service = new https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX();
+        https.test_paxfacturacion_com_mx._453.WcfRecepcionASMXSoap port = service.getWcfRecepcionASMXSoap();
+        String result = port.fnEnviarXML(facturaXml, psTipoDocumento, pnIdEstructura, sNombre, sContraseña, sVersion);
+
+        if (result.startsWith("301")) {
+            throw new Exception("El xml se encuentra mal formado.");
+        } else if (result.startsWith("302")) {
+            throw new Exception("El sello de la factura está mal formado.");
+        } else if (result.startsWith("303")) {
+            throw new Exception("El xml se encuentra mal formado.");
+        } else if (result.startsWith("304")) {
+            throw new Exception("El Sello no corresponde al emisor o ya caducó.");
+        } else if (result.startsWith("305")) {
+            throw new Exception("El certificado fue revocado o está caduco.");
+        } else if (result.startsWith("306")) {
+            throw new Exception("La fecha de emisión no está dentro de la vigencia del CSD del Emisor.");
+        } else if (result.startsWith("307")) {
+            throw new Exception("El CDFI tiene un timbre previo.");
+        } else if (result.startsWith("308")) {
+            throw new Exception("Certificado no expedido or el SAT.");
+        } else if (result.startsWith("401")) {
+            throw new Exception("El rango de la fecha de generación es mayor a 72 horas para la emisión del timbre.");
+        } else if (result.startsWith("402")) {
+            throw new Exception("El RFC del emisor no existe.");
+        } else if (result.startsWith("403")) {
+            throw new Exception("La fecha de emisión es anterior al primero de enero del 2011.");
+        }
+
+        return result;
     }
-    
-    public static void agregarDatosDeTimbrado(Facturas factura,String xml) throws ParserConfigurationException, SAXException, IOException, ParseException{
+
+    public static void agregarDatosDeTimbrado(Facturas factura, String xml) throws ParserConfigurationException, SAXException, IOException, ParseException {
         String folioFiscal = null;
         Date fechaTimbrado = new Date();
         String selloCFD = null;
         String noCertificadoSat = null;
         String selloSat = null;
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        
+
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         InputStream inputXml = new ByteArrayInputStream(xml.getBytes("UTF-8"));
         org.w3c.dom.Document doc = dBuilder.parse(inputXml);
         doc.getDocumentElement().normalize();
-        
+
         NodeList nList = doc.getElementsByTagName("tfd:TimbreFiscalDigital");
-        
+
         for (int temp = 0; temp < nList.getLength(); temp++) {
- 
-		Node nNode = nList.item(temp);
- 
-		System.out.println("\nCurrent Element :" + nNode.getNodeName());
- 
-		if (nNode.getNodeType() == Node.ELEMENT_NODE) {
- 
-			Element eElement = (Element) nNode;
- 
-			folioFiscal = eElement.getAttribute("UUID");
-                        fechaTimbrado = formatDate.parse(eElement.getAttribute("FechaTimbrado"));
-                        selloCFD = eElement.getAttribute("selloCFD");
-                        noCertificadoSat = eElement.getAttribute("noCertificadoSAT");
-                        selloSat = eElement.getAttribute("selloSAT");
-                        
-                        factura.setFolioFiscal(folioFiscal);
-                        factura.setFechaTimbrado(fechaTimbrado);
-                        factura.setSelloCdfi(selloCFD);
-                        factura.setNoSerieCertSat(noCertificadoSat);
-                        factura.setSelloSat(selloSat);
-		}
-	}
+
+            Node nNode = nList.item(temp);
+
+            System.out.println("\nCurrent Element :" + nNode.getNodeName());
+
+            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+                Element eElement = (Element) nNode;
+
+                folioFiscal = eElement.getAttribute("UUID");
+                fechaTimbrado = formatDate.parse(eElement.getAttribute("FechaTimbrado"));
+                selloCFD = eElement.getAttribute("selloCFD");
+                noCertificadoSat = eElement.getAttribute("noCertificadoSAT");
+                selloSat = eElement.getAttribute("selloSAT");
+
+                factura.setFolioFiscal(folioFiscal);
+                factura.setFechaTimbrado(fechaTimbrado);
+                factura.setSelloCdfi(selloCFD);
+                factura.setNoSerieCertSat(noCertificadoSat);
+                factura.setSelloSat(selloSat);
+            }
+        }
     }
-    
-    public static Set<ConceptosFactura> convierteProductosAConceptos(Iterator<ProductosInventario> productos){
+
+    public static Set<ConceptosFactura> convierteProductosAConceptos(Iterator<ProductosInventario> productos) {
         Set<ConceptosFactura> conceptos = new HashSet<>();
-        while(productos.hasNext()){
+        while (productos.hasNext()) {
             ProductosInventario producto = productos.next();
             ConceptosFactura concepto = new ConceptosFactura();
             concepto.setPrecioUnitario(new BigDecimal("0.00").setScale(3, RoundingMode.HALF_EVEN));
-            
+
             concepto.setClave(producto.getProductosHasProveedores().getProductos().getCodigo());
             concepto.setCantidad(new BigDecimal("1.00").setScale(2, RoundingMode.HALF_EVEN));
             concepto.setDescripcion(producto.getProductosHasProveedores().getProductos().getDescripcion());
@@ -321,11 +334,11 @@ public class FacturasUtility {
             concepto.setCantidad(producto.getPeso());
             concepto.setUnidad("KG");
             concepto.setImporteTotal(producto.getPrecio().multiply(producto.getPeso()));
-            if(!conceptos.contains(concepto)){
+            if (!conceptos.contains(concepto)) {
                 conceptos.add(concepto);
-            }else{
-                for(ConceptosFactura conceptoRepetio: conceptos){
-                    if(conceptoRepetio.equals(concepto)){
+            } else {
+                for (ConceptosFactura conceptoRepetio : conceptos) {
+                    if (conceptoRepetio.equals(concepto)) {
                         conceptoRepetio.setCantidad(conceptoRepetio.getCantidad().add(concepto.getCantidad()));
                         conceptoRepetio.setImporteTotal(conceptoRepetio.getImporteTotal().add(concepto.getImporteTotal()));
                     }
@@ -337,7 +350,7 @@ public class FacturasUtility {
 
     public static BigDecimal getTotalImpuestos(Set<Impuestos> impuestos) {
         BigDecimal totalImpuesto = new BigDecimal("0.000000");
-        for(Impuestos impuesto: impuestos) {
+        for (Impuestos impuesto : impuestos) {
             totalImpuesto = totalImpuesto.add(impuesto.getImporte()).setScale(6, RoundingMode.HALF_EVEN);
         }
         return totalImpuesto;
@@ -361,24 +374,53 @@ public class FacturasUtility {
 
         return buffer;
     }
-    
-    public static void guardaXml(String name,String content,String path) throws IOException{
- 
-			File file = new File(path+name);
- 
-			// if file doesnt exists, then create it
-			if (!file.exists()) {
-				file.createNewFile();
-			}
- 
-			FileWriter fw = new FileWriter(file.getAbsoluteFile());
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(content);
-			bw.close();
- 
+
+    public static void guardaXml(String name, String content, String path) throws IOException {
+
+        File file = new File(path + name);
+
+        // if file doesnt exists, then create it
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+
+        FileWriter fw = new FileWriter(file.getAbsoluteFile());
+        BufferedWriter bw = new BufferedWriter(fw);
+        bw.write(content);
+        bw.close();
+
     }
-    
-    public static void guardaPdf(){
-        
+
+    public static void guardaPdf(Integer facturaId, String name, String path) {
+        try {
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/valco", "admin3ZheGrA", "1VtHQW5M-3g-");) {
+            JasperReport jasperReport = null;
+            JasperReport subreporte = null;
+            ServletContext servletContext = (ServletContext) FacesContext
+                    .getCurrentInstance().getExternalContext().getContext();
+            String realPath = servletContext.getRealPath("//pagina//reportes//factura//Factura.jrxml");
+            jasperReport = JasperCompileManager.compileReport(realPath);
+
+            JasperPrint jasperPrint = null;
+
+            Map mapa = new HashMap();
+            mapa.put("FacturaId", facturaId);
+            jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
+            
+            JasperExportManager.exportReportToPdfFile(jasperPrint, path+name);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(FacturasUtility.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(FacturasUtility.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

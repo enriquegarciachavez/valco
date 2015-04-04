@@ -91,6 +91,7 @@ public class CreacionFacturaBean {
                 MsgUtility.showInfoMeage("Debe de seleccionar una nota de venta para facturar.");
                 return;
             }
+            List<Facturas> facturas = new ArrayList<>();
             for(NotasDeVenta nota : notasDeVenta.getTarget()){
                 Facturas factura = new Facturas();
                 factura.setFecha(new Date());
@@ -117,8 +118,12 @@ public class CreacionFacturaBean {
                 String xml = FacturasUtility.facturar(factura);
                 FacturasUtility.agregarDatosDeTimbrado(factura,xml);
                 FacturasUtility.guardaXml(nota.getClientes().getRfc()+"-"+facturasDao.getConsecutivo()+".xml", xml, "C:/SAT/");
+                facturas.add(factura);
             }
             facturasDao.insertarFacturasYActualizarNotas(notasDeVenta.getTarget());
+            for(Facturas factura: facturas){
+                FacturasUtility.guardaPdf(factura.getCodigo(),factura.getNotasDeVenta().getClientes().getRfc()+"-"+factura.getCodigo()+".pdf" ,"C:/SAT/");
+            }
             MsgUtility.showInfoMeage("Las facturas se generaron corectamente.");
         }catch(Exception e){
             MsgUtility.showErrorMeage(e.getMessage());

@@ -7,11 +7,20 @@ package com.valco.dao;
 
 import com.valco.HibernateUtil;
 import com.valco.pojo.Clientes;
+import com.valco.pojo.ConceptosFactura;
 import com.valco.pojo.Facturas;
 import com.valco.pojo.NotasDeVenta;
+import com.valco.servlets.ReportesXls;
+import java.io.OutputStream;
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -62,6 +71,10 @@ public class FacturasDAO implements Serializable {
             for (NotasDeVenta nota : notas) {
                 session.update(nota);
                 session.save(nota.getFacturas());
+                for(ConceptosFactura concepto: nota.getFacturas().getConceptosFacturas()){
+                    concepto.setFacturas(nota.getFacturas());
+                    session.save(concepto);
+                }
             }
             tx.commit();
         } catch (Exception e) {
@@ -171,25 +184,28 @@ public class FacturasDAO implements Serializable {
     }
 
     public Integer getConsecutivo() throws Exception {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction tx = null;
         try {
-            tx = session.beginTransaction();
-            Query query = session.createQuery("SELECT SECUENCIA\n"
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/valco", "admin3ZheGrA", "1VtHQW5M-3g-");) {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT SECUENCIA\n"
                     + "FROM SECUENCIAS\n"
                     + "WHERE TABLE_NAME = 'FACTURAS'");
-            Integer consecutivo = (Integer) query.uniqueResult();
+            rs.next();
+            Integer consecutivo = rs.getInt("SECUENCIA");
             return consecutivo;
-        } catch (HibernateException he) {
-            throw new Exception("Ocurrió un error al consultar el número consecutivo.");
-
-        } finally {
-            try {
-                session.close();
-            } catch (HibernateException he) {
-                throw new Exception("Ocurrió un error al consultar el número consecutivo.");
-            }
+        }catch(Exception e){
+            throw new Exception("Ocurrió un error al consultar el consecutivo");
         }
+
+
     }
 
 }

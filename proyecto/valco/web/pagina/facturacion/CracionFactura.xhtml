@@ -149,14 +149,14 @@
                         <p:inputTextarea id="observaciones" rows="3" cols="50" value="#{creacionFacturaBean.observaciones}" />
 
                         <f:facet name="footer">
-                            <p:commandButton    id="btnFacturarr"
+                            <p:commandButton    id="btnFacturar"
                                                 value="Facturar"
                                                 action="#{creacionFacturaBean.facturar()}"/>
                         </f:facet>
 
                     </h:panelGrid>
 
-                    <p:blockUI block="form" trigger="btnBuscar">
+                    <p:blockUI block="form" trigger="btnBuscar btnFacturar">
                         Cargando.... Espere porfavor<br />
                         <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
 
