@@ -173,11 +173,13 @@ public class FacturasUtility {
                 + "<cfdi:Conceptos>\n"
                 + formaXmlConceptos(conceptosFactura)
                 + "</cfdi:Conceptos>\n"
-                + "<cfdi:Impuestos totalImpuestosTrasladados= \"" + getTotalImpuestos(impuestos) + "\">\n"
-                + "		<cfdi:Traslados>\n"
+                + "<cfdi:Impuestos totalImpuestosTrasladados= \"" + getTotalImpuestos(impuestos) + "\">\n";
+        if(impuestos != null && !impuestos.isEmpty()){
+                factura += "		<cfdi:Traslados>\n"
                 + formaXmlImpuestos(impuestos)
-                + "		</cfdi:Traslados>\n"
-                + "</cfdi:Impuestos>\n"
+                + "		</cfdi:Traslados>\n";
+        }
+                factura += "</cfdi:Impuestos>\n"
                 + "</cfdi:Comprobante>";
         return factura;
     }
@@ -355,6 +357,12 @@ public class FacturasUtility {
             }
         }
         return conceptos;
+    }
+    
+    public static void calculaTotalImpuestos(Set<Impuestos> impuestos, BigDecimal subTotal){
+        for (Impuestos impuesto : impuestos) {
+            impuesto.setImporte(impuesto.getTasa().divide(new BigDecimal("100.00")).multiply(subTotal).setScale(2, RoundingMode.HALF_EVEN));
+        }
     }
 
     public static BigDecimal getTotalImpuestos(Set<Impuestos> impuestos) {

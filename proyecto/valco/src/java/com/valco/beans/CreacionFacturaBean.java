@@ -104,7 +104,8 @@ public class CreacionFacturaBean {
                 factura.setImpuestoses(this.impuestosSeleccionados);
                 factura.setObservaciones(observaciones);
                 factura.setSubtotal(nota.getTotal());
-                factura.setTotal(nota.getTotal());
+                FacturasUtility.calculaTotalImpuestos(this.impuestosSeleccionados, factura.getSubtotal());
+                factura.setTotal(factura.getSubtotal().add(FacturasUtility.getTotalImpuestos(this.impuestosSeleccionados)).setScale(2, RoundingMode.HALF_EVEN));
                 factura.setXml(metodoPago);
                 factura.setLugar("CHIHUAHUA,CHIHUAHUA,MEXICO");
                 factura.setMoneda("MXN");
