@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Factura" language="groovy" pageWidth="612" pageHeight="792" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e63e840a-d227-424b-845a-eddd775cec3f">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="622"/>
+	<property name="ireport.y" value="334"/>
 	<import value="com.keepdynamic.barcode.generator.jasperreports.BarcodeFactory"/>
 	<style name="table">
 		<box>
@@ -565,6 +565,7 @@ WHERE FACTURAS.`CODIGO` = $P{FacturasId}]]>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\apps\\valco\\valco\\proyecto\\valco\\web\\pagina\\reportes\\factura\\"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="isCopia" class="java.lang.Boolean"/>
 	<queryString>
 		<![CDATA[SELECT
      FACTURAS.`CODIGO` AS FACTURAS_CODIGO,
@@ -1182,6 +1183,15 @@ WHERE
 				</textElement>
 				<textFieldExpression><![CDATA["||1.0|"+$F{FACTURAS_FOLIO_FISCAL}+"|"+$F{FACTURAS_FECHA_TIMBRADO}+"|"+$F{FACTURAS_SELLO_CDFI}+"|"+$F{FACTURAS_NO_SEIE_CERT_EMISOR}+"||"]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="112" y="386" width="219" height="84" forecolor="#CCCCCC" uuid="cd6ee8d5-66ed-466e-8981-cee4b3e0bdfb">
+					<printWhenExpression><![CDATA[$P{isCopia}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="66"/>
+				</textElement>
+				<text><![CDATA[COPIA]]></text>
+			</staticText>
 		</band>
 	</title>
 </jasperReport>

@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../templates/Template1.xhtml">
+
+            <ui:define name="title">
+                Reimpresion de facturas
+            </ui:define>
+
+            <ui:define name="content">
+                <p:messages id="messages" showDetail="true" autoUpdate="true" />
+                <h:form id="formBusqueda">
+                    <h:panelGrid columns="2"
+                                 cellpadding="5"
+                                 cellspacing="5"
+                                style="text-align: right; margin: 0 auto;" >
+                                     
+                        <p:outputLabel for="noFactura" value="Número de factura:"  />
+                        <p:inputText id="noFactura"
+                                     value="#{reimpresionFacturaBean.noFactura}"/>
+                        
+                        <p:outputLabel for="noNota" value="Número de nota:"  />
+                        <p:inputText id="noNota"
+                                     value="#{reimpresionFacturaBean.noNota}"/>
+                        
+                        <p:outputLabel for="chkOriginal" value="Original:"  />
+                        <p:selectBooleanCheckbox id="chkOriginal" value="#{reimpresionFacturaBean.facturaOriginal}"/>
+                        
+                        <p:outputLabel for="chkCopia" value="Copia:" />
+                        <p:selectBooleanCheckbox id="chkCopia" value="#{reimpresionFacturaBean.facturaCopia}"/>
+                        
+                        <f:facet name="footer">
+                            <p:commandButton id="btnBuscar"
+                                             value="Buscar"
+                                             action="#{reimpresionFacturaBean.reimprimirFactras}"
+                                             update="formBusqueda"/>
+                        </f:facet>
+                        
+                    </h:panelGrid>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

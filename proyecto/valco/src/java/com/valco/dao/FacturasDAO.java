@@ -28,6 +28,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -134,7 +135,7 @@ public class FacturasDAO implements Serializable {
         }
     }
 
-    public void actualizarCliente(List<Facturas> facturas) throws Exception {
+    public void actualizarFacturas(List<Facturas> facturas) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
@@ -162,8 +163,35 @@ public class FacturasDAO implements Serializable {
             }
         }
     }
+    
+    public void actualizarFactura(Facturas factura) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+                session.update(factura);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al actualizar la factura.");
+                }
+            }
+            throw new Exception("Ocurrió un error al actualizar la factura.");
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al actualizar la factura.");
+            }
+        }
+    }
 
-    public void borrarCliente(List<Facturas> facturas) throws Exception {
+    public void borrarFacturas(List<Facturas> facturas) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
@@ -207,6 +235,36 @@ public class FacturasDAO implements Serializable {
                 }
             }
             return clientes;
+
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar las facturas.");
+
+        } finally {
+            try {
+                session.close();
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar las facturas.");
+            }
+        }
+    }
+    
+    public List<Facturas> getFacturas(Integer noFactura, Integer noNota) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        List<Facturas> facturas = new ArrayList<Facturas>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(Facturas.class);
+            if(noFactura != null){
+                q.add(Restrictions.eq("codigo", noFactura));
+            }
+            if(noNota != null){
+                q.createCriteria("notasDeVenta").add(Restrictions.eq("folio", noNota));
+            //q.createAlias("notasDeVenta", "nota").add(Restrictions.eqProperty("codigo", noNota.toString()));
+            }
+            facturas = (List<Facturas>) q.list();
+
+            return facturas;
 
         } catch (HibernateException he) {
             throw new Exception("Ocurrió un error al consultar las facturas.");

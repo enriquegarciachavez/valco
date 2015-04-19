@@ -74,6 +74,8 @@ public class ReportesPdf extends HttpServlet {
                     mapa.put(parametro.split("Int")[0], new Integer(request.getParameter(parametro)));
                 } else if (parametro.contains("Date")) {
                     mapa.put(parametro.split("Date")[0], new Date(request.getParameter(parametro)));
+                } else if (parametro.contains("Bool")){
+                    mapa.put(parametro.split("Bool")[0], new Boolean(request.getParameter(parametro)));
                 }
             }
             JasperReport jasperReport = JasperCompileManager.compileReport(input);
