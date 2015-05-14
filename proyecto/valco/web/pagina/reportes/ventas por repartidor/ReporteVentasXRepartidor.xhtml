@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../templates/Template1.xhtml">
+
+            <ui:define name="title">
+                Reporte de ventas por repartidor
+            </ui:define>
+
+            <ui:define name="content">
+                <p:messages autoUpdate="true" showDetail="true"/>
+                <h:form id="form1">
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" />
+                    <h:panelGrid
+                        columns="2"
+                        cellpadding="5"
+                        style="margin: 0 auto; text-align: right;">
+                        
+                        <p:outputLabel for="fechaInicialDate" value="Fecha Inicial:" />
+                        <p:calendar id="fechaInicialDate"
+                                    required="true"
+                                    requiredMessage="Debe capturar una fecha"
+                                    navigator="true" 
+                                    value="#{reporteVentasXRepartidorBean.fechaInicial}"
+                                    />
+                        <p:outputLabel for="fechaFinalDate" value="Fecha final:" />
+                        <p:calendar id="fechaFinalDate"
+                                    required="true"
+                                    requiredMessage="Debe capturar una fecha"
+                                    navigator="true" 
+                                    value="#{reporteVentasXRepartidorBean.fechaFinal}"
+                                    />
+                        
+                        <p:outputLabel for="repartidor" value="Repartidor:"  />
+                            <p:selectOneMenu 
+                                id="repartidor" 
+                                converter="omnifaces.SelectItemsConverter" 
+                                panelStyle="width:180px"
+                                effect="fade" 
+                                required="true"
+                                var="c" 
+                                style="width:100%" 
+                                filter="true" 
+                                filterMatchMode="contains"
+                                value="#{reporteVentasXRepartidorBean.repartidorSeleccionado}">
+                                <f:selectItem itemLabel="Seleccionar repartidor" itemValue="" />
+                                <f:selectItems value="#{reporteVentasXRepartidorBean.repartidores}" var="repartidor" itemLabel="#{repartidor.codigo} | #{repartidor.nombres} #{repartidor.apellidoPaterno}" itemValue="#{repartidor}" />
+
+                                <p:column style="width:10%">
+                                    <h:outputText value="#{c.codigo}" />
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{c.nombres} #{c.apellidoPaterno}" />
+                                </p:column>
+                            </p:selectOneMenu>
+                        
+                        <p:commandButton
+                            id="Excel"
+                            value="Excel"
+                            partialSubmit="false"
+                            update="form1"
+                            action="#{reporteVentasXRepartidorBean.mostrarXls()}"/>
+                        <p:commandButton
+                            id="Pdf"
+                            value="Pdf"
+                            partialSubmit="false"
+                            ajax="false"
+                            update="form1"
+                            action="#{reporteVentasXRepartidorBean.mostrarPdf()}"/>
+                    </h:panelGrid>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

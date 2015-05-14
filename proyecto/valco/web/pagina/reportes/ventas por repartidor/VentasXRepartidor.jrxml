@@ -44,6 +44,7 @@ WHERE
 	<field name="REPARTIDORES_APELLIDO_PATERNO" class="java.lang.String"/>
 	<field name="REPARTIDORES_APELLIDO_MATERNO" class="java.lang.String"/>
 	<field name="REPARTIDORES_NOMBRES" class="java.lang.String"/>
+	<variable name="totalPeriodo" class="java.math.BigDecimal" calculation="Sum"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -90,6 +91,7 @@ WHERE
 					<subreportParameterExpression><![CDATA[$F{NOTAS_DE_VENTA_FECHA_DE_VENTA}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="total" toVariable="totalPeriodo" calculation="Sum"/>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "VentasXRepartidor_subreport1.jasper"]]></subreportExpression>
 			</subreport>
 			<textField>
@@ -117,6 +119,11 @@ WHERE
 		</band>
 	</detail>
 	<summary>
-		<band height="42" splitType="Stretch"/>
+		<band height="42" splitType="Stretch">
+			<textField pattern="$ #,##0.00">
+				<reportElement x="472" y="0" width="100" height="20" uuid="9b13f4cf-11ff-46f3-bec7-a39a7488d7c5"/>
+				<textFieldExpression><![CDATA[$V{totalPeriodo}]]></textFieldExpression>
+			</textField>
+		</band>
 	</summary>
 </jasperReport>
