@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -65,6 +66,101 @@ public class ClienteMainBean implements Serializable {
      *
      * @return
      */
+    
+    @PostConstruct
+    private void init(){
+        try {
+            clientes = clienteDao.getClientes();
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage("Ocurrió un error al consultar los clientes");
+        }
+    }
+    
+     public DataModel getClientesModel() {
+        try {
+            modeloClientes = new ListDataModel(clientes);
+            return modeloClientes;
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+            return modeloClientes;
+        }
+    }
+     
+      public void actualizarCliente() {
+        try {
+            clienteDao.actualizarCliente(clienteSeleccionado);
+            MsgUtility.showInfoMeage("El cliente se actualizó con éxito");
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+
+    }
+
+    public void insertarCliente() {
+        try {
+            clienteNuevo.setEstatus("ACTIVO");
+            clienteDao.insertarCliente(clienteNuevo);
+            this.clientes.add(clienteNuevo);
+            MsgUtility.showInfoMeage("El cliente se ingresó con éxito");
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+    }
+
+    public void borrarCliente() {
+        try {
+            clienteDao.borrarCliente(clienteSeleccionado);
+            this.clientes.remove(clienteSeleccionado);
+            MsgUtility.showInfoMeage("El cliente se borro con éxito");
+        } catch (Exception ex) {
+           MsgUtility.showErrorMeage(ex.getMessage());
+        }
+    }
+    
+    public void validarRazonSocial(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        Clientes razon = null;
+        razon = 
+                this.clienteDao.getClientesXRazonSocial(value.toString());
+        if(razon != null){
+            throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe")); 
+        }
+        
+    }
+    
+    public void validarModificarRazonSocial(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        Clientes razon = null;
+        razon
+                = this.clienteDao.getClientesXRazonSocial(value.toString());
+        if (razon != null) {
+            if (razon.getCodigo() != clienteSeleccionado.getCodigo()) {
+                throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe"));
+            }
+        }
+
+    }
+
+    public void limpiarIngresarForm() {
+        apellidoPaterno.setValue(null);
+        apellidoMaterno.setValue(null);
+        nombres.setValue(null);
+        direccion.setValue(null);
+        colonia.setValue(null);
+        numeroInterior.setValue(null);
+        numeroExterior.setValue("");
+        codigoPostal.setValue(null);
+        ciudad.setValue(null);
+        estado.setValue(null);
+        pais.setValue(null);
+        limiteCredito.setValue(null);
+        rfc.setValue(null);
+        correoElectronico.setValue(null);
+        incobrable.setValue(false);
+        foreano.setValue(false);
+        cuentaBancaria.setValue(null);
+        banco.setValue(null);
+
+    }
+    
     public UIInput getApellidoPaterno() {
         return apellidoPaterno;
     }
@@ -227,38 +323,7 @@ public class ClienteMainBean implements Serializable {
         return null;
     }
 
-    public DataModel getClientesModel() {
-        try {
-            clientes = clienteDao.getClientes();
-            modeloClientes = new ListDataModel(clientes);
-            return modeloClientes;
-        } catch (Exception ex) {
-            MsgUtility.showErrorMeage(ex.getMessage());
-            return modeloClientes;
-        }
-    }
-
-    public void limpiarIngresarForm() {
-        apellidoPaterno.setValue(null);
-        apellidoMaterno.setValue(null);
-        nombres.setValue(null);
-        direccion.setValue(null);
-        colonia.setValue(null);
-        numeroInterior.setValue(null);
-        numeroExterior.setValue("");
-        codigoPostal.setValue(null);
-        ciudad.setValue(null);
-        estado.setValue(null);
-        pais.setValue(null);
-        limiteCredito.setValue(null);
-        rfc.setValue(null);
-        correoElectronico.setValue(null);
-        incobrable.setValue(false);
-        foreano.setValue(false);
-        cuentaBancaria.setValue(null);
-        banco.setValue(null);
-
-    }
+   
 
     public ClienteDAO getClienteDao() {
         return clienteDao;
@@ -300,55 +365,6 @@ public class ClienteMainBean implements Serializable {
         this.clienteNuevo = clienteNuevo;
     }
 
-    public void actualizarCliente() {
-        try {
-            clienteDao.actualizarCliente(clienteSeleccionado);
-            MsgUtility.showInfoMeage("El cliente se actualizó con éxito");
-        } catch (Exception ex) {
-            MsgUtility.showErrorMeage(ex.getMessage());
-        }
-
-    }
-
-    public void insertarCliente() {
-        try {
-            clienteNuevo.setEstatus("ACTIVO");
-            clienteDao.insertarCliente(clienteNuevo);
-            MsgUtility.showInfoMeage("El cliente se ingresó con éxito");
-        } catch (Exception ex) {
-            MsgUtility.showErrorMeage(ex.getMessage());
-        }
-    }
-
-    public void borrarCliente() {
-        try {
-            clienteDao.borrarCliente(clienteSeleccionado);
-            MsgUtility.showInfoMeage("El cliente se borro con éxito");
-        } catch (Exception ex) {
-           MsgUtility.showErrorMeage(ex.getMessage());
-        }
-    }
-    
-    public void validarRazonSocial(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
-        Clientes razon = null;
-        razon = 
-                this.clienteDao.getClientesXRazonSocial(value.toString());
-        if(razon != null){
-            throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe")); 
-        }
-        
-    }
-    
-    public void validarModificarRazonSocial(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
-        Clientes razon = null;
-        razon
-                = this.clienteDao.getClientesXRazonSocial(value.toString());
-        if (razon != null) {
-            if (razon.getCodigo() != clienteSeleccionado.getCodigo()) {
-                throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe"));
-            }
-        }
-
-    }
+   
 
 }

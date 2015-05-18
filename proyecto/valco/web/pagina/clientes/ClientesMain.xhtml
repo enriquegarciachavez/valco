@@ -10,38 +10,42 @@
 
         <ui:composition template="../templates/Template1.xhtml">
 
-            <ui:define name="content">
+            <ui:define name="content" id="content">
+
+                
                 <h:form id="form">
                     <p:messages id="messages" showDetail="true" autoUpdate="true" />
-                     <p:menubar>
-                        
+                    <p:menubar>
+
                         <p:menuitem 
-                            value="Ingresar" 
+                            value="Ingresar"
+                            id="btnIngresar"
                             icon="ui-icon-plusthick"                      
                             partialSubmit="true"
                             oncomplete="PF('popupingresar').show();;"
                             update=":formingresar:popupingresar"                           
                             action="#{clienteMainBean.inicializarCliente()}"/>
-                            
+
                         <p:menuitem 
                             value="Modificar"  
-                            process="singleDT" 
-                            update=":formmodificar:popupmodificar" 
+                            id="btnModificar"
+                            update=":popupmodificar" 
                             oncomplete="PF('popupmodificar').show();" 
                             icon="ui-icon-pencil"
                             partialSubmit="true"
                             />
                         <p:menuitem 
-                            value="Borrar " 
+                            value="Borrar"
+                            id="btnBorrar"
                             icon="ui-icon-circle-close"
                             partialSubmit="true"
                             process="singleDT" 
                             update=":popupborrar" 
                             oncomplete="PF('popupborrar').show();" 
-                            
-                           /> 
+
+                            /> 
                     </p:menubar>
-                    
+
                     <p:dataTable id="singleDT" var="cliente" value="#{clienteMainBean.clientesModel}" selectionMode="single" selection="#{clienteMainBean.clienteSeleccionado}" rowKey="#{cliente.codigo}">
                         <f:facet name="header">
                             Clientes
@@ -58,8 +62,13 @@
                         <p:column headerText="Nombres">
                             <h:outputText value="#{cliente.nombres}" />
                         </p:column>
-                        
+
                     </p:dataTable>
+                                <p:blockUI block="form" trigger="btnIngresar btnModificar btnBorrar">
+                Cargando.... Espere porfavor<br />
+                <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
+
+            </p:blockUI>
                 </h:form>
 
                 <!-- BOTON INGRESAR CLIENTE-->
@@ -183,9 +192,9 @@
                 <!-- BOTON MODIFICAR CLIENTE-->
                 <!-- <p:commandButton value="Modificar" type="button" onclick="PF('popupmodificar').show();" /> -->
 
-                <h:form id="formmodificar">
-                    <p:dialog header="Modificar Cliente" widgetVar="popupmodificar" id="popupmodificar" modal="true" position="top">
 
+                <p:dialog header="Modificar Cliente" widgetVar="popupmodificar" id="popupmodificar" modal="true" position="top">
+                    <h:form id="formmodificar">
                         <h:panelGrid id="modificarGrid"  columns="6" cellpadding="5">
 
                             <f:facet name="header">
@@ -258,7 +267,7 @@
                             <p:message for="rfc2" display="icon" />
 
                             <p:outputLabel for="correo2" value="Correo Electronico" />
-                                                    
+
                             <p:inputText id="correo2" required="false" label="correo2" value="#{clienteMainBean.clienteSeleccionado.correoElectronico}"/>
                             <p:message for="correo2" display="icon" />
 
@@ -287,11 +296,11 @@
                                 <p:commandButton value="Guardar" id="guardar" oncomplete="handleLoginRequest(xhr, status, args, 'popupmodificar' )" update="modificarGrid :form:singleDT" action="#{clienteMainBean.actualizarCliente()}"/>
                             </f:facet>
                         </h:panelGrid>
+                    </h:form>
+                </p:dialog>
 
-                    </p:dialog>
-                </h:form>
 
-                
+
 
 
                 <!--BOTON ELIMINAR CLIENTE-->
@@ -315,6 +324,7 @@
 
             </ui:define>
 
+         
         </ui:composition>
     </body>
 </html>

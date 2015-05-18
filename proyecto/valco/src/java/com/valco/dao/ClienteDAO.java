@@ -112,6 +112,28 @@ public class ClienteDAO implements Serializable{
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(Clientes.class);
               clientes = (List<Clientes>) q.list();
+              return clientes;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los clientes.");
+
+          } finally {
+              try {
+                  session.close();
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los clientes.");
+              }
+        }
+    }
+      
+      public List<Clientes> getClientesYNotas() throws Exception {
+          Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+          Transaction tx = null;
+          List<Clientes> clientes = new ArrayList<Clientes>();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(Clientes.class);
+              clientes = (List<Clientes>) q.list();
               for(Clientes cliente : clientes){
                   for(NotasDeVenta nota : cliente.getNotasDeVentas()){
                       Hibernate.initialize(nota);
