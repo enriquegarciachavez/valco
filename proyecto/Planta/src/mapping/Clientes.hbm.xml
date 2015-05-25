@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 24-may-2015 21:47:36 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="mapping.Clientes" table="CLIENTES" catalog="valco" optimistic-lock="version">
+        <id name="codigo" type="java.lang.Integer">
+            <column name="CODIGO" />
+            <generator class="identity" />
+        </id>
+        <property name="razonSocial" type="string">
+            <column name="RAZON_SOCIAL" length="200" not-null="true" unique="true" />
+        </property>
+        <property name="apellidoPaterno" type="string">
+            <column name="APELLIDO_PATERNO" length="100" not-null="true" />
+        </property>
+        <property name="apellidoMaterno" type="string">
+            <column name="APELLIDO_MATERNO" length="100" />
+        </property>
+        <property name="nombres" type="string">
+            <column name="NOMBRES" length="100" not-null="true" />
+        </property>
+        <property name="calle" type="string">
+            <column name="CALLE" length="300" not-null="true" />
+        </property>
+        <property name="colonia" type="string">
+            <column name="COLONIA" length="100" />
+        </property>
+        <property name="numeroInterior" type="string">
+            <column name="NUMERO_INTERIOR" length="30" />
+        </property>
+        <property name="numeroExterior" type="int">
+            <column name="NUMERO_EXTERIOR" not-null="true" />
+        </property>
+        <property name="codigoPostal" type="java.lang.Integer">
+            <column name="CODIGO_POSTAL" />
+        </property>
+        <property name="ciudad" type="string">
+            <column name="CIUDAD" length="100" not-null="true" />
+        </property>
+        <property name="estado" type="string">
+            <column name="ESTADO" length="100" not-null="true" />
+        </property>
+        <property name="pais" type="string">
+            <column name="PAIS" length="100" not-null="true" />
+        </property>
+        <property name="limiteCredito" type="java.lang.Integer">
+            <column name="LIMITE_CREDITO" />
+        </property>
+        <property name="rfc" type="string">
+            <column name="RFC" length="50" />
+        </property>
+        <property name="correoElectronico" type="string">
+            <column name="CORREO_ELECTRONICO" length="200" />
+        </property>
+        <property name="incobrable" type="java.lang.Boolean">
+            <column name="INCOBRABLE" />
+        </property>
+        <property name="foreano" type="java.lang.Boolean">
+            <column name="FOREANO" />
+        </property>
+        <property name="estatus" type="string">
+            <column name="ESTATUS" length="20" not-null="true" />
+        </property>
+        <property name="cuentaBancaria" type="string">
+            <column name="CUENTA_BANCARIA" length="50" />
+        </property>
+        <property name="banco" type="string">
+            <column name="BANCO" length="100" />
+        </property>
+        <set name="telefonoses" table="TELEFONOS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CLIENTES_CODIGO" not-null="true" />
+            </key>
+            <one-to-many class="mapping.Telefonos" />
+        </set>
+        <set name="notasCreditos" table="NOTAS_CREDITO" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CLIENTES_CODIGO" not-null="true" />
+            </key>
+            <one-to-many class="mapping.NotasCredito" />
+        </set>
+        <set name="notasDeVentas" table="NOTAS_DE_VENTA" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CLIENTES_CODIGO" />
+            </key>
+            <one-to-many class="mapping.NotasDeVenta" />
+        </set>
+    </class>
+</hibernate-mapping>

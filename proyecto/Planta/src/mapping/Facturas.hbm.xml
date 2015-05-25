@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 24-may-2015 21:47:36 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="mapping.Facturas" table="FACTURAS" catalog="valco" optimistic-lock="version">
+        <id name="codigo" type="java.lang.Integer">
+            <column name="CODIGO" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="notasDeVenta" class="mapping.NotasDeVenta" fetch="select">
+            <column name="NOTAS_DE_VENTA_CODIGO" not-null="true" />
+        </many-to-one>
+        <property name="lugar" type="string">
+            <column name="LUGAR" length="100" not-null="true" />
+        </property>
+        <property name="fecha" type="timestamp">
+            <column name="FECHA" length="19" not-null="true" />
+        </property>
+        <property name="folio" type="int">
+            <column name="FOLIO" not-null="true" />
+        </property>
+        <property name="folioFiscal" type="string">
+            <column name="FOLIO_FISCAL" length="100" not-null="true" />
+        </property>
+        <property name="fechaTimbrado" type="timestamp">
+            <column name="FECHA_TIMBRADO" length="19" not-null="true" />
+        </property>
+        <property name="noSerieCertSat" type="string">
+            <column name="NO_SERIE_CERT_SAT" length="100" not-null="true" />
+        </property>
+        <property name="observaciones" type="string">
+            <column name="OBSERVACIONES" length="65535" />
+        </property>
+        <property name="estatus" type="string">
+            <column name="ESTATUS" length="20" not-null="true" />
+        </property>
+        <property name="xml" type="string">
+            <column name="XML" not-null="true" />
+        </property>
+        <property name="formaPago" type="string">
+            <column name="FORMA_PAGO" length="100" not-null="true" />
+        </property>
+        <property name="noSeieCertEmisor" type="string">
+            <column name="NO_SEIE_CERT_EMISOR" length="100" not-null="true" />
+        </property>
+        <property name="metodoPago" type="string">
+            <column name="METODO_PAGO" length="100" not-null="true" />
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="20" not-null="true" />
+        </property>
+        <property name="noCliente" type="int">
+            <column name="NO_CLIENTE" not-null="true" />
+        </property>
+        <property name="banco" type="string">
+            <column name="BANCO" length="20" not-null="true" />
+        </property>
+        <property name="subtotal" type="big_decimal">
+            <column name="SUBTOTAL" precision="8" not-null="true" />
+        </property>
+        <property name="iva" type="big_decimal">
+            <column name="IVA" precision="3" not-null="true" />
+        </property>
+        <property name="total" type="big_decimal">
+            <column name="TOTAL" precision="8" not-null="true" />
+        </property>
+        <property name="importeLetra" type="string">
+            <column name="IMPORTE_LETRA" length="200" />
+        </property>
+        <property name="selloCdfi" type="string">
+            <column name="SELLO_CDFI" length="300" not-null="true" />
+        </property>
+        <property name="selloSat" type="string">
+            <column name="SELLO_SAT" length="300" not-null="true" />
+        </property>
+        <property name="cadenaOriginal" type="string">
+            <column name="CADENA_ORIGINAL" length="65535" not-null="true" />
+        </property>
+        <property name="cadenaCompromiso" type="string">
+            <column name="CADENA_COMPROMISO" length="65535" />
+        </property>
+        <property name="condicionPago" type="string">
+            <column name="CONDICION_PAGO" length="20" not-null="true" />
+        </property>
+        <property name="serie" type="string">
+            <column name="SERIE" length="45" />
+        </property>
+        <set name="notasDeVentas" table="NOTAS_DE_VENTA" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FACTURAS_CODIGO" />
+            </key>
+            <one-to-many class="mapping.NotasDeVenta" />
+        </set>
+        <set name="conceptosFacturas" table="CONCEPTOS_FACTURA" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FACTURAS_CODIGO" not-null="true" />
+            </key>
+            <one-to-many class="mapping.ConceptosFactura" />
+        </set>
+        <set name="impuestoses" table="IMPUESTOS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FACTURAS_CODIGO" not-null="true" />
+            </key>
+            <one-to-many class="mapping.Impuestos" />
+        </set>
+    </class>
+</hibernate-mapping>

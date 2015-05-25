@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+<hibernate-reverse-engineering>
+  <schema-selection match-catalog="valco"/>
+  <table-filter match-name="UNIDADES_DE_MEDIDA"/>
+  <table-filter match-name="CUENTAS_X_COBRAR"/>
+  <table-filter match-name="MOVIMIENTOS"/>
+  <table-filter match-name="CUENTAS_CONTABLES"/>
+  <table-filter match-name="PRODUCTOS"/>
+  <table-filter match-name="REPARTIDORES"/>
+  <table-filter match-name="CLIENTES"/>
+  <table-filter match-name="TIPO_PRODUCTO"/>
+  <table-filter match-name="IMPUESTOS"/>
+  <table-filter match-name="PRODUCTOS_INVENTARIO"/>
+  <table-filter match-name="NOTAS_CREDITO"/>
+  <table-filter match-name="PROCESOS"/>
+  <table-filter match-name="TRANFERENCIAS"/>
+  <table-filter match-name="PROVEEDORES"/>
+  <table-filter match-name="ORDENES_COMPRA"/>
+  <table-filter match-name="TELEFONOS"/>
+  <table-filter match-name="CUENTAS_X_PAGAR"/>
+  <table-filter match-name="FACTURAS"/>
+  <table-filter match-name="PRODUCTOS_has_PROVEEDORES"/>
+  <table-filter match-name="PRODUCTOS_has_PRODUCTOS"/>
+  <table-filter match-name="METODOS_PAGO"/>
+  <table-filter match-name="NOTAS_DE_VENTA"/>
+  <table-filter match-name="UBICACIONES"/>
+  <table-filter match-name="ABONOS_CUENTAS_X_PAGAR"/>
+  <table-filter match-name="PARAMETROS_GENERALES"/>
+  <table-filter match-name="ABONOS_CUENTAS_X_COBRAR"/>
+  <table-filter match-name="USUARIOS"/>
+  <table-filter match-name="CONCEPTOS_FACTURA"/>
+</hibernate-reverse-engineering>

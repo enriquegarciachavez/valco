@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 24-may-2015 21:47:36 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="mapping.Procesos" table="PROCESOS" catalog="valco" optimistic-lock="version">
+        <id name="codigo" type="java.lang.Integer">
+            <column name="CODIGO" />
+            <generator class="identity" />
+        </id>
+        <property name="letra" type="char">
+            <column name="LETRA" length="1" not-null="true" />
+        </property>
+        <property name="numero" type="java.lang.Integer">
+            <column name="NUMERO" />
+        </property>
+        <property name="fechaInicio" type="timestamp">
+            <column name="FECHA_INICIO" length="19" not-null="true" />
+        </property>
+        <property name="fechaFin" type="timestamp">
+            <column name="FECHA_FIN" length="19" />
+        </property>
+        <property name="costoManoObra" type="big_decimal">
+            <column name="COSTO_MANO_OBRA" precision="9" />
+        </property>
+        <property name="costosIndirectos" type="big_decimal">
+            <column name="COSTOS_INDIRECTOS" precision="9" />
+        </property>
+        <property name="sobranteHueso" type="big_decimal">
+            <column name="SOBRANTE_HUESO" precision="9" />
+        </property>
+        <property name="sobranteSebo" type="string">
+            <column name="SOBRANTE_SEBO" length="45" />
+        </property>
+        <property name="costoFlete" type="big_decimal">
+            <column name="COSTO_FLETE" precision="9" />
+        </property>
+        <property name="estatus" type="string">
+            <column name="ESTATUS" length="20" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
