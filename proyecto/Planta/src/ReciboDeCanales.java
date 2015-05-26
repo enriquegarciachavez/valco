@@ -1,20 +1,46 @@
+
+import dao.ProductoDAO;
+import dao.ProveedorDAO;
+import dao.UbicacionesDAO;
+import java.awt.event.KeyEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import mapping.Proveedores;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Karla
  */
 public class ReciboDeCanales extends javax.swing.JFrame {
 
+    ProductoDAO productoDAO;
+    ProveedorDAO proveedorDAO = new ProveedorDAO();
+    UbicacionesDAO ubicacionesDAO;
+
     /**
      * Creates new form ReciboDeCanales
      */
     public ReciboDeCanales() {
         initComponents();
+    }
+
+    private Object[] getProveedoresArray() {
+        Object[] proveedores;
+        try {
+            proveedores = proveedorDAO.getProveedores().toArray();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(rootPane, "Ocurriò un error al consultar los proveedores", "Error", ERROR_MESSAGE);
+            return null;
+        }
+        return proveedores;
     }
 
     /**
@@ -56,7 +82,16 @@ public class ReciboDeCanales extends javax.swing.JFrame {
 
         jLabel4.setText("Proveedor:");
 
-        proveedorLOV.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        proveedorTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                proveedorTxtKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                proveedorTxtKeyTyped(evt);
+            }
+        });
+
+        proveedorLOV.setModel(new DefaultComboBoxModel(getProveedoresArray()));
 
         jLabel5.setText("Almacen:");
 
@@ -152,6 +187,33 @@ public class ReciboDeCanales extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void proveedorTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_proveedorTxtKeyTyped
+       
+            char c = evt.getKeyChar();
+            if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
+                evt.consume();
+            } 
+    }//GEN-LAST:event_proveedorTxtKeyTyped
+
+    private void proveedorTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_proveedorTxtKeyReleased
+        try {
+            char c = evt.getKeyChar();
+            if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
+                evt.consume();
+            } else {
+                if (!proveedorTxt.getText().equals("")) {
+                    Proveedores proveedor = proveedorDAO.getProveedoresXCodigo(new Integer(proveedorTxt.getText()));
+                    if (proveedor != null) {
+                        proveedorLOV.setSelectedItem(proveedor);
+                        proveedorLOV.repaint();
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(rootPane, "Ocurriò un error al consultar el proveedor", "Error", ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_proveedorTxtKeyReleased
 
     /**
      * @param args the command line arguments

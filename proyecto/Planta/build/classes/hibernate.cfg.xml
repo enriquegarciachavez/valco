@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/valco?zeroDateTimeBehavior=convertToNull</property>
+    <property name="hibernate.connection.username">admin3ZheGrA</property>
+    <property name="hibernate.connection.password">1VtHQW5M-3g-</property>
+    <property name="hibernate.show_sql">true</property>
+    <property name="hibernate.current_session_context_class">thread</property>
+    <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
+    <mapping resource="mapping/Proveedores.hbm.xml"/>
+    <mapping resource="mapping/NotasCredito.hbm.xml"/>
+    <mapping resource="mapping/NotasDeVenta.hbm.xml"/>
+    <mapping resource="mapping/ParametrosGenerales.hbm.xml"/>
+    <mapping resource="mapping/Tranferencias.hbm.xml"/>
+    <mapping resource="mapping/Clientes.hbm.xml"/>
+    <mapping resource="mapping/Facturas.hbm.xml"/>
+    <mapping resource="mapping/ConceptosFactura.hbm.xml"/>
+    <mapping resource="mapping/ProductosHasProveedores.hbm.xml"/>
+    <mapping resource="mapping/CuentasContables.hbm.xml"/>
+    <mapping resource="mapping/CuentasXPagar.hbm.xml"/>
+    <mapping resource="mapping/ProductosInventario.hbm.xml"/>
+    <mapping resource="mapping/Procesos.hbm.xml"/>
+    <mapping resource="mapping/Telefonos.hbm.xml"/>
+    <mapping resource="mapping/Usuarios.hbm.xml"/>
+    <mapping resource="mapping/Repartidores.hbm.xml"/>
+    <mapping resource="mapping/Ubicaciones.hbm.xml"/>
+    <mapping resource="mapping/Productos.hbm.xml"/>
+    <mapping resource="mapping/Impuestos.hbm.xml"/>
+    <mapping resource="mapping/TipoProducto.hbm.xml"/>
+    <mapping resource="mapping/AbonosCuentasXPagar.hbm.xml"/>
+    <mapping resource="mapping/UnidadesDeMedida.hbm.xml"/>
+    <mapping resource="mapping/CuentasXCobrar.hbm.xml"/>
+    <mapping resource="mapping/AbonosCuentasXCobrar.hbm.xml"/>
+    <mapping resource="mapping/MetodosPago.hbm.xml"/>
+    <mapping resource="mapping/OrdenesCompra.hbm.xml"/>
+    <mapping resource="mapping/Movimientos.hbm.xml"/>
+  </session-factory>
+</hibernate-configuration>

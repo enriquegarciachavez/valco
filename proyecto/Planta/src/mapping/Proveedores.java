@@ -194,7 +194,22 @@ public class Proveedores  implements java.io.Serializable {
         this.ordenesCompras = ordenesCompras;
     }
 
-
+    public String toString(){
+        return this.getRazonSocial();
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if( o != null){
+        if((o instanceof Proveedores) && (((Proveedores) o).getCodigo() == this.getCodigo())){
+            return true;
+        }else{
+            return false;
+           }
+        }else{
+            return false;
+        }
+    }
 
 
 }
