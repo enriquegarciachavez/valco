@@ -78,8 +78,23 @@ public class ProductosHasProveedores  implements java.io.Serializable {
     public void setProductosInventarios(Set<ProductosInventario> productosInventarios) {
         this.productosInventarios = productosInventarios;
     }
-
-
+    
+    public String toString(){
+        return this.getProductos().getDescripcion();
+    }
+    
+    public boolean equals(Object o) {
+        if( o != null){
+        if(((o instanceof ProductosHasProveedores) && (((ProductosHasProveedores) o).getProveedores().equals(this.getProveedores())))
+                &&(((ProductosHasProveedores) o).getProductos().getCodigo().equals(this.getProductos().getCodigo()))){
+            return true;
+        }else{
+            return false;
+           }
+        }else{
+            return false;
+        }
+    }
 
 
 }

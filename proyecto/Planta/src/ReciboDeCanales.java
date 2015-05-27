@@ -8,6 +8,8 @@ import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import mapping.Productos;
+import mapping.ProductosHasProveedores;
 import mapping.Proveedores;
 
 /*
@@ -21,9 +23,9 @@ import mapping.Proveedores;
  */
 public class ReciboDeCanales extends javax.swing.JFrame {
 
-    ProductoDAO productoDAO;
+    ProductoDAO productoDAO = new ProductoDAO();
     ProveedorDAO proveedorDAO = new ProveedorDAO();
-    UbicacionesDAO ubicacionesDAO;
+    UbicacionesDAO ubicacionesDAO = new UbicacionesDAO();
 
     /**
      * Creates new form ReciboDeCanales
@@ -33,7 +35,7 @@ public class ReciboDeCanales extends javax.swing.JFrame {
     }
 
     private Object[] getProveedoresArray() {
-        Object[] proveedores;
+        Object[] proveedores = null;
         try {
             proveedores = proveedorDAO.getProveedores().toArray();
         } catch (Exception ex) {
@@ -41,6 +43,16 @@ public class ReciboDeCanales extends javax.swing.JFrame {
             return null;
         }
         return proveedores;
+    }
+    
+    private Object[] getProductosArray(){
+        Object[] productos = null;
+        try{
+            productos = productoDAO.getProductosXProveedor((Proveedores) proveedorLOV.getSelectedItem()).toArray();
+        }catch(Exception ex){
+            JOptionPane.showMessageDialog(rootPane, "Ocurriò un error al consultar los Productos", "Error", ERROR_MESSAGE);
+        }
+        return productos;
     }
 
     /**
@@ -78,7 +90,14 @@ public class ReciboDeCanales extends javax.swing.JFrame {
 
         jLabel3.setText("Producto:");
 
-        productoLov.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        productoTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                productoTxtKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                productoTxtKeyTyped(evt);
+            }
+        });
 
         jLabel4.setText("Proveedor:");
 
@@ -92,6 +111,13 @@ public class ReciboDeCanales extends javax.swing.JFrame {
         });
 
         proveedorLOV.setModel(new DefaultComboBoxModel(getProveedoresArray()));
+        proveedorLOV.setSelectedItem(proveedorLOV.getSelectedItem());
+        productoLov.setModel(new DefaultComboBoxModel(getProductosArray()));
+        proveedorLOV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                proveedorLOVActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Almacen:");
 
@@ -214,6 +240,35 @@ public class ReciboDeCanales extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Ocurriò un error al consultar el proveedor", "Error", ERROR_MESSAGE);
         }
     }//GEN-LAST:event_proveedorTxtKeyReleased
+
+    private void proveedorLOVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proveedorLOVActionPerformed
+        productoLov.setModel(new DefaultComboBoxModel(this.getProductosArray()));
+        productoLov.repaint();
+    }//GEN-LAST:event_proveedorLOVActionPerformed
+
+    private void productoTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoTxtKeyReleased
+        char c = evt.getKeyChar();
+            if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
+                evt.consume();
+            } else {
+                if(!productoTxt.getText().equals("")){
+                    Productos producto = new Productos();
+                    producto.setCodigo(new Integer(productoTxt.getText()));
+                    ProductosHasProveedores prodProv = new ProductosHasProveedores();
+                    prodProv.setProveedores((Proveedores) proveedorLOV.getSelectedItem());
+                    prodProv.setProductos(producto);
+                    productoLov.setSelectedItem(prodProv);
+                    productoLov.repaint();
+                }
+            }
+    }//GEN-LAST:event_productoTxtKeyReleased
+
+    private void productoTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoTxtKeyTyped
+        char c = evt.getKeyChar();
+            if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
+                evt.consume();
+            } 
+    }//GEN-LAST:event_productoTxtKeyTyped
 
     /**
      * @param args the command line arguments

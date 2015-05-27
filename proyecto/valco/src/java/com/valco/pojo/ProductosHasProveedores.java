@@ -79,9 +79,12 @@ public class ProductosHasProveedores  implements java.io.Serializable {
         this.precioSugerido = precioSugerdio;
     }
 
+     @Override
+    public String toString(){
+        return this.getProductos().getDescripcion();
+    }
 
-
-
+    
 }
 
 

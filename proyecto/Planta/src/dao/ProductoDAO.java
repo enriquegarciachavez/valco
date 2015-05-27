@@ -270,6 +270,61 @@ public class ProductoDAO {
         }
     }
     
+    public List<ProductosHasProveedores> getProductosXProveedor(Proveedores proveedor) throws Exception{
+        Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          List<ProductosHasProveedores> productos = new ArrayList<ProductosHasProveedores>();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(ProductosHasProveedores.class)
+                      .add(Restrictions.eq("proveedores", proveedor));
+              productos = (List<ProductosHasProveedores>)q.list();
+              for(ProductosHasProveedores producto: productos){
+                  Hibernate.initialize(producto.getProductos());
+                  Hibernate.initialize(producto.getProveedores());
+              }
+              return productos;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los productos.");
+
+          } finally {
+              try {
+                  if(session.isOpen()){
+                    session.close();
+                  }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los productos.");
+              }
+        }
+    }
+    
+    public List<ProductosHasProveedores> getProductosXProveedorYProducto(Proveedores proveedor, int productoCodigo) throws Exception{
+        Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          List<ProductosHasProveedores> productos = new ArrayList<ProductosHasProveedores>();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(ProductosHasProveedores.class)
+                      .add(Restrictions.eq("proveedores", proveedor));
+              q.createCriteria("productos").add(Restrictions.eq("codigo", productoCodigo));
+              productos = (List<ProductosHasProveedores>)q.list();
+              return productos;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los productos.");
+
+          } finally {
+              try {
+                  if(session.isOpen()){
+                    session.close();
+                  }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los productos.");
+              }
+        }
+    }
+    
     public void recibirProductos(List<ProductosInventario> productos, OrdenesCompra orden) throws Exception{
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
