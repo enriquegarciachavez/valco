@@ -106,7 +106,9 @@ public class Ubicaciones  implements java.io.Serializable {
         this.usuarioses = usuarioses;
     }
 
-
+    public String toString(){
+        return this.getOficina();
+    }
 
 
 }

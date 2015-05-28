@@ -54,6 +54,16 @@ public class ReciboDeCanales extends javax.swing.JFrame {
         }
         return productos;
     }
+    
+    private Object[] getUbicacionesArray(){
+        Object[] ubicaciones = null;
+        try{
+            ubicaciones = ubicacionesDAO.getUbicaciones().toArray();
+        }catch(Exception ex){
+            JOptionPane.showMessageDialog(rootPane, "Ocurriò un error al consultar los Productos", "Error", ERROR_MESSAGE);
+        }
+        return ubicaciones;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -82,7 +92,7 @@ public class ReciboDeCanales extends javax.swing.JFrame {
         finalizarBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1024, 724));
+        setPreferredSize(new java.awt.Dimension(1100, 724));
 
         jLabel1.setText("Nùmero de matanza:");
 
@@ -121,7 +131,7 @@ public class ReciboDeCanales extends javax.swing.JFrame {
 
         jLabel5.setText("Almacen:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setModel(new DefaultComboBoxModel(getUbicacionesArray()));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
