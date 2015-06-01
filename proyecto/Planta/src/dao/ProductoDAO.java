@@ -299,16 +299,16 @@ public class ProductoDAO {
         }
     }
     
-    public List<ProductosHasProveedores> getProductosXProveedorYProducto(Proveedores proveedor, int productoCodigo) throws Exception{
+    public ProductosHasProveedores getProductosXProveedorYProducto(Proveedores proveedor, int productoCodigo) throws Exception{
         Session session = HibernateUtil.getSessionFactory().openSession();
           Transaction tx = null;
-          List<ProductosHasProveedores> productos = new ArrayList<ProductosHasProveedores>();
+          ProductosHasProveedores productos = new ProductosHasProveedores();
           try {
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(ProductosHasProveedores.class)
                       .add(Restrictions.eq("proveedores", proveedor));
               q.createCriteria("productos").add(Restrictions.eq("codigo", productoCodigo));
-              productos = (List<ProductosHasProveedores>)q.list();
+              productos = (ProductosHasProveedores)q.uniqueResult();
               return productos;
 
           } catch (HibernateException he) {

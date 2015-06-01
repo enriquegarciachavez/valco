@@ -2,15 +2,24 @@
 import dao.ProductoDAO;
 import dao.ProveedorDAO;
 import dao.UbicacionesDAO;
+import dao.UsuariosDAO;
 import java.awt.event.KeyEvent;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import javax.swing.table.DefaultTableModel;
+import mapping.OrdenesCompra;
 import mapping.Productos;
 import mapping.ProductosHasProveedores;
+import mapping.ProductosInventario;
 import mapping.Proveedores;
+import mapping.Ubicaciones;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -26,7 +35,9 @@ public class ReciboDeCanales extends javax.swing.JFrame {
     ProductoDAO productoDAO = new ProductoDAO();
     ProveedorDAO proveedorDAO = new ProveedorDAO();
     UbicacionesDAO ubicacionesDAO = new UbicacionesDAO();
-
+    DefaultTableModel model = new DefaultTableModel();
+    List<ProductosInventario> nuevosCanales = new ArrayList<ProductosInventario>();
+    UsuariosDAO usuariosDao = new UsuariosDAO();
     /**
      * Creates new form ReciboDeCanales
      */
@@ -85,11 +96,12 @@ public class ReciboDeCanales extends javax.swing.JFrame {
         proveedorTxt = new javax.swing.JTextField();
         proveedorLOV = new javax.swing.JComboBox();
         jLabel5 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
+        almacenLOV = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaCanales = new javax.swing.JTable();
         agregarBtn = new javax.swing.JButton();
         finalizarBtn = new javax.swing.JButton();
+        eliminarBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1100, 724));
@@ -131,24 +143,38 @@ public class ReciboDeCanales extends javax.swing.JFrame {
 
         jLabel5.setText("Almacen:");
 
-        jComboBox1.setModel(new DefaultComboBoxModel(getUbicacionesArray()));
+        almacenLOV.setModel(new DefaultComboBoxModel(getUbicacionesArray()));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Nùmero de matanza", "Peso", "Producto", "Almacen"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        tablaCanales.setModel(model);
+        String[] columnNames = {"Número de matanza",
+            "Peso",
+            "Proveedor",
+            "Producto",
+            "Almacen"};
+
+        model.setColumnIdentifiers(columnNames);
+        jScrollPane1.setViewportView(tablaCanales);
 
         agregarBtn.setText("Agregar");
+        agregarBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                agregarBtnActionPerformed(evt);
+            }
+        });
 
         finalizarBtn.setText("Finalizar");
+        finalizarBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                finalizarBtnActionPerformed(evt);
+            }
+        });
+
+        eliminarBtn.setText("Eliminar");
+        eliminarBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -181,11 +207,14 @@ public class ReciboDeCanales extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(almacenLOV, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(finalizarBtn)
-                            .addComponent(agregarBtn))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(agregarBtn)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(eliminarBtn)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -209,16 +238,18 @@ public class ReciboDeCanales extends javax.swing.JFrame {
                             .addComponent(jLabel3)
                             .addComponent(productoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(almacenLOV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(productoLov, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(8, 8, 8)
-                .addComponent(agregarBtn)
-                .addGap(28, 28, 28)
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(agregarBtn)
+                    .addComponent(eliminarBtn))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
                 .addComponent(finalizarBtn)
-                .addContainerGap(111, Short.MAX_VALUE))
+                .addContainerGap(136, Short.MAX_VALUE))
         );
 
         pack();
@@ -280,6 +311,61 @@ public class ReciboDeCanales extends javax.swing.JFrame {
             } 
     }//GEN-LAST:event_productoTxtKeyTyped
 
+    private void agregarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarBtnActionPerformed
+        Object[] canal = new Object[5];
+        ProductosInventario producto = new ProductosInventario();
+         
+        canal[0] = matanzaTxt.getText();
+        canal[1] = pesoTxt.getText();
+        canal[2] = proveedorLOV.getSelectedItem().toString();
+        canal[3] = productoLov.getSelectedItem().toString();
+        canal[4] = almacenLOV.getSelectedItem().toString();
+   
+        model.addRow(canal);
+        
+        producto.setEstatus("ACTIVO");
+        producto.setPeso(new BigDecimal(pesoTxt.getText()));
+        producto.setPrecio(BigDecimal.ZERO);
+        producto.setProductosHasProveedores((ProductosHasProveedores) productoLov.getSelectedItem());
+        producto.setUbicaciones((Ubicaciones) almacenLOV.getSelectedItem());
+        
+        nuevosCanales.add(producto);
+    }//GEN-LAST:event_agregarBtnActionPerformed
+
+    private void eliminarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarBtnActionPerformed
+        int[] selectedRows = tablaCanales.getSelectedRows();
+        if (selectedRows.length > 0) {
+            for (int i = selectedRows.length - 1; i >= 0; i--) {
+                model.removeRow(selectedRows[i]);
+                nuevosCanales.remove(selectedRows[i]);
+            }
+        }
+    }//GEN-LAST:event_eliminarBtnActionPerformed
+
+    private void finalizarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finalizarBtnActionPerformed
+        OrdenesCompra orden = new OrdenesCompra();
+        orden.setEstatus("ACTIVO");
+        orden.setFecha(new Date());
+        orden.setProveedores((Proveedores) proveedorLOV.getSelectedItem());
+        BigDecimal total = BigDecimal.ZERO;
+        for(ProductosInventario producto : orden.getProductosInventarios()){
+            total = total.add(producto.getPrecio().multiply(producto.getPeso()));
+        }
+        orden.setTotal(total);
+        try {
+            orden.setUsuarios(usuariosDao.getUsuarios().get(0));
+        } catch (Exception ex) {
+            Logger.getLogger(ReciboDeCanales.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try{
+        productoDAO.recibirProductos(nuevosCanales, orden);
+        nuevosCanales.clear();
+        JOptionPane.showMessageDialog(rootPane, "Se recibieron los canales correctamente");
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(rootPane, "Ocurrió un error al recibir los canales");
+        }
+    }//GEN-LAST:event_finalizarBtnActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -317,20 +403,21 @@ public class ReciboDeCanales extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton agregarBtn;
+    private javax.swing.JComboBox almacenLOV;
+    private javax.swing.JButton eliminarBtn;
     private javax.swing.JButton finalizarBtn;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField matanzaTxt;
     private javax.swing.JTextField pesoTxt;
     private javax.swing.JComboBox productoLov;
     private javax.swing.JTextField productoTxt;
     private javax.swing.JComboBox proveedorLOV;
     private javax.swing.JTextField proveedorTxt;
+    private javax.swing.JTable tablaCanales;
     // End of variables declaration//GEN-END:variables
 }
