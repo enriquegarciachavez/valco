@@ -244,6 +244,36 @@ public class ProductoDAO {
         }
     }
     
+    public List<ProductosInventario> getCanalesDisponibles() throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          List<ProductosInventario> productos = new ArrayList<ProductosInventario>();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(ProductosInventario.class);
+              Criteria y = q.createCriteria("productosHasProveedores");
+              Criteria x = y.createCriteria("productos").add(Restrictions.eq("generarSubproducto",true));
+              productos = (List<ProductosInventario>)x.list();
+              for(ProductosInventario producto : productos){
+                Hibernate.initialize(producto.getProductosHasProveedores());
+                Hibernate.initialize(producto.getProductosHasProveedores().getProductos());
+              }
+              return productos;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los productos.");
+
+          } finally {
+              try {
+                  if(session.isOpen()){
+                    session.close();
+                  }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los productos.");
+              }
+        }
+    }
+    
     public ProductosHasProveedores getProductoXProveYCodigo(Proveedores proveedor, String codigo) throws Exception{
         Session session = HibernateUtil.getSessionFactory().openSession();
           Transaction tx = null;

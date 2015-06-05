@@ -162,7 +162,14 @@ public class ProductosInventario  implements java.io.Serializable {
         this.numeroMatanza = numeroMatanza;
     }
 
-
+    public String toString(){
+        String descripcion = "";
+        descripcion +=  this.getProductosHasProveedores().getProductos().getDescripcion();
+        descripcion += "    ";
+        descripcion += this.getPeso();
+        descripcion += " KG";
+        return descripcion;
+    }
 
 
 }
