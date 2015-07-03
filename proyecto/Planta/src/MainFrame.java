@@ -1,4 +1,5 @@
 
+import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 
 /*
@@ -12,7 +13,7 @@ import javax.swing.JPanel;
  * @author Karla
  */
 public class MainFrame extends javax.swing.JFrame {
-
+    JInternalFrame internalFrame;
     /**
      * Creates new form MainFrame
      */
@@ -29,14 +30,17 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jCheckBox1 = new javax.swing.JCheckBox();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
+        jCheckBox1.setText("jCheckBox1");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1100, 724));
+        setPreferredSize(new java.awt.Dimension(1120, 724));
 
         jMenu1.setText("File");
 
@@ -67,16 +71,25 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
+        if(internalFrame != null)
+        getContentPane().remove(internalFrame);
+        internalFrame = new JInternalFrame();
+        ReciboDeProducto prueb = new ReciboDeProducto();
+        internalFrame.add(prueb);
+        getContentPane().add(internalFrame, java.awt.BorderLayout.CENTER);
+        internalFrame.setVisible(true);
+        internalFrame.repaint();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        AbrirProcesoPanel panelProceso = new AbrirProcesoPanel();
-        
-        getContentPane().add( panelProceso, java.awt.BorderLayout.CENTER);
-        pack();
-        panelProceso.setVisible(true);
-        getContentPane().repaint();        
+        if(internalFrame != null)
+        getContentPane().remove(internalFrame);
+        internalFrame = new JInternalFrame();
+        AbrirProcesoPanel prueb = new AbrirProcesoPanel();
+        internalFrame.add(prueb);
+        getContentPane().add(internalFrame, java.awt.BorderLayout.CENTER);
+        internalFrame.setVisible(true);
+        internalFrame.repaint();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
@@ -115,6 +128,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;

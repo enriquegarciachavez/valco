@@ -22,6 +22,7 @@ public class Procesos  implements java.io.Serializable {
      private String sobranteSebo;
      private BigDecimal costoFlete;
      private String estatus;
+     private String observaciones;
 
     public Procesos() {
     }
@@ -121,6 +122,14 @@ public class Procesos  implements java.io.Serializable {
     
     public void setEstatus(String estatus) {
         this.estatus = estatus;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 
 

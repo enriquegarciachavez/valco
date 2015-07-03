@@ -6,6 +6,7 @@
 package dao;
 
 import Hibernate.HibernateUtil;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -112,6 +113,35 @@ public class ProductoDAO {
         }
     }
 
+    public void actualizarProductosInventario(Object[] productos) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            for(Object producto : productos){
+                session.update(producto);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al modificar el producto.");
+                }
+            }
+            throw new Exception("Ocurrió un error al modificar el producto.");
+        } finally {
+            try {
+                if(session.isOpen()){
+                    session.close();
+                  }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al modificar el producto.");
+            }
+        }
+    }
+    
     public void borrarProducto(Productos productos) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
