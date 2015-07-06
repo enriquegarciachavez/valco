@@ -1,3 +1,5 @@
+package panels;
+
 
 import dao.ProductoDAO;
 import dao.ProveedorDAO;
@@ -296,7 +298,7 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         try {
             orden.setUsuarios(usuariosDao.getUsuarios().get(0));
         } catch (Exception ex) {
-            Logger.getLogger(ReciboDeCanales.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ReciboDeProducto.class.getName()).log(Level.SEVERE, null, ex);
         }
         try{
             productoDAO.recibirProductos(nuevosCanales, orden);
