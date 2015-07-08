@@ -3,6 +3,7 @@ package panels;
 
 import creators.PanelCreator;
 import java.awt.event.ActionEvent;
+import javax.swing.JFrame;
 import panels.ReciboDeProducto;
 import panels.ConfigBascula;
 import panels.AbrirProcesoPanel;
@@ -51,6 +52,7 @@ public class MainFrame extends javax.swing.JFrame {
         jCheckBox1.setText("jCheckBox1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         jMenu1.setText("File");
 

@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -31,6 +33,11 @@ public class ConfigBascula extends javax.swing.JPanel {
      */
     public ConfigBascula() {
         initComponents();
+        try {
+            readCsv();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Ocurrio un error al leer los datos de la bascula", "Error", ERROR_MESSAGE);
+        }
     }
 
     /**
