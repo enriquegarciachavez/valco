@@ -7,7 +7,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
-        <ui:composition template="./../clientes/Template1.xhtml">
+        <ui:composition template="../templates/Template1.xhtml">
             <ui:define name="content">
 
 
@@ -44,18 +44,18 @@
                              /> 
                     </p:menubar>
                     
-                    <p:dataTable id="singleDT" var="tipoproductos" value="#{tipoProductoMainBean.modeloTipoProducto}" selectionMode="single" selection="#{tipoProductoMainBean.tipoProductoSeleccionado}" rowKey="#{tipoproductos.codigo}">
+                    <p:dataTable id="singleDT" var="tipoProductos" value="#{tipoProductoMainBean.tipoProducto}" selectionMode="single" selection="#{tipoProductoMainBean.tipoProductoSeleccionado}" rowKey="#{tipoProductos.codigo}">
                         <f:facet name="header">
                             Tipo Productos
                         </f:facet>
                         <p:column headerText="Tipo producto">
-                            <h:outputText value="#{tipoproductos.descripcion}" />
+                            <h:outputText value="#{tipoProductos.descripcion}" />
                         </p:column>
                         <p:column headerText="Observaciones">
-                            <h:outputText value="#{tipoproductos.observaciones}" />
+                            <h:outputText value="#{tipoProductos.observaciones}" />
                         </p:column>
                         <p:column headerText="Estatus">
-                            <h:outputText value="#{tipoproductos.estatus}" />
+                            <h:outputText value="#{tipoProductos.estatus}" />
                         </p:column>
 
                    <!--     <f:facet name="footer">

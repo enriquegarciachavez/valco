@@ -11,6 +11,7 @@ import com.valco.utility.MsgUtility;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -31,8 +32,8 @@ import javax.faces.validator.ValidatorException;
 
 public class TipoProductoMainBean {
     @ManagedProperty(value = "#{tipoproductoDao}")
-    private TipoProductoDAO tipoproductoDao;
-    List<TipoProducto> tipoproducto;
+    private TipoProductoDAO tipoProductoDao;
+    List<TipoProducto> tipoProducto;
     TipoProducto tipoNuevo;
     TipoProducto tipoSeleccionado;
     UIInput descripcion;
@@ -45,16 +46,76 @@ public class TipoProductoMainBean {
      */
     public TipoProductoMainBean() {
     }
-
-    public DataModel getModeloTipoProducto(){
+    
+    @PostConstruct
+    private void init(){
         try {
-            tipoproducto = tipoproductoDao.getTipoProducto();
-            modeloTipoProducto = new ListDataModel(tipoproducto);
-            return modeloTipoProducto;
+            tipoProducto = tipoProductoDao.getTipoProducto();
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage("Ocurrió un error al consultar los Productos");
+        }
+    }
+
+
+    
+    public void insertarTipoProducto() {
+        try {
+            tipoNuevo.setEstatus("ACTIVO");
+            tipoProductoDao.insertarTipoProducto(tipoNuevo);
+           MsgUtility.showInfoMeage("El tipo producto se insertó con éxito");
+           
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
-            return modeloTipoProducto;
+            
         }
+    }    
+    
+    public void borrarTipoProducto(){
+        try {
+            tipoProductoDao.borrarTipoProducto(tipoSeleccionado);
+            MsgUtility.showInfoMeage("El tipo producto se borró con éxito");
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+          
+        }
+    }
+    public void actualizarTipoProducto(){
+        try {
+            tipoProductoDao.actualizarTipoProducto(tipoSeleccionado);
+            MsgUtility.showInfoMeage("El tipo producto se actualizó con éxito");
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+            
+        }
+        
+    }
+     public void inicializarTipo() {
+         this.tipoNuevo = new TipoProducto();
+        limpiarIngresarForm();}
+    
+     public void limpiarIngresarForm() {
+        
+       // observaciones.setValue(false);
+        //observaciones.setText(null);
+        }
+     public void validarDescripcion(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        TipoProducto tipopro = null;
+        tipopro = 
+                this.tipoProductoDao.getTipoProductoXDescripcion(value.toString());
+        if(tipopro != null){
+            throw new ValidatorException(new FacesMessage("La descripcion que capturó ya existe")); 
+        }
+        
+    }
+     public void validarModificarDescripcion(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        TipoProducto tipopro = null;
+        tipopro = 
+                this.tipoProductoDao.getTipoProductoXDescripcion(value.toString());
+        if(tipopro != null){
+            if(tipopro.getCodigo()!= tipoSeleccionado.getCodigo())
+            throw new ValidatorException(new FacesMessage("La descripción que capturó ya existe")); 
+        }
+        
     }
 
     public void setModeloTipoProducto(DataModel modeloTipoProducto) {
@@ -62,20 +123,20 @@ public class TipoProductoMainBean {
     }
 
     
-    public TipoProductoDAO getTipoproductoDao() {
-        return tipoproductoDao;
+    public TipoProductoDAO getTipoProductoDao() {
+        return tipoProductoDao;
     }
 
-    public void setTipoproductoDao(TipoProductoDAO tipoproductoDao) {
-        this.tipoproductoDao = tipoproductoDao;
+    public void setTipoProductoDao(TipoProductoDAO tipoproductoDao) {
+        this.tipoProductoDao = tipoproductoDao;
     }
 
-    public List<TipoProducto> getTipoproducto() {
-        return tipoproducto;
+    public List<TipoProducto> getTipoProducto() {
+        return tipoProducto;
     }
 
-    public void setTipoproducto(List<TipoProducto> tipoproducto) {
-        this.tipoproducto = tipoproducto;
+    public void setTipoProducto(List<TipoProducto> tipoproducto) {
+        this.tipoProducto = tipoproducto;
     }
 
     public TipoProducto getTipoProductoNuevo() {
@@ -108,66 +169,6 @@ public class TipoProductoMainBean {
 
     public void setObservaciones(UIInput observaciones) {
         this.observaciones = observaciones;
-    }
-    
-    public void insertarTipoProducto() {
-        try {
-            tipoNuevo.setEstatus("ACTIVO");
-            tipoproductoDao.insertarTipoProducto(tipoNuevo);
-           MsgUtility.showInfoMeage("El tipo producto se insertó con éxito");
-           
-        } catch (Exception ex) {
-            MsgUtility.showErrorMeage(ex.getMessage());
-            
-        }
-    }    
-    
-    public void borrarTipoProducto(){
-        try {
-            tipoproductoDao.borrarTipoProducto(tipoSeleccionado);
-            MsgUtility.showInfoMeage("El tipo producto se borró con éxito");
-        } catch (Exception ex) {
-            MsgUtility.showErrorMeage(ex.getMessage());
-          
-        }
-    }
-    public void actualizarTipoProducto(){
-        try {
-            tipoproductoDao.actualizarTipoProducto(tipoSeleccionado);
-            MsgUtility.showInfoMeage("El tipo producto se actualizó con éxito");
-        } catch (Exception ex) {
-            MsgUtility.showErrorMeage(ex.getMessage());
-            
-        }
-        
-    }
-     public void inicializarTipo() {
-         this.tipoNuevo = new TipoProducto();
-        limpiarIngresarForm();}
-    
-     public void limpiarIngresarForm() {
-        
-       // observaciones.setValue(false);
-        //observaciones.setText(null);
-        }
-     public void validarDescripcion(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
-        TipoProducto tipopro = null;
-        tipopro = 
-                this.tipoproductoDao.getTipoProductoXDescripcion(value.toString());
-        if(tipopro != null){
-            throw new ValidatorException(new FacesMessage("La descripcion que capturó ya existe")); 
-        }
-        
-    }
-     public void validarModificarDescripcion(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
-        TipoProducto tipopro = null;
-        tipopro = 
-                this.tipoproductoDao.getTipoProductoXDescripcion(value.toString());
-        if(tipopro != null){
-            if(tipopro.getCodigo()!= tipoSeleccionado.getCodigo())
-            throw new ValidatorException(new FacesMessage("La descripción que capturó ya existe")); 
-        }
-        
     }
     
 }
