@@ -88,4 +88,52 @@ public class ProcesosDAO {
 
     }
     
+    public List<Procesos> getProcesosActivos() throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        List<Procesos> procesos = new ArrayList<Procesos>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(Procesos.class)
+                      .add(Restrictions.eq("estatus", "ACTIVO"));
+              procesos = (List<Procesos>) q.list();
+            return procesos;
+
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar los procesos.");
+
+        } finally {
+            try {
+                if(session.isOpen()){
+                    session.close();
+                  }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar los procesos.");
+            }
+        }
+    }
+    
+    public List<Procesos> getProcesosActivosEInactivos() throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        List<Procesos> procesos = new ArrayList<Procesos>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(Procesos.class);
+              procesos = (List<Procesos>) q.list();
+            return procesos;
+
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar los procesos.");
+
+        } finally {
+            try {
+                if(session.isOpen()){
+                    session.close();
+                  }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar los procesos.");
+            }
+        }
+    }
 }

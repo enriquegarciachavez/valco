@@ -138,7 +138,21 @@ public class Productos  implements java.io.Serializable {
         this.productosHasProveedoreses = productosHasProveedoreses;
     }
 
-
+    public String toString(){
+        return this.getDescripcion();
+    }
+    
+    public boolean equals(Object o){
+        if( o != null){
+        if(((o instanceof Productos) && (((Productos) o).getCodigo().equals(this.getCodigo())))){
+            return true;
+        }else{
+            return false;
+           }
+        }else{
+            return false;
+        }
+    }
 
 
 }

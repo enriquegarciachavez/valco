@@ -3,6 +3,7 @@ package mapping;
 
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -132,7 +133,9 @@ public class Procesos  implements java.io.Serializable {
         this.observaciones = observaciones;
     }
 
-
+    public String toString(){
+        return this.getLetra() + new SimpleDateFormat("ddMMyyyy").format(this.getFechaInicio());
+    }
 
 
 }
