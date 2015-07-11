@@ -17,6 +17,7 @@ import mapping.ProductosInventario;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Projections;
@@ -133,6 +134,32 @@ public class ProcesosDAO {
                   }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al consultar los procesos.");
+            }
+        }
+    }
+    
+    public Integer getConsecutivo(int procesoCodigo) throws Exception{
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        Integer consecutivo = 0;
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(ProductosInventario.class)
+                    .setProjection(Projections.max("consecutivoProceso"));
+              consecutivo =  (int) q.uniqueResult();
+              System.out.println(consecutivo);
+            return consecutivo;
+
+        } catch (HibernateException he) {
+            throw new Exception(he.getMessage());
+
+        } finally {
+            try {
+                if(session.isOpen()){
+                    session.close();
+                  }
+            } catch (HibernateException he) {
+                throw new Exception(he.getMessage());
             }
         }
     }

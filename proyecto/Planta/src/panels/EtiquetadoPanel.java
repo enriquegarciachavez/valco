@@ -38,18 +38,24 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
      * Creates new form EtiquetadoPanel
      */
     public EtiquetadoPanel() {
-        initComponents();
-        
-        PesoThread pesoThread = null;
+   
+            initComponents();
         try {
-            pesoThread = new PesoThread();
+            consecutivoLbl.setText(procesosDAO.getConsecutivo(1).toString());
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Ocurrio un error al leer el peso de la bascula", "Error", ERROR_MESSAGE);
-            return;
+            JOptionPane.showMessageDialog(null, ex);
         }
-        pesoThread.setPesoLbl(pesoBasculaLbl);
-        Thread thread = new Thread(pesoThread);
-        thread.start();
+            PesoThread pesoThread = null;
+            try {
+                pesoThread = new PesoThread();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Ocurrio un error al leer el peso de la bascula", "Error", ERROR_MESSAGE);
+                return;
+            }
+            pesoThread.setPesoLbl(pesoBasculaLbl);
+            Thread thread = new Thread(pesoThread);
+            thread.start();
+
     }
     
     private Object[] getProducts(){
@@ -117,10 +123,11 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
+        consecutivoLbl = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jFormattedTextField1 = new javax.swing.JFormattedTextField();
         pesoManualLbl = new javax.swing.JFormattedTextField();
+        procesoLbl = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -147,7 +154,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
             }
         });
 
-        jLabel2.setText("ID del proceso: " + procesosLov.getSelectedItem());
+        jLabel2.setText("ID del proceso:");
 
         descripcionArea.setColumns(20);
         descripcionArea.setRows(5);
@@ -189,6 +196,11 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         jScrollPane2.setViewportView(productoCodigoArea);
 
         productosLov.setModel(new DefaultComboBoxModel(getProducts()));
+        productosLov.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                productosLovActionPerformed(evt);
+            }
+        });
 
         fechaElaboracionEtiquetaChk.setLabel("Fecha de elaboración en etiqueta");
 
@@ -211,7 +223,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         jLabel9.setText("Producto:");
 
         productoLbl.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        productoLbl.setText("Nombre del producto");
+        productoLbl.setText(productosLov.getSelectedItem().toString());
 
         eliminarCajaBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         eliminarCajaBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/button_cancel-48.png"))); // NOI18N
@@ -223,7 +235,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
 
         jLabel13.setText("Consecutivo:");
 
-        jLabel14.setText("000000");
+        consecutivoLbl.setText("00000");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel4.setText("Descripción:");
@@ -253,6 +265,8 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         pesoManualLbl.setEnabled(false);
         pesoManualLbl.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
 
+        procesoLbl.setText(procesosLov.getSelectedItem().toString());
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -263,12 +277,12 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
                         .addGap(14, 14, 14)
                         .addComponent(procesosCerradosChk)
                         .addGap(31, 31, 31)
-                        .addComponent(procesosLov, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(84, 84, 84))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(procesosLov, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(274, 274, 274)))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(procesoLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel13)
@@ -276,7 +290,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel12)
-                    .addComponent(jLabel14))
+                    .addComponent(consecutivoLbl))
                 .addGap(173, 173, 173))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -340,10 +354,12 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
                                 .addGap(2, 2, 2)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel13)
-                                    .addComponent(jLabel14)))
+                                    .addComponent(consecutivoLbl)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(procesoLbl))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -411,10 +427,11 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         }else{
             this.procesosLov.setModel(new DefaultComboBoxModel(getProcesosActivosArray()));
         }
+        procesoLbl.setText(procesosLov.getSelectedItem().toString());
     }//GEN-LAST:event_procesosCerradosChkActionPerformed
 
     private void procesosLovActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_procesosLovActionPerformed
-        jLabel12.updateUI();
+        procesoLbl.setText(procesosLov.getSelectedItem().toString());
     }//GEN-LAST:event_procesosLovActionPerformed
 
     private void productoCodigoAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyReleased
@@ -455,12 +472,16 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         boolean selected = abstractButton.getModel().isSelected();
         if(selected){
             try {
+                pesoManualLbl.setFormatterFactory(null);
+                pesoManualLbl.setText("");
                 pesoManualLbl.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("#,###.##")));
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(null, "Ocurrio un error al dar formato al peso", "Errr", ERROR_MESSAGE);
             }
         }else{
             try {
+                pesoManualLbl.setFormatterFactory(null);
+                pesoManualLbl.setText("");
                 pesoManualLbl.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.##")));
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(null, "Ocurrio un error al dar formato al peso", "Errr", ERROR_MESSAGE);
@@ -468,8 +489,14 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_toneladasChkActionPerformed
 
+    private void productosLovActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productosLovActionPerformed
+        productoLbl.setText(productosLov.getSelectedItem().toString());
+        productoCodigoArea.setText(((Productos)productosLov.getSelectedItem()).getCodigo().toString());
+    }//GEN-LAST:event_productosLovActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel consecutivoLbl;
     private javax.swing.JTextArea descripcionArea;
     private javax.swing.JTextField diasCaducidadTxt;
     private javax.swing.JButton eliminarCajaBtn;
@@ -480,7 +507,6 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
@@ -493,6 +519,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
     private javax.swing.JLabel pesoBasculaLbl;
     private javax.swing.JCheckBox pesoManualChk;
     private javax.swing.JFormattedTextField pesoManualLbl;
+    private javax.swing.JLabel procesoLbl;
     private javax.swing.JCheckBox procesosCerradosChk;
     private javax.swing.JComboBox procesosLov;
     private javax.swing.JTextArea productoCodigoArea;

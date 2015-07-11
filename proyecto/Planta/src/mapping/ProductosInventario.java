@@ -26,6 +26,7 @@ public class ProductosInventario  implements java.io.Serializable {
      private Integer procesosCodigoHijo;
      private Date fechaCaducidad;
      private Integer numeroMatanza;
+     private Integer consecutivoProceso;
 
     public ProductosInventario() {
     }
@@ -161,6 +162,16 @@ public class ProductosInventario  implements java.io.Serializable {
     public void setNumeroMatanza(Integer numeroMatanza) {
         this.numeroMatanza = numeroMatanza;
     }
+
+    public Integer getConsecutivoProceso() {
+        return consecutivoProceso;
+    }
+
+    public void setConsecutivoProceso(Integer consecutivoProceso) {
+        this.consecutivoProceso = consecutivoProceso;
+    }
+    
+    
 
     public String toString(){
         String descripcion = "";

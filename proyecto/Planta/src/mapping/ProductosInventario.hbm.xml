@@ -50,5 +50,8 @@
         <property name="numeroMatanza" type="java.lang.Integer">
             <column name="NUMERO_MATANZA" />
         </property>
+        <property name="consecutivoProceso" type="java.lang.Integer">
+            <column name="CONSECUTIVO_PROCESO" />
+        </property>
     </class>
 </hibernate-mapping>
