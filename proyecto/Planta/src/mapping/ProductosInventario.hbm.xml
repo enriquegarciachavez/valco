@@ -12,7 +12,7 @@
             <column name="NOTAS_DE_VENTA_CODIGO" />
         </many-to-one>
         <many-to-one name="ordenesCompra" class="mapping.OrdenesCompra" fetch="select">
-            <column name="ORDENES_COMPRA_CODIGO" not-null="true" />
+            <column name="ORDENES_COMPRA_CODIGO" />
         </many-to-one>
         <many-to-one name="productosHasProveedores" class="mapping.ProductosHasProveedores" fetch="select">
             <column name="PRODUCTOS_has_PROVEEDORES_CODIGO" not-null="true" />

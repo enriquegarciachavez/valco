@@ -22,6 +22,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.Hibernate;
 
 /**
  *
@@ -141,14 +142,46 @@ public class ProcesosDAO {
     public Integer getConsecutivo(int procesoCodigo) throws Exception{
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
-        Integer consecutivo = 0;
+        Integer consecutivo = 1;
         try {
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(ProductosInventario.class)
-                    .setProjection(Projections.max("consecutivoProceso"));
-              consecutivo =  (int) q.uniqueResult();
-              System.out.println(consecutivo);
+                    .setProjection(Projections.max("consecutivoProceso"))
+                    .add(Restrictions.eq("procesosCodigoPadre", procesoCodigo));
+              if(q.uniqueResult() != null){
+                  consecutivo = (Integer) q.uniqueResult();
+                  consecutivo++;
+              }
             return consecutivo;
+
+        } catch (HibernateException he) {
+            throw new Exception(he.getMessage());
+
+        } finally {
+            try {
+                if(session.isOpen()){
+                    session.close();
+                  }
+            } catch (HibernateException he) {
+                throw new Exception(he.getMessage());
+            }
+        }
+    }
+    
+    public List<ProductosInventario> getCajasPorProceso(int procesoCodigo) throws Exception{
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        List<ProductosInventario> productos = new ArrayList<>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(ProductosInventario.class)
+                    .add(Restrictions.eq("procesosCodigoPadre", procesoCodigo));
+              productos = q.list();
+              for(ProductosInventario producto: productos){
+                  Hibernate.initialize(producto.getProductosHasProveedores());
+                  Hibernate.initialize(producto.getProductosHasProveedores().getProductos());
+              }
+            return productos;
 
         } catch (HibernateException he) {
             throw new Exception(he.getMessage());

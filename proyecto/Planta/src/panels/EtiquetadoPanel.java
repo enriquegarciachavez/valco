@@ -3,6 +3,7 @@ package panels;
 import dao.ProcesosDAO;
 import dao.ProductoDAO;
 import java.awt.event.KeyEvent;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -14,12 +15,15 @@ import javax.swing.AbstractButton;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
 import mapping.Procesos;
 import mapping.Productos;
 import mapping.ProductosHasProveedores;
+import mapping.ProductosInventario;
 import mapping.Proveedores;
+import mapping.Ubicaciones;
 import threads.PesoThread;
 
 /*
@@ -34,14 +38,16 @@ import threads.PesoThread;
 public class EtiquetadoPanel extends javax.swing.JPanel {
     ProcesosDAO procesosDAO = new ProcesosDAO();
     ProductoDAO productoDAO = new ProductoDAO();
+    DefaultTableModel model = new DefaultTableModel();
     /**
      * Creates new form EtiquetadoPanel
      */
     public EtiquetadoPanel() {
    
             initComponents();
+            this.setTableModel();
         try {
-            consecutivoLbl.setText(procesosDAO.getConsecutivo(1).toString());
+            consecutivoLbl.setText(procesosDAO.getConsecutivo(((Procesos)procesosLov.getSelectedItem()).getCodigo()).toString());
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
@@ -50,6 +56,10 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
                 pesoThread = new PesoThread();
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Ocurrio un error al leer el peso de la bascula", "Error", ERROR_MESSAGE);
+                pesoManualChk.setSelected(true);
+                pesoManualChk.setEnabled(false);
+                pesoBasculaLbl.setEnabled(false);
+                pesoManualLbl.setEnabled(true);
                 return;
             }
             pesoThread.setPesoLbl(pesoBasculaLbl);
@@ -61,7 +71,9 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
     private Object[] getProducts(){
         Object[] productosArray = new Object[0];
         try{
-            productosArray = productoDAO.getProductos().toArray();
+            Proveedores proveedor = new Proveedores();
+            proveedor.setCodigo(1);
+            productosArray = productoDAO.getProductosXProveedor(proveedor).toArray();
         }catch(Exception ex){
             JOptionPane.showMessageDialog(null, ex.getMessage(),"Error" ,ERROR_MESSAGE);
         }
@@ -98,6 +110,14 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        String[] columnNames = {"Nombre",
+            "Peso",
+            "Etiqueta",
+            "Consecutivo"};
+
+        model.setColumnIdentifiers(columnNames);
         jPanel1 = new javax.swing.JPanel();
         procesosCerradosChk = new javax.swing.JCheckBox();
         procesosLov = new javax.swing.JComboBox();
@@ -129,16 +149,12 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         pesoManualLbl = new javax.swing.JFormattedTextField();
         procesoLbl = new javax.swing.JLabel();
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 538, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
+
+        jTable1.setModel(model);
+        jScrollPane3.setViewportView(jTable1);
+
+        jPanel2.add(jScrollPane3);
 
         procesosCerradosChk.setText("Mostrar procesos cerrados");
         procesosCerradosChk.addActionListener(new java.awt.event.ActionListener() {
@@ -217,6 +233,11 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         imprimirEtiquetaBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         imprimirEtiquetaBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Print-48.png"))); // NOI18N
         imprimirEtiquetaBtn.setText("<html><center>Imprimir<br>Etiqueta<html>");
+        imprimirEtiquetaBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                imprimirEtiquetaBtnActionPerformed(evt);
+            }
+        });
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -409,8 +430,8 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 635, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(301, 301, 301)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 821, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -432,6 +453,12 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
 
     private void procesosLovActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_procesosLovActionPerformed
         procesoLbl.setText(procesosLov.getSelectedItem().toString());
+        try {
+            consecutivoLbl.setText(procesosDAO.getConsecutivo(((Procesos)procesosLov.getSelectedItem()).getCodigo()).toString());
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+        this.setTableModel();
     }//GEN-LAST:event_procesosLovActionPerformed
 
     private void productoCodigoAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyReleased
@@ -474,7 +501,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
             try {
                 pesoManualLbl.setFormatterFactory(null);
                 pesoManualLbl.setText("");
-                pesoManualLbl.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("#,###.##")));
+                pesoManualLbl.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####.##")));
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(null, "Ocurrio un error al dar formato al peso", "Errr", ERROR_MESSAGE);
             }
@@ -494,6 +521,51 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         productoCodigoArea.setText(((Productos)productosLov.getSelectedItem()).getCodigo().toString());
     }//GEN-LAST:event_productosLovActionPerformed
 
+    private void imprimirEtiquetaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imprimirEtiquetaBtnActionPerformed
+        ProductosInventario productoInventario = new ProductosInventario();
+        Ubicaciones ubicacion = new Ubicaciones();
+        ubicacion.setCodigo(1);
+        productoInventario.setProductosHasProveedores((ProductosHasProveedores) productosLov.getSelectedItem());
+        productoInventario.setUbicaciones(ubicacion);
+        if(pesoManualChk.isSelected()){
+            productoInventario.setPeso(new BigDecimal(pesoManualLbl.getText()));
+        }else{
+            productoInventario.setPeso(new BigDecimal(pesoBasculaLbl.getText()));
+        }
+        productoInventario.setProcesosCodigoPadre(((Procesos)procesosLov.getSelectedItem()).getCodigo());
+        productoInventario.setPrecio(BigDecimal.ZERO);
+        productoInventario.setEstatus("ACTIVO");
+        productoInventario.setConsecutivoProceso(new Integer(consecutivoLbl.getText()));
+        try {
+            productoDAO.insertarProducto(productoInventario);
+            JOptionPane.showMessageDialog(null, "Se creo el producto correctamente");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex, "Errot", ERROR_MESSAGE);
+        }
+        this.setTableModel();
+    }//GEN-LAST:event_imprimirEtiquetaBtnActionPerformed
+
+    private void setTableModel(){
+        int rowCount = model.getRowCount();
+        //Remove rows one by one from the end of the table
+        for (int i = rowCount - 1; i >= 0; i--) {
+            model.removeRow(i);
+        }
+        List<ProductosInventario> productos = new ArrayList<>();  
+        try {
+             productos = procesosDAO.getCajasPorProceso(((Procesos)procesosLov.getSelectedItem()).getCodigo());
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex, "Error",ERROR_MESSAGE);
+        }
+        for(ProductosInventario producto : productos){
+            Object[] row = new Object[4];
+            row[0] = producto.toString();
+            row[1] = producto.getPeso();
+            row[2] = producto.getCodigoBarras();
+            row[3] = producto.getConsecutivoProceso();
+            model.addRow(row);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel consecutivoLbl;
@@ -516,6 +588,8 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable jTable1;
     private javax.swing.JLabel pesoBasculaLbl;
     private javax.swing.JCheckBox pesoManualChk;
     private javax.swing.JFormattedTextField pesoManualLbl;

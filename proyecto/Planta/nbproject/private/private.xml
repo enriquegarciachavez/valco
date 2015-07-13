@@ -5,6 +5,7 @@
         <group>
             <file>file:/C:/apps/valco/proyecto/Planta/src/mapping/ProductosHasProveedores.java</file>
             <file>file:/C:/apps/valco/proyecto/Planta/src/panels/ReciboDeProducto.java</file>
+            <file>file:/C:/apps/valco/proyecto/Planta/src/dao/ProductoDAO.java</file>
             <file>file:/C:/apps/valco/proyecto/Planta/src/mapping/ProductosInventario.hbm.xml</file>
             <file>file:/C:/apps/valco/proyecto/Planta/src/dao/ProcesosDAO.java</file>
             <file>file:/C:/apps/valco/proyecto/Planta/src/mapping/ProductosInventario.java</file>

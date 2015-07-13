@@ -423,5 +423,33 @@ public class ProductoDAO {
     
     }
 
+    public void insertarProducto(ProductosInventario producto) throws Exception{
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.save(producto);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al registrar el producto.");
+                }
+            }
+            throw new Exception("Ocurrió un error al registrar el producto.");
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al registrar el producto.");
+            }
+        }
+    
+    }
+    
 }
 
