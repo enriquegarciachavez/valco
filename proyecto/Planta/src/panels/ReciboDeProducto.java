@@ -22,6 +22,7 @@ import mapping.ProductosHasProveedores;
 import mapping.ProductosInventario;
 import mapping.Proveedores;
 import mapping.Ubicaciones;
+import table.custom.NoEditableTableModel;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -38,7 +39,7 @@ public class ReciboDeProducto extends javax.swing.JPanel {
     ProductoDAO productoDAO = new ProductoDAO();
     ProveedorDAO proveedorDAO = new ProveedorDAO();
     UbicacionesDAO ubicacionesDAO = new UbicacionesDAO();
-    DefaultTableModel model = new DefaultTableModel();
+    DefaultTableModel model = new NoEditableTableModel();
     List<ProductosInventario> nuevosCanales = new ArrayList<ProductosInventario>();
     UsuariosDAO usuariosDao = new UsuariosDAO();
     
