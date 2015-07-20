@@ -2,21 +2,22 @@ package panels;
 
 import dao.ProcesosDAO;
 import dao.ProductoDAO;
-import java.awt.Color;
-import java.awt.Component;
+import java.awt.ComponentOrientation;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
+import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 import mapping.Procesos;
 import mapping.Productos;
@@ -42,13 +43,22 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
     ProcesosDAO procesosDAO = new ProcesosDAO();
     ProductoDAO productoDAO = new ProductoDAO();
     DefaultTableModel model = new NoEditableTableModel();
+    String formato = "##.##";
+    Action action = new AbstractAction("doSomething") {
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        System.out.println("triggered the action");
+    }
+
+};
     /**
      * Creates new form EtiquetadoPanel
      */
     public EtiquetadoPanel() {
 
         initComponents();
+        action.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control S"));
         tablaProductos.setDefaultRenderer(Object.class, new EtiquetadoTableCellRendered());
         this.setTableModel();
         try {
@@ -67,6 +77,14 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
             pesoManualLbl.setEnabled(true);
             return;
         }
+         KeyboardFocusManager.getCurrentKeyboardFocusManager()
+  .addKeyEventDispatcher(new KeyEventDispatcher() {
+      @Override
+      public boolean dispatchKeyEvent(KeyEvent e) {
+        System.out.println("Got key event!");
+        return false;
+      }
+});
         pesoThread.setPesoLbl(pesoBasculaLbl);
         Thread thread = new Thread(pesoThread);
         thread.start();
@@ -144,6 +162,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         reimprimirEtiquetaBtn = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         imprimirEtiquetaBtn = new javax.swing.JButton();
+        imprimirEtiquetaBtn.setMnemonic(KeyEvent.VK_ENTER);
         jLabel9 = new javax.swing.JLabel();
         productoLbl = new javax.swing.JLabel();
         eliminarCajaBtn = new javax.swing.JButton();
@@ -153,8 +172,14 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         consecutivoLbl = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jFormattedTextField1 = new javax.swing.JFormattedTextField();
-        pesoManualLbl = new javax.swing.JFormattedTextField();
         procesoLbl = new javax.swing.JLabel();
+        pesoManualLbl = new javax.swing.JTextField();
+
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+        });
 
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -287,18 +312,20 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         jFormattedTextField1.setFocusTraversalPolicyProvider(true);
         jFormattedTextField1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
 
-        pesoManualLbl.setBackground(new java.awt.Color(0, 0, 0));
-        pesoManualLbl.setForeground(new java.awt.Color(0, 204, 0));
-        try {
-            pesoManualLbl.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.##")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        pesoManualLbl.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        pesoManualLbl.setEnabled(false);
-        pesoManualLbl.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-
         procesoLbl.setText(procesosLov.getSelectedItem().toString());
+
+        pesoManualLbl.setBackground(new java.awt.Color(0, 0, 0));
+        pesoManualLbl.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        pesoManualLbl.setForeground(new java.awt.Color(0, 204, 51));
+        pesoManualLbl.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        pesoManualLbl.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                pesoManualLblKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                pesoManualLblKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -329,24 +356,26 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(pesoBasculaLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fechaElaboracionEtiquetaChk)
-                            .addComponent(fechaCaducidadEtiquetaChk)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(diasCaducidadTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(productosLov, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE))))
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 609, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(pesoBasculaLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(10, 10, 10)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(fechaElaboracionEtiquetaChk)
+                                    .addComponent(fechaCaducidadEtiquetaChk)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(diasCaducidadTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(productosLov, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE))))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(reimprimirEtiquetaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(28, 28, 28)
@@ -365,64 +394,60 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(productoLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 609, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(productoLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(procesosCerradosChk)
+                    .addComponent(procesosLov, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel12))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(procesosCerradosChk)
-                            .addComponent(procesosLov, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel12))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel13)
-                                    .addComponent(consecutivoLbl)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(procesoLbl))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(21, 21, 21)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(pesoBasculaLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(productosLov, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
+                            .addComponent(jLabel13)
+                            .addComponent(consecutivoLbl)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(procesoLbl))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(21, 21, 21)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pesoBasculaLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(productosLov, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(pesoManualChk)
                             .addComponent(fechaElaboracionEtiquetaChk))
                         .addGap(6, 6, 6)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(toneladasChk)
-                            .addComponent(fechaCaducidadEtiquetaChk)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(pesoManualLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(2, 2, 2)))
-                .addGap(4, 4, 4)
+                            .addComponent(fechaCaducidadEtiquetaChk))
+                        .addGap(9, 9, 9)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(diasCaducidadTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(pesoManualLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(diasCaducidadTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
+                    .addComponent(jLabel8)
+                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(reimprimirEtiquetaBtn)
@@ -433,7 +458,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(productoLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(121, Short.MAX_VALUE))
+                .addContainerGap(122, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -510,21 +535,9 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         AbstractButton abstractButton = (AbstractButton) evt.getSource();
         boolean selected = abstractButton.getModel().isSelected();
         if (selected) {
-            try {
-                pesoManualLbl.setFormatterFactory(null);
-                pesoManualLbl.setText("");
-                pesoManualLbl.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####.##")));
-            } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(null, "Ocurrio un error al dar formato al peso", "Errr", ERROR_MESSAGE);
-            }
+            
         } else {
-            try {
-                pesoManualLbl.setFormatterFactory(null);
-                pesoManualLbl.setText("");
-                pesoManualLbl.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.##")));
-            } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(null, "Ocurrio un error al dar formato al peso", "Errr", ERROR_MESSAGE);
-            }
+            
         }
     }//GEN-LAST:event_toneladasChkActionPerformed
 
@@ -550,7 +563,6 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         productoInventario.setConsecutivoProceso(new Integer(consecutivoLbl.getText()));
         try {
             productoDAO.insertarProducto(productoInventario);
-            JOptionPane.showMessageDialog(null, "Se creo el producto correctamente");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex, "Errot", ERROR_MESSAGE);
         }
@@ -573,10 +585,50 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, ex, "Error", ERROR_MESSAGE);
             }
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "No hay ningúna caja seleccionada.");
         }
     }//GEN-LAST:event_eliminarCajaBtnActionPerformed
+
+    private void pesoManualLblKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pesoManualLblKeyPressed
+        char c = evt.getKeyChar();
+        if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_ENTER )) {
+            evt.consume();
+        } else {
+            if (c == KeyEvent.VK_BACK_SPACE) {
+                if (pesoManualLbl.getText().length() > 4) {
+                    pesoManualLbl.setText(swapChars(pesoManualLbl.getText(), pesoManualLbl.getText().length() - 3, pesoManualLbl.getText().length() - 4));
+                }else if (pesoManualLbl.getText().length() == 4){
+                    pesoManualLbl.setText(pesoManualLbl.getText().charAt(0) +""+ pesoManualLbl.getText().charAt(2)+""+ pesoManualLbl.getText().charAt(3));
+                }
+            } else if (Character.isDigit(c)){
+                if (pesoManualLbl.getText().length() == 2) {
+                    pesoManualLbl.setText(pesoManualLbl.getText().charAt(0) + "." + pesoManualLbl.getText().charAt(1));
+                } else if (pesoManualLbl.getText().length() > 2) {
+                    pesoManualLbl.setText(swapChars(pesoManualLbl.getText(), pesoManualLbl.getText().length() - 3, pesoManualLbl.getText().length() - 2));
+                }
+            }
+        }
+    }//GEN-LAST:event_pesoManualLblKeyPressed
+
+    private void pesoManualLblKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pesoManualLblKeyTyped
+        char c = evt.getKeyChar();
+        if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_ENTER )) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_pesoManualLblKeyTyped
+
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
+      JOptionPane.showMessageDialog(null, "chafa");
+    }//GEN-LAST:event_formKeyPressed
+
+    private String swapChars(String str, int lIdx, int rIdx) {
+        StringBuilder sb = new StringBuilder(str);
+        char l = sb.charAt(lIdx), r = sb.charAt(rIdx);
+        sb.setCharAt(lIdx, r);
+        sb.setCharAt(rIdx, l);
+        return sb.toString();
+    }
 
     private void setTableModel() {
         int rowCount = model.getRowCount();
@@ -600,6 +652,8 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
             model.addRow(row);
         }
     }
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel consecutivoLbl;
@@ -608,7 +662,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
     private javax.swing.JButton eliminarCajaBtn;
     private javax.swing.JCheckBox fechaCaducidadEtiquetaChk;
     private javax.swing.JCheckBox fechaElaboracionEtiquetaChk;
-    private javax.swing.JButton imprimirEtiquetaBtn;
+    public javax.swing.JButton imprimirEtiquetaBtn;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -625,7 +679,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel pesoBasculaLbl;
     private javax.swing.JCheckBox pesoManualChk;
-    private javax.swing.JFormattedTextField pesoManualLbl;
+    private javax.swing.JTextField pesoManualLbl;
     private javax.swing.JLabel procesoLbl;
     private javax.swing.JCheckBox procesosCerradosChk;
     private javax.swing.JComboBox procesosLov;
