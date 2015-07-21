@@ -5,6 +5,8 @@ import dao.ProductoDAO;
 import dao.ProveedorDAO;
 import dao.UbicacionesDAO;
 import dao.UsuariosDAO;
+import java.awt.ComponentOrientation;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -12,10 +14,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import javax.swing.table.DefaultTableModel;
+import listeners.NumericKeyListener;
 import mapping.OrdenesCompra;
 import mapping.Productos;
 import mapping.ProductosHasProveedores;
@@ -135,6 +140,9 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         jLabel4.setText("Proveedor:");
 
         jLabel3.setText("Producto:");
+
+        pesoTxt.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        pesoTxt.addKeyListener(new NumericKeyListener());
 
         jLabel2.setText("Peso:");
 
@@ -266,6 +274,10 @@ public class ReciboDeProducto extends javax.swing.JPanel {
     }//GEN-LAST:event_eliminarBtnActionPerformed
 
     private void agregarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarBtnActionPerformed
+        if(pesoTxt.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "Debe capturar el peso.");
+            return;
+        }
         Object[] canal = new Object[5];
         ProductosInventario producto = new ProductosInventario();
 
@@ -305,6 +317,8 @@ public class ReciboDeProducto extends javax.swing.JPanel {
             productoDAO.recibirProductos(nuevosCanales, orden);
             nuevosCanales.clear();
             JOptionPane.showMessageDialog(null, "Se recibieron los canales correctamente");
+            model.setRowCount(0);
+            pesoTxt.setText("");
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "Ocurrió un error al recibir los canales");
         }

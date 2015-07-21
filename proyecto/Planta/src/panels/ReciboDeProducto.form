@@ -199,6 +199,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="pesoTxt">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="pesoTxt.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);&#xd;&#xa;pesoTxt.addKeyListener(new NumericKeyListener());&#xd;&#xa;"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>

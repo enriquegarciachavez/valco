@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
+import listeners.NumericKeyListener;
 import mapping.Procesos;
 import mapping.Productos;
 import mapping.ProductosHasProveedores;
@@ -318,14 +319,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         pesoManualLbl.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         pesoManualLbl.setForeground(new java.awt.Color(0, 204, 51));
         pesoManualLbl.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        pesoManualLbl.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                pesoManualLblKeyPressed(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                pesoManualLblKeyTyped(evt);
-            }
-        });
+        pesoManualLbl.addKeyListener(new NumericKeyListener());
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -553,6 +547,10 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         productoInventario.setProductosHasProveedores((ProductosHasProveedores) productosLov.getSelectedItem());
         productoInventario.setUbicaciones(ubicacion);
         if (pesoManualChk.isSelected()) {
+            if(pesoManualLbl.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Debe introducir el peso de la caja.");
+                return;
+            }
             productoInventario.setPeso(new BigDecimal(pesoManualLbl.getText()));
         } else {
             productoInventario.setPeso(new BigDecimal(pesoBasculaLbl.getText()));
@@ -589,34 +587,6 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "No hay ningúna caja seleccionada.");
         }
     }//GEN-LAST:event_eliminarCajaBtnActionPerformed
-
-    private void pesoManualLblKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pesoManualLblKeyPressed
-        char c = evt.getKeyChar();
-        if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_ENTER )) {
-            evt.consume();
-        } else {
-            if (c == KeyEvent.VK_BACK_SPACE) {
-                if (pesoManualLbl.getText().length() > 4) {
-                    pesoManualLbl.setText(swapChars(pesoManualLbl.getText(), pesoManualLbl.getText().length() - 3, pesoManualLbl.getText().length() - 4));
-                }else if (pesoManualLbl.getText().length() == 4){
-                    pesoManualLbl.setText(pesoManualLbl.getText().charAt(0) +""+ pesoManualLbl.getText().charAt(2)+""+ pesoManualLbl.getText().charAt(3));
-                }
-            } else if (Character.isDigit(c)){
-                if (pesoManualLbl.getText().length() == 2) {
-                    pesoManualLbl.setText(pesoManualLbl.getText().charAt(0) + "." + pesoManualLbl.getText().charAt(1));
-                } else if (pesoManualLbl.getText().length() > 2) {
-                    pesoManualLbl.setText(swapChars(pesoManualLbl.getText(), pesoManualLbl.getText().length() - 3, pesoManualLbl.getText().length() - 2));
-                }
-            }
-        }
-    }//GEN-LAST:event_pesoManualLblKeyPressed
-
-    private void pesoManualLblKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pesoManualLblKeyTyped
-        char c = evt.getKeyChar();
-        if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_ENTER )) {
-            evt.consume();
-        }
-    }//GEN-LAST:event_pesoManualLblKeyTyped
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
       JOptionPane.showMessageDialog(null, "chafa");
