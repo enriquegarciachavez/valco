@@ -16,6 +16,7 @@
                         
                         <p:menuitem 
                             value="Ingresar" 
+                            id="btnIngresar"
                             icon="ui-icon-plusthick"                      
                             partialSubmit="true"
                             update=":formingresar:popupingresar" 
@@ -23,7 +24,8 @@
                             action="#{proveedoresMainBean.inicializarProveedor()}"/>
                             
                         <p:menuitem 
-                            value="Modificar"  
+                            value="Modificar"
+                            id="btnModificar"
                             process="singleDT" 
                             update=":formmodificar:popupmodificar" 
                             oncomplete="PF('popupmodificar').show();"  
@@ -32,6 +34,7 @@
                             />
                         <p:menuitem 
                             value="Borrar" 
+                            id="btnBorrar"
                             process="singleDT" 
                             update=":popupborrar" 
                             oncomplete="PF('popupborrar').show();" 
@@ -60,6 +63,11 @@
                         </p:column>
                        
                     </p:dataTable>
+                    <p:blockUI block="form" trigger="btnIngresar btnModificar btnBorrar">
+                Cargando.... Espere porfavor<br />
+                <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
+
+            </p:blockUI>
                 </h:form>
 
 

@@ -8,13 +8,14 @@ package com.valco.beans;
 import com.valco.dao.ProveedorDAO;
 import com.valco.pojo.Proveedores;
 import com.valco.utility.MsgUtility;
+import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -29,11 +30,11 @@ import javax.faces.validator.ValidatorException;
  */
 @ManagedBean
 @ViewScoped
-public class ProveedoresMainBean {
+public class ProveedoresMainBean implements Serializable {
 
     @ManagedProperty(value = "#{proveedorDAO}")
     private ProveedorDAO proveedorDAO;
-       List<Proveedores> proveedores;
+    List<Proveedores> proveedores;
     Proveedores proveedorSeleccionado;
     Proveedores proveedorNuevo;
     DataModel modeloProveedores;
@@ -76,6 +77,69 @@ public class ProveedoresMainBean {
         
 
     }
+    
+    @PostConstruct
+    public void init(){
+        try {
+            proveedores = proveedorDAO.getProveedores();
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+    }
+    
+    public void insertarProveedor() {
+        try {
+            proveedorNuevo.setEstatus("ACTIVO");
+            proveedorDAO.insertarProveedor(proveedorNuevo);
+            MsgUtility.showInfoMeage("El proveedor se insertó con éxito");
+            this.proveedores.add(proveedorNuevo);
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+    }
+    public void borrarProveedor(){
+        try {
+            proveedorDAO.borrarProveedor(proveedorSeleccionado);
+            MsgUtility.showInfoMeage("El cliente se borró con éxito");
+            this.proveedores.remove(proveedorSeleccionado);
+        } catch (Exception ex) {
+          MsgUtility.showErrorMeage(ex.getMessage());
+        }
+    }
+    
+     public void actualizarProveedor(){
+        try {
+            proveedorDAO.actualizarProveedor(proveedorSeleccionado);
+            MsgUtility.showInfoMeage("El proveedor se actualizó con éxito");
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+        
+    }
+     public void inicializarProveedor() {
+         this.proveedorNuevo = new Proveedores();
+        limpiarIngresarForm();}
+    
+    public void validarRazonSocial(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        Proveedores razon = null;
+        razon = 
+                this.proveedorDAO.getProveedoresXRazonSocial(value.toString());
+        if(razon != null){
+            throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe")); 
+        }
+        
+    }
+    
+    public void validarModificarRazonSocial(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        Proveedores razon = null;
+        razon
+                = this.proveedorDAO.getProveedoresXRazonSocial(value.toString());
+        if (razon != null) {
+            if (razon.getCodigo() != proveedorSeleccionado.getCodigo()) {
+                throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe"));
+            }
+        }
+    }
 
     public ProveedorDAO getProveedorDAO() {
         return proveedorDAO;
@@ -111,7 +175,6 @@ public class ProveedoresMainBean {
 
     public DataModel getModeloProveedores()  {
         try {
-            proveedores = proveedorDAO.getProveedores();
             modeloProveedores = new ListDataModel(proveedores);
             return modeloProveedores;
         } catch (Exception ex) {
@@ -228,66 +291,4 @@ public class ProveedoresMainBean {
         this.posicionCodigoFinal = posicionCodigoFinal;
     }
     
-    
-    public void insertarProveedor() {
-        try {
-            proveedorNuevo.setEstatus("ACTIVO");
-            proveedorDAO.insertarProveedor(proveedorNuevo);
-            MsgUtility.showInfoMeage("El proveedor se insertó con éxito");
-           
-        } catch (Exception ex) {
-            MsgUtility.showErrorMeage(ex.getMessage());
-        }
-    }
-    public void borrarProveedor(){
-        try {
-            proveedorDAO.borrarProveedor(proveedorSeleccionado);
-            MsgUtility.showInfoMeage("El cliente se borró con éxito");
-        } catch (Exception ex) {
-          MsgUtility.showErrorMeage(ex.getMessage());
-        }
-    }
-    
-     public void actualizarProveedor(){
-        try {
-            proveedorDAO.actualizarProveedor(proveedorSeleccionado);
-            MsgUtility.showInfoMeage("El proveedor se actualizó con éxito");
-        } catch (Exception ex) {
-            MsgUtility.showErrorMeage(ex.getMessage());
-        }
-        
-    }
-     public void inicializarProveedor() {
-         this.proveedorNuevo = new Proveedores();
-        limpiarIngresarForm();}
-    
-    public void validarRazonSocial(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
-        Proveedores razon = null;
-        razon = 
-                this.proveedorDAO.getProveedoresXRazonSocial(value.toString());
-        if(razon != null){
-            throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe")); 
-        }
-        
-    }
-    
-    public void validarModificarRazonSocial(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
-        Proveedores razon = null;
-        razon
-                = this.proveedorDAO.getProveedoresXRazonSocial(value.toString());
-        if (razon != null) {
-            if (razon.getCodigo() != proveedorSeleccionado.getCodigo()) {
-                throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe"));
-            }
-        }
-
-    }
-
-    
-    
-                
-
-  
-    
-
 }
