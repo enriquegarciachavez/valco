@@ -5,6 +5,7 @@
         <group>
             <file>file:/C:/apps/valco/proyecto/Planta/src/panels/AbrirProcesoPanel.java</file>
             <file>file:/C:/apps/valco/proyecto/Planta/src/keydispatchers/BarCodeScannerKeyDispatcher.java</file>
+            <file>file:/C:/apps/valco/proyecto/Planta/src/panels/EtiquetadoPanel.java</file>
             <file>file:/C:/apps/valco/proyecto/Planta/src/panels/MainFrame.java</file>
         </group>
     </open-files>
