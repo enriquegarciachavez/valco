@@ -3,13 +3,12 @@ package panels;
 
 import creators.PanelCreator;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
-import panels.ReciboDeProducto;
-import panels.ConfigBascula;
-import panels.AbrirProcesoPanel;
-import panels.EtiquetadoPanel;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /*
@@ -29,6 +28,19 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
+        this.addKeyListener(new KeyAdapter() {
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+           JOptionPane.showMessageDialog(rootPane, e);
+        } else {
+            // some character has been read, append it to your "barcode cache"
+            JOptionPane.showMessageDialog(rootPane, e);
+        }
+    }
+
+});
     }
 
     /**
@@ -53,6 +65,11 @@ public class MainFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                formKeyTyped(evt);
+            }
+        });
 
         jMenu1.setText("File");
 
@@ -127,6 +144,10 @@ public class MainFrame extends javax.swing.JFrame {
     private void reciboCanalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reciboCanalesActionPerformed
         addNewPanel(evt);
     }//GEN-LAST:event_reciboCanalesActionPerformed
+
+    private void formKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyTyped
+        JOptionPane.showMessageDialog(null, "hola");
+    }//GEN-LAST:event_formKeyTyped
 
     /**
      * @param args the command line arguments

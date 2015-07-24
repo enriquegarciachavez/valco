@@ -5,6 +5,8 @@ import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
 import dao.ProcesosDAO;
 import dao.ProductoDAO;
 import java.awt.Component;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,6 +16,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import javax.swing.ListModel;
+import keydispatchers.BarCodeScannerKeyDispatcher;
 import mapping.ProductosInventario;
 import net.sf.click.extras.control.PickList;
 
@@ -32,11 +35,14 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
     ProcesosDAO procesosDAO = new ProcesosDAO();
     DefaultListModel lmDisponibles =new DefaultListModel();
     DefaultListModel lmSeleccionados =new DefaultListModel();
+    KeyboardFocusManager manager;
     /**
      * Creates new form AbrirProcesoPanel
      */
     public AbrirProcesoPanel() {
         initComponents();
+        manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        manager.addKeyEventDispatcher(new BarCodeScannerKeyDispatcher(barCodeTxt, manager));
     }
 
     /**
@@ -68,6 +74,7 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
         pesoLbl2 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         fechaLbl = new javax.swing.JLabel();
+        barCodeTxt = new javax.swing.JTextField();
 
         jButton1.setText("Abrir proceso");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -203,7 +210,8 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(barCodeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(layout.createSequentialGroup()
                 .addGap(426, 426, 426)
                 .addComponent(jButton1))
@@ -233,8 +241,11 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                        .addComponent(barCodeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
                 .addComponent(jButton1))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -303,6 +314,7 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton SeleccionarTodosBtn;
+    private javax.swing.JTextField barCodeTxt;
     private javax.swing.JList disponiblesJList;
     private javax.swing.JLabel fechaLbl;
     private javax.swing.JButton jButton1;
