@@ -26,7 +26,7 @@ width: 500px
 
         <div id="top" class="top">
             <ui:insert name="top">
-                <h:form>
+                <h:form id="logout" onsubmit="this.action = '#{facesContext.externalContext.requestContextPath}/logout';" prependId="false" >
                     <p:menubar>
                         <p:submenu label="Catálogos">
                             <p:menuitem value="Clientes" url="../clientes/ClientesMain.xhtml" /> 
@@ -56,7 +56,7 @@ width: 500px
                         </p:submenu>
                         <f:facet name="options">
                             <p:inputText style="margin-right:10px" placeholder="Search"/>
-                            <p:commandButton type="button" value="Logout" icon="ui-icon-extlink" />
+                            <p:commandButton id="submit" value="Logout" ajax="false" icon="ui-icon-extlink" />
                         </f:facet>
                     </p:menubar>
                 </h:form>

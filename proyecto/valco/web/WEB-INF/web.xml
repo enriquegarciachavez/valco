@@ -36,6 +36,10 @@
         <servlet-name>ReportesXls</servlet-name>
         <servlet-class>com.valco.servlets.ReportesXls</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>com.valco.servlets.LogoutServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>*.htm</url-pattern>
@@ -52,6 +56,10 @@
         <servlet-name>ReportesXls</servlet-name>
         <url-pattern>/ReportesXls</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
@@ -61,4 +69,50 @@
         <welcome-file>faces/index.xhtml</welcome-file>
         <welcome-file>redirect.jsp</welcome-file>
     </welcome-file-list>
+    <security-constraint>
+        <display-name>UsuarioConstraint</display-name>
+        <web-resource-collection>
+            <web-resource-name>Acceso general</web-resource-name>
+            <description/>
+            <url-pattern>/faces/pagina/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description/>
+            <role-name>ADMINISTRADOR</role-name>
+            <role-name>USUARIO</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <security-constraint>
+        <display-name>AdministradorConstraint</display-name>
+        <web-resource-collection>
+            <web-resource-name>Acceso restringido</web-resource-name>
+            <description/>
+            <url-pattern>/resources/*</url-pattern>
+        </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>Acceso no libre</web-resource-name>
+            <description/>
+            <url-pattern>/faces/resources/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description/>
+            <role-name>ADMINISTRADOR</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <realm-name>valcoRealm</realm-name>
+        <form-login-config>
+            <form-login-page>/faces/login.xhtml</form-login-page>
+            <form-error-page>/faces/loginError.xhtml</form-error-page>
+        </form-login-config>
+    </login-config>
+    <security-role>
+        <description/>
+        <role-name>ADMINISTRADOR</role-name>
+    </security-role>
+    <security-role>
+        <description/>
+        <role-name>USUARIO</role-name>
+    </security-role>
 </web-app>
