@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 14/07/2015 09:21:07 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.valco.pojo.UsuariosAccesos" table="USUARIOS_ACCESOS" catalog="valco" optimistic-lock="version">
+        <id name="codigo" type="java.lang.Integer">
+            <column name="CODIGO" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="accesos" class="com.valco.pojo.Accesos" fetch="select">
+            <column name="CODIGO_ACCESO" />
+        </many-to-one>
+        <many-to-one name="usuarios" class="com.valco.pojo.Usuarios" fetch="select">
+            <column name="CODIGO_USUARIO" />
+        </many-to-one>
+        <property name="estatus" type="java.lang.Boolean">
+            <column name="ESTATUS" />
+        </property>
+    </class>
+</hibernate-mapping>

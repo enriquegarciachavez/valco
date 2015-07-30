@@ -15,6 +15,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -107,10 +108,9 @@ public class UsuariosDAO {
         List<Usuarios> usuarios = new ArrayList<Usuarios>();
         try {
             tx = session.beginTransaction();
-            Criteria q = session.createCriteria(Usuarios.class)
-                    .setFetchMode("ubicaciones", FetchMode.JOIN);
+            Criteria cr = session.createCriteria(Usuarios.class);
 
-            usuarios = (List<Usuarios>) q.list();
+            usuarios = (List<Usuarios>) cr.list();
             return usuarios;
 
         } catch (HibernateException he) {
@@ -151,5 +151,16 @@ public class UsuariosDAO {
               }
         }
     }
-    
+     
+        public List<Usuarios> getUsuarios(String correo) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();;
+        try {
+            Criteria cr = session.createCriteria(Usuarios.class);
+            cr.add(Expression.eq("correo", correo));
+            List<Usuarios> usuarios = (List<Usuarios>) cr.list();
+            return usuarios;
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar el usuario.");
+        } 
+    }
 }

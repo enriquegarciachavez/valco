@@ -47,5 +47,17 @@
             </key>
             <one-to-many class="com.valco.pojo.Movimientos" />
         </set>
+        <set name="usuariosAccesoses" table="usuarios_accesos" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CODIGO_USUARIOS" />
+            </key>
+            <one-to-many class="com.valco.pojo.UsuariosAccesos" />
+        </set>
+        <set name="usuariosGruposes" table="usuarios_grupos" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CODIGO_USUARIO" />
+            </key>
+            <one-to-many class="com.valco.pojo.UsuariosGrupos" />
+        </set>
     </class>
 </hibernate-mapping>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"  
+      xmlns:o="http://omnifaces.org/ui">
+
+    <body>
+        <ui:composition template="../templates/Template1.xhtml">
+            <ui:define name="content"> 
+                <h:form id="form">
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" />
+                </h:form>
+                <h:form id="formPermisos" binding="#{accesosBean.form}" >
+                    <p:blockUI block="panel" trigger="guardar usuariosSelectOneChoice">
+                        Cargando.... Espere por favor<br />
+                        <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
+                    </p:blockUI>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

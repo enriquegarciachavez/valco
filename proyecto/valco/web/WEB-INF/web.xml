@@ -9,9 +9,26 @@
         <param-value>Development</param-value>
     </context-param>
     <context-param>
-        <param-name>primefaces.FONT_AWESOME</param-name>
-        <param-value>true</param-value>
+        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+        <param-value>client</param-value>
     </context-param>
+    <filter>
+        <description>This Filter authorizes user access to application components based upon request URI.</description>
+        <filter-name>AuthorizationFilter</filter-name>
+        <filter-class>com.valco.filters.AuthorizationFilter</filter-class>
+        <init-param>
+            <param-name>error_page</param-name>
+            <param-value>/faces/error.jsp</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthorizationFilter</filter-name>
+        <url-pattern>/faces/pagina/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+        <dispatcher>ERROR</dispatcher>
+    </filter-mapping>
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
@@ -66,8 +83,7 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>faces/index.xhtml</welcome-file>
-        <welcome-file>redirect.jsp</welcome-file>
+        <welcome-file>faces/login.xhtml</welcome-file>
     </welcome-file-list>
     <security-constraint>
         <display-name>UsuarioConstraint</display-name>
@@ -85,18 +101,14 @@
     <security-constraint>
         <display-name>AdministradorConstraint</display-name>
         <web-resource-collection>
-            <web-resource-name>Acceso restringido</web-resource-name>
+            <web-resource-name>Accesos restringido</web-resource-name>
             <description/>
-            <url-pattern>/resources/*</url-pattern>
-        </web-resource-collection>
-        <web-resource-collection>
-            <web-resource-name>Acceso no libre</web-resource-name>
-            <description/>
-            <url-pattern>/faces/resources/*</url-pattern>
+            <url-pattern>/faces/pagina/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <description/>
             <role-name>ADMINISTRADOR</role-name>
+            <role-name>USUARIO</role-name>
         </auth-constraint>
     </security-constraint>
     <login-config>

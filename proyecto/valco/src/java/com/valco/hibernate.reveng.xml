@@ -29,4 +29,8 @@
   <table-filter match-name="NOTAS_DE_VENTA"/>
   <table-filter match-name="PARAMETROS_GENERALES"/>
   <table-filter match-name="IMPUESTOS"/>
+  <table-filter match-name="GRUPOS"/>
+  <table-filter match-name="ACCESOS"/>
+  <table-filter match-name="USUARIOS_ACCESOS"/>
+  <table-filter match-name="USUARIOS_GRUPOS"/>
 </hibernate-reverse-engineering>
