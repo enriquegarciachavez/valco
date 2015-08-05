@@ -196,4 +196,31 @@ public class ProcesosDAO {
             }
         }
     }
+    
+    public void actualizarProceso(Procesos proceso) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.update(proceso);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al modificar el proceso.");
+                }
+            }
+            throw new Exception("Ocurrió un error al modificar el proceso.");
+        } finally {
+            try {
+                if(session.isOpen()){
+                    session.close();
+                  }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al modificar el proceso.");
+            }
+        }
+    }
 }
