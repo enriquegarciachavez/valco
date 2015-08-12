@@ -6,6 +6,7 @@
 package dao;
 
 import Hibernate.HibernateUtil;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -183,16 +184,22 @@ public class ProcesosDAO {
               }
             return productos;
 
-        } catch (HibernateException he) {
-            throw new Exception(he.getMessage());
-
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al consultar las cajas.");
+                }
+            }
+            throw new Exception("Ocurrió un error al consultar las cajas.");
         } finally {
             try {
                 if(session.isOpen()){
                     session.close();
                   }
             } catch (HibernateException he) {
-                throw new Exception(he.getMessage());
+                throw new Exception("Ocurrió un error al consultar las cajas.");
             }
         }
     }
@@ -220,6 +227,155 @@ public class ProcesosDAO {
                   }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al modificar el proceso.");
+            }
+        }
+    }
+    
+    public BigDecimal getPesoInicial(int procesoCodigo) throws Exception{
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        BigDecimal total = new BigDecimal("0.00");
+        List<ProductosInventario> productos = new ArrayList<>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(ProductosInventario.class)
+                    .add(Restrictions.eq("procesosCodigoHijo", procesoCodigo));
+              productos = q.list();
+              for(ProductosInventario producto: productos){
+                  total = total.add(producto.getPeso());
+              }
+            return total;
+
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al obtener el peso inicial.");
+                }
+            }
+            throw new Exception("Ocurrió un error al obtener el peso inicial.");
+        } finally {
+            try {
+                if(session.isOpen()){
+                    session.close();
+                  }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al obtener el peso inicial.");
+            }
+        }
+    }
+    
+    public BigDecimal getPesoHueso(int procesoCodigo) throws Exception{
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        BigDecimal total = new BigDecimal("0.00");
+        List<ProductosInventario> productos = new ArrayList<>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(ProductosInventario.class)
+                    .add(Restrictions.eq("procesosCodigoHijo", procesoCodigo));
+            Criteria y = q.createCriteria("productosHasProveedores");
+            Criteria x = y.createCriteria("productos");
+            Criteria z = x.createCriteria("tipoProducto").add(Restrictions.eq("descripcion", "HUESO"));
+              productos = q.list();
+              for(ProductosInventario producto: productos){
+                  total = total.add(producto.getPeso());
+              }
+            return total;
+
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al calcular el hueso.");
+                }
+            }
+            throw new Exception("Ocurrió un error al calcular el hueso.");
+        } finally {
+            try {
+                if(session.isOpen()){
+                    session.close();
+                  }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al calcular el hueso.");
+            }
+        }
+    }
+    
+    public BigDecimal getPesoSebo(int procesoCodigo) throws Exception{
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        BigDecimal total = new BigDecimal("0.00");
+        List<ProductosInventario> productos = new ArrayList<>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(ProductosInventario.class)
+                    .add(Restrictions.eq("procesosCodigoHijo", procesoCodigo));
+            Criteria y = q.createCriteria("productosHasProveedores");
+            Criteria x = y.createCriteria("productos");
+            Criteria z = x.createCriteria("tipoProducto").add(Restrictions.eq("descripcion", "SEBO"));
+              productos = q.list();
+              for(ProductosInventario producto: productos){
+                  total = total.add(producto.getPeso());
+              }
+            return total;
+
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al calcular el sebo.");
+                }
+            }
+            throw new Exception("Ocurrió un error al calcular el sebo.");
+        } finally {
+            try {
+                if(session.isOpen()){
+                    session.close();
+                  }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al calcular el sebo.");
+            }
+        }
+    }
+    
+    public BigDecimal getPesoAserrin(int procesoCodigo) throws Exception{
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        BigDecimal total = new BigDecimal("0.00");
+        List<ProductosInventario> productos = new ArrayList<>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(ProductosInventario.class)
+                    .add(Restrictions.eq("procesosCodigoHijo", procesoCodigo));
+            Criteria y = q.createCriteria("productosHasProveedores");
+            Criteria x = y.createCriteria("productos");
+            Criteria z = x.createCriteria("tipoProducto").add(Restrictions.eq("descripcion", "ASERRIN"));
+              productos = q.list();
+              for(ProductosInventario producto: productos){
+                  total = total.add(producto.getPeso());
+              }
+            return total;
+
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al calcular el Aserrin.");
+                }
+            }
+            throw new Exception("Ocurrió un error al calcular el Aserrin.");
+        } finally {
+            try {
+                if(session.isOpen()){
+                    session.close();
+                  }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al calcular el Aserrin.");
             }
         }
     }
