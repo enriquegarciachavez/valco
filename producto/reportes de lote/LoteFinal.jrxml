@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="LoteFinal" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8ad69716-3d43-40f9-9dba-628c2e0ee4b5">
+	<property name="ireport.zoom" value="0.9090909090909093"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="45"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\Karla\\Desktop\\Reportes\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="procesoCodigo" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT
+     VISTA_PROCESOS.`CODIGO_PROCESO` AS VISTA_PROCESOS_CODIGO_PROCESO,
+     VISTA_PROCESOS.`FECHA_INICIO` AS VISTA_PROCESOS_FECHA_INICIO,
+     VISTA_PROCESOS.`FECHA_FIN` AS VISTA_PROCESOS_FECHA_FIN,
+     VISTA_PROCESOS.`PESO_INICIAL` AS VISTA_PROCESOS_PESO_INICIAL,
+     VISTA_PROCESOS.`PESO_FINAL` AS VISTA_PROCESOS_PESO_FINAL,
+     VISTA_PROCESOS.`COSTOS_INDIRECTOS` AS VISTA_PROCESOS_COSTOS_INDIRECTOS,
+     VISTA_PROCESOS.`OBSERVACIONES` AS VISTA_PROCESOS_OBSERVACIONES,
+     VISTA_PROCESOS.`COSTO_INICIAL` AS VISTA_PROCESOS_COSTO_INICIAL,
+     VISTA_PROCESOS.`COSTO_FINAL` AS VISTA_PROCESOS_COSTO_FINAL,
+     VISTA_PROCESOS.`PESO_HUESO_SEBO` AS VISTA_PROCESOS_PESO_HUESO_SEBO,
+     VISTA_PROCESOS.`TOTAL_CAJAS` AS VISTA_PROCESOS_TOTAL_CAJAS,
+     VISTA_PROCESOS.`MANO_OBRA` AS VISTA_PROCESOS_MANO_OBRA,
+     VISTA_PROCESOS.`MERMA_PESO` AS VISTA_PROCESOS_MERMA_PESO,
+     VISTA_PROCESOS.`MERMA_PORCENTAJE` AS VISTA_PROCESOS_MERMA_PORCENTAJE
+FROM
+     `VISTA_PROCESOS` VISTA_PROCESOS
+
+where VISTA_PROCESOS.`CODIGO_PROCESO` =  $P{procesoCodigo}]]>
+	</queryString>
+	<field name="VISTA_PROCESOS_CODIGO_PROCESO" class="java.lang.Integer"/>
+	<field name="VISTA_PROCESOS_FECHA_INICIO" class="java.sql.Timestamp"/>
+	<field name="VISTA_PROCESOS_FECHA_FIN" class="java.sql.Timestamp"/>
+	<field name="VISTA_PROCESOS_PESO_INICIAL" class="java.math.BigDecimal"/>
+	<field name="VISTA_PROCESOS_PESO_FINAL" class="java.math.BigDecimal"/>
+	<field name="VISTA_PROCESOS_COSTOS_INDIRECTOS" class="java.math.BigDecimal"/>
+	<field name="VISTA_PROCESOS_OBSERVACIONES" class="java.lang.String"/>
+	<field name="VISTA_PROCESOS_COSTO_INICIAL" class="java.math.BigDecimal"/>
+	<field name="VISTA_PROCESOS_COSTO_FINAL" class="java.math.BigDecimal"/>
+	<field name="VISTA_PROCESOS_PESO_HUESO_SEBO" class="java.math.BigDecimal"/>
+	<field name="VISTA_PROCESOS_TOTAL_CAJAS" class="java.lang.Long"/>
+	<field name="VISTA_PROCESOS_MANO_OBRA" class="java.math.BigDecimal"/>
+	<field name="VISTA_PROCESOS_MERMA_PESO" class="java.math.BigDecimal"/>
+	<field name="VISTA_PROCESOS_MERMA_PORCENTAJE" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="132" splitType="Stretch">
+			<staticText>
+				<reportElement x="192" y="23" width="365" height="28" backcolor="#FFFFFF" uuid="43f6b87a-b393-46d0-b147-127193853019"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reporte de Lote Finalizado]]></text>
+			</staticText>
+			<image>
+				<reportElement x="10" y="11" width="115" height="75" uuid="cdb74ca3-e6fa-4e68-9783-fdefbc46cb99"/>
+				<imageExpression><![CDATA["C:\\Users\\Karla\\Downloads\\11006088_866443736709346_2067763016_n.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="192" y="87" width="72" height="17" uuid="95c04daa-0f69-47b6-92fa-983f78229d06"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="192" y="65" width="72" height="22" forecolor="#000000" backcolor="#666666" uuid="929de7c5-f97e-44c1-aa9a-aa065598b43d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Proceso]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="192" y="104" width="72" height="17" uuid="cd87f38d-d307-4307-82b3-fea5a6867827"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Inicio]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="264" y="86" width="100" height="18" uuid="c71645a0-0f00-4221-bbcf-1e9b101c817e"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{VISTA_PROCESOS_OBSERVACIONES}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="364" y="104" width="72" height="17" uuid="76727b75-7b23-4ced-b46d-bf32737b16f6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Cierre]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="264" y="104" width="100" height="17" uuid="9f5f7eee-61bb-4617-8b05-fa59c1fd663e"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{VISTA_PROCESOS_FECHA_INICIO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="436" y="104" width="100" height="17" uuid="6f8e1160-39d8-4c76-a181-ddbd416a9132"/>
+				<textFieldExpression><![CDATA[$F{VISTA_PROCESOS_FECHA_FIN}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="2" y="0" width="570" height="20" forecolor="#000000" uuid="3c32600b-0838-49bf-a0b8-94889e06d654"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Datos del Reporte]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="205" splitType="Stretch">
+			<staticText>
+				<reportElement x="2" y="20" width="123" height="17" uuid="29f4d655-8cf4-425f-90c3-f0bb2ef4ddde"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Peso Inicial:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="37" width="125" height="17" uuid="485cdff7-3f29-4a7a-9c90-28ad7a861dd7"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Peso Final:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="54" width="125" height="18" uuid="f9e2246d-07e7-49e5-a1f4-82f0a21db64c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Merma en Peso:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="72" width="125" height="18" uuid="433e0236-c7ce-4865-9320-39faf53e5151"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Merma en Porcentace:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="90" width="125" height="18" uuid="4927ac6f-cd30-4732-960b-dde2b1646148"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Costos Indirectos:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="108" width="125" height="18" uuid="88ce9639-5363-4e93-b1f3-0e8c3a10507f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuario Inicio:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="20" width="123" height="17" backcolor="#666666" uuid="2e0256d6-d000-417e-b88d-5341de2d0ea8"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Costo Inicial:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="37" width="123" height="17" uuid="5766a585-7196-4f13-aa68-ca268348de5a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Costo Final]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="55" width="123" height="17" uuid="77e1eac7-cf06-4822-bfae-148c2cdf3aad"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Peso de Hueso y Cebo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="72" width="123" height="17" uuid="95eb1e6b-2c7a-40d7-a3d8-1bf85f1fc4e7"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total de Cajas:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="89" width="123" height="17" uuid="e463b7c6-35b3-42dd-9389-3e913d10e4fd"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mano de Obra:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="106" width="123" height="17" uuid="17fbee91-db35-4c5c-a74d-6fd7aebf77c1"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuario Cierre:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="125" y="20" width="100" height="17" uuid="5a506435-2d56-4d76-b971-6d645126a969"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{VISTA_PROCESOS_PESO_INICIAL} +" Kg"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="125" y="37" width="100" height="17" uuid="948b2b44-ded6-4379-bf77-ab72849cd4ac"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{VISTA_PROCESOS_PESO_FINAL} + " Kg"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="125" y="54" width="100" height="17" uuid="3a845710-8b7c-45ba-b120-235564d9920c"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{VISTA_PROCESOS_MERMA_PESO} + " Kg"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="125" y="72" width="100" height="18" uuid="8b771945-f8d5-4eea-936c-c884ce9cc3cc"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{VISTA_PROCESOS_MERMA_PORCENTAJE} +  "%"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="125" y="90" width="100" height="18" uuid="c8f58ecf-0c22-4468-a010-246a53c8d680"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["\$ " + $F{VISTA_PROCESOS_COSTOS_INDIRECTOS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="413" y="20" width="100" height="17" uuid="eb7c0339-ae3b-4038-b6c5-78aedea77e26"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["\$ " + $F{VISTA_PROCESOS_COSTO_INICIAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="413" y="37" width="100" height="17" uuid="d2088ddc-29c0-4ee8-b92b-4d16db9eeb18"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["\$ " + $F{VISTA_PROCESOS_COSTO_FINAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="413" y="54" width="100" height="17" uuid="c18c2e4f-67f8-456d-9d21-1bd93a0b7efa"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{VISTA_PROCESOS_PESO_HUESO_SEBO} + "Kg"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="413" y="71" width="100" height="18" uuid="28577d12-6ddd-4c70-91f9-f79d058dce36"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{VISTA_PROCESOS_TOTAL_CAJAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="413" y="89" width="100" height="17" uuid="80528e6b-6d18-4625-bb20-7ac79da641ed"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["\$ " + $F{VISTA_PROCESOS_MANO_OBRA}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="0" y="139" width="572" height="60" uuid="fc4a2a3a-41f6-45d6-9162-3a8d51743f69"/>
+				<subreportParameter name="procesoCodigo">
+					<subreportParameterExpression><![CDATA[$F{VISTA_PROCESOS_CODIGO_PROCESO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Materia_prima_proceso.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</columnHeader>
+</jasperReport>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Facturas_subreport1" language="groovy" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="5372f1c6-9ace-4ceb-aec4-820a9c67e870">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fecha" class="java.sql.Timestamp"/>
+	<queryString>
+		<![CDATA[SELECT
+     CLIENTES.`CODIGO` AS CLIENTES_CODIGO,
+     CLIENTES.`RAZON_SOCIAL` AS CLIENTES_RAZON_SOCIAL,
+     FACTURAS.`FOLIO` AS FACTURAS_FOLIO,
+     FACTURAS.`CODIGO` AS FACTURAS_CODIGO,
+     FACTURAS.`OBSERVACIONES` AS FACTURAS_OBSERVACIONES,
+     FACTURAS.`TOTAL` AS FACTURAS_TOTAL,
+     FACTURAS.`ESTATUS` AS FACTURAS_ESTATUS,
+     NOTAS_DE_VENTA.`CODIGO` AS NOTAS_DE_VENTA_CODIGO,
+     NOTAS_DE_VENTA.`FOLIO` AS NOTAS_DE_VENTA_FOLIO,
+     FACTURAS.`FECHA` AS FACTURAS_FECHA
+FROM
+     `CLIENTES` CLIENTES INNER JOIN `NOTAS_DE_VENTA` NOTAS_DE_VENTA ON CLIENTES.`CODIGO` = NOTAS_DE_VENTA.`CLIENTES_CODIGO`
+     INNER JOIN `FACTURAS` FACTURAS ON NOTAS_DE_VENTA.`CODIGO` = FACTURAS.`NOTAS_DE_VENTA_CODIGO`
+
+WHERE FACTURAS.`FECHA` =$P{fecha}]]>
+	</queryString>
+	<field name="CLIENTES_CODIGO" class="java.lang.Integer"/>
+	<field name="CLIENTES_RAZON_SOCIAL" class="java.lang.String"/>
+	<field name="FACTURAS_FOLIO" class="java.lang.Integer"/>
+	<field name="FACTURAS_CODIGO" class="java.lang.Integer"/>
+	<field name="FACTURAS_OBSERVACIONES" class="java.lang.String"/>
+	<field name="FACTURAS_TOTAL" class="java.math.BigDecimal"/>
+	<field name="FACTURAS_ESTATUS" class="java.lang.String"/>
+	<field name="NOTAS_DE_VENTA_CODIGO" class="java.lang.Integer"/>
+	<field name="NOTAS_DE_VENTA_FOLIO" class="java.lang.Integer"/>
+	<field name="FACTURAS_FECHA" class="java.sql.Timestamp"/>
+	<variable name="totalImporte" class="java.math.BigDecimal" resetType="Group" resetGroup="CLIENTES_CODIGO" calculation="Sum">
+		<variableExpression><![CDATA[$F{FACTURAS_TOTAL}]]></variableExpression>
+	</variable>
+	<group name="CLIENTES_CODIGO">
+		<groupExpression><![CDATA[$F{CLIENTES_CODIGO}]]></groupExpression>
+		<groupFooter>
+			<band height="21">
+				<textField pattern="$ #,##0.00">
+					<reportElement x="201" y="0" width="100" height="20" uuid="a8ad0fe8-c15d-4733-bd8f-126460d98400"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totalImporte}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="101" y="0" width="100" height="20" forecolor="#000000" uuid="2601b41b-e9b3-4d38-bcdb-55862a65a092"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+					<text><![CDATA[Total del Dia]]></text>
+				</staticText>
+				<line>
+					<reportElement x="201" y="0" width="100" height="1" uuid="67ac9a5a-fb88-473e-9ff5-e0554f63ccf9"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="33" splitType="Stretch">
+			<textField>
+				<reportElement x="101" y="0" width="100" height="20" uuid="4ed5c40d-c0a1-4125-9573-caec0c69a51b"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLIENTES_RAZON_SOCIAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="0" width="100" height="20" uuid="1e5a8207-4be6-4844-af81-5c119de1c532"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FACTURAS_FOLIO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="$ #,##0.00">
+				<reportElement x="201" y="0" width="100" height="20" uuid="ed6abc8a-27b2-431b-913c-d862a21ad3c7"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FACTURAS_TOTAL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="301" y="0" width="100" height="20" uuid="d98736e9-6b52-4d5a-849f-e453b2746c66"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FACTURAS_OBSERVACIONES}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="50"/>
+	</summary>
+</jasperReport>

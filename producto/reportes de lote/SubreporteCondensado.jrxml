@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SubreporteCondensado" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a644b66c-37f4-4b28-848d-3c5c655c9db4">
+	<property name="ireport.zoom" value="1.2100000000000002"/>
+	<property name="ireport.x" value="119"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="procesoCodigo" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT
+ROUND ((SUM(PRODUCTOS_INVENTARIO.`PESO`))/COUNT(*),2) AS PROMEDIO,
+ SUM(PRODUCTOS_INVENTARIO.`PESO`) AS PESO_TOTAL,
+     COUNT(*) AS CAJAS,
+     PRODUCTOS_INVENTARIO.`CODIGO` AS PRODUCTOS_INVENTARIO_CODIGO,
+ROUND((SELECT SUM(COSTO)/COUNT(*) FROM PRODUCTOS_INVENTARIO WHERE PROCESOS_CODIGO_HIJO = $P{procesoCodigo}),2) AS COSTO,
+     PRODUCTOS_INVENTARIO.`PESO` AS PRODUCTOS_INVENTARIO_PESO,
+
+     PRODUCTOS_INVENTARIO.`PRECIO` AS PRODUCTOS_INVENTARIO_PRECIO,
+     PRODUCTOS_INVENTARIO.`PROCESOS_CODIGO_PADRE` AS PRODUCTOS_INVENTARIO_PROCESOS_CODIGO_PADRE,
+     PRODUCTOS_INVENTARIO.`PROCESOS_CODIGO_HIJO` AS PRODUCTOS_INVENTARIO_PROCESOS_CODIGO_HIJO,
+
+ROUND((SUM(PRODUCTOS_INVENTARIO.`PESO`)/(SELECT SUM(PESO) FROM PRODUCTOS_INVENTARIO WHERE PROCESOS_CODIGO_PADRE = PRODUCTOS_INVENTARIO_PROCESOS_CODIGO_PADRE))*100,2) AS PORCENTAJE,
+     PRODUCTOS_has_PROVEEDORES.`CODIGO` AS PRODUCTOS_has_PROVEEDORES_CODIGO,
+     PRODUCTOS_has_PROVEEDORES.`PRODUCTOS_CODIGO` AS PRODUCTOS_has_PROVEEDORES_PRODUCTOS_CODIGO,
+     PRODUCTOS_has_PROVEEDORES.`PROVEEDORES_CODIGO` AS PRODUCTOS_has_PROVEEDORES_PROVEEDORES_CODIGO,
+     PRODUCTOS_has_PROVEEDORES.`CODIGO_PROVEEDOR` AS PRODUCTOS_has_PROVEEDORES_CODIGO_PROVEEDOR,
+     PRODUCTOS_has_PROVEEDORES.`PRECIO_SUGERIDO` AS PRODUCTOS_has_PROVEEDORES_PRECIO_SUGERIDO,
+     PRODUCTOS.`CODIGO` AS PRODUCTOS_CODIGO,
+     PRODUCTOS.`DESCRIPCION` AS PRODUCTOS_DESCRIPCION,
+ROUND((SELECT SUM(COSTO)/COUNT(*) FROM PRODUCTOS_INVENTARIO WHERE PROCESOS_CODIGO_HIJO = $P{procesoCodigo})*SUM(PRODUCTOS_INVENTARIO.`PESO`),2) AS COSTO_TOTAL
+FROM
+     `PRODUCTOS_has_PROVEEDORES` PRODUCTOS_has_PROVEEDORES INNER JOIN `PRODUCTOS_INVENTARIO` PRODUCTOS_INVENTARIO ON PRODUCTOS_has_PROVEEDORES.`CODIGO` = PRODUCTOS_INVENTARIO.`PRODUCTOS_has_PROVEEDORES_CODIGO`
+     INNER JOIN `PRODUCTOS` PRODUCTOS ON PRODUCTOS_has_PROVEEDORES.`PRODUCTOS_CODIGO` = PRODUCTOS.`CODIGO`
+where PRODUCTOS_INVENTARIO.`PROCESOS_CODIGO_PADRE` = $P{procesoCodigo}
+GROUP BY
+     PRODUCTOS.`CODIGO`]]>
+	</queryString>
+	<field name="PROMEDIO" class="java.math.BigDecimal"/>
+	<field name="PESO_TOTAL" class="java.math.BigDecimal"/>
+	<field name="CAJAS" class="java.lang.Long"/>
+	<field name="PRODUCTOS_INVENTARIO_CODIGO" class="java.lang.Integer"/>
+	<field name="COSTO" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PRODUCTOS_INVENTARIO_PESO" class="java.math.BigDecimal"/>
+	<field name="PRODUCTOS_INVENTARIO_PRECIO" class="java.math.BigDecimal"/>
+	<field name="PRODUCTOS_INVENTARIO_PROCESOS_CODIGO_PADRE" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_PROCESOS_CODIGO_HIJO" class="java.lang.Integer"/>
+	<field name="PORCENTAJE" class="java.math.BigDecimal"/>
+	<field name="PRODUCTOS_has_PROVEEDORES_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_has_PROVEEDORES_PRODUCTOS_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_has_PROVEEDORES_PROVEEDORES_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_has_PROVEEDORES_CODIGO_PROVEEDOR" class="java.lang.String"/>
+	<field name="PRODUCTOS_has_PROVEEDORES_PRECIO_SUGERIDO" class="java.math.BigDecimal"/>
+	<field name="PRODUCTOS_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_DESCRIPCION" class="java.lang.String"/>
+	<field name="COSTO_TOTAL" class="java.math.BigDecimal"/>
+	<variable name="Total Cajas" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{CAJAS}]]></variableExpression>
+	</variable>
+	<variable name="Total_Peso_Total" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PESO_TOTAL}]]></variableExpression>
+	</variable>
+	<variable name="Total total" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{COSTO_TOTAL}]]></variableExpression>
+	</variable>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="2" y="0" width="100" height="23" uuid="6cbe6c26-a29b-4e96-b71b-13ae0b89a774"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Descripcioón]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="102" y="1" width="83" height="22" uuid="18ad39d8-d9ae-4014-9957-b1d458e520df"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Cajas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="185" y="1" width="72" height="22" uuid="b82bbf44-ebae-49f9-967c-b61c6f2e4e09"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Peso Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="257" y="1" width="73" height="22" uuid="2aceaa7f-3127-43b2-a0ba-b1bc0baf86a4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Promedio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="330" y="1" width="64" height="22" uuid="26e0021b-7e7e-44a2-9db3-3f2e7ebd6880"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Porcentaje]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="394" y="1" width="78" height="21" uuid="028756fb-90f4-4976-89a8-124bce7d913a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Costo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="472" y="1" width="100" height="21" uuid="d1f7a4a6-6454-4ece-a489-d8850fc050d4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Costo Total]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="24" splitType="Stretch">
+			<textField>
+				<reportElement x="2" y="0" width="100" height="22" uuid="bf627970-c260-4c21-bd95-2597dab934c5"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{PRODUCTOS_DESCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="0" width="83" height="24" uuid="6c2331ba-5da6-49a3-9493-e9ac8f9cf453"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CAJAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="185" y="0" width="72" height="24" uuid="568def35-de51-46d3-a6c1-35c943c601aa"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{PESO_TOTAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="257" y="0" width="73" height="24" uuid="a3a7e470-dc98-4588-a87f-e82d35112f3e"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{PROMEDIO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="330" y="0" width="64" height="24" uuid="0b4ddc6e-a060-4ab0-b965-cb89e99bd5c4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{PORCENTAJE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="394" y="0" width="78" height="24" uuid="b205cccd-2836-4e9a-9433-5d62a771537a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{COSTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="472" y="0" width="100" height="24" uuid="6135f8c8-9bdf-4470-a247-c5aff1989edf"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{COSTO_TOTAL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="102" y="1" width="83" height="20" uuid="a7c7e80f-48a6-4162-b0ad-f9d4189adfe7"/>
+				<textFieldExpression><![CDATA[$V{Total Cajas}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="472" y="1" width="100" height="20" uuid="c2c1a38c-ca12-4fc4-87f1-18ab91c0d42f"/>
+				<textFieldExpression><![CDATA[$V{Total total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="1" width="100" height="20" uuid="2d08049e-8ba2-46a0-a99e-5dbead33c2a4"/>
+				<text><![CDATA[Totales]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="185" y="1" width="72" height="20" uuid="f760cfcb-4e50-4a86-8168-767fbafa7815"/>
+				<textFieldExpression><![CDATA[$V{Total_Peso_Total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReporteAbonos" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9d9596ae-276f-46f5-89db-37b5d177eee3">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\Karla\\Desktop\\Reportes\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     FACTURAS.`CODIGO` AS FACTURAS_CODIGO,
+     FACTURAS.`LUGAR` AS FACTURAS_LUGAR,
+     FACTURAS.`FECHA` AS FACTURAS_FECHA,
+     FACTURAS.`FOLIO` AS FACTURAS_FOLIO,
+     FACTURAS.`FOLIO_FISCAL` AS FACTURAS_FOLIO_FISCAL,
+     FACTURAS.`FECHA_TIMBRADO` AS FACTURAS_FECHA_TIMBRADO,
+     FACTURAS.`NO_SERIE_CERT_SAT` AS FACTURAS_NO_SERIE_CERT_SAT,
+     FACTURAS.`OBSERVACIONES` AS FACTURAS_OBSERVACIONES,
+     FACTURAS.`ESTATUS` AS FACTURAS_ESTATUS,
+     FACTURAS.`XML` AS FACTURAS_XML,
+     FACTURAS.`FORMA_PAGO` AS FACTURAS_FORMA_PAGO,
+     FACTURAS.`NO_SEIE_CERT_EMISOR` AS FACTURAS_NO_SEIE_CERT_EMISOR,
+     FACTURAS.`METODO_PAGO` AS FACTURAS_METODO_PAGO,
+     FACTURAS.`MONEDA` AS FACTURAS_MONEDA,
+     FACTURAS.`NO_CLIENTE` AS FACTURAS_NO_CLIENTE,
+     FACTURAS.`BANCO` AS FACTURAS_BANCO,
+     FACTURAS.`SUBTOTAL` AS FACTURAS_SUBTOTAL,
+     FACTURAS.`IVA` AS FACTURAS_IVA,
+     FACTURAS.`TOTAL` AS FACTURAS_TOTAL,
+     FACTURAS.`IMPORTE_LETRA` AS FACTURAS_IMPORTE_LETRA,
+     FACTURAS.`SELLO_CDFI` AS FACTURAS_SELLO_CDFI,
+     FACTURAS.`SELLO_SAT` AS FACTURAS_SELLO_SAT,
+     FACTURAS.`CADENA_ORIGINAL` AS FACTURAS_CADENA_ORIGINAL,
+     FACTURAS.`CADENA_COMPROMISO` AS FACTURAS_CADENA_COMPROMISO,
+     FACTURAS.`CONDICION_PAGO` AS FACTURAS_CONDICION_PAGO,
+     FACTURAS.`NOTAS_DE_VENTA_CODIGO` AS FACTURAS_NOTAS_DE_VENTA_CODIGO
+FROM
+     `FACTURAS` FACTURAS]]>
+	</queryString>
+	<field name="FACTURAS_CODIGO" class="java.lang.Integer"/>
+	<field name="FACTURAS_LUGAR" class="java.lang.String"/>
+	<field name="FACTURAS_FECHA" class="java.sql.Timestamp"/>
+	<field name="FACTURAS_FOLIO" class="java.lang.Integer"/>
+	<field name="FACTURAS_FOLIO_FISCAL" class="java.lang.String"/>
+	<field name="FACTURAS_FECHA_TIMBRADO" class="java.lang.String"/>
+	<field name="FACTURAS_NO_SERIE_CERT_SAT" class="java.lang.String"/>
+	<field name="FACTURAS_OBSERVACIONES" class="java.lang.String"/>
+	<field name="FACTURAS_ESTATUS" class="java.lang.String"/>
+	<field name="FACTURAS_XML" class="java.lang.String"/>
+	<field name="FACTURAS_FORMA_PAGO" class="java.lang.String"/>
+	<field name="FACTURAS_NO_SEIE_CERT_EMISOR" class="java.lang.String"/>
+	<field name="FACTURAS_METODO_PAGO" class="java.lang.String"/>
+	<field name="FACTURAS_MONEDA" class="java.lang.String"/>
+	<field name="FACTURAS_NO_CLIENTE" class="java.lang.Integer"/>
+	<field name="FACTURAS_BANCO" class="java.lang.String"/>
+	<field name="FACTURAS_SUBTOTAL" class="java.math.BigDecimal"/>
+	<field name="FACTURAS_IVA" class="java.math.BigDecimal"/>
+	<field name="FACTURAS_TOTAL" class="java.math.BigDecimal"/>
+	<field name="FACTURAS_IMPORTE_LETRA" class="java.lang.String"/>
+	<field name="FACTURAS_SELLO_CDFI" class="java.lang.String"/>
+	<field name="FACTURAS_SELLO_SAT" class="java.lang.String"/>
+	<field name="FACTURAS_CADENA_ORIGINAL" class="java.lang.String"/>
+	<field name="FACTURAS_CADENA_COMPROMISO" class="java.lang.String"/>
+	<field name="FACTURAS_CONDICION_PAGO" class="java.lang.String"/>
+	<field name="FACTURAS_NOTAS_DE_VENTA_CODIGO" class="java.lang.Integer"/>
+	<title>
+		<band height="72">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="72" backcolor="#006699" uuid="fbcc611c-c75b-463d-9517-78ce7f878140"/>
+				<staticText>
+					<reportElement x="124" y="10" width="227" height="33" forecolor="#FFFFFF" uuid="f9568f6c-ddf0-428b-be10-89ca34f3d209"/>
+					<textElement>
+						<font size="26" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Reporte ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="351" y="43" width="180" height="20" forecolor="#FFFFFF" uuid="c7d90021-a4a6-4704-85a3-3b18b2c02672"/>
+					<textElement textAlignment="Right">
+						<font size="14" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Ventas con Factura]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<detail>
+		<band height="139">
+			<subreport>
+				<reportElement x="99" y="37" width="200" height="100" uuid="daf1db50-8db3-4523-ae55-cc75dc47094f"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "ReporteAbonosSubreport1.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="3d9ef6e0-3871-45cd-9969-56e11c3ebaf7"/>
+				<text><![CDATA[FACTURAS_FECHA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="-1" y="20" width="100" height="20" uuid="f7f67205-0e9c-4672-be12-5c30aff6ecbc"/>
+				<textFieldExpression><![CDATA[$F{FACTURAS_FECHA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="50"/>
+	</pageFooter>
+</jasperReport>

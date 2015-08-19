@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Facturas" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="23a61ed3-02b6-40e2-86d1-5b646b183b2c">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\Karla\\Desktop\\Reportes\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecha_inicial" class="java.util.Date"/>
+	<parameter name="fecha_final" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT DISTINCT
+     FACTURAS.`FECHA` AS FACTURAS_FECHA,
+     FACTURAS.`TOTAL` AS FACTURAS_TOTAL
+FROM
+     `FACTURAS` FACTURAS
+WHERE
+     FACTURAS.`FECHA` BETWEEN $P{fecha_inicial} AND $P{fecha_final}]]>
+	</queryString>
+	<field name="FACTURAS_FECHA" class="java.sql.Timestamp"/>
+	<field name="FACTURAS_TOTAL" class="java.math.BigDecimal"/>
+	<variable name="totalTotal" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{FACTURAS_TOTAL}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="114" splitType="Stretch">
+			<staticText>
+				<reportElement x="156" y="19" width="267" height="40" backcolor="#FFFFFF" uuid="b47cb302-7bc2-4276-9149-a63e602c0bc9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reporte de ventas por factura]]></text>
+			</staticText>
+			<image>
+				<reportElement x="3" y="3" width="115" height="75" uuid="79b9a21b-91f8-421c-9cc3-613b75b504f7"/>
+				<imageExpression><![CDATA["C:\\Users\\Karla\\Downloads\\11006088_866443736709346_2067763016_n.jpg"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="221" y="59" width="267" height="17" uuid="ec96d649-eb79-4dac-83a4-75901acef593"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["DEL "+new SimpleDateFormat("dd/MMM/yyyy").format($P{fecha_inicial})+" AL "+new SimpleDateFormat("dd/MMM/yyyy").format($P{fecha_final})]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="22">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="966c18ad-86a1-4a92-85b5-c25db267c15f"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="104" y="0" width="100" height="20" uuid="fee87baf-2a77-4e7c-b12a-85702ce0e42b"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Factura]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="206" y="0" width="100" height="20" uuid="8abc594c-53db-4016-804e-4862a08b0712"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="0" width="100" height="20" uuid="02f413a4-5bb0-4f24-b9e7-37b225c1c5e4"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Importe ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="410" y="0" width="100" height="20" uuid="741459af-03f2-4f4c-b97e-9e7a24286060"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Observaciones]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="156" splitType="Stretch">
+			<subreport>
+				<reportElement x="100" y="20" width="472" height="136" uuid="9eabd738-93b4-432b-99a9-85c033097d37"/>
+				<subreportParameter name="fecha">
+					<subreportParameterExpression><![CDATA[$F{FACTURAS_FECHA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Facturas_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="f82c5032-3f48-4090-9ac8-610ccb5daa50"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{FACTURAS_FECHA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="50">
+			<textField pattern="$#,##0.00">
+				<reportElement x="306" y="0" width="100" height="19" uuid="6fd1ec2d-3ca6-435e-b86c-49c022625932"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$V{totalTotal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="767f86da-7690-4905-84c7-2f9c66c7762b"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>
