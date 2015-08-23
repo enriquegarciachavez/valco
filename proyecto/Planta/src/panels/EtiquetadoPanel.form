@@ -769,10 +769,7 @@
                                   <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
                                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="pesoFinalLbl" min="-2" pref="31" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="pesoFinalLbl" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="0" pref="29" max="32767" attributes="0"/>
                       </Group>
@@ -839,11 +836,10 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="humedadRadio" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="detalladoRadio" alignment="0" min="-2" pref="127" max="-2" attributes="0"/>
                               <Component id="condensadoRadio" min="-2" pref="145" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="46" max="32767" attributes="0"/>
+                          <EmptySpace pref="78" max="32767" attributes="0"/>
                           <Component id="reporteBtn" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                       </Group>
@@ -860,8 +856,6 @@
                           <Component id="condensadoRadio" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                           <Component id="detalladoRadio" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="humedadRadio" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -873,8 +867,11 @@
                     <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                       <ComponentRef name="reporteGroup"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Reporte condensado"/>
+                    <Property name="text" type="java.lang.String" value="Reporte Condensado"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="condensadoRadioActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JRadioButton" name="detalladoRadio">
                   <Properties>
@@ -883,11 +880,9 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="Reporte detallado"/>
                   </Properties>
-                </Component>
-                <Component class="javax.swing.JRadioButton" name="humedadRadio">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Reporte con pesos de humedad"/>
-                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="detalladoRadioActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="reporteBtn">
                   <Properties>
@@ -905,6 +900,9 @@
                       <Connection code="SwingConstants.BOTTOM" type="code"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="reporteBtnActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -1037,6 +1035,9 @@
                   <Connection code="SwingConstants.CENTER" type="code"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="reporteFinalBtnActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

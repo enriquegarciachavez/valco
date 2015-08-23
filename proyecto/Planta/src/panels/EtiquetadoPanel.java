@@ -7,9 +7,18 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -28,6 +37,12 @@ import mapping.ProductosHasProveedores;
 import mapping.ProductosInventario;
 import mapping.Proveedores;
 import mapping.Ubicaciones;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 import table.custom.EtiquetadoTableCellRendered;
 import table.custom.NoEditableTableModel;
 import threads.PesoThread;
@@ -43,6 +58,7 @@ import threads.PesoThread;
  */
 public class EtiquetadoPanel extends javax.swing.JPanel {
 
+    String path ="src/Reportes/Lote_Final.jrxml";
     ProcesosDAO procesosDAO = new ProcesosDAO();
     ProductoDAO productoDAO = new ProductoDAO();
     DefaultTableModel model = new NoEditableTableModel();
@@ -204,7 +220,6 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         jPanel7 = new javax.swing.JPanel();
         condensadoRadio = new javax.swing.JRadioButton();
         detalladoRadio = new javax.swing.JRadioButton();
-        humedadRadio = new javax.swing.JRadioButton();
         reporteBtn = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
@@ -609,9 +624,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(35, 35, 35)
                         .addComponent(jLabel1))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(pesoFinalLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(pesoFinalLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 29, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -622,18 +635,31 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Reportes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Times New Roman", 1, 14))); // NOI18N
 
         reporteGroup.add(condensadoRadio);
-        condensadoRadio.setText("Reporte condensado");
+        condensadoRadio.setText("Reporte Condensado");
+        condensadoRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                condensadoRadioActionPerformed(evt);
+            }
+        });
 
         reporteGroup.add(detalladoRadio);
         detalladoRadio.setText("Reporte detallado");
-
-        humedadRadio.setText("Reporte con pesos de humedad");
+        detalladoRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                detalladoRadioActionPerformed(evt);
+            }
+        });
 
         reporteBtn.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         reporteBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Book-icon.PNG"))); // NOI18N
         reporteBtn.setText("Reporte");
         reporteBtn.setHorizontalTextPosition(SwingConstants.CENTER);
         reporteBtn.setVerticalTextPosition(SwingConstants.BOTTOM);
+        reporteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reporteBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -641,10 +667,9 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(humedadRadio)
                     .addComponent(detalladoRadio, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(condensadoRadio, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
                 .addComponent(reporteBtn)
                 .addGap(25, 25, 25))
         );
@@ -658,8 +683,6 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
                 .addComponent(condensadoRadio)
                 .addGap(18, 18, 18)
                 .addComponent(detalladoRadio)
-                .addGap(18, 18, 18)
-                .addComponent(humedadRadio)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -727,6 +750,11 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         reporteFinalBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Book-icon.PNG"))); // NOI18N
         reporteFinalBtn.setText("Reporte final");
         reporteFinalBtn.setHorizontalTextPosition(SwingConstants.CENTER);
+        reporteFinalBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reporteFinalBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -963,6 +991,94 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_cerrarProcesoBtnActionPerformed
 
+    private void reporteFinalBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reporteFinalBtnActionPerformed
+        // TODO add your handling code here:
+        System.out.println(EtiquetadoPanel.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+        try {
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/valco", "admin3ZheGrA", "1VtHQW5M-3g-");
+               ) {
+            /* TODO output your page here. You may use following sample code. */
+
+            //Connecting to the MySQL database
+            //Loading Jasper Report File from Local file system
+            
+            String realPath = "src/Reportes/Lote_Final.jrxml" ;
+            InputStream input = new FileInputStream(new File(realPath));
+            Map mapa = new HashMap();
+                
+            mapa.put("procesoCodigo",((Procesos)(this.procesosLov.getSelectedItem())).getCodigo());
+               
+            JasperReport jasperReport = JasperCompileManager.compileReport(input);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
+            JasperViewer.viewReport(jasperPrint, false);
+        }catch (SQLException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_reporteFinalBtnActionPerformed
+
+    private void reporteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reporteBtnActionPerformed
+        // TODO add your handling code here:
+        if (detalladoRadio.isSelected()){
+            path="src/Reportes/LoteDetallado.jrxml";
+        }else{
+            path="src/Reportes/Lote_final.jrxml";
+        }
+        try {
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/valco", "admin3ZheGrA", "1VtHQW5M-3g-");
+               ) {
+            /* TODO output your page here. You may use following sample code. */
+
+            //Connecting to the MySQL database
+            //Loading Jasper Report File from Local file system
+            
+            String realPath = path ;
+            InputStream input = new FileInputStream(new File(realPath));
+            Map mapa = new HashMap();
+                
+            mapa.put("procesoCodigo",((Procesos)(this.procesosLov.getSelectedItem())).getCodigo());
+               
+            JasperReport jasperReport = JasperCompileManager.compileReport(input);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
+            JasperViewer.viewReport(jasperPrint, false);
+        }catch (SQLException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_reporteBtnActionPerformed
+
+    private void detalladoRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detalladoRadioActionPerformed
+        // TODO add your handling code here:
+        String path ="src/Reportes/LoteDetallado.jrxml";
+    }//GEN-LAST:event_detalladoRadioActionPerformed
+
+    private void condensadoRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_condensadoRadioActionPerformed
+        // TODO add your handling code here:
+        String path ="src/Reportes/Lote_Final.jrxml";
+    }//GEN-LAST:event_condensadoRadioActionPerformed
+
     private String swapChars(String str, int lIdx, int rIdx) {
         StringBuilder sb = new StringBuilder(str);
         char l = sb.charAt(lIdx), r = sb.charAt(rIdx);
@@ -1019,7 +1135,6 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox fechaCaducidadEtiquetaChk;
     private javax.swing.JCheckBox fechaElaboracionEtiquetaChk;
     private javax.swing.JButton guardarCostoBtn;
-    private javax.swing.JRadioButton humedadRadio;
     public javax.swing.JButton imprimirEtiquetaBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
