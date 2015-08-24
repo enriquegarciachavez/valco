@@ -15,12 +15,21 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.print.Doc;
+import javax.print.DocFlavor;
+import javax.print.DocPrintJob;
+import javax.print.PrintException;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.SimpleDoc;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
@@ -58,19 +67,20 @@ import threads.PesoThread;
  */
 public class EtiquetadoPanel extends javax.swing.JPanel {
 
-    String path ="src/Reportes/Lote_Final.jrxml";
+    String path = "src/Reportes/Lote_Final.jrxml";
     ProcesosDAO procesosDAO = new ProcesosDAO();
     ProductoDAO productoDAO = new ProductoDAO();
     DefaultTableModel model = new NoEditableTableModel();
     String formato = "##.##";
     Action action = new AbstractAction("doSomething") {
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        System.out.println("triggered the action");
-    }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("triggered the action");
+        }
 
-};
+    };
+
     /**
      * Creates new form EtiquetadoPanel
      */
@@ -96,14 +106,14 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
             pesoManualLbl.setEnabled(true);
             return;
         }
-         KeyboardFocusManager.getCurrentKeyboardFocusManager()
-  .addKeyEventDispatcher(new KeyEventDispatcher() {
-      @Override
-      public boolean dispatchKeyEvent(KeyEvent e) {
-        System.out.println("Got key event!");
-        return false;
-      }
-});
+        KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                .addKeyEventDispatcher(new KeyEventDispatcher() {
+                    @Override
+                    public boolean dispatchKeyEvent(KeyEvent e) {
+                        System.out.println("Got key event!");
+                        return false;
+                    }
+                });
         pesoThread.setPesoLbl(pesoBasculaLbl);
         Thread thread = new Thread(pesoThread);
         thread.start();
@@ -749,6 +759,8 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         reporteFinalBtn.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         reporteFinalBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Book-icon.PNG"))); // NOI18N
         reporteFinalBtn.setText("Reporte final");
+        reporteFinalBtn.setEnabled(((Procesos)this.procesosLov.getSelectedItem()).getEstatus().equals("ACTIVO")
+        );
         reporteFinalBtn.setHorizontalTextPosition(SwingConstants.CENTER);
         reporteFinalBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -817,46 +829,46 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         add(jTabbedPane1);
     }// </editor-fold>//GEN-END:initComponents
 
-    private String getPesoInicial(){
+    private String getPesoInicial() {
         String pesoInicial = "";
         try {
-            pesoInicial = procesosDAO.getPesoInicial(((Procesos)procesosLov.getSelectedItem()).getCodigo()).toString();
+            pesoInicial = procesosDAO.getPesoInicial(((Procesos) procesosLov.getSelectedItem()).getCodigo()).toString();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
         return pesoInicial;
     }
-    
-    private String getPesoHueso(){
+
+    private String getPesoHueso() {
         String pesoInicial = "";
         try {
-            pesoInicial = procesosDAO.getPesoHueso(((Procesos)procesosLov.getSelectedItem()).getCodigo()).toString();
+            pesoInicial = procesosDAO.getPesoHueso(((Procesos) procesosLov.getSelectedItem()).getCodigo()).toString();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
         return pesoInicial;
     }
-    
-    private String getPesoSebo(){
+
+    private String getPesoSebo() {
         String pesoInicial = "";
         try {
-            pesoInicial = procesosDAO.getPesoSebo(((Procesos)procesosLov.getSelectedItem()).getCodigo()).toString();
+            pesoInicial = procesosDAO.getPesoSebo(((Procesos) procesosLov.getSelectedItem()).getCodigo()).toString();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
         return pesoInicial;
     }
-    
-    private String getPesoAserrin(){
+
+    private String getPesoAserrin() {
         String pesoInicial = "";
         try {
-            pesoInicial = procesosDAO.getPesoAserrin(((Procesos)procesosLov.getSelectedItem()).getCodigo()).toString();
+            pesoInicial = procesosDAO.getPesoAserrin(((Procesos) procesosLov.getSelectedItem()).getCodigo()).toString();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
         return pesoInicial;
     }
-    
+
     private void procesosCerradosChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_procesosCerradosChkActionPerformed
         AbstractButton abstractButton = (AbstractButton) evt.getSource();
         boolean selected = abstractButton.getModel().isSelected();
@@ -878,6 +890,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         }
         this.setTableModel();
         this.actualizarValores();
+        this.reporteFinalBtn.setEnabled(!((Procesos) this.procesosLov.getSelectedItem()).getEstatus().equals("ACTIVO"));
     }//GEN-LAST:event_procesosLovActionPerformed
 
     private void productoCodigoAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyReleased
@@ -917,9 +930,9 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         AbstractButton abstractButton = (AbstractButton) evt.getSource();
         boolean selected = abstractButton.getModel().isSelected();
         if (selected) {
-            
+
         } else {
-            
+
         }
     }//GEN-LAST:event_toneladasChkActionPerformed
 
@@ -935,7 +948,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         productoInventario.setProductosHasProveedores((ProductosHasProveedores) productosLov.getSelectedItem());
         productoInventario.setUbicaciones(ubicacion);
         if (pesoManualChk.isSelected()) {
-            if(pesoManualLbl.getText().equals("")){
+            if (pesoManualLbl.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "Debe introducir el peso de la caja.");
                 return;
             }
@@ -947,12 +960,15 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         productoInventario.setPrecio(BigDecimal.ZERO);
         productoInventario.setEstatus("ACTIVO");
         productoInventario.setConsecutivoProceso(new Integer(consecutivoLbl.getText()));
+        productoInventario.setCodigoBarras(getCodigoBarras());
         try {
             productoDAO.insertarProducto(productoInventario);
+            this.imprimirCodigo();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex, "Errot", ERROR_MESSAGE);
         }
         this.setTableModel();
+        this.actualizarValores();
     }//GEN-LAST:event_imprimirEtiquetaBtnActionPerformed
 
     private void eliminarCajaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarCajaBtnActionPerformed
@@ -977,7 +993,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_eliminarCajaBtnActionPerformed
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
-      JOptionPane.showMessageDialog(null, "chafa");
+        JOptionPane.showMessageDialog(null, "chafa");
     }//GEN-LAST:event_formKeyPressed
 
     private void cerrarProcesoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrarProcesoBtnActionPerformed
@@ -1003,23 +1019,21 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         } catch (IllegalAccessException ex) {
             Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/valco", "admin3ZheGrA", "1VtHQW5M-3g-");
-               ) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/valco", "admin3ZheGrA", "1VtHQW5M-3g-");) {
             /* TODO output your page here. You may use following sample code. */
 
             //Connecting to the MySQL database
             //Loading Jasper Report File from Local file system
-            
-            String realPath = "src/Reportes/Lote_Final.jrxml" ;
+            String realPath = "src/Reportes/Lote_Final.jrxml";
             InputStream input = new FileInputStream(new File(realPath));
             Map mapa = new HashMap();
-                
-            mapa.put("procesoCodigo",((Procesos)(this.procesosLov.getSelectedItem())).getCodigo());
-               
+
+            mapa.put("procesoCodigo", ((Procesos) (this.procesosLov.getSelectedItem())).getCodigo());
+
             JasperReport jasperReport = JasperCompileManager.compileReport(input);
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
             JasperViewer.viewReport(jasperPrint, false);
-        }catch (SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
         } catch (JRException ex) {
             Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -1030,10 +1044,10 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
 
     private void reporteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reporteBtnActionPerformed
         // TODO add your handling code here:
-        if (detalladoRadio.isSelected()){
-            path="src/Reportes/LoteDetallado.jrxml";
-        }else{
-            path="src/Reportes/Lote_final.jrxml";
+        if (detalladoRadio.isSelected()) {
+            path = "src/Reportes/LoteDetallado.jrxml";
+        } else {
+            path = "src/Reportes/Lote_final.jrxml";
         }
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -1044,23 +1058,21 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         } catch (IllegalAccessException ex) {
             Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/valco", "admin3ZheGrA", "1VtHQW5M-3g-");
-               ) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/valco", "admin3ZheGrA", "1VtHQW5M-3g-");) {
             /* TODO output your page here. You may use following sample code. */
 
             //Connecting to the MySQL database
             //Loading Jasper Report File from Local file system
-            
-            String realPath = path ;
+            String realPath = path;
             InputStream input = new FileInputStream(new File(realPath));
             Map mapa = new HashMap();
-                
-            mapa.put("procesoCodigo",((Procesos)(this.procesosLov.getSelectedItem())).getCodigo());
-               
+
+            mapa.put("procesoCodigo", ((Procesos) (this.procesosLov.getSelectedItem())).getCodigo());
+
             JasperReport jasperReport = JasperCompileManager.compileReport(input);
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
             JasperViewer.viewReport(jasperPrint, false);
-        }catch (SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
         } catch (JRException ex) {
             Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -1071,12 +1083,12 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
 
     private void detalladoRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detalladoRadioActionPerformed
         // TODO add your handling code here:
-        String path ="src/Reportes/LoteDetallado.jrxml";
+        String path = "src/Reportes/LoteDetallado.jrxml";
     }//GEN-LAST:event_detalladoRadioActionPerformed
 
     private void condensadoRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_condensadoRadioActionPerformed
         // TODO add your handling code here:
-        String path ="src/Reportes/Lote_Final.jrxml";
+        String path = "src/Reportes/Lote_Final.jrxml";
     }//GEN-LAST:event_condensadoRadioActionPerformed
 
     private String swapChars(String str, int lIdx, int rIdx) {
@@ -1109,15 +1121,52 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
             model.addRow(row);
         }
     }
-    
-    private void actualizarValores(){
+
+    private void actualizarValores() {
         this.pesoInicialLbl.setText(this.getPesoInicial());
         this.pesoHuesoLbl.setText(this.getPesoHueso());
         this.pesoSeboLbl.setText(this.getPesoSebo());
         this.pesoAcerrinLbl.setText(this.getPesoAserrin());
+        try {
+            consecutivoLbl.setText(procesosDAO.getConsecutivo(((Procesos) procesosLov.getSelectedItem()).getCodigo()).toString());
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
     }
-    
-    
+    private String getCodigoBarras(){
+       return this.procesosLov.getSelectedItem()
+                + new SimpleDateFormat("yyddMM").format(new Date())
+                + ((ProductosHasProveedores) this.productosLov.getSelectedItem()).getProductos().getCodigo()
+                + (pesoManualChk.isSelected() ? pesoManualLbl.getText().replaceAll("\\.", "") : pesoBasculaLbl.getText().replaceAll("\\.", ""))
+                + consecutivoLbl.getText();
+    }
+
+    private void imprimirCodigo() {
+        // aca obtenemos la printer default  
+        PrintService printService = PrintServiceLookup.lookupDefaultPrintService();
+
+        String zplCommand = "^XA"
+                + "^FO10,0^ARN,11,7^FD "+ this.productosLov.getSelectedItem()+" ^FS"
+                + " ^BCN, 80, Y, Y, N^FD corptectr>"+getCodigoBarras()+" ^FS "
+                + "^XZ";
+
+// convertimos el comando a bytes  
+        byte[] by = zplCommand.getBytes();
+        DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
+        Doc doc = new SimpleDoc(by, flavor, null);
+
+// creamos el printjob  
+        DocPrintJob job = printService.createPrintJob();
+
+        try {
+            // imprimimos
+            job.print(doc, null);
+        } catch (PrintException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel P;

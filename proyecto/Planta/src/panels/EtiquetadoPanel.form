@@ -1031,6 +1031,9 @@
                   <Image iconType="3" name="/images/Book-icon.PNG"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Reporte final"/>
+                <Property name="enabled" type="boolean" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="((Procesos)this.procesosLov.getSelectedItem()).getEstatus().equals(&quot;ACTIVO&quot;)&#xd;&#xa;" type="code"/>
+                </Property>
                 <Property name="horizontalTextPosition" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="SwingConstants.CENTER" type="code"/>
                 </Property>
