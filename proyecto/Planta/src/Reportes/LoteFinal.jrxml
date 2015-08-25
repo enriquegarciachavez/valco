@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="LoteFinal" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="83"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["src/Reportes/"]]></defaultValueExpression>
 	</parameter>
@@ -54,10 +54,6 @@ where VISTA_PROCESOS.`CODIGO_PROCESO` =  $P{procesoCodigo}]]>
 				</textElement>
 				<text><![CDATA[Reporte de Lote Finalizado]]></text>
 			</staticText>
-			<image>
-				<reportElement x="10" y="11" width="115" height="75"/>
-				<imageExpression class="java.lang.String"><![CDATA["C:\\Users\\Karla\\Downloads\\11006088_866443736709346_2067763016_n.jpg"]]></imageExpression>
-			</image>
 			<staticText>
 				<reportElement x="192" y="87" width="72" height="17"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
@@ -101,6 +97,10 @@ where VISTA_PROCESOS.`CODIGO_PROCESO` =  $P{procesoCodigo}]]>
 				<textElement lineSpacing="Single"/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{VISTA_PROCESOS_FECHA_FIN}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="30" y="23" width="115" height="75"/>
+				<imageExpression class="java.lang.String"><![CDATA["src/Reportes/logo.jpg"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>
