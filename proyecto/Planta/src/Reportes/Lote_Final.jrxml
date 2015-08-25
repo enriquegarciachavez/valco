@@ -4,7 +4,7 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["src/Reportes/"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="procesoCodigo" class="java.lang.Integer"/>
 	<queryString>

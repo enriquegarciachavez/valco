@@ -4,7 +4,7 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="83"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["."]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["src/Reportes/"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="procesoCodigo" class="java.lang.Integer"/>
 	<queryString>
@@ -256,7 +256,7 @@ where VISTA_PROCESOS.`CODIGO_PROCESO` =  $P{procesoCodigo}]]>
 					<subreportParameterExpression><![CDATA[$F{VISTA_PROCESOS_CODIGO_PROCESO}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression class="java.lang.String"><![CDATA["Materia_prima_proceso.jasper"]]></subreportExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR}+"Materia_prima_proceso.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</columnHeader>
