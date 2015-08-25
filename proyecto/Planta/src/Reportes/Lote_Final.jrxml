@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Lote_Final " language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" >
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Lote_Final " language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -55,23 +55,23 @@ FROM
 	<field name="PRODUCTOS_ESTATUS" class="java.lang.String"/>
 	<field name="PRODUCTOS_PRECIO_SUGERIDO" class="java.math.BigDecimal"/>
 	<title>
-		<band height="151" splitType="Stretch">
+		<band height="151">
 			<subreport>
-				<reportElement positionType="Float" x="20" y="0" width="544" height="40" />
+				<reportElement positionType="Float" x="20" y="0" width="544" height="40"/>
 				<subreportParameter name="SUBREPORT_DIR"/>
 				<subreportParameter name="procesoCodigo">
 					<subreportParameterExpression><![CDATA[$P{procesoCodigo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "LoteFinal.jasper"]]></subreportExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["LoteFinal.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="20" y="40" width="544" height="107" />
+				<reportElement positionType="Float" x="20" y="40" width="544" height="107"/>
 				<subreportParameter name="procesoCodigo">
 					<subreportParameterExpression><![CDATA[$P{procesoCodigo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "SubreporteCondensado.jasper"]]></subreportExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["SubreporteCondensado.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>

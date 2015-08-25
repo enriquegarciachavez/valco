@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Materia_prima_proceso" language="groovy" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="da8b5da8-8d9a-44c1-a077-011451a624e0">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Materia_prima_proceso" language="groovy" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -38,7 +38,7 @@ where  PRODUCTOS_INVENTARIO.`PROCESOS_CODIGO_HIJO` =$P{procesoCodigo}]]>
 	<pageHeader>
 		<band height="21" splitType="Stretch">
 			<staticText>
-				<reportElement x="2" y="0" width="570" height="20" uuid="68b5ff0d-abf3-4a48-b38d-fda507660b4f"/>
+				<reportElement x="2" y="0" width="570" height="20" />
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="14" isBold="true"/>
 				</textElement>
@@ -49,14 +49,14 @@ where  PRODUCTOS_INVENTARIO.`PROCESOS_CODIGO_HIJO` =$P{procesoCodigo}]]>
 	<columnHeader>
 		<band height="20" splitType="Stretch">
 			<staticText>
-				<reportElement x="142" y="0" width="149" height="18" uuid="5720c180-debd-4366-ae51-53fccae56da0"/>
+				<reportElement x="142" y="0" width="149" height="18" />
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Descripcion:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="291" y="0" width="123" height="18" uuid="4d883b75-6854-4f5e-b5d4-9d113053f57f"/>
+				<reportElement x="291" y="0" width="123" height="18" />
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
@@ -67,12 +67,12 @@ where  PRODUCTOS_INVENTARIO.`PROCESOS_CODIGO_HIJO` =$P{procesoCodigo}]]>
 	<detail>
 		<band height="22" splitType="Stretch">
 			<textField>
-				<reportElement x="142" y="0" width="149" height="20" uuid="60afff12-afe3-47fd-8e3b-c0bdefaf24f2"/>
+				<reportElement x="142" y="0" width="149" height="20" />
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{PRODUCTOS_DESCRIPCION}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="291" y="0" width="123" height="20" uuid="b61b4bdf-915a-4135-9431-1e3b11d0a457"/>
+				<reportElement x="291" y="0" width="123" height="20" />
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{PRODUCTOS_INVENTARIO_PESO}]]></textFieldExpression>
 			</textField>

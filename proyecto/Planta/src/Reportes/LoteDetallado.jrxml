@@ -31,7 +31,7 @@ FROM
 	<field name="PRODUCTOS_ESTATUS" class="java.lang.String"/>
 	<field name="PRODUCTOS_PRECIO_SUGERIDO" class="java.math.BigDecimal"/>
 	<title>
-		<band height="162" splitType="Stretch">
+		<band height="162">
 			<subreport>
 				<reportElement positionType="Float" x="0" y="0" width="572" height="60"/>
 				<subreportParameter name="SUBREPORT_DIR"/>
@@ -39,7 +39,7 @@ FROM
 					<subreportParameterExpression><![CDATA[$P{procesoCodigo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "LoteFinal.jasper"]]></subreportExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["LoteFinal.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
 				<reportElement positionType="Float" x="0" y="60" width="572" height="61"/>
@@ -47,7 +47,7 @@ FROM
 					<subreportParameterExpression><![CDATA[$P{procesoCodigo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "SubreporteDetallado.jasper"]]></subreportExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["SubreporteDetallado.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
