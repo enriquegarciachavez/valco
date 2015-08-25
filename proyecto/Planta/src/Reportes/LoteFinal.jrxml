@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="LoteFinal" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b4798221-194f-489c-b6b1-38bf80f681c5">
-	<property name="ireport.zoom" value="0.9090909090909093"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="LoteFinal" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="83"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["."]]></defaultValueExpression>
 	</parameter>
@@ -48,63 +48,38 @@ where VISTA_PROCESOS.`CODIGO_PROCESO` =  $P{procesoCodigo}]]>
 	<title>
 		<band height="132">
 			<staticText>
-<<<<<<< HEAD
 				<reportElement x="192" y="23" width="365" height="28" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-=======
-				<reportElement x="192" y="23" width="365" height="28" backcolor="#FFFFFF" uuid="d164b078-9c29-458a-9adc-d4938282affb"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
->>>>>>> origin/master
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Reporte de Lote Finalizado]]></text>
 			</staticText>
 			<image>
-<<<<<<< HEAD
 				<reportElement x="10" y="11" width="115" height="75"/>
 				<imageExpression class="java.lang.String"><![CDATA["C:\\Users\\Karla\\Downloads\\11006088_866443736709346_2067763016_n.jpg"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="192" y="87" width="72" height="17"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
-=======
-				<reportElement x="10" y="11" width="115" height="75" uuid="244586b5-af36-465b-8ab7-249efe7ba4d4"/>
-				<imageExpression><![CDATA["C:\\Users\\Karla\\Downloads\\11006088_866443736709346_2067763016_n.jpg"]]></imageExpression>
-			</image>
-			<staticText>
-				<reportElement x="192" y="87" width="72" height="17" uuid="685221c0-4f89-4335-a638-11dc41152c2f"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
->>>>>>> origin/master
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Descripción]]></text>
 			</staticText>
 			<staticText>
-<<<<<<< HEAD
 				<reportElement x="192" y="65" width="72" height="22" forecolor="#000000" backcolor="#666666"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
-=======
-				<reportElement x="192" y="65" width="72" height="22" forecolor="#000000" backcolor="#666666" uuid="3bc4726b-5153-427d-9b02-76a073d8d367"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
->>>>>>> origin/master
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Proceso]]></text>
 			</staticText>
 			<staticText>
-<<<<<<< HEAD
 				<reportElement x="192" y="104" width="72" height="17"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
-=======
-				<reportElement x="192" y="104" width="72" height="17" uuid="716526b3-4857-4434-8f38-0059a41dfb7a"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
->>>>>>> origin/master
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Fecha Inicio]]></text>
 			</staticText>
 			<textField>
-<<<<<<< HEAD
 				<reportElement x="264" y="86" width="100" height="18"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single"/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{VISTA_PROCESOS_OBSERVACIONES}]]></textFieldExpression>
@@ -112,21 +87,11 @@ where VISTA_PROCESOS.`CODIGO_PROCESO` =  $P{procesoCodigo}]]>
 			<staticText>
 				<reportElement x="364" y="104" width="72" height="17"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
-=======
-				<reportElement x="264" y="86" width="100" height="18" uuid="717bc2c1-189f-4eef-a76b-d9e5ea317788"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{VISTA_PROCESOS_OBSERVACIONES}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="364" y="104" width="72" height="17" uuid="ed266cd1-2a3a-4c36-bf3e-af8f27e906c7"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
->>>>>>> origin/master
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Fecha Cierre]]></text>
 			</staticText>
 			<textField>
-<<<<<<< HEAD
 				<reportElement x="264" y="104" width="100" height="17"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single"/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{VISTA_PROCESOS_FECHA_INICIO}]]></textFieldExpression>
@@ -135,28 +100,14 @@ where VISTA_PROCESOS.`CODIGO_PROCESO` =  $P{procesoCodigo}]]>
 				<reportElement x="436" y="104" width="100" height="17"/>
 				<textElement lineSpacing="Single"/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{VISTA_PROCESOS_FECHA_FIN}]]></textFieldExpression>
-=======
-				<reportElement x="264" y="104" width="100" height="17" uuid="8f654a9b-9fdd-45b8-8fdd-bce40a518b8f"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{VISTA_PROCESOS_FECHA_INICIO}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="436" y="104" width="100" height="17" uuid="5d204c63-c13f-41b5-bfca-c1b7b6322c67"/>
-				<textFieldExpression><![CDATA[$F{VISTA_PROCESOS_FECHA_FIN}]]></textFieldExpression>
->>>>>>> origin/master
 			</textField>
 		</band>
 	</title>
 	<pageHeader>
 		<band height="20">
 			<staticText>
-<<<<<<< HEAD
 				<reportElement x="2" y="0" width="570" height="20" forecolor="#000000"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-=======
-				<reportElement x="2" y="0" width="570" height="20" forecolor="#000000" uuid="755c0a00-a30e-49b1-9af9-41517a42a541"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
->>>>>>> origin/master
 					<font fontName="Arial" size="14" isBold="true" isPdfEmbedded="false"/>
 				</textElement>
 				<text><![CDATA[Datos del Reporte]]></text>
@@ -166,151 +117,90 @@ where VISTA_PROCESOS.`CODIGO_PROCESO` =  $P{procesoCodigo}]]>
 	<columnHeader>
 		<band height="205">
 			<staticText>
-<<<<<<< HEAD
 				<reportElement x="2" y="20" width="123" height="17"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
-=======
-				<reportElement x="2" y="20" width="123" height="17" uuid="f10ec3b0-e5cf-478e-9152-6c07516ee0e8"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
->>>>>>> origin/master
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Peso Inicial:]]></text>
 			</staticText>
 			<staticText>
-<<<<<<< HEAD
 				<reportElement x="0" y="37" width="125" height="17"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
-=======
-				<reportElement x="0" y="37" width="125" height="17" uuid="5d25ffc4-10e1-4932-9a26-7e1a5bc7846f"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
->>>>>>> origin/master
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Peso Final:]]></text>
 			</staticText>
 			<staticText>
-<<<<<<< HEAD
 				<reportElement x="0" y="54" width="125" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
-=======
-				<reportElement x="0" y="54" width="125" height="18" uuid="b6a41080-39a6-4d80-be51-a18c3cab4cec"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
->>>>>>> origin/master
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Merma en Peso:]]></text>
 			</staticText>
 			<staticText>
-<<<<<<< HEAD
 				<reportElement x="0" y="72" width="125" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
-=======
-				<reportElement x="0" y="72" width="125" height="18" uuid="9e2aefc9-17bd-4fb5-9606-a2ac1d27f422"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
->>>>>>> origin/master
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Merma en Porcentace:]]></text>
 			</staticText>
 			<staticText>
-<<<<<<< HEAD
 				<reportElement x="0" y="90" width="125" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
-=======
-				<reportElement x="0" y="90" width="125" height="18" uuid="6d211a63-04a1-4a01-b577-2ad64903a129"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
->>>>>>> origin/master
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Costos Indirectos:]]></text>
 			</staticText>
 			<staticText>
-<<<<<<< HEAD
 				<reportElement x="0" y="108" width="125" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
-=======
-				<reportElement x="0" y="108" width="125" height="18" uuid="00fc76ff-d05b-4ac9-8afe-81f8addbe0b3"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
->>>>>>> origin/master
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Usuario Inicio:]]></text>
 			</staticText>
 			<staticText>
-<<<<<<< HEAD
 				<reportElement x="290" y="20" width="123" height="17" backcolor="#666666"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
-=======
-				<reportElement x="290" y="20" width="123" height="17" backcolor="#666666" uuid="bcd0fc00-02ef-459a-9b28-9ae2a52fc85c"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
->>>>>>> origin/master
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Costo Inicial:]]></text>
 			</staticText>
 			<staticText>
-<<<<<<< HEAD
 				<reportElement x="290" y="37" width="123" height="17"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
-=======
-				<reportElement x="290" y="37" width="123" height="17" uuid="69ed3783-871d-41ee-b486-c5028b88085d"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
->>>>>>> origin/master
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Costo Final]]></text>
 			</staticText>
 			<staticText>
-<<<<<<< HEAD
 				<reportElement x="290" y="55" width="123" height="17"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
-=======
-				<reportElement x="290" y="55" width="123" height="17" uuid="a3a79355-c4d4-47e8-987c-202afc196371"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
->>>>>>> origin/master
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Peso de Hueso y Cebo:]]></text>
 			</staticText>
 			<staticText>
-<<<<<<< HEAD
 				<reportElement x="290" y="72" width="123" height="17"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
-=======
-				<reportElement x="290" y="72" width="123" height="17" uuid="623b703e-d013-4bc4-84cc-3ca7d479c875"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
->>>>>>> origin/master
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total de Cajas:]]></text>
 			</staticText>
 			<staticText>
-<<<<<<< HEAD
 				<reportElement x="290" y="89" width="123" height="17"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
-=======
-				<reportElement x="290" y="89" width="123" height="17" uuid="7155fcaf-edbc-437f-9b2d-8b01d1caf02a"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
->>>>>>> origin/master
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Mano de Obra:]]></text>
 			</staticText>
 			<staticText>
-<<<<<<< HEAD
 				<reportElement x="290" y="106" width="123" height="17"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
-=======
-				<reportElement x="290" y="106" width="123" height="17" uuid="ca1c77f3-f313-4300-9294-8ac30583e148"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
->>>>>>> origin/master
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Usuario Cierre:]]></text>
 			</staticText>
 			<textField>
-<<<<<<< HEAD
 				<reportElement x="125" y="20" width="100" height="17"/>
 				<textElement verticalAlignment="Middle" lineSpacing="Single"/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{VISTA_PROCESOS_PESO_INICIAL} +" Kg"]]></textFieldExpression>
@@ -362,68 +252,11 @@ where VISTA_PROCESOS.`CODIGO_PROCESO` =  $P{procesoCodigo}]]>
 			</textField>
 			<subreport>
 				<reportElement x="0" y="139" width="572" height="60"/>
-=======
-				<reportElement x="125" y="20" width="100" height="17" uuid="e9b1efcc-2a19-4ab1-865f-e0492932e8b1"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{VISTA_PROCESOS_PESO_INICIAL} +" Kg"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="125" y="37" width="100" height="17" uuid="27d30e68-cddd-4d0f-bbac-fc800caec0b7"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{VISTA_PROCESOS_PESO_FINAL} + " Kg"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="125" y="54" width="100" height="17" uuid="5265238a-9cfd-4193-8988-7360bf8953d9"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{VISTA_PROCESOS_MERMA_PESO} + " Kg"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="125" y="72" width="100" height="18" uuid="7bf6d46a-92db-40f6-bd91-37bfac3f4b34"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{VISTA_PROCESOS_MERMA_PORCENTAJE} +  "%"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="125" y="90" width="100" height="18" uuid="7f924c15-d325-4b05-bdf4-5b05695323ef"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA["\$ " + $F{VISTA_PROCESOS_COSTOS_INDIRECTOS}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="413" y="20" width="100" height="17" uuid="61706aad-7b47-490c-8c04-c6d6b60d73bd"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA["\$ " + $F{VISTA_PROCESOS_COSTO_INICIAL}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="413" y="37" width="100" height="17" uuid="244165c1-aa23-435c-bba0-3dd8aeb0a74c"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA["\$ " + $F{VISTA_PROCESOS_COSTO_FINAL}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="413" y="54" width="100" height="17" uuid="501580df-86c7-4439-85fd-ef2a9a8a5023"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{VISTA_PROCESOS_PESO_HUESO_SEBO} + "Kg"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="413" y="71" width="100" height="18" uuid="05117a98-112d-4c50-98f2-faeeb78d9ff8"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{VISTA_PROCESOS_TOTAL_CAJAS}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="413" y="89" width="100" height="17" uuid="59914557-98c7-4d4e-80fd-f438fd13f159"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA["\$ " + $F{VISTA_PROCESOS_MANO_OBRA}]]></textFieldExpression>
-			</textField>
-			<subreport>
-				<reportElement x="0" y="139" width="572" height="60" uuid="e4e374dd-fc71-410e-b36c-7d99ce84715d"/>
->>>>>>> origin/master
 				<subreportParameter name="procesoCodigo">
 					<subreportParameterExpression><![CDATA[$F{VISTA_PROCESOS_CODIGO_PROCESO}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-<<<<<<< HEAD
 				<subreportExpression class="java.lang.String"><![CDATA["Materia_prima_proceso.jasper"]]></subreportExpression>
-=======
-				<subreportExpression><![CDATA["Materia_prima_proceso.jasper"]]></subreportExpression>
->>>>>>> origin/master
 			</subreport>
 		</band>
 	</columnHeader>

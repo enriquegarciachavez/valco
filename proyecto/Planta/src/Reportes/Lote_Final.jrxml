@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Lote_Final " language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-=======
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Lote_Final " language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="05ce2fd2-d5d2-45b5-9ea5-8367bf18c8ce">
->>>>>>> origin/master
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -61,36 +57,21 @@ FROM
 	<title>
 		<band height="151">
 			<subreport>
-<<<<<<< HEAD
 				<reportElement positionType="Float" x="20" y="0" width="544" height="40"/>
-=======
-				<reportElement positionType="Float" x="20" y="0" width="544" height="40" uuid="f6eff233-c39b-4a68-869c-ad4ae0cca38f"/>
->>>>>>> origin/master
 				<subreportParameter name="SUBREPORT_DIR"/>
 				<subreportParameter name="procesoCodigo">
 					<subreportParameterExpression><![CDATA[$P{procesoCodigo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-<<<<<<< HEAD
 				<subreportExpression class="java.lang.String"><![CDATA["LoteFinal.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
 				<reportElement positionType="Float" x="20" y="40" width="544" height="107"/>
-=======
-				<subreportExpression><![CDATA["LoteFinal.jasper"]]></subreportExpression>
-			</subreport>
-			<subreport>
-				<reportElement positionType="Float" x="20" y="40" width="544" height="107" uuid="0d739841-ec70-4ed4-bff7-54268222e42a"/>
->>>>>>> origin/master
 				<subreportParameter name="procesoCodigo">
 					<subreportParameterExpression><![CDATA[$P{procesoCodigo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-<<<<<<< HEAD
 				<subreportExpression class="java.lang.String"><![CDATA["SubreporteCondensado.jasper"]]></subreportExpression>
-=======
-				<subreportExpression><![CDATA["SubreporteCondensado.jasper"]]></subreportExpression>
->>>>>>> origin/master
 			</subreport>
 		</band>
 	</title>
