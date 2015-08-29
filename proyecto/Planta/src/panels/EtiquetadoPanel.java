@@ -1175,8 +1175,8 @@ public class EtiquetadoPanel extends CoustomPanel {
         PrintService printService = PrintServiceLookup.lookupDefaultPrintService();
 
         String zplCommand = "^XA"
-                + "^FO10,0^ARN,11,7^FD "+ this.productosLov.getSelectedItem()+" ^FS"
-                + " ^BCN, 80, Y, Y, N^FD corptectr>"+getCodigoBarras()+" ^FS "
+                + "^FO30,150^ARN,11,7^FD "+ this.productosLov.getSelectedItem()+""
+                + "^BCN, 80, Y, Y, Y^FD >"+getCodigoBarras()+" ^FS "
                 + "^XZ";
 
 // convertimos el comando a bytes  
