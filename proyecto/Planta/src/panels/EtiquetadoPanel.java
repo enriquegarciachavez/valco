@@ -1,5 +1,6 @@
 package panels;
 
+import creators.PanelCreator;
 import dao.ProcesosDAO;
 import dao.ProductoDAO;
 import java.awt.ComponentOrientation;
@@ -34,8 +35,12 @@ import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
@@ -65,13 +70,14 @@ import threads.PesoThread;
  *
  * @author Administrador
  */
-public class EtiquetadoPanel extends javax.swing.JPanel {
+public class EtiquetadoPanel extends CoustomPanel {
 
     String path = "src/Reportes/Lote_Final.jrxml";
     ProcesosDAO procesosDAO = new ProcesosDAO();
     ProductoDAO productoDAO = new ProductoDAO();
     DefaultTableModel model = new NoEditableTableModel();
     String formato = "##.##";
+    JInternalFrame internalFrame;
     Action action = new AbstractAction("doSomething") {
 
         @Override
@@ -84,8 +90,8 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
     /**
      * Creates new form EtiquetadoPanel
      */
-    public EtiquetadoPanel() {
-
+    public EtiquetadoPanel(JDesktopPane mainPanel) {
+        this.mainPanel= mainPanel;
         initComponents();
         action.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control S"));
         tablaProductos.setDefaultRenderer(Object.class, new EtiquetadoTableCellRendered());
@@ -602,6 +608,11 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         agregarPesoInicialBtn.setText("Agregar peso inicial");
         agregarPesoInicialBtn.setHorizontalTextPosition(SwingConstants.CENTER);
         agregarPesoInicialBtn.setVerticalTextPosition(SwingConstants.BOTTOM);
+        agregarPesoInicialBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                agregarPesoInicialBtnActionPerformed(evt);
+            }
+        });
 
         pesoInicialLbl.setText(this.getPesoInicial());
 
@@ -1091,6 +1102,24 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         String path = "src/Reportes/Lote_Final.jrxml";
     }//GEN-LAST:event_condensadoRadioActionPerformed
 
+    private void agregarPesoInicialBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarPesoInicialBtnActionPerformed
+        // TODO add your handling code here:
+        addNewPanel(evt);
+        
+    }//GEN-LAST:event_agregarPesoInicialBtnActionPerformed
+
+    private void addNewPanel(ActionEvent evt){
+        if(internalFrame != null)
+        this.mainPanel.remove(internalFrame);
+        internalFrame = new JInternalFrame("Modificación de peso Inicial", true, true, true);
+        JPanel prueb = new AbrirProcesoPanel((Procesos) procesosLov.getSelectedItem());
+        internalFrame.add(prueb);
+        internalFrame.setBounds(0, 0, 200, 200);
+        this.mainPanel.add(internalFrame);
+        internalFrame.setVisible(true);
+        internalFrame.show();
+        internalFrame.repaint();
+    }
     private String swapChars(String str, int lIdx, int rIdx) {
         StringBuilder sb = new StringBuilder(str);
         char l = sb.charAt(lIdx), r = sb.charAt(rIdx);

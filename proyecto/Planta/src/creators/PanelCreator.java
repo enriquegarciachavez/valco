@@ -5,6 +5,7 @@
  */
 package creators;
 
+import javax.swing.JDesktopPane;
 import panels.EtiquetadoPanel;
 import javax.swing.JPanel;
 import panels.AbrirProcesoPanel;
@@ -17,13 +18,13 @@ import panels.ReciboDeProducto;
  */
 public class PanelCreator {
     
-    public static JPanel createPanel(String panelName){
+    public static JPanel createPanel(String panelName, JDesktopPane mainPanel){
         if("Recibo de canales".equals(panelName)){
             return new ReciboDeProducto();
         }else if("Apertura de proceso".equals(panelName)){
             return new AbrirProcesoPanel();
         }else if("Pesar y etiquetar".equals(panelName)){
-            return new EtiquetadoPanel();
+            return new EtiquetadoPanel(mainPanel);
         }else if("Configuración de la báscula".equals(panelName)){
             return new ConfigBascula();
         }

@@ -280,7 +280,7 @@ public class ProductoDAO {
           List<ProductosInventario> productos = new ArrayList<ProductosInventario>();
           try {
               tx = session.beginTransaction();
-              Criteria q = session.createCriteria(ProductosInventario.class);
+              Criteria q = session.createCriteria(ProductosInventario.class).add(Restrictions.eq("estatus","ACTIVO"));
               Criteria y = q.createCriteria("productosHasProveedores");
               Criteria x = y.createCriteria("productos").add(Restrictions.eq("generarSubproducto",true));
               productos = (List<ProductosInventario>)x.list();

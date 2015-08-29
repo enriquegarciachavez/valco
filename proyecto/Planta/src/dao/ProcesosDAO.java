@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import mapping.Procesos;
 import mapping.Productos;
 import mapping.ProductosInventario;
@@ -39,6 +40,42 @@ public class ProcesosDAO {
             session.save(proceso);
             for(Object producto : productos){
                 ((ProductosInventario)producto).setProcesosCodigoHijo(proceso.getCodigo());
+                ((ProductosInventario)producto).setEstatus("ASIGNADO");
+                session.update(producto);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al registrar el producto.");
+                }
+            }
+            throw new Exception("Ocurrió un error al registrar el producto.");
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al registrar el producto.");
+            }
+        }
+    }
+     public void actualizarProceso(Procesos proceso, Set<ProductosInventario> toAdd, Set<ProductosInventario> toRemove) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            for(Object producto : toRemove){
+                ((ProductosInventario)producto).setProcesosCodigoHijo(null);
+                ((ProductosInventario)producto).setEstatus("ACTIVO");
+                session.update(producto);
+            }
+            for(Object producto : toAdd){
+                ((ProductosInventario)producto).setProcesosCodigoHijo(proceso.getCodigo());
+                ((ProductosInventario)producto).setEstatus("ASIGNADO");
                 session.update(producto);
             }
             tx.commit();
@@ -177,6 +214,41 @@ public class ProcesosDAO {
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(ProductosInventario.class)
                     .add(Restrictions.eq("procesosCodigoPadre", procesoCodigo));
+              productos = q.list();
+              for(ProductosInventario producto: productos){
+                  Hibernate.initialize(producto.getProductosHasProveedores());
+                  Hibernate.initialize(producto.getProductosHasProveedores().getProductos());
+              }
+            return productos;
+
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al consultar las cajas.");
+                }
+            }
+            throw new Exception("Ocurrió un error al consultar las cajas.");
+        } finally {
+            try {
+                if(session.isOpen()){
+                    session.close();
+                  }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar las cajas.");
+            }
+        }
+    }
+    
+    public List<ProductosInventario> getCajasPorProcesoHijo(int procesoCodigo) throws Exception{
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        List<ProductosInventario> productos = new ArrayList<>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(ProductosInventario.class)
+                    .add(Restrictions.eq("procesosCodigoHijo", procesoCodigo));
               productos = q.list();
               for(ProductosInventario producto: productos){
                   Hibernate.initialize(producto.getProductosHasProveedores());

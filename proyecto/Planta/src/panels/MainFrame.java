@@ -53,6 +53,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jCheckBox1 = new javax.swing.JCheckBox();
+        mainPanel = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         reciboCanales = new javax.swing.JMenuItem();
@@ -70,6 +71,19 @@ public class MainFrame extends javax.swing.JFrame {
                 formKeyTyped(evt);
             }
         });
+
+        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
+        mainPanel.setLayout(mainPanelLayout);
+        mainPanelLayout.setHorizontalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1394, Short.MAX_VALUE)
+        );
+        mainPanelLayout.setVerticalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 654, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
 
         jMenu1.setText("File");
 
@@ -119,12 +133,15 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void addNewPanel(ActionEvent evt){
         if(internalFrame != null)
-        getContentPane().remove(internalFrame);
+        mainPanel.remove(internalFrame);
         internalFrame = new JInternalFrame();
         String sourceName = ((JMenuItem)evt.getSource()).getText();
-        JPanel prueb = PanelCreator.createPanel(sourceName);
+        JPanel prueb = PanelCreator.createPanel(sourceName, mainPanel);
         internalFrame.add(prueb);
-        getContentPane().add(internalFrame, java.awt.BorderLayout.CENTER);
+        internalFrame.setBounds(0,0, 200, 200);
+        internalFrame.setResizable(true);
+        mainPanel.add(internalFrame);
+        internalFrame.show();
         internalFrame.setVisible(true);
         internalFrame.repaint();
     }
@@ -192,6 +209,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JDesktopPane mainPanel;
     private javax.swing.JMenuItem reciboCanales;
     // End of variables declaration//GEN-END:variables
 }

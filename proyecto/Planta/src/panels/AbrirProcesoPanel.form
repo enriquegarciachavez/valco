@@ -142,6 +142,9 @@
               <Connection code="lmSeleccionados" type="code"/>
             </Property>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="try{&#xa;            for(Object elemento : destination){&#xa;                lmSeleccionados.addElement(elemento);&#xa;            }&#xa;        }catch(Exception e){&#xa;&#xa;        }"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>
