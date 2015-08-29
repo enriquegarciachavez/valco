@@ -1,7 +1,8 @@
 package panels;
 
-
 import creators.PanelCreator;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -16,13 +17,14 @@ import javax.swing.JPanel;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Karla
  */
 public class MainFrame extends javax.swing.JFrame {
+
     JInternalFrame internalFrame;
+
     /**
      * Creates new form MainFrame
      */
@@ -30,17 +32,17 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         this.addKeyListener(new KeyAdapter() {
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-           JOptionPane.showMessageDialog(rootPane, e);
-        } else {
-            // some character has been read, append it to your "barcode cache"
-            JOptionPane.showMessageDialog(rootPane, e);
-        }
-    }
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    JOptionPane.showMessageDialog(rootPane, e);
+                } else {
+                    // some character has been read, append it to your "barcode cache"
+                    JOptionPane.showMessageDialog(rootPane, e);
+                }
+            }
 
-});
+        });
     }
 
     /**
@@ -131,21 +133,26 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addNewPanel(ActionEvent evt){
-        if(internalFrame != null)
-        mainPanel.remove(internalFrame);
+    private void addNewPanel(ActionEvent evt) {
+        if (internalFrame != null) {
+            mainPanel.remove(internalFrame);
+        }
         internalFrame = new JInternalFrame();
-        String sourceName = ((JMenuItem)evt.getSource()).getText();
+        String sourceName = ((JMenuItem) evt.getSource()).getText();
         JPanel prueb = PanelCreator.createPanel(sourceName, mainPanel);
         internalFrame.add(prueb);
-        internalFrame.setBounds(0,0, 200, 200);
+        internalFrame.setBounds(0, 0, 200, 200);
         internalFrame.setResizable(true);
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        gd.getDefaultConfiguration().getBounds().getWidth();
+        internalFrame.setSize(gd.getDefaultConfiguration().getBounds().getSize());
         mainPanel.add(internalFrame);
         internalFrame.show();
         internalFrame.setVisible(true);
         internalFrame.repaint();
     }
-    
+
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         addNewPanel(evt);
     }//GEN-LAST:event_jMenuItem3ActionPerformed

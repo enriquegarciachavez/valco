@@ -1114,7 +1114,7 @@ public class EtiquetadoPanel extends CoustomPanel {
         internalFrame = new JInternalFrame("Modificación de peso Inicial", true, true, true);
         JPanel prueb = new AbrirProcesoPanel((Procesos) procesosLov.getSelectedItem());
         internalFrame.add(prueb);
-        internalFrame.setBounds(0, 0, 200, 200);
+        internalFrame.setBounds(0, 0, 1002, 702);
         this.mainPanel.add(internalFrame);
         internalFrame.setVisible(true);
         internalFrame.show();
