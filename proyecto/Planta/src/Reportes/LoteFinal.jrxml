@@ -97,10 +97,6 @@ where VISTA_PROCESOS.`CODIGO_PROCESO` =  $P{procesoCodigo}]]>
 				<textElement lineSpacing="Single"/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{VISTA_PROCESOS_FECHA_FIN}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="30" y="23" width="115" height="75"/>
-				<imageExpression class="java.lang.String"><![CDATA["src/Reportes/logo.jpg"]]></imageExpression>
-			</image>
 		</band>
 	</title>
 	<pageHeader>
