@@ -11,6 +11,7 @@
     <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,2,12,0,0,2,-109"/>
   </AuxValues>
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
@@ -319,18 +320,21 @@
                 <Component class="javax.swing.JTextField" name="numeroCanalTxt">
                 </Component>
                 <Component class="javax.swing.JTextField" name="pesoTxt2">
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pesoTxt2ActionPerformed"/>
+                  </Events>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="this.pesoTxt2.setVisible(this.productoLov.getSelectedItem().toString().equals(&quot;CANAL DE EQUINO&quot;)&#xd;&#xa;||this.productoLov.getSelectedItem().toString().equals(&quot;CANAL DE RES&quot;));&#xd;&#xa;"/>
+                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="this.pesoTxt2.setVisible(this.productoLov.getSelectedItem().toString().equals(&quot;CANAL DE EQUINO&quot;)&#xd;&#xa;||this.productoLov.getSelectedItem().toString().equals(&quot;CANAL DE RES&quot;));&#xd;&#xa;pesoTxt2.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);&#xd;&#xa;        pesoTxt2.addKeyListener(new NumericKeyListener());"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JTextField" name="pesoTxt3">
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="this.pesoTxt3.setVisible(this.productoLov.getSelectedItem().toString().equals(&quot;CANAL DE RES&quot;));"/>
+                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="this.pesoTxt3.setVisible(this.productoLov.getSelectedItem().toString().equals(&quot;CANAL DE RES&quot;));&#xd;&#xa;pesoTxt3.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);&#xd;&#xa;        pesoTxt3.addKeyListener(new NumericKeyListener());"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JTextField" name="pesoTxt4">
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="this.pesoTxt4.setVisible(this.productoLov.getSelectedItem().toString().equals(&quot;CANAL DE RES&quot;));"/>
+                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="this.pesoTxt4.setVisible(this.productoLov.getSelectedItem().toString().equals(&quot;CANAL DE RES&quot;));&#xd;&#xa;pesoTxt4.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);&#xd;&#xa;        pesoTxt4.addKeyListener(new NumericKeyListener());"/>
                   </AuxValues>
                 </Component>
               </SubComponents>
@@ -352,7 +356,7 @@
                     </Property>
                   </Properties>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="String[] columnNames = {&quot;N&#xfa;mero de matanza&quot;,&#xd;&#xa;        &quot;Peso&quot;,&#xd;&#xa;        &quot;Proveedor&quot;,&#xd;&#xa;        &quot;Producto&quot;,&#xd;&#xa;        &quot;Almacen&quot;};&#xd;&#xa;&#xd;&#xa;    model.setColumnIdentifiers(columnNames);"/>
+                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="if (modoOperacion.equals(&quot;CANAL DE EQUINO&quot;)){&#xd;&#xa;String[] columnNames = {&quot;N&#xfa;mero de Canal&quot;,&#xd;&#xa;        &quot;Peso1&quot;,&#xd;&#xa;        &quot;Peso2&quot;,&#xd;&#xa;        &quot;Proveedor&quot;,&#xd;&#xa;        &quot;Producto&quot;,&#xd;&#xa;        &quot;Almacen&quot;};&#xd;&#xa;&#xd;&#xa;    model.setColumnIdentifiers(columnNames);&#xd;&#xa;} else if(modoOperacion.equals(&quot;CANAL DE RES&quot;)){&#xd;&#xa;        &#xd;&#xa;        String[] columnNames = {&quot;N&#xfa;mero de Canal&quot;,&#xd;&#xa;        &quot;Peso1&quot;,&#xd;&#xa;        &quot;Peso2&quot;,&#xd;&#xa;        &quot;Peso3&quot;,&#xd;&#xa;        &quot;Peso4&quot;,&#xd;&#xa;        &quot;Proveedor&quot;,&#xd;&#xa;        &quot;Producto&quot;,&#xd;&#xa;        &quot;Almacen&quot;};&#xd;&#xa;         model.setColumnIdentifiers(columnNames);&#xd;&#xa;} else if(modoOperacion.equals(&quot;RES CASO ESPECIAL&quot;)){&#xd;&#xa;       String[] columnNames = {&quot;N&#xfa;mero de Canal&quot;,&#xd;&#xa;        &quot;Peso&quot;,&#xd;&#xa;        &quot;Proveedor&quot;,&#xd;&#xa;        &quot;Producto&quot;,&#xd;&#xa;        &quot;Almacen&quot;};&#xd;&#xa;         model.setColumnIdentifiers(columnNames); &#xd;&#xa;}&#xd;&#xa;"/>
                   </AuxValues>
                 </Component>
               </SubComponents>
