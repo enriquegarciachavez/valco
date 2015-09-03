@@ -91,7 +91,7 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         tablaCanales = new javax.swing.JTable();
         finalizarBtn = new javax.swing.JButton();
         agregarBtn = new javax.swing.JButton();
-        eliminarBtn = new javax.swing.JButton();
+        limpiarBtn = new javax.swing.JButton();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -220,6 +220,11 @@ public class ReciboDeProducto extends javax.swing.JPanel {
 
         pesoTxt1.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         pesoTxt1.addKeyListener(new NumericKeyListener());
+        pesoTxt1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pesoTxt1ActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("Número de Canal:");
 
@@ -236,10 +241,20 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         this.pesoTxt3.setVisible(this.productoLov.getSelectedItem().toString().equals("CANAL DE RES"));
         pesoTxt3.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         pesoTxt3.addKeyListener(new NumericKeyListener());
+        pesoTxt3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pesoTxt3ActionPerformed(evt);
+            }
+        });
 
         this.pesoTxt4.setVisible(this.productoLov.getSelectedItem().toString().equals("CANAL DE RES"));
         pesoTxt4.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         pesoTxt4.addKeyListener(new NumericKeyListener());
+        pesoTxt4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pesoTxt4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -325,10 +340,10 @@ public class ReciboDeProducto extends javax.swing.JPanel {
             }
         });
 
-        eliminarBtn.setText("Eliminar");
-        eliminarBtn.addActionListener(new java.awt.event.ActionListener() {
+        limpiarBtn.setText("Eliminar");
+        limpiarBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                eliminarBtnActionPerformed(evt);
+                limpiarBtnActionPerformed(evt);
             }
         });
 
@@ -344,7 +359,7 @@ public class ReciboDeProducto extends javax.swing.JPanel {
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(agregarBtn)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(eliminarBtn)
+                                .addComponent(limpiarBtn)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(finalizarBtn))
                             .addGroup(jPanel4Layout.createSequentialGroup()
@@ -368,7 +383,7 @@ public class ReciboDeProducto extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(agregarBtn)
-                    .addComponent(eliminarBtn)
+                    .addComponent(limpiarBtn)
                     .addComponent(finalizarBtn))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -411,20 +426,14 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         return ubicaciones;
     }
 
-    private void eliminarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarBtnActionPerformed
-        int[] selectedRows = tablaCanales.getSelectedRows();
-        if (selectedRows.length > 0) {
-            for (int i = selectedRows.length - 1; i >= 0; i--) {
-                model.removeRow(selectedRows[i]);
-                nuevosCanales.remove(selectedRows[i]);
-            }
-        }
-    }//GEN-LAST:event_eliminarBtnActionPerformed
+    private void limpiarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarBtnActionPerformed
+       limpiar();
+    }//GEN-LAST:event_limpiarBtnActionPerformed
     private void limpiar() {
-        pesoTxt1.setText(null);
-        pesoTxt2.setText(null);
-        pesoTxt3.setText(null);
-        pesoTxt4.setText(null);
+        pesoTxt1.setText("");
+        pesoTxt2.setText("");
+        pesoTxt3.setText("");
+        pesoTxt4.setText("");
         if (modoOperacion.equals("CANAL DE RES")) {
             String[] columnNames = {"Número de Canal",
                 "Peso1",
@@ -465,6 +474,7 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         jPanel3.repaint();
         pesoTxt2.updateUI();
         model.setRowCount(0);
+        nuevosCanales.clear();
     }
 
     private void agregarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarBtnActionPerformed
@@ -472,10 +482,14 @@ public class ReciboDeProducto extends javax.swing.JPanel {
             agregarCanalEquino();
         }else if(modoOperacion.equals("RES CASO ESPECIAL")){
             agregarResCasoEspecial();
+        }else if(modoOperacion.equals("CANAL DE RES")){
+            agregarCanalRes();
         }
     }//GEN-LAST:event_agregarBtnActionPerformed
 
     private void agregarCanalEquino() {
+        
+        int numeroCanal =0;
         if (pesoTxt1.getText().equals("") || pesoTxt2.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Debe capturar el peso.");
             return;
@@ -485,10 +499,12 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         ProductosInventario canal2 = new ProductosInventario();
         if (tablaCanales.getRowCount() == 0) {
 
-            canal[0] = numeroCanalTxt.getText();
+            numeroCanal= new Integer(numeroCanalTxt.getText());
         }else {
-            canal[0] = new Integer(tablaCanales.getValueAt(tablaCanales.getRowCount()-1, 0).toString())+1;
+            numeroCanal = new Integer(tablaCanales.getValueAt(tablaCanales.getRowCount()-1, 0).toString())+1;
         }
+        
+            canal[0]= numeroCanal;
             canal[1] = pesoTxt1.getText();
             canal[2] = pesoTxt2.getText();
             canal[3] = proveedorLOV.getSelectedItem().toString();
@@ -499,6 +515,7 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         model.addRow(canal);
 
         canal1.setEstatus("ACTIVO");
+        canal1.setNumeroMatanza(new Integer (matanzaTxt.getText()));
         canal1.setPeso(new BigDecimal(pesoTxt1.getText()));
         canal1.setPrecio(BigDecimal.ZERO);
         canal1.setProductosHasProveedores((ProductosHasProveedores) productoLov.getSelectedItem());
@@ -507,6 +524,7 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         nuevosCanales.add(canal1);
 
         canal2.setEstatus("ACTIVO");
+        canal2.setNumeroMatanza(new Integer (matanzaTxt.getText()));
         canal2.setPeso(new BigDecimal(pesoTxt2.getText()));
         canal2.setPrecio(BigDecimal.ZERO);
         canal2.setProductosHasProveedores((ProductosHasProveedores) productoLov.getSelectedItem());
@@ -515,7 +533,80 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         nuevosCanales.add(canal2);
     }
 
+    private void agregarCanalRes() {
+        int numeroCanal= 0;
+        
+        if (pesoTxt1.getText().equals("") || pesoTxt2.getText().equals("") || pesoTxt3.getText().equals("")||pesoTxt4.getText().equals("") ){
+            JOptionPane.showMessageDialog(null, "Debe capturar el peso.");
+            return;
+        }
+        Object[] canal = new Object[8];
+        ProductosInventario canal1 = new ProductosInventario();
+        ProductosInventario canal2 = new ProductosInventario();
+        ProductosInventario canal3 = new ProductosInventario();
+        ProductosInventario canal4 = new ProductosInventario();
+        if (tablaCanales.getRowCount() == 0) {
+
+            numeroCanal= new Integer(numeroCanalTxt.getText());
+        }else {
+            numeroCanal = new Integer(tablaCanales.getValueAt(tablaCanales.getRowCount()-1, 0).toString())+1;
+        }
+            canal[0] = numeroCanal;
+            canal[1] = pesoTxt1.getText();
+            canal[2] = pesoTxt2.getText();
+            canal[3] = pesoTxt3.getText();
+            canal[4] = pesoTxt4.getText();
+            canal[5] = proveedorLOV.getSelectedItem().toString();
+            canal[6] = productoLov.getSelectedItem().toString();
+            canal[7] = almacenLOV.getSelectedItem().toString();
+        
+
+        model.addRow(canal);
+        
+        canal1.setNumeroCanal(numeroCanal);
+        canal1.setNumeroMatanza(new Integer (matanzaTxt.getText()));
+        canal1.setEstatus("ACTIVO");
+        canal1.setPeso(new BigDecimal(pesoTxt1.getText()));
+        canal1.setPrecio(BigDecimal.ZERO);
+        canal1.setProductosHasProveedores((ProductosHasProveedores) productoLov.getSelectedItem());
+        canal1.setUbicaciones((Ubicaciones) almacenLOV.getSelectedItem());
+
+        nuevosCanales.add(canal1);
+        
+        canal2.setNumeroCanal(numeroCanal);
+        canal2.setNumeroMatanza(new Integer (matanzaTxt.getText()));
+        canal2.setEstatus("ACTIVO");
+        canal2.setPeso(new BigDecimal(pesoTxt2.getText()));
+        canal2.setPrecio(BigDecimal.ZERO);
+        canal2.setProductosHasProveedores((ProductosHasProveedores) productoLov.getSelectedItem());
+        canal2.setUbicaciones((Ubicaciones) almacenLOV.getSelectedItem());
+
+        nuevosCanales.add(canal2);
+        
+        canal3.setNumeroCanal(numeroCanal);
+        canal3.setNumeroMatanza(new Integer (matanzaTxt.getText()));
+        canal3.setEstatus("ACTIVO");
+        canal3.setPeso(new BigDecimal(pesoTxt3.getText()));
+        canal3.setPrecio(BigDecimal.ZERO);
+        canal3.setProductosHasProveedores((ProductosHasProveedores) productoLov.getSelectedItem());
+        canal3.setUbicaciones((Ubicaciones) almacenLOV.getSelectedItem());
+
+        nuevosCanales.add(canal3);
+        
+        canal4.setNumeroCanal(numeroCanal);
+        canal4.setNumeroMatanza(new Integer (matanzaTxt.getText()));
+        canal4.setEstatus("ACTIVO");
+        canal4.setPeso(new BigDecimal(pesoTxt4.getText()));
+        canal4.setPrecio(BigDecimal.ZERO);
+        canal4.setProductosHasProveedores((ProductosHasProveedores) productoLov.getSelectedItem());
+        canal4.setUbicaciones((Ubicaciones) almacenLOV.getSelectedItem());
+
+        nuevosCanales.add(canal4);
+        
+    }
     private void agregarResCasoEspecial() {
+        int numeroCanal=0;
+        
         if (pesoTxt1.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Debe capturar el peso.");
             return;
@@ -523,14 +614,24 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         Object[] canal = new Object[5];
         ProductosInventario producto = new ProductosInventario();
 
-        canal[0] = matanzaTxt.getText();
+        if (tablaCanales.getRowCount() == 0) {
+
+            numeroCanal= new Integer(numeroCanalTxt.getText());
+        }else {
+            numeroCanal = new Integer(tablaCanales.getValueAt(tablaCanales.getRowCount()-1, 0).toString())+1;
+        }
+        
+        
+        canal[0] = numeroCanal;
         canal[1] = pesoTxt1.getText();
         canal[2] = proveedorLOV.getSelectedItem().toString();
         canal[3] = productoLov.getSelectedItem().toString();
         canal[4] = almacenLOV.getSelectedItem().toString();
 
         model.addRow(canal);
-
+        
+        producto.setNumeroCanal(numeroCanal);
+        producto.setNumeroMatanza(new Integer (matanzaTxt.getText()));
         producto.setEstatus("ACTIVO");
         producto.setPeso(new BigDecimal(pesoTxt1.getText()));
         producto.setPrecio(BigDecimal.ZERO);
@@ -635,13 +736,48 @@ public class ReciboDeProducto extends javax.swing.JPanel {
 
     private void pesoTxt2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoTxt2ActionPerformed
         // TODO add your handling code here:
+        if (modoOperacion.equals("CANAL DE EQUINO")){
+            agregarCanalEquino();
+            pesoTxt1.setText("");
+            pesoTxt2.setText("");
+            pesoTxt1.requestFocus();
+            
+        }   else {
+            pesoTxt3.requestFocus();
+        }  
     }//GEN-LAST:event_pesoTxt2ActionPerformed
+
+    private void pesoTxt1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoTxt1ActionPerformed
+        // TODO add your handling code here:
+        if(modoOperacion.equals("RES CASO ESPECIAL")){
+            agregarResCasoEspecial();
+            pesoTxt1.setText("");
+        }else {
+            pesoTxt2.requestFocus();
+        }
+    }//GEN-LAST:event_pesoTxt1ActionPerformed
+
+    private void pesoTxt3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoTxt3ActionPerformed
+        // TODO add your handling code here:
+        pesoTxt4.requestFocus();
+        
+    }//GEN-LAST:event_pesoTxt3ActionPerformed
+
+    private void pesoTxt4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoTxt4ActionPerformed
+        // TODO add your handling code here:
+            agregarCanalRes();
+            pesoTxt1.setText("");
+            pesoTxt2.setText("");
+            pesoTxt3.setText("");
+            pesoTxt4.setText("");
+            pesoTxt1.requestFocus();
+        
+    }//GEN-LAST:event_pesoTxt4ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton agregarBtn;
     private javax.swing.JComboBox almacenLOV;
-    private javax.swing.JButton eliminarBtn;
     private javax.swing.JButton finalizarBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -655,6 +791,7 @@ public class ReciboDeProducto extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton limpiarBtn;
     private javax.swing.JTextField matanzaTxt;
     private javax.swing.JTextField numeroCanalTxt;
     private javax.swing.JTextField pesoTxt1;

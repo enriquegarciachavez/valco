@@ -24,25 +24,14 @@ import javax.swing.JPanel;
 public class MainFrame extends javax.swing.JFrame {
 
     JInternalFrame internalFrame;
+    JPanel prueb;
 
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         initComponents();
-        this.addKeyListener(new KeyAdapter() {
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    JOptionPane.showMessageDialog(rootPane, e);
-                } else {
-                    // some character has been read, append it to your "barcode cache"
-                    JOptionPane.showMessageDialog(rootPane, e);
-                }
-            }
-
-        });
+        
     }
 
     /**
@@ -135,11 +124,14 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void addNewPanel(ActionEvent evt) {
         if (internalFrame != null) {
+            if(prueb instanceof AbrirProcesoPanel){
+                ((AbrirProcesoPanel)prueb).manager.removeKeyEventDispatcher(((AbrirProcesoPanel)prueb).dispacher);
+            }
             mainPanel.remove(internalFrame);
         }
         internalFrame = new JInternalFrame();
         String sourceName = ((JMenuItem) evt.getSource()).getText();
-        JPanel prueb = PanelCreator.createPanel(sourceName, mainPanel);
+         prueb = PanelCreator.createPanel(sourceName, mainPanel);
         internalFrame.add(prueb);
         internalFrame.setBounds(0, 0, 200, 200);
         internalFrame.setResizable(true);

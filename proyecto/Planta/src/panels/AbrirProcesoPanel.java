@@ -49,6 +49,7 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
     List<ProductosInventario> source = new ArrayList<>();
     List<ProductosInventario> destination = new ArrayList<>();
     Procesos procesoEdicion;
+    BarCodeScannerKeyDispatcher dispacher;
     
     /**
      * Creates new form AbrirProcesoPanel
@@ -61,7 +62,9 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
         }
         initComponents();
         manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-        manager.addKeyEventDispatcher(new BarCodeScannerKeyDispatcher(barCodeTxt, manager, observacionesTxt));
+        dispacher= new BarCodeScannerKeyDispatcher(barCodeTxt, manager, observacionesTxt);
+        manager.addKeyEventDispatcher(dispacher);
+        
         
     }
     
@@ -75,8 +78,10 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
         }
         initComponents();
         manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-        manager.addKeyEventDispatcher(new BarCodeScannerKeyDispatcher(barCodeTxt, manager, observacionesTxt));
+         dispacher= new BarCodeScannerKeyDispatcher(barCodeTxt, manager, observacionesTxt);
+        manager.addKeyEventDispatcher(dispacher);
         modoEdicion= true;
+       
     }
 
     /**

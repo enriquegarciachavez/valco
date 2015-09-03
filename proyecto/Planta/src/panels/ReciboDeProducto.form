@@ -33,7 +33,7 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="agregarBtn" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="eliminarBtn" min="-2" max="-2" attributes="0"/>
+                                      <Component id="limpiarBtn" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="finalizarBtn" min="-2" max="-2" attributes="0"/>
                                   </Group>
@@ -65,7 +65,7 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="agregarBtn" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="eliminarBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="limpiarBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="finalizarBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -308,6 +308,9 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="pesoTxt1">
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pesoTxt1ActionPerformed"/>
+                  </Events>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="pesoTxt1.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);&#xd;&#xa;pesoTxt1.addKeyListener(new NumericKeyListener());&#xd;&#xa;"/>
                   </AuxValues>
@@ -328,11 +331,17 @@
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JTextField" name="pesoTxt3">
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pesoTxt3ActionPerformed"/>
+                  </Events>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="this.pesoTxt3.setVisible(this.productoLov.getSelectedItem().toString().equals(&quot;CANAL DE RES&quot;));&#xd;&#xa;pesoTxt3.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);&#xd;&#xa;        pesoTxt3.addKeyListener(new NumericKeyListener());"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JTextField" name="pesoTxt4">
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pesoTxt4ActionPerformed"/>
+                  </Events>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="this.pesoTxt4.setVisible(this.productoLov.getSelectedItem().toString().equals(&quot;CANAL DE RES&quot;));&#xd;&#xa;pesoTxt4.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);&#xd;&#xa;        pesoTxt4.addKeyListener(new NumericKeyListener());"/>
                   </AuxValues>
@@ -377,12 +386,12 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="agregarBtnActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="eliminarBtn">
+            <Component class="javax.swing.JButton" name="limpiarBtn">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Eliminar"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="eliminarBtnActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="limpiarBtnActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

@@ -5,6 +5,7 @@
  */
 package creators;
 
+import java.awt.KeyboardFocusManager;
 import javax.swing.JDesktopPane;
 import panels.EtiquetadoPanel;
 import javax.swing.JPanel;
@@ -18,7 +19,10 @@ import panels.ReciboDeProducto;
  */
 public class PanelCreator {
     
+    
     public static JPanel createPanel(String panelName, JDesktopPane mainPanel){
+        
+        
         if("Recibo de canales".equals(panelName)){
             return new ReciboDeProducto();
         }else if("Apertura de proceso".equals(panelName)){
