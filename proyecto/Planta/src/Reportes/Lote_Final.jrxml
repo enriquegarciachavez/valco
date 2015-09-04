@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Lote_Final " language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["src/Reportes/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="procesoCodigo" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT
+     PRODUCTOS.`CODIGO` AS PRODUCTOS_CODIGO,
+     PRODUCTOS.`DESCRIPCION` AS PRODUCTOS_DESCRIPCION,
+     PRODUCTOS.`TIPO_PRODUCTO_CODIGO` AS PRODUCTOS_TIPO_PRODUCTO_CODIGO,
+     PRODUCTOS.`UNIDADES_DE_MEDIDA_CODIGO` AS PRODUCTOS_UNIDADES_DE_MEDIDA_CODIGO,
+     PRODUCTOS.`INCLUYE_VICERA` AS PRODUCTOS_INCLUYE_VICERA,
+     PRODUCTOS.`GENERAR_SUBPRODUCTO` AS PRODUCTOS_GENERAR_SUBPRODUCTO,
+     PRODUCTOS.`APLICA_INVENTARIO_FISICO` AS PRODUCTOS_APLICA_INVENTARIO_FISICO,
+     PRODUCTOS.`ESTATUS` AS PRODUCTOS_ESTATUS,
+     PRODUCTOS.`PRECIO_SUGERIDO` AS PRODUCTOS_PRECIO_SUGERIDO,
+     PRODUCTOS_INVENTARIO.`CODIGO` AS PRODUCTOS_INVENTARIO_CODIGO,
+     PRODUCTOS_INVENTARIO.`PESO` AS PRODUCTOS_INVENTARIO_PESO,
+     PRODUCTOS_INVENTARIO.`PRECIO` AS PRODUCTOS_INVENTARIO_PRECIO,
+     PRODUCTOS_INVENTARIO.`NOTAS_DE_VENTA_CODIGO` AS PRODUCTOS_INVENTARIO_NOTAS_DE_VENTA_CODIGO,
+     PRODUCTOS_INVENTARIO.`PRODUCTOS_has_PROVEEDORES_CODIGO` AS PRODUCTOS_INVENTARIO_PRODUCTOS_has_PROVEEDORES_CODIGO,
+     PRODUCTOS_INVENTARIO.`ORDENES_COMPRA_CODIGO` AS PRODUCTOS_INVENTARIO_ORDENES_COMPRA_CODIGO,
+     PRODUCTOS_INVENTARIO.`TRANFERENCIAS_CODIGO` AS PRODUCTOS_INVENTARIO_TRANFERENCIAS_CODIGO,
+     PRODUCTOS_INVENTARIO.`CODIGO_BARRAS` AS PRODUCTOS_INVENTARIO_CODIGO_BARRAS,
+     PRODUCTOS_INVENTARIO.`UBICACIONES_CODIGO` AS PRODUCTOS_INVENTARIO_UBICACIONES_CODIGO,
+     PRODUCTOS_INVENTARIO.`ESTATUS` AS PRODUCTOS_INVENTARIO_ESTATUS,
+     PRODUCTOS_INVENTARIO.`REPARTIDORES_CODIGO` AS PRODUCTOS_INVENTARIO_REPARTIDORES_CODIGO,
+     PRODUCTOS_INVENTARIO.`PROCESOS_CODIGO_PADRE` AS PRODUCTOS_INVENTARIO_PROCESOS_CODIGO_PADRE,
+     PRODUCTOS_INVENTARIO.`PROCESOS_CODIGO_HIJO` AS PRODUCTOS_INVENTARIO_PROCESOS_CODIGO_HIJO,
+     PRODUCTOS_INVENTARIO.`FECHA_CADUCIDAD` AS PRODUCTOS_INVENTARIO_FECHA_CADUCIDAD,
+     PRODUCTOS_INVENTARIO.`NUMERO_MATANZA` AS PRODUCTOS_INVENTARIO_NUMERO_MATANZA,
+     PRODUCTOS_INVENTARIO.`CONSECUTIVO_PROCESO` AS PRODUCTOS_INVENTARIO_CONSECUTIVO_PROCESO,
+     PRODUCTOS_INVENTARIO.`COSTO` AS PRODUCTOS_INVENTARIO_COSTO,
+     PRODUCTOS_INVENTARIO.`FECHA_CREACION` AS PRODUCTOS_INVENTARIO_FECHA_CREACION,
+     PRODUCTOS_has_PROVEEDORES.`CODIGO` AS PRODUCTOS_has_PROVEEDORES_CODIGO,
+     PRODUCTOS_has_PROVEEDORES.`PRODUCTOS_CODIGO` AS PRODUCTOS_has_PROVEEDORES_PRODUCTOS_CODIGO,
+     PRODUCTOS_has_PROVEEDORES.`PROVEEDORES_CODIGO` AS PRODUCTOS_has_PROVEEDORES_PROVEEDORES_CODIGO,
+     PRODUCTOS_has_PROVEEDORES.`CODIGO_PROVEEDOR` AS PRODUCTOS_has_PROVEEDORES_CODIGO_PROVEEDOR,
+     PRODUCTOS_has_PROVEEDORES.`PRECIO_SUGERIDO` AS PRODUCTOS_has_PROVEEDORES_PRECIO_SUGERIDO
+FROM
+     `PRODUCTOS` PRODUCTOS INNER JOIN `PRODUCTOS_has_PROVEEDORES` PRODUCTOS_has_PROVEEDORES ON PRODUCTOS.`CODIGO` = PRODUCTOS_has_PROVEEDORES.`PRODUCTOS_CODIGO`
+     INNER JOIN `PRODUCTOS_INVENTARIO` PRODUCTOS_INVENTARIO ON PRODUCTOS_has_PROVEEDORES.`CODIGO` = PRODUCTOS_INVENTARIO.`PRODUCTOS_has_PROVEEDORES_CODIGO`]]>
+	</queryString>
+	<field name="PRODUCTOS_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_DESCRIPCION" class="java.lang.String"/>
+	<field name="PRODUCTOS_TIPO_PRODUCTO_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_UNIDADES_DE_MEDIDA_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INCLUYE_VICERA" class="java.lang.Boolean"/>
+	<field name="PRODUCTOS_GENERAR_SUBPRODUCTO" class="java.lang.Boolean"/>
+	<field name="PRODUCTOS_APLICA_INVENTARIO_FISICO" class="java.lang.Boolean"/>
+	<field name="PRODUCTOS_ESTATUS" class="java.lang.String"/>
+	<field name="PRODUCTOS_PRECIO_SUGERIDO" class="java.math.BigDecimal"/>
+	<title>
+		<band height="151">
+			<subreport>
+				<reportElement positionType="Float" x="20" y="0" width="544" height="40"/>
+				<subreportParameter name="SUBREPORT_DIR"/>
+				<subreportParameter name="procesoCodigo">
+					<subreportParameterExpression><![CDATA[$P{procesoCodigo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR}+"LoteFinal.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="20" y="40" width="544" height="107"/>
+				<subreportParameter name="procesoCodigo">
+					<subreportParameterExpression><![CDATA[$P{procesoCodigo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR}+"SubreporteCondensado.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+</jasperReport>

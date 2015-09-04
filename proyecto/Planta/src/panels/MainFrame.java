@@ -1,7 +1,10 @@
 package panels;
 
+
 import security.DialogCallbackHandler;
 import creators.PanelCreator;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -34,25 +37,13 @@ import utilities.UsuarioFirmado;
 public class MainFrame extends javax.swing.JFrame {
 
     JInternalFrame internalFrame;
+    JPanel prueb;
 
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         initComponents();
-        this.addKeyListener(new KeyAdapter() {
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    JOptionPane.showMessageDialog(rootPane, e);
-                } else {
-                    // some character has been read, append it to your "barcode cache"
-                    JOptionPane.showMessageDialog(rootPane, e);
-                }
-            }
-
-        });
     }
 
     /**
@@ -65,6 +56,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jCheckBox1 = new javax.swing.JCheckBox();
+        mainPanel = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         reciboCanales = new javax.swing.JMenuItem();
@@ -82,6 +74,19 @@ public class MainFrame extends javax.swing.JFrame {
                 formKeyTyped(evt);
             }
         });
+
+        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
+        mainPanel.setLayout(mainPanelLayout);
+        mainPanelLayout.setHorizontalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1394, Short.MAX_VALUE)
+        );
+        mainPanelLayout.setVerticalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 654, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
 
         jMenu1.setText("File");
 
@@ -131,13 +136,23 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void addNewPanel(ActionEvent evt) {
         if (internalFrame != null) {
-            getContentPane().remove(internalFrame);
+            if(prueb instanceof AbrirProcesoPanel){
+                ((AbrirProcesoPanel)prueb).manager.removeKeyEventDispatcher(((AbrirProcesoPanel)prueb).dispacher);
+            }
+            mainPanel.remove(internalFrame);
         }
         internalFrame = new JInternalFrame();
         String sourceName = ((JMenuItem) evt.getSource()).getText();
-        JPanel prueb = PanelCreator.createPanel(sourceName);
+         prueb = PanelCreator.createPanel(sourceName, mainPanel);
         internalFrame.add(prueb);
-        getContentPane().add(internalFrame, java.awt.BorderLayout.CENTER);
+        internalFrame.setBounds(0, 0, 200, 200);
+        internalFrame.setResizable(true);
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        gd.getDefaultConfiguration().getBounds().getWidth();
+        internalFrame.setSize(gd.getDefaultConfiguration().getBounds().getSize());
+        mainPanel.add(internalFrame);
+        internalFrame.show();
         internalFrame.setVisible(true);
         internalFrame.repaint();
     }
@@ -280,6 +295,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JDesktopPane mainPanel;
     private javax.swing.JMenuItem reciboCanales;
     // End of variables declaration//GEN-END:variables
 }

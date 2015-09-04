@@ -20,6 +20,12 @@ import keydispatchers.BarCodeScannerKeyDispatcher;
 import mapping.ProductosInventario;
 import net.sf.click.extras.control.PickList;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import mapping.Procesos;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -37,13 +43,45 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
     DefaultListModel lmDisponibles =new DefaultListModel();
     DefaultListModel lmSeleccionados =new DefaultListModel();
     KeyboardFocusManager manager;
+    boolean modoEdicion = false;
+    Set<ProductosInventario> toRemove = new HashSet<>();
+    Set<ProductosInventario> toAdd = new HashSet<>();
+    List<ProductosInventario> source = new ArrayList<>();
+    List<ProductosInventario> destination = new ArrayList<>();
+    Procesos procesoEdicion;
+    BarCodeScannerKeyDispatcher dispacher;
+    
     /**
      * Creates new form AbrirProcesoPanel
      */
     public AbrirProcesoPanel() {
+        try {
+            source = productoDAO.getCanalesDisponibles();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", ERROR_MESSAGE);
+        }
         initComponents();
         manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-        manager.addKeyEventDispatcher(new BarCodeScannerKeyDispatcher(barCodeTxt, manager, observacionesTxt));
+        dispacher= new BarCodeScannerKeyDispatcher(barCodeTxt, manager, observacionesTxt);
+        manager.addKeyEventDispatcher(dispacher);
+        
+        
+    }
+    
+    public AbrirProcesoPanel(Procesos proceso){
+        try {
+            source = productoDAO.getCanalesDisponibles();
+            destination= procesosDAO.getCajasPorProcesoHijo(proceso.getCodigo());
+            this.procesoEdicion= proceso;
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", ERROR_MESSAGE);
+        }
+        initComponents();
+        manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+         dispacher= new BarCodeScannerKeyDispatcher(barCodeTxt, manager, observacionesTxt);
+        manager.addKeyEventDispatcher(dispacher);
+        modoEdicion= true;
+       
     }
 
     /**
@@ -95,6 +133,13 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
         jScrollPane1.setViewportView(disponiblesJList);
 
         seleccionadosJList.setModel(lmSeleccionados);
+        try{
+            for(Object elemento : destination){
+                lmSeleccionados.addElement(elemento);
+            }
+        }catch(Exception e){
+
+        }
         jScrollPane2.setViewportView(seleccionadosJList);
 
         seleccionarSelecBtn.setText(">");
@@ -269,14 +314,23 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
         int[] indices = disponiblesJList.getSelectedIndices();
         for(int x = indices.length-1 ; x >= 0; x--){
             lmSeleccionados.addElement(lmDisponibles.getElementAt(indices[x]));
+            if(!destination.contains(lmDisponibles.getElementAt(indices[x]))&& modoEdicion){
+                toAdd.add((ProductosInventario) lmDisponibles.getElementAt(indices[x]));
+                toRemove.remove( lmDisponibles.getElementAt(indices[x]));
+            }
             lmDisponibles.removeElementAt(indices[x]);
         }
         actualizarPeso();
     }//GEN-LAST:event_seleccionarSelecBtnActionPerformed
 
+    
     private void SeleccionarTodosBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SeleccionarTodosBtnActionPerformed
         for(Object element : lmDisponibles.toArray()){
             lmSeleccionados.addElement(element);
+            if(!destination.contains(element) && modoEdicion){
+                toAdd.add((ProductosInventario) element);
+                toRemove.remove(element);
+            }
         }
         lmDisponibles.clear();
         actualizarPeso();
@@ -285,6 +339,10 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
     private void quitarTodosBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitarTodosBtnActionPerformed
         for(Object element : lmSeleccionados.toArray()){
             lmDisponibles.addElement(element);
+            if(!source.contains(element) && modoEdicion){
+                toRemove.add((ProductosInventario) element);
+                toAdd.remove(element);
+            }
         }
         lmSeleccionados.clear();
         actualizarPeso();
@@ -294,7 +352,12 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
         int[] indices = seleccionadosJList.getSelectedIndices();
         for(int x = indices.length-1 ; x >= 0; x--){
             lmDisponibles.addElement(lmSeleccionados.getElementAt(indices[x]));
+            if(!source.contains(lmSeleccionados.getElementAt(indices[x]))&& modoEdicion){
+                toRemove.add((ProductosInventario) lmSeleccionados.getElementAt(indices[x]));
+                toAdd.remove( lmSeleccionados.getElementAt(indices[x]));
+            }
             lmSeleccionados.removeElementAt(indices[x]);
+            
         }
         actualizarPeso();
     }//GEN-LAST:event_quitarSelecBtnActionPerformed
@@ -310,8 +373,15 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Ocurriò un error al abrir el proceso", "Error", ERROR_MESSAGE);
             return;
         }
+        
         try {
+            if(modoEdicion){
+                procesosDAO.actualizarProceso(procesoEdicion, toAdd, toRemove);
+              
+            }else{
             procesosDAO.abrirProceso(proceso, lmSeleccionados.toArray());
+            }
+            
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Ocurriò un error al abrir el proceso", "Error", ERROR_MESSAGE);
             return;

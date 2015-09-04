@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Cuentas por Cobrar" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c0d7a957-89f6-4b8f-92f3-61381e7586ab">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+     CUENTAS_X_COBRAR.`CODIGO` AS CUENTAS_X_COBRAR_CODIGO,
+     CUENTAS_X_COBRAR.`FECHA` AS CUENTAS_X_COBRAR_FECHA,
+     CUENTAS_X_COBRAR.`IMPORTE` AS CUENTAS_X_COBRAR_IMPORTE,
+     CUENTAS_X_COBRAR.`ESTATUS` AS CUENTAS_X_COBRAR_ESTATUS,
+     CUENTAS_X_COBRAR.`OBSERVACIONES` AS CUENTAS_X_COBRAR_OBSERVACIONES
+FROM
+     `CUENTAS_X_COBRAR` CUENTAS_X_COBRAR]]>
+	</queryString>
+	<field name="CUENTAS_X_COBRAR_CODIGO" class="java.lang.Integer"/>
+	<field name="CUENTAS_X_COBRAR_FECHA" class="java.sql.Timestamp"/>
+	<field name="CUENTAS_X_COBRAR_IMPORTE" class="java.math.BigDecimal"/>
+	<field name="CUENTAS_X_COBRAR_ESTATUS" class="java.lang.String"/>
+	<field name="CUENTAS_X_COBRAR_OBSERVACIONES" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="335" y="25" width="100" height="20" uuid="e1fef5b5-7b4b-4301-9b52-56afc43e28b9"/>
+				<text><![CDATA[Cuentas por Cobrar]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="13" y="2" width="100" height="20" uuid="95d17180-8043-40ff-8ed9-f25ff73094f6"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Codigo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="146" y="2" width="100" height="20" uuid="aa44f657-5fe2-49ee-a29d-cc1640a824ad"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="2" width="100" height="20" uuid="f97f1b12-0c71-457c-b09d-b58599e177de"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Importe]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="435" y="2" width="100" height="20" uuid="6b45ac04-befa-4574-a5a8-720b2ae73a2f"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Estatus]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="585" y="2" width="100" height="20" uuid="2c07d800-212c-4cd3-a4cf-13849bc5d2d0"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Observaciones]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="24" splitType="Stretch">
+			<textField>
+				<reportElement x="13" y="0" width="100" height="20" uuid="7ee8453d-2ec6-4c0b-8ba6-448661bd2862"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{CUENTAS_X_COBRAR_CODIGO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="146" y="0" width="100" height="20" uuid="dc73a5bd-fb4f-4f27-a581-c9d50487b32d"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{CUENTAS_X_COBRAR_FECHA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="293" y="0" width="100" height="20" uuid="2c471dc3-0dbe-45be-a8a2-fdbc0a950e63"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{CUENTAS_X_COBRAR_IMPORTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="435" y="0" width="100" height="20" uuid="0dd644bb-4a6f-45f0-80ea-48f0cee778ba"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{CUENTAS_X_COBRAR_ESTATUS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="585" y="0" width="100" height="20" uuid="94ddf367-e743-400f-9c21-4209a967a2ed"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{CUENTAS_X_COBRAR_OBSERVACIONES}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

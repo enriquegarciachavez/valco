@@ -280,7 +280,7 @@ public class ProductoDAO {
           List<ProductosInventario> productos = new ArrayList<ProductosInventario>();
           try {
               tx = session.beginTransaction();
-              Criteria q = session.createCriteria(ProductosInventario.class);
+              Criteria q = session.createCriteria(ProductosInventario.class).add(Restrictions.eq("estatus","ACTIVO"));
               Criteria y = q.createCriteria("productosHasProveedores");
               Criteria x = y.createCriteria("productos").add(Restrictions.eq("generarSubproducto",true));
               productos = (List<ProductosInventario>)x.list();
@@ -338,6 +338,37 @@ public class ProductoDAO {
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(ProductosHasProveedores.class)
                       .add(Restrictions.eq("proveedores", proveedor));
+              productos = (List<ProductosHasProveedores>)q.list();
+              for(ProductosHasProveedores producto: productos){
+                  Hibernate.initialize(producto.getProductos());
+                  Hibernate.initialize(producto.getProveedores());
+              }
+              return productos;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los productos.");
+
+          } finally {
+              try {
+                  if(session.isOpen()){
+                    session.close();
+                  }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los productos.");
+              }
+        }
+    }
+    
+    public List<ProductosHasProveedores> getCanalesXProveedor(Proveedores proveedor) throws Exception{
+        Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          List<ProductosHasProveedores> productos = new ArrayList<ProductosHasProveedores>();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(ProductosHasProveedores.class)
+                      .add(Restrictions.eq("proveedores", proveedor));
+              Criteria x = q.createCriteria("productos").add(Restrictions.eq("generarSubproducto",true));
+              Criteria y= x.createCriteria("tipoProducto").add(Restrictions.eq("descripcion", "CANAL"));
               productos = (List<ProductosHasProveedores>)q.list();
               for(ProductosHasProveedores producto: productos){
                   Hibernate.initialize(producto.getProductos());

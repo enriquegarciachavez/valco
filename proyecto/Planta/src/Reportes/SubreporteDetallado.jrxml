@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SubreporteDetallado" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" >
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="procesoCodigo" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT
+     PRODUCTOS_has_PROVEEDORES.`CODIGO` AS PRODUCTOS_has_PROVEEDORES_CODIGO,
+     PRODUCTOS_has_PROVEEDORES.`PRODUCTOS_CODIGO` AS PRODUCTOS_has_PROVEEDORES_PRODUCTOS_CODIGO,
+     PRODUCTOS_has_PROVEEDORES.`PROVEEDORES_CODIGO` AS PRODUCTOS_has_PROVEEDORES_PROVEEDORES_CODIGO,
+     PRODUCTOS_has_PROVEEDORES.`CODIGO_PROVEEDOR` AS PRODUCTOS_has_PROVEEDORES_CODIGO_PROVEEDOR,
+     PRODUCTOS_has_PROVEEDORES.`PRECIO_SUGERIDO` AS PRODUCTOS_has_PROVEEDORES_PRECIO_SUGERIDO,
+     PRODUCTOS.`CODIGO` AS PRODUCTOS_CODIGO,
+     PRODUCTOS.`DESCRIPCION` AS PRODUCTOS_DESCRIPCION,
+     PRODUCTOS_INVENTARIO.`CODIGO` AS PRODUCTOS_INVENTARIO_CODIGO,
+     PRODUCTOS_INVENTARIO.`PESO` AS PRODUCTOS_INVENTARIO_PESO,
+     PRODUCTOS_INVENTARIO.`PRECIO` AS PRODUCTOS_INVENTARIO_PRECIO,
+     PRODUCTOS_INVENTARIO.`PROCESOS_CODIGO_HIJO` AS PRODUCTOS_INVENTARIO_PROCESOS_CODIGO_HIJO,
+     PRODUCTOS_INVENTARIO.`COSTO` AS PRODUCTOS_INVENTARIO_COSTO,
+     PRODUCTOS_INVENTARIO.`FECHA_CREACION` AS PRODUCTOS_INVENTARIO_FECHA_CREACION,
+     PRODUCTOS_INVENTARIO.`PROCESOS_CODIGO_PADRE` AS PRODUCTOS_INVENTARIO_PROCESOS_CODIGO_PADRE,
+     PRODUCTOS_INVENTARIO.`CONSECUTIVO_PROCESO` AS PRODUCTOS_INVENTARIO_CONSECUTIVO_PROCESO
+FROM
+     `PRODUCTOS_has_PROVEEDORES` PRODUCTOS_has_PROVEEDORES INNER JOIN `PRODUCTOS` PRODUCTOS ON PRODUCTOS_has_PROVEEDORES.`PRODUCTOS_CODIGO` = PRODUCTOS.`CODIGO`
+     INNER JOIN `PRODUCTOS_INVENTARIO` PRODUCTOS_INVENTARIO ON PRODUCTOS_has_PROVEEDORES.`CODIGO` = PRODUCTOS_INVENTARIO.`PRODUCTOS_has_PROVEEDORES_CODIGO`
+WHERE
+     PRODUCTOS_INVENTARIO.`PROCESOS_CODIGO_PADRE` = $P{procesoCodigo}]]>
+	</queryString>
+	<field name="PRODUCTOS_has_PROVEEDORES_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_has_PROVEEDORES_PRODUCTOS_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_has_PROVEEDORES_PROVEEDORES_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_has_PROVEEDORES_CODIGO_PROVEEDOR" class="java.lang.String"/>
+	<field name="PRODUCTOS_has_PROVEEDORES_PRECIO_SUGERIDO" class="java.math.BigDecimal"/>
+	<field name="PRODUCTOS_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_DESCRIPCION" class="java.lang.String"/>
+	<field name="PRODUCTOS_INVENTARIO_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_PESO" class="java.math.BigDecimal"/>
+	<field name="PRODUCTOS_INVENTARIO_PRECIO" class="java.math.BigDecimal"/>
+	<field name="PRODUCTOS_INVENTARIO_PROCESOS_CODIGO_HIJO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_COSTO" class="java.math.BigDecimal"/>
+	<field name="PRODUCTOS_INVENTARIO_FECHA_CREACION" class="java.sql.Timestamp"/>
+	<field name="PRODUCTOS_INVENTARIO_PROCESOS_CODIGO_PADRE" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_CONSECUTIVO_PROCESO" class="java.lang.Integer"/>
+	<variable name="Total" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PRODUCTOS_INVENTARIO_PESO}]]></variableExpression>
+	</variable>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" />
+				<text><![CDATA[Consecutivo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="125" y="0" width="100" height="20" />
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="248" y="0" width="100" height="20" />
+				<text><![CDATA[Peso (Kg)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="364" y="0" width="100" height="20" />
+				<text><![CDATA[Fecha Creacion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="472" y="0" width="100" height="20"/>
+				<text><![CDATA[PRODUCTOS_INVENTARIO_FECHA_CREACION]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" />
+				<textFieldExpression><![CDATA[$F{PRODUCTOS_INVENTARIO_CONSECUTIVO_PROCESO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="125" y="0" width="100" height="20" />
+				<textFieldExpression><![CDATA[$F{PRODUCTOS_DESCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="248" y="0" width="100" height="20" />
+				<textFieldExpression><![CDATA[$F{PRODUCTOS_INVENTARIO_PESO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="364" y="3" width="100" height="20" />
+				<textFieldExpression><![CDATA[new SimpleDateFormat("h:mm a").format( $F{PRODUCTOS_INVENTARIO_FECHA_CREACION})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="472" y="3" width="100" height="20" />
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yy").format( $F{PRODUCTOS_INVENTARIO_FECHA_CREACION})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="50">
+			<textField>
+				<reportElement x="248" y="0" width="100" height="20" />
+				<textFieldExpression><![CDATA[$V{Total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" />
+				<text><![CDATA[Totales]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

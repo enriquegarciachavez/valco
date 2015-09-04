@@ -1,5 +1,6 @@
 package panels;
 
+import creators.PanelCreator;
 import dao.ProcesosDAO;
 import dao.ProductoDAO;
 import java.awt.ComponentOrientation;
@@ -7,15 +8,39 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.print.Doc;
+import javax.print.DocFlavor;
+import javax.print.DocPrintJob;
+import javax.print.PrintException;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.SimpleDoc;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
@@ -26,6 +51,12 @@ import mapping.ProductosHasProveedores;
 import mapping.ProductosInventario;
 import mapping.Proveedores;
 import mapping.Ubicaciones;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 import table.custom.EtiquetadoTableCellRendered;
 import table.custom.NoEditableTableModel;
 import threads.PesoThread;
@@ -39,25 +70,28 @@ import threads.PesoThread;
  *
  * @author Administrador
  */
-public class EtiquetadoPanel extends javax.swing.JPanel {
+public class EtiquetadoPanel extends CoustomPanel {
 
+    String path = "src/Reportes/Lote_Final.jrxml";
     ProcesosDAO procesosDAO = new ProcesosDAO();
     ProductoDAO productoDAO = new ProductoDAO();
     DefaultTableModel model = new NoEditableTableModel();
     String formato = "##.##";
+    JInternalFrame internalFrame;
     Action action = new AbstractAction("doSomething") {
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        System.out.println("triggered the action");
-    }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("triggered the action");
+        }
 
-};
+    };
+
     /**
      * Creates new form EtiquetadoPanel
      */
-    public EtiquetadoPanel() {
-
+    public EtiquetadoPanel(JDesktopPane mainPanel) {
+        this.mainPanel= mainPanel;
         initComponents();
         action.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control S"));
         tablaProductos.setDefaultRenderer(Object.class, new EtiquetadoTableCellRendered());
@@ -78,14 +112,14 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
             pesoManualLbl.setEnabled(true);
             return;
         }
-         KeyboardFocusManager.getCurrentKeyboardFocusManager()
-  .addKeyEventDispatcher(new KeyEventDispatcher() {
-      @Override
-      public boolean dispatchKeyEvent(KeyEvent e) {
-        System.out.println("Got key event!");
-        return false;
-      }
-});
+        KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                .addKeyEventDispatcher(new KeyEventDispatcher() {
+                    @Override
+                    public boolean dispatchKeyEvent(KeyEvent e) {
+                        System.out.println("Got key event!");
+                        return false;
+                    }
+                });
         pesoThread.setPesoLbl(pesoBasculaLbl);
         Thread thread = new Thread(pesoThread);
         thread.start();
@@ -154,7 +188,6 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         diasCaducidadTxt = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         reimprimirEtiquetaBtn = new javax.swing.JButton();
-        jLabel8 = new javax.swing.JLabel();
         imprimirEtiquetaBtn = new javax.swing.JButton();
         imprimirEtiquetaBtn.setMnemonic(KeyEvent.VK_ENTER);
         jLabel9 = new javax.swing.JLabel();
@@ -165,7 +198,6 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         jLabel13 = new javax.swing.JLabel();
         consecutivoLbl = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
         procesoLbl = new javax.swing.JLabel();
         pesoManualLbl = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
@@ -193,17 +225,27 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         costoIndirectoTxt = new javax.swing.JTextField();
         costoInicialLbl = new javax.swing.JLabel();
         totalLbl = new javax.swing.JLabel();
+        guardarCostoBtn = new javax.swing.JButton();
+        agregarCostoBtn = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
-        pesoInicialLbl = new javax.swing.JLabel();
         P = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         pesoFinalLbl = new javax.swing.JLabel();
-        guardarProcesoBtn = new javax.swing.JButton();
+        agregarPesoInicialBtn = new javax.swing.JButton();
+        pesoInicialLbl = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         condensadoRadio = new javax.swing.JRadioButton();
         detalladoRadio = new javax.swing.JRadioButton();
-        humedadRadio = new javax.swing.JRadioButton();
         reporteBtn = new javax.swing.JButton();
+        jPanel8 = new javax.swing.JPanel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        pesoHuesoLbl = new javax.swing.JLabel();
+        pesoSeboLbl = new javax.swing.JLabel();
+        pesoAcerrinLbl = new javax.swing.JLabel();
+        cerrarProcesoBtn = new javax.swing.JButton();
+        reporteFinalBtn = new javax.swing.JButton();
 
         addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -285,9 +327,6 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         reimprimirEtiquetaBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         reimprimirEtiquetaBtn.setText("<html><center>Reimprimir<br>Etiqueta<html>");
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel8.setText("Piezas por empaque");
-
         imprimirEtiquetaBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         imprimirEtiquetaBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Print-48.png"))); // NOI18N
         imprimirEtiquetaBtn.setText("<html><center>Imprimir<br>Etiqueta<html>");
@@ -324,20 +363,6 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel4.setText("Descripción:");
 
-        jFormattedTextField1.setForeground(new java.awt.Color(0, 255, 0));
-        try {
-            jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####.##")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        jFormattedTextField1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jFormattedTextField1.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        jFormattedTextField1.setDoubleBuffered(true);
-        jFormattedTextField1.setDragEnabled(true);
-        jFormattedTextField1.setFocusCycleRoot(true);
-        jFormattedTextField1.setFocusTraversalPolicyProvider(true);
-        jFormattedTextField1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-
         procesoLbl.setText(procesosLov.getSelectedItem().toString());
 
         pesoManualLbl.setBackground(new java.awt.Color(0, 0, 0));
@@ -362,7 +387,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(procesoLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel13)
                     .addComponent(jLabel11))
@@ -402,14 +427,11 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
                                 .addGap(49, 49, 49)
                                 .addComponent(eliminarCajaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
-                                    .addComponent(pesoManualLbl))
+                                .addComponent(pesoManualLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(toneladasChk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(pesoManualChk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(pesoManualChk, javax.swing.GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -449,6 +471,9 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
                         .addComponent(productosLov, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(pesoManualLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(45, 45, 45))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(pesoManualChk)
@@ -460,14 +485,8 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
                         .addGap(9, 9, 9)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(diasCaducidadTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(pesoManualLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(33, 33, 33)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(reimprimirEtiquetaBtn)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -477,7 +496,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(productoLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(145, Short.MAX_VALUE))
         );
 
         jSplitPane1.setLeftComponent(jPanel1);
@@ -513,6 +532,14 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
 
         jLabel15.setText("Cstos indirectos:");
 
+        guardarCostoBtn.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        guardarCostoBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/save.png"))); // NOI18N
+        guardarCostoBtn.setText("Guardar");
+        guardarCostoBtn.setHorizontalTextPosition(SwingConstants.CENTER);
+        guardarCostoBtn.setVerticalTextPosition(SwingConstants.BOTTOM);
+
+        agregarCostoBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/plus-icon.png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -532,6 +559,10 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
                     .addComponent(costoIndirectoTxt)
                     .addComponent(totalLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(costoInicialLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(35, 35, 35)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(guardarCostoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(agregarCostoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
@@ -558,15 +589,32 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
                     .addComponent(jLabel15)
                     .addComponent(costoIndirectoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(34, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(agregarCostoBtn)
+                .addGap(18, 18, 18)
+                .addComponent(guardarCostoBtn)
+                .addContainerGap())
         );
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Información del peso", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Times New Roman", 1, 14))); // NOI18N
 
-        pesoInicialLbl.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-
         P.setText("Peso Inicial:");
 
         jLabel1.setText("Peso final:");
+
+        agregarPesoInicialBtn.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        agregarPesoInicialBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/plus-icon.png"))); // NOI18N
+        agregarPesoInicialBtn.setText("Agregar peso inicial");
+        agregarPesoInicialBtn.setHorizontalTextPosition(SwingConstants.CENTER);
+        agregarPesoInicialBtn.setVerticalTextPosition(SwingConstants.BOTTOM);
+        agregarPesoInicialBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                agregarPesoInicialBtnActionPerformed(evt);
+            }
+        });
+
+        pesoInicialLbl.setText(this.getPesoInicial());
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -578,48 +626,61 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
                     .addComponent(P)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(pesoInicialLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pesoInicialLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(pesoFinalLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(81, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(agregarPesoInicialBtn)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pesoInicialLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(P))
+                .addGap(39, 39, 39)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(P)
+                    .addComponent(pesoInicialLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(15, 15, 15)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(35, 35, 35)
                         .addComponent(jLabel1))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(pesoFinalLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(pesoFinalLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 29, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(agregarPesoInicialBtn)
+                .addGap(38, 38, 38))
         );
-
-        guardarProcesoBtn.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        guardarProcesoBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/save.png"))); // NOI18N
-        guardarProcesoBtn.setText("Guardar");
-        guardarProcesoBtn.setHorizontalTextPosition(SwingConstants.CENTER);
-        guardarProcesoBtn.setVerticalTextPosition(SwingConstants.BOTTOM);
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Reportes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Times New Roman", 1, 14))); // NOI18N
 
         reporteGroup.add(condensadoRadio);
-        condensadoRadio.setText("Reporte condensado");
+        condensadoRadio.setText("Reporte Condensado");
+        condensadoRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                condensadoRadioActionPerformed(evt);
+            }
+        });
 
         reporteGroup.add(detalladoRadio);
         detalladoRadio.setText("Reporte detallado");
-
-        humedadRadio.setText("Reporte con pesos de humedad");
+        detalladoRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                detalladoRadioActionPerformed(evt);
+            }
+        });
 
         reporteBtn.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         reporteBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Book-icon.PNG"))); // NOI18N
         reporteBtn.setText("Reporte");
         reporteBtn.setHorizontalTextPosition(SwingConstants.CENTER);
         reporteBtn.setVerticalTextPosition(SwingConstants.BOTTOM);
+        reporteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reporteBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -627,10 +688,9 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(humedadRadio)
                     .addComponent(detalladoRadio, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(condensadoRadio, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
                 .addComponent(reporteBtn)
                 .addGap(25, 25, 25))
         );
@@ -644,10 +704,80 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
                 .addComponent(condensadoRadio)
                 .addGap(18, 18, 18)
                 .addComponent(detalladoRadio)
-                .addGap(18, 18, 18)
-                .addComponent(humedadRadio)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
+
+        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Sobrante", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Times New Roman", 1, 14))); // NOI18N
+
+        jLabel16.setText("Hueso:");
+
+        jLabel17.setText("Sebo:");
+
+        jLabel8.setText("Aserrin:");
+
+        pesoHuesoLbl.setText(this.getPesoHueso());
+
+        pesoSeboLbl.setText(this.getPesoSebo());
+
+        pesoAcerrinLbl.setText(this.getPesoAserrin());
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel17)
+                    .addComponent(jLabel16))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(pesoHuesoLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
+                    .addComponent(pesoSeboLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pesoAcerrinLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(pesoHuesoLbl))
+                .addGap(32, 32, 32)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(pesoSeboLbl))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(pesoAcerrinLbl))
+                .addContainerGap())
+        );
+
+        cerrarProcesoBtn.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        cerrarProcesoBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lock.png"))); // NOI18N
+        cerrarProcesoBtn.setText("Cerrar proceso");
+        cerrarProcesoBtn.setHorizontalTextPosition(SwingConstants.CENTER);
+        cerrarProcesoBtn.setVerticalTextPosition(SwingConstants.BOTTOM);
+        cerrarProcesoBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cerrarProcesoBtnActionPerformed(evt);
+            }
+        });
+
+        reporteFinalBtn.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        reporteFinalBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Book-icon.PNG"))); // NOI18N
+        reporteFinalBtn.setText("Reporte final");
+        reporteFinalBtn.setEnabled(((Procesos)this.procesosLov.getSelectedItem()).getEstatus().equals("ACTIVO")
+        );
+        reporteFinalBtn.setHorizontalTextPosition(SwingConstants.CENTER);
+        reporteFinalBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reporteFinalBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -656,47 +786,99 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(procesoLbl1, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(procesoLbl1, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(30, 30, 30)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(cerrarProcesoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(guardarProcesoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(569, Short.MAX_VALUE))
+                        .addComponent(reporteFinalBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(622, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(procesoLbl1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
-                        .addComponent(guardarProcesoBtn)
-                        .addGap(302, 302, 302))
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(23, 23, 23)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(procesoLbl1)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cerrarProcesoBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(reporteFinalBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 14, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(8, 8, 8)))
+                .addContainerGap(204, Short.MAX_VALUE))
         );
+
+        cerrarProcesoBtn.getAccessibleContext().setAccessibleName("Cerrarproceso");
 
         jTabbedPane1.addTab("Cierre de proceso", jPanel4);
 
         add(jTabbedPane1);
     }// </editor-fold>//GEN-END:initComponents
+
+    private String getPesoInicial() {
+        String pesoInicial = "";
+        try {
+            pesoInicial = procesosDAO.getPesoInicial(((Procesos) procesosLov.getSelectedItem()).getCodigo()).toString();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+        return pesoInicial;
+    }
+
+    private String getPesoHueso() {
+        String pesoInicial = "";
+        try {
+            pesoInicial = procesosDAO.getPesoHueso(((Procesos) procesosLov.getSelectedItem()).getCodigo()).toString();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+        return pesoInicial;
+    }
+
+    private String getPesoSebo() {
+        String pesoInicial = "";
+        try {
+            pesoInicial = procesosDAO.getPesoSebo(((Procesos) procesosLov.getSelectedItem()).getCodigo()).toString();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+        return pesoInicial;
+    }
+
+    private String getPesoAserrin() {
+        String pesoInicial = "";
+        try {
+            pesoInicial = procesosDAO.getPesoAserrin(((Procesos) procesosLov.getSelectedItem()).getCodigo()).toString();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+        return pesoInicial;
+    }
 
     private void procesosCerradosChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_procesosCerradosChkActionPerformed
         AbstractButton abstractButton = (AbstractButton) evt.getSource();
@@ -718,6 +900,8 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, ex);
         }
         this.setTableModel();
+        this.actualizarValores();
+        this.reporteFinalBtn.setEnabled(!((Procesos) this.procesosLov.getSelectedItem()).getEstatus().equals("ACTIVO"));
     }//GEN-LAST:event_procesosLovActionPerformed
 
     private void productoCodigoAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyReleased
@@ -757,9 +941,9 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         AbstractButton abstractButton = (AbstractButton) evt.getSource();
         boolean selected = abstractButton.getModel().isSelected();
         if (selected) {
-            
+
         } else {
-            
+
         }
     }//GEN-LAST:event_toneladasChkActionPerformed
 
@@ -775,7 +959,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         productoInventario.setProductosHasProveedores((ProductosHasProveedores) productosLov.getSelectedItem());
         productoInventario.setUbicaciones(ubicacion);
         if (pesoManualChk.isSelected()) {
-            if(pesoManualLbl.getText().equals("")){
+            if (pesoManualLbl.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "Debe introducir el peso de la caja.");
                 return;
             }
@@ -787,12 +971,15 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
         productoInventario.setPrecio(BigDecimal.ZERO);
         productoInventario.setEstatus("ACTIVO");
         productoInventario.setConsecutivoProceso(new Integer(consecutivoLbl.getText()));
+        productoInventario.setCodigoBarras(getCodigoBarras());
         try {
             productoDAO.insertarProducto(productoInventario);
+            this.imprimirCodigo();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex, "Errot", ERROR_MESSAGE);
         }
         this.setTableModel();
+        this.actualizarValores();
     }//GEN-LAST:event_imprimirEtiquetaBtnActionPerformed
 
     private void eliminarCajaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarCajaBtnActionPerformed
@@ -817,9 +1004,122 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_eliminarCajaBtnActionPerformed
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
-      JOptionPane.showMessageDialog(null, "chafa");
+        JOptionPane.showMessageDialog(null, "chafa");
     }//GEN-LAST:event_formKeyPressed
 
+    private void cerrarProcesoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrarProcesoBtnActionPerformed
+        Procesos proceso = (Procesos) procesosLov.getSelectedItem();
+        proceso.setEstatus("CERRADO");
+        try {
+            procesosDAO.actualizarProceso(proceso);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", ERROR_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_cerrarProcesoBtnActionPerformed
+
+    private void reporteFinalBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reporteFinalBtnActionPerformed
+        // TODO add your handling code here:
+        System.out.println(EtiquetadoPanel.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+        try {
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/valco", "admin3ZheGrA", "1VtHQW5M-3g-");) {
+            /* TODO output your page here. You may use following sample code. */
+
+            //Connecting to the MySQL database
+            //Loading Jasper Report File from Local file system
+            String realPath = "src/Reportes/Lote_Final.jrxml";
+            InputStream input = new FileInputStream(new File(realPath));
+            Map mapa = new HashMap();
+
+            mapa.put("procesoCodigo", ((Procesos) (this.procesosLov.getSelectedItem())).getCodigo());
+
+            JasperReport jasperReport = JasperCompileManager.compileReport(input);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
+            JasperViewer.viewReport(jasperPrint, false);
+        } catch (SQLException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_reporteFinalBtnActionPerformed
+
+    private void reporteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reporteBtnActionPerformed
+        // TODO add your handling code here:
+        if (detalladoRadio.isSelected()) {
+            path = "src/Reportes/LoteDetallado.jrxml";
+        } else {
+            path = "src/Reportes/Lote_final.jrxml";
+        }
+        try {
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/valco", "admin3ZheGrA", "1VtHQW5M-3g-");) {
+            /* TODO output your page here. You may use following sample code. */
+
+            //Connecting to the MySQL database
+            //Loading Jasper Report File from Local file system
+            String realPath = path;
+            InputStream input = new FileInputStream(new File(realPath));
+            Map mapa = new HashMap();
+
+            mapa.put("procesoCodigo", ((Procesos) (this.procesosLov.getSelectedItem())).getCodigo());
+
+            JasperReport jasperReport = JasperCompileManager.compileReport(input);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
+            JasperViewer.viewReport(jasperPrint, false);
+        } catch (SQLException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_reporteBtnActionPerformed
+
+    private void detalladoRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detalladoRadioActionPerformed
+        // TODO add your handling code here:
+        String path = "src/Reportes/LoteDetallado.jrxml";
+    }//GEN-LAST:event_detalladoRadioActionPerformed
+
+    private void condensadoRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_condensadoRadioActionPerformed
+        // TODO add your handling code here:
+        String path = "src/Reportes/Lote_Final.jrxml";
+    }//GEN-LAST:event_condensadoRadioActionPerformed
+
+    private void agregarPesoInicialBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarPesoInicialBtnActionPerformed
+        // TODO add your handling code here:
+        addNewPanel(evt);
+        
+    }//GEN-LAST:event_agregarPesoInicialBtnActionPerformed
+
+    private void addNewPanel(ActionEvent evt){
+        if(internalFrame != null)
+        this.mainPanel.remove(internalFrame);
+        internalFrame = new JInternalFrame("Modificación de peso Inicial", true, true, true);
+        JPanel prueb = new AbrirProcesoPanel((Procesos) procesosLov.getSelectedItem());
+        internalFrame.add(prueb);
+        internalFrame.setBounds(0, 0, 1002, 702);
+        this.mainPanel.add(internalFrame);
+        internalFrame.setVisible(true);
+        internalFrame.show();
+        internalFrame.repaint();
+    }
     private String swapChars(String str, int lIdx, int rIdx) {
         StringBuilder sb = new StringBuilder(str);
         char l = sb.charAt(lIdx), r = sb.charAt(rIdx);
@@ -850,11 +1150,58 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
             model.addRow(row);
         }
     }
-    
-    
+
+    private void actualizarValores() {
+        this.pesoInicialLbl.setText(this.getPesoInicial());
+        this.pesoHuesoLbl.setText(this.getPesoHueso());
+        this.pesoSeboLbl.setText(this.getPesoSebo());
+        this.pesoAcerrinLbl.setText(this.getPesoAserrin());
+        try {
+            consecutivoLbl.setText(procesosDAO.getConsecutivo(((Procesos) procesosLov.getSelectedItem()).getCodigo()).toString());
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }
+    private String getCodigoBarras(){
+       return this.procesosLov.getSelectedItem()
+                + new SimpleDateFormat("yyddMM").format(new Date())
+                + ((ProductosHasProveedores) this.productosLov.getSelectedItem()).getProductos().getCodigo()
+                + (pesoManualChk.isSelected() ? pesoManualLbl.getText().replaceAll("\\.", "") : pesoBasculaLbl.getText().replaceAll("\\.", ""))
+                + consecutivoLbl.getText();
+    }
+
+    private void imprimirCodigo() {
+        // aca obtenemos la printer default  
+        PrintService printService = PrintServiceLookup.lookupDefaultPrintService();
+
+        String zplCommand = "^XA"
+                + "^FO30,150^ARN,11,7^FD "+ this.productosLov.getSelectedItem()+""
+                + "^BCN, 80, Y, Y, Y^FD >"+getCodigoBarras()+" ^FS "
+                + "^XZ";
+
+// convertimos el comando a bytes  
+        byte[] by = zplCommand.getBytes();
+        DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
+        Doc doc = new SimpleDoc(by, flavor, null);
+
+// creamos el printjob  
+        DocPrintJob job = printService.createPrintJob();
+
+        try {
+            // imprimimos
+            job.print(doc, null);
+        } catch (PrintException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel P;
+    private javax.swing.JButton agregarCostoBtn;
+    private javax.swing.JButton agregarPesoInicialBtn;
+    private javax.swing.JButton cerrarProcesoBtn;
     private javax.swing.JRadioButton condensadoRadio;
     private javax.swing.JLabel consecutivoLbl;
     private javax.swing.JTextField costoIndirectoTxt;
@@ -865,10 +1212,8 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
     private javax.swing.JButton eliminarCajaBtn;
     private javax.swing.JCheckBox fechaCaducidadEtiquetaChk;
     private javax.swing.JCheckBox fechaElaboracionEtiquetaChk;
-    private javax.swing.JButton guardarProcesoBtn;
-    private javax.swing.JRadioButton humedadRadio;
+    private javax.swing.JButton guardarCostoBtn;
     public javax.swing.JButton imprimirEtiquetaBtn;
-    private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -876,6 +1221,8 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -891,6 +1238,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -898,11 +1246,14 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField manoDeObraTxt;
     private javax.swing.JTextField masTxt;
+    private javax.swing.JLabel pesoAcerrinLbl;
     private javax.swing.JLabel pesoBasculaLbl;
     private javax.swing.JLabel pesoFinalLbl;
+    private javax.swing.JLabel pesoHuesoLbl;
     private javax.swing.JLabel pesoInicialLbl;
     private javax.swing.JCheckBox pesoManualChk;
     private javax.swing.JTextField pesoManualLbl;
+    private javax.swing.JLabel pesoSeboLbl;
     private javax.swing.JLabel procesoLbl;
     private javax.swing.JLabel procesoLbl1;
     private javax.swing.JCheckBox procesosCerradosChk;
@@ -912,6 +1263,7 @@ public class EtiquetadoPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox productosLov;
     private javax.swing.JButton reimprimirEtiquetaBtn;
     private javax.swing.JButton reporteBtn;
+    private javax.swing.JButton reporteFinalBtn;
     private javax.swing.ButtonGroup reporteGroup;
     private javax.swing.JTable tablaProductos;
     private javax.swing.JCheckBox toneladasChk;
