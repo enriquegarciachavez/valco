@@ -20,6 +20,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -155,6 +156,41 @@ public class UsuariosDAO {
                   throw new Exception("Ocurrió un error al consultar los clientes.");
               }
         }
+    }
+     
+     public Usuarios getUsuarios(String correo, String password) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();;
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();           
+            Criteria cr = session.createCriteria(Usuarios.class);
+            cr.add(Expression.eq("correo", correo));
+            cr.add(Expression.eq("password", password));
+            Usuarios usuarios = (Usuarios) cr.uniqueResult();
+            return usuarios;
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar el usuario.");
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar el usuario.");
+            }
+        }
+    }
+     
+      public List<Usuarios> getUsuarios(String correo) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();;
+        try {
+            Criteria cr = session.createCriteria(Usuarios.class);
+            cr.add(Expression.eq("correo", correo));
+            List<Usuarios> usuarios = (List<Usuarios>) cr.list();
+            return usuarios;
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar el usuario.");
+        } 
     }
     
 }

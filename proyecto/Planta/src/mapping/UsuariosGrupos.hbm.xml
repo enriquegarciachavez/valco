@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 14/07/2015 09:21:07 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="valco" name="mapping.UsuariosGrupos" optimistic-lock="version" table="usuarios_grupos">
+    <id name="codigo" type="java.lang.Integer">
+      <column name="CODIGO"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="mapping.Grupos" fetch="select" name="grupos">
+      <column name="CODIGO_GRUPO"/>
+    </many-to-one>
+    <many-to-one class="mapping.Usuarios" fetch="select" name="usuarios">
+      <column name="CODIGO_USUARIO"/>
+    </many-to-one>
+  </class>
+</hibernate-mapping>

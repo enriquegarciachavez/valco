@@ -25,6 +25,10 @@
     <mapping resource="mapping/Procesos.hbm.xml"/>
     <mapping resource="mapping/Telefonos.hbm.xml"/>
     <mapping resource="mapping/Usuarios.hbm.xml"/>
+    <mapping resource="mapping/Accesos.hbm.xml"/>
+    <mapping resource="mapping/Grupos.hbm.xml"/>
+    <mapping resource="mapping/UsuariosAccesos.hbm.xml"/>
+    <mapping resource="mapping/UsuariosGrupos.hbm.xml"/>
     <mapping resource="mapping/Repartidores.hbm.xml"/>
     <mapping resource="mapping/Ubicaciones.hbm.xml"/>
     <mapping resource="mapping/Productos.hbm.xml"/>

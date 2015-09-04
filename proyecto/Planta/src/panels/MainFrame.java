@@ -1,28 +1,40 @@
 package panels;
 
-
+import security.DialogCallbackHandler;
 import creators.PanelCreator;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import java.security.Principal;
+import java.security.PrivilegedAction;
+import javax.security.auth.*;
+import javax.security.auth.login.AccountExpiredException;
+import javax.security.auth.login.CredentialExpiredException;
+import javax.security.auth.login.FailedLoginException;
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
+import security.HWLoginModule;
+import utilities.UsuarioFirmado;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Karla
  */
 public class MainFrame extends javax.swing.JFrame {
+
     JInternalFrame internalFrame;
+
     /**
      * Creates new form MainFrame
      */
@@ -30,17 +42,17 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         this.addKeyListener(new KeyAdapter() {
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-           JOptionPane.showMessageDialog(rootPane, e);
-        } else {
-            // some character has been read, append it to your "barcode cache"
-            JOptionPane.showMessageDialog(rootPane, e);
-        }
-    }
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    JOptionPane.showMessageDialog(rootPane, e);
+                } else {
+                    // some character has been read, append it to your "barcode cache"
+                    JOptionPane.showMessageDialog(rootPane, e);
+                }
+            }
 
-});
+        });
     }
 
     /**
@@ -117,18 +129,19 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addNewPanel(ActionEvent evt){
-        if(internalFrame != null)
-        getContentPane().remove(internalFrame);
+    private void addNewPanel(ActionEvent evt) {
+        if (internalFrame != null) {
+            getContentPane().remove(internalFrame);
+        }
         internalFrame = new JInternalFrame();
-        String sourceName = ((JMenuItem)evt.getSource()).getText();
+        String sourceName = ((JMenuItem) evt.getSource()).getText();
         JPanel prueb = PanelCreator.createPanel(sourceName);
         internalFrame.add(prueb);
         getContentPane().add(internalFrame, java.awt.BorderLayout.CENTER);
         internalFrame.setVisible(true);
         internalFrame.repaint();
     }
-    
+
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         addNewPanel(evt);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
@@ -151,6 +164,12 @@ public class MainFrame extends javax.swing.JFrame {
 
     /**
      * @param args the command line arguments
+     *
+     * Esta aplicación se intenta autenticar a un usuario.
+     *
+     * Si el usuario se autentica satisfactoriamente, se visualiza el nombre de
+     * usuario y el número de las credenciales.
+     *
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -177,9 +196,78 @@ public class MainFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
+        /**
+         * Se intenta autenticar al usuario.
+         */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainFrame().setVisible(true);
+                LoginContext lc = null;
+                final LoginContext lcFinal;
+                try {
+                    // se usan los módulos LoginModule configurados para la entrada "valco"
+                    lc = new LoginContext("valco", new DialogCallbackHandler());
+                } catch (LoginException le) {
+                    le.printStackTrace();
+                    System.exit(-1);
+                }
+                // El usuario dispone de 3 intentos para autenticarse satisfactoriamente.
+                int i;
+                for (i = 0; i < 3; i++) {
+                    try {
+
+                        // Intento de autenticación
+                        lc.login();
+
+                        // Si no se devuelve ninguna excepción,
+                        // la autenticación ha sido satisfactoria.
+                        break;
+
+                    } catch (AccountExpiredException aee) {
+                        JOptionPane.showMessageDialog(null, "¡Su cuenta ha caducado!", "¡Error de sesion!", JOptionPane.ERROR_MESSAGE);
+
+                        System.exit(-1);
+
+                    } catch (CredentialExpiredException cee) {
+                        JOptionPane.showMessageDialog(null, "¡Sus credenciales han caducado!", "¡Error de sesion!", JOptionPane.ERROR_MESSAGE);
+
+                        System.exit(-1);
+
+                    } catch (FailedLoginException fle) {
+                        JOptionPane.showMessageDialog(null, "¡Autenticación fallida!", "¡Error de sesion!", JOptionPane.ERROR_MESSAGE);
+
+                        try {
+                            Thread.currentThread().sleep(3000);
+                        } catch (Exception e) {
+                            // Se pasa por alto.
+                        }
+
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, "¡Excepción no prevista - imposible continuar!", "¡Error de sesion!", JOptionPane.ERROR_MESSAGE);
+
+                        e.printStackTrace();
+                        System.exit(-1);
+                    }
+                }
+
+                // ¿Se ha fallado tres veces?
+                if (i == 3) {
+                    JOptionPane.showMessageDialog(null, "¡Lo lamentamos!", "¡Error de sesion!", JOptionPane.ERROR_MESSAGE);
+
+                    System.exit(-1);
+                }
+                // Examinemos parte del trabajo basado en Principal:
+                lcFinal=lc;
+                Subject.doAsPrivileged(lcFinal.getSubject(), new PrivilegedAction() {
+                   
+                    public MainFrame run() {
+                        MainFrame mf = new MainFrame();
+                        HWLoginModule.validateAccess(lcFinal.getSubject(),mf.jMenuBar1.getComponents());
+                        mf.setTitle(UsuarioFirmado.getUsuarioFirmado().getNombre());
+                        mf.setVisible(true);
+                        return mf;
+                    }
+                }, null);
+
             }
         });
     }
