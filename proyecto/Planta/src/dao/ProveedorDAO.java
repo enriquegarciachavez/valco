@@ -11,21 +11,24 @@ import java.util.ArrayList;
 import java.util.List;
 import mapping.OrdenesCompra;
 import mapping.Proveedores;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 /**
  *
  * @author Karla
  */
-public class ProveedorDAO implements Serializable{
-    public void insertarProveedor(Proveedores proveedor) throws Exception{
-     Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+public class ProveedorDAO implements Serializable {
+
+    public void insertarProveedor(Proveedores proveedor) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
@@ -50,9 +53,9 @@ public class ProveedorDAO implements Serializable{
             }
         }
     }
-    
-    public void actualizarProveedor (Proveedores proveedor) throws Exception{
-     Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+
+    public void actualizarProveedor(Proveedores proveedor) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
@@ -77,8 +80,9 @@ public class ProveedorDAO implements Serializable{
             }
         }
     }
-    public void borrarProveedor (Proveedores proveedor) throws Exception{
-     Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+
+    public void borrarProveedor(Proveedores proveedor) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
@@ -103,116 +107,115 @@ public class ProveedorDAO implements Serializable{
             }
         }
     }
-    public List<Proveedores> getProveedores() throws Exception{
-    Session session = null;
-          try {
-            session   = HibernateUtil.getSessionFactory().getCurrentSession();
-          Transaction tx = null;
-          List<Proveedores> proveedores = new ArrayList<Proveedores>();
-              tx = session.beginTransaction();
-              Query q = session.createQuery("FROM Proveedores");
-              proveedores = (List<Proveedores>) q.list();
-              return proveedores;
 
-          } catch (HibernateException he) {
-              throw new Exception("Ocurrió un error al consultar los proveedores.");
+    public List<Proveedores> getProveedores() throws Exception {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            Transaction tx = null;
+            List<Proveedores> proveedores = new ArrayList<Proveedores>();
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(Proveedores.class);
+            q.addOrder(Order.asc("razonSocial"));
+            proveedores = (List<Proveedores>) q.list();
+            return proveedores;
 
-          } finally {
-              try {
-                  if (session.isOpen()) {
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar los proveedores.");
+
+        } finally {
+            try {
+                if (session.isOpen()) {
                     session.close();
                 }
-              } catch (HibernateException he) {
-                  throw new Exception("Ocurrió un error al consultar los proveedores.");
-              }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar los proveedores.");
+            }
         }
     }
-    
+
     public Proveedores getProveedoresXRazonSocial(String razonSocial) throws Exception {
-          Session session = HibernateUtil.getSessionFactory().openSession();
-          Transaction tx = null;
-          Proveedores proveedor = new Proveedores();
-          try {
-              tx = session.beginTransaction();
-              Criteria q = session.createCriteria(Proveedores.class)
-                      .add(Restrictions.eq("razonSocial", razonSocial));
-              proveedor = (Proveedores)q.uniqueResult();
-              return proveedor;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        Proveedores proveedor = new Proveedores();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(Proveedores.class)
+                    .add(Restrictions.eq("razonSocial", razonSocial));
+            proveedor = (Proveedores) q.uniqueResult();
+            return proveedor;
 
-          } catch (HibernateException he) {
-              throw new Exception("Ocurrió un error al consultar los proveedores.");
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar los proveedores.");
 
-          } finally {
-              try {
-                  if (session.isOpen()) {
+        } finally {
+            try {
+                if (session.isOpen()) {
                     session.close();
                 }
-              } catch (HibernateException he) {
-                  throw new Exception("Ocurrió un error al consultar los proveedores.");
-              }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar los proveedores.");
+            }
         }
     }
-    
-    public Proveedores getProveedoresXCodigo(Integer codigo) throws Exception {
-          Session session = HibernateUtil.getSessionFactory().openSession();
-          Transaction tx = null;
-          Proveedores proveedor = new Proveedores();
-          try {
-              tx = session.beginTransaction();
-              Criteria q = session.createCriteria(Proveedores.class)
-                      .add(Restrictions.eq("codigo", codigo));
-              proveedor = (Proveedores)q.uniqueResult();
-              return proveedor;
 
-          } catch (HibernateException he) {
-              throw new Exception("Ocurrió un error al consultar los proveedores.");
+    public Proveedores getProveedoresXCodigo(String criterio) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        Proveedores proveedor = new Proveedores();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(Proveedores.class);
+            
+            if (StringUtils.isNumeric(criterio)) {
+                q.add(Restrictions.eq("codigo",new Integer(criterio)));
+            } else {
+                q.add(Restrictions.eq("razonSocial", criterio));
+            }
+            
 
-          } finally {
-              try {
-                  if (session.isOpen()) {
+            proveedor = (Proveedores) q.uniqueResult();
+            return proveedor;
+
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar los proveedores.");
+
+        }
+    }
+
+    public List<Proveedores> getOdenesProveedores() throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        List<Proveedores> proveedores = new ArrayList<Proveedores>();
+        try {
+            tx = session.beginTransaction();
+            Query q = session.createQuery("FROM Proveedores");
+            proveedores = (List<Proveedores>) q.list();
+            for (Proveedores proveedor : proveedores) {
+
+                for (OrdenesCompra orden : proveedor.getOrdenesCompras()) {
+
+                    Hibernate.initialize(orden);
+
+                    Hibernate.initialize(orden.getCuentasXPagars());
+
+                }
+
+            }
+            return proveedores;
+
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar los proveedores.");
+
+        } finally {
+            try {
+                if (session.isOpen()) {
                     session.close();
                 }
-              } catch (HibernateException he) {
-                  throw new Exception("Ocurrió un error al consultar los proveedores.");
-              }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar los proveedores.");
+            }
         }
     }
-    
-    public List<Proveedores> getOdenesProveedores() throws Exception{
-    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-          Transaction tx = null;
-          List<Proveedores> proveedores = new ArrayList<Proveedores>();
-          try {
-              tx = session.beginTransaction();
-              Query q = session.createQuery("FROM Proveedores");
-              proveedores = (List<Proveedores>) q.list();
-              for (Proveedores proveedor : proveedores) {
 
-                  for (OrdenesCompra orden : proveedor.getOrdenesCompras()) {
-
-                      Hibernate.initialize(orden);
-
-                      Hibernate.initialize(orden.getCuentasXPagars());
-
-                  }
-
-              }
-              return proveedores;
-
-          } catch (HibernateException he) {
-              throw new Exception("Ocurrió un error al consultar los proveedores.");
-
-          } finally {
-              try {
-                  if (session.isOpen()) {
-                    session.close();
-                }
-              } catch (HibernateException he) {
-                  throw new Exception("Ocurrió un error al consultar los proveedores.");
-              }
-        }
-    }
-    
-    
-    
 }

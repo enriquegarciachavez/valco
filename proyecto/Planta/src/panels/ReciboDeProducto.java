@@ -46,7 +46,7 @@ public class ReciboDeProducto extends javax.swing.JPanel {
     DefaultTableModel model = new NoEditableTableModel();
     List<ProductosInventario> nuevosCanales = new ArrayList<ProductosInventario>();
     UsuariosDAO usuariosDao = new UsuariosDAO();
-    String modoOperacion;
+    String modoOperacion= "CANAL DE RES";
 
     /**
      * Creates new form ReciboDeProducto
@@ -108,6 +108,11 @@ public class ReciboDeProducto extends javax.swing.JPanel {
 
         jLabel4.setText("Proveedor:");
 
+        productoTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                productoTxtActionPerformed(evt);
+            }
+        });
         productoTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 productoTxtKeyReleased(evt);
@@ -176,7 +181,10 @@ public class ReciboDeProducto extends javax.swing.JPanel {
                 .addGap(0, 42, Short.MAX_VALUE))
         );
 
-        this.modoOperacion= this.productoLov.getSelectedItem().toString();
+        if(this.productoLov.getSelectedItem() != null){
+            this.modoOperacion= this.productoLov.getSelectedItem().toString();
+
+        }
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Almacen y Número de Matanza"));
 
@@ -228,8 +236,8 @@ public class ReciboDeProducto extends javax.swing.JPanel {
 
         jLabel6.setText("Número de Canal:");
 
-        this.pesoTxt2.setVisible(this.productoLov.getSelectedItem().toString().equals("CANAL DE EQUINO")
-            ||this.productoLov.getSelectedItem().toString().equals("CANAL DE RES"));
+        this.pesoTxt2.setVisible(modoOperacion.equals("CANAL DE EQUINO")
+            ||modoOperacion.equals("CANAL DE RES"));
         pesoTxt2.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         pesoTxt2.addKeyListener(new NumericKeyListener());
         pesoTxt2.addActionListener(new java.awt.event.ActionListener() {
@@ -238,7 +246,7 @@ public class ReciboDeProducto extends javax.swing.JPanel {
             }
         });
 
-        this.pesoTxt3.setVisible(this.productoLov.getSelectedItem().toString().equals("CANAL DE RES"));
+        this.pesoTxt3.setVisible(modoOperacion.equals("CANAL DE RES"));
         pesoTxt3.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         pesoTxt3.addKeyListener(new NumericKeyListener());
         pesoTxt3.addActionListener(new java.awt.event.ActionListener() {
@@ -247,7 +255,7 @@ public class ReciboDeProducto extends javax.swing.JPanel {
             }
         });
 
-        this.pesoTxt4.setVisible(this.productoLov.getSelectedItem().toString().equals("CANAL DE RES"));
+        this.pesoTxt4.setVisible(modoOperacion.equals("CANAL DE RES"));
         pesoTxt4.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         pesoTxt4.addKeyListener(new NumericKeyListener());
         pesoTxt4.addActionListener(new java.awt.event.ActionListener() {
@@ -668,18 +676,15 @@ public class ReciboDeProducto extends javax.swing.JPanel {
 
     private void proveedorTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_proveedorTxtKeyReleased
         try {
-            char c = evt.getKeyChar();
-            if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
-                evt.consume();
-            } else {
+            
                 if (!proveedorTxt.getText().equals("")) {
-                    Proveedores proveedor = proveedorDAO.getProveedoresXCodigo(new Integer(proveedorTxt.getText()));
+                    Proveedores proveedor = proveedorDAO.getProveedoresXCodigo(proveedorTxt.getText());
                     if (proveedor != null) {
                         proveedorLOV.setSelectedItem(proveedor);
                         proveedorLOV.repaint();
                     }
                 }
-            }
+            
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Ocurriò un error al consultar el proveedor", "Error", ERROR_MESSAGE);
         }
@@ -687,41 +692,44 @@ public class ReciboDeProducto extends javax.swing.JPanel {
 
     private void proveedorTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_proveedorTxtKeyTyped
 
-        char c = evt.getKeyChar();
-        if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
-            evt.consume();
-        }
+        
     }//GEN-LAST:event_proveedorTxtKeyTyped
 
     private void proveedorLOVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proveedorLOVActionPerformed
         productoLov.setModel(new DefaultComboBoxModel(this.getProductosArray()));
         productoLov.repaint();
+        if(productoLov.getSelectedItem()!= null){
         modoOperacion = productoLov.getSelectedItem().toString();
+        }
         limpiar();
+      
     }//GEN-LAST:event_proveedorLOVActionPerformed
 
     private void productoTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoTxtKeyReleased
         char c = evt.getKeyChar();
-        if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
-            evt.consume();
-        } else {
+       
             if (!productoTxt.getText().equals("")) {
-                Productos producto = new Productos();
-                producto.setCodigo(new Integer(productoTxt.getText()));
+                Productos producto = null;
+                try {
+                    producto = productoDAO.getProductosXDescripcionOCodigo(productoTxt.getText());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, ex, "ERROR", ERROR_MESSAGE);
+                    return;
+                }
+                if(producto==null){
+                    return;
+                }
                 ProductosHasProveedores prodProv = new ProductosHasProveedores();
                 prodProv.setProveedores((Proveedores) proveedorLOV.getSelectedItem());
                 prodProv.setProductos(producto);
                 productoLov.setSelectedItem(prodProv);
                 productoLov.repaint();
             }
-        }
+        
     }//GEN-LAST:event_productoTxtKeyReleased
 
     private void productoTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoTxtKeyTyped
-        char c = evt.getKeyChar();
-        if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
-            evt.consume();
-        }
+        
     }//GEN-LAST:event_productoTxtKeyTyped
 
     private void proveedorTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proveedorTxtActionPerformed
@@ -773,6 +781,10 @@ public class ReciboDeProducto extends javax.swing.JPanel {
             pesoTxt1.requestFocus();
         
     }//GEN-LAST:event_pesoTxt4ActionPerformed
+
+    private void productoTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productoTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_productoTxtActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

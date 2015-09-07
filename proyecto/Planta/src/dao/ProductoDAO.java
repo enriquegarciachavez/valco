@@ -16,6 +16,7 @@ import mapping.Productos;
 import mapping.ProductosHasProveedores;
 import mapping.ProductosInventario;
 import mapping.Proveedores;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Hibernate;
@@ -203,6 +204,40 @@ public class ProductoDAO {
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(Productos.class)
                       .add(Restrictions.eq("descripcion", descripcion));
+              producto = (Productos)q.uniqueResult();
+              return producto;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los productos.");
+
+          } finally {
+              try {
+                  if(session.isOpen()){
+                    session.close();
+                  }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los productos.");
+              }
+        }
+    }
+    
+    public Productos getProductosXDescripcionOCodigo(String criterio) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          Productos producto = new Productos();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(Productos.class);
+                      if(StringUtils.isNumeric(criterio)){
+                          q.add(Restrictions.eq("codigo", new Integer( criterio)));
+                      }else{
+                          
+                          q.add(Restrictions.eq("descripcion", criterio));
+                      }
+                      
+                              
+                      
+                      
               producto = (Productos)q.uniqueResult();
               return producto;
 

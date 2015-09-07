@@ -153,6 +153,7 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="productoTxt">
                   <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="productoTxtActionPerformed"/>
                     <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="productoTxtKeyReleased"/>
                     <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="productoTxtKeyTyped"/>
                   </Events>
@@ -162,7 +163,7 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="productoLovActionPerformed"/>
                   </Events>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="this.modoOperacion= this.productoLov.getSelectedItem().toString();"/>
+                    <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="if(this.productoLov.getSelectedItem() != null){&#xd;&#xa;this.modoOperacion= this.productoLov.getSelectedItem().toString();&#xd;&#xa;&#xd;&#xa;}"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel3">
@@ -327,7 +328,7 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pesoTxt2ActionPerformed"/>
                   </Events>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="this.pesoTxt2.setVisible(this.productoLov.getSelectedItem().toString().equals(&quot;CANAL DE EQUINO&quot;)&#xd;&#xa;||this.productoLov.getSelectedItem().toString().equals(&quot;CANAL DE RES&quot;));&#xd;&#xa;pesoTxt2.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);&#xd;&#xa;        pesoTxt2.addKeyListener(new NumericKeyListener());"/>
+                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="this.pesoTxt2.setVisible(modoOperacion.equals(&quot;CANAL DE EQUINO&quot;)&#xd;&#xa;||modoOperacion.equals(&quot;CANAL DE RES&quot;));&#xd;&#xa;pesoTxt2.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);&#xd;&#xa;        pesoTxt2.addKeyListener(new NumericKeyListener());"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JTextField" name="pesoTxt3">
@@ -335,7 +336,7 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pesoTxt3ActionPerformed"/>
                   </Events>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="this.pesoTxt3.setVisible(this.productoLov.getSelectedItem().toString().equals(&quot;CANAL DE RES&quot;));&#xd;&#xa;pesoTxt3.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);&#xd;&#xa;        pesoTxt3.addKeyListener(new NumericKeyListener());"/>
+                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="this.pesoTxt3.setVisible(modoOperacion.equals(&quot;CANAL DE RES&quot;));&#xd;&#xa;pesoTxt3.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);&#xd;&#xa;        pesoTxt3.addKeyListener(new NumericKeyListener());"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JTextField" name="pesoTxt4">
@@ -343,7 +344,7 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pesoTxt4ActionPerformed"/>
                   </Events>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="this.pesoTxt4.setVisible(this.productoLov.getSelectedItem().toString().equals(&quot;CANAL DE RES&quot;));&#xd;&#xa;pesoTxt4.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);&#xd;&#xa;        pesoTxt4.addKeyListener(new NumericKeyListener());"/>
+                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="this.pesoTxt4.setVisible(modoOperacion.equals(&quot;CANAL DE RES&quot;));&#xd;&#xa;pesoTxt4.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);&#xd;&#xa;        pesoTxt4.addKeyListener(new NumericKeyListener());"/>
                   </AuxValues>
                 </Component>
               </SubComponents>
