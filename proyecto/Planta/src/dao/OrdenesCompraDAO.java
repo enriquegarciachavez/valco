@@ -3,32 +3,29 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.valco.dao;
+package dao;
 
-import com.valco.HibernateUtil;
-import com.valco.pojo.OrdenesCompra;
-import com.valco.pojo.ProductosInventario;
+import Hibernate.HibernateUtil;
 import java.util.ArrayList;
 import java.util.List;
+import mapping.OrdenesCompra;
+import mapping.ProductosInventario;
+import mapping.Ubicaciones;
 import org.hibernate.Criteria;
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.Transformers;
 
 /**
  *
- * @author Enrique
+ * @author Karla
  */
 public class OrdenesCompraDAO {
     
-    
-    
-    public void insertarOrdenesCompra(OrdenesCompra ordenesCompra) throws Exception {
+     public void insertarOrdenesCompra(OrdenesCompra ordenesCompra) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
@@ -114,9 +111,6 @@ public class OrdenesCompraDAO {
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(OrdenesCompra.class);
               ordenesCompra = (List<OrdenesCompra>) q.list();
-              for (OrdenesCompra orden: ordenesCompra){
-                  Hibernate.initialize(orden.getProveedores());
-              }
               return ordenesCompra;
 
           } catch (HibernateException he) {
@@ -139,7 +133,7 @@ public class OrdenesCompraDAO {
           List<ProductosInventario> productoInventario = new ArrayList<ProductosInventario>();
           try {
               tx = session.beginTransaction();
-              Criteria q = session.createCriteria(ProductosInventario.class)
+              Criteria q = session.createCriteria(OrdenesCompra.class)
                       .add(Restrictions.eq("ordenesCompra", ordenCompra));
               productoInventario = (List<ProductosInventario>) q.list();
               return productoInventario;
@@ -167,11 +161,8 @@ public class OrdenesCompraDAO {
               Criteria q = session.createCriteria(ProductosInventario.class)
                       .add(Restrictions.eq("ordenesCompra", ordenCompra));
               q.setProjection(Projections.projectionList()
-                      .add(Projections.groupProperty("productosHasProveedores").as("productosHasProveedores"))
-                      .add(Projections.property("precio").as("precio"))
-                        .add(Projections.sum("peso").as("peso"))
-              );
-              q.setResultTransformer(Transformers.aliasToBean(ProductosInventario.class));
+                      .add(Projections.groupProperty("productosHasProveedores"))
+                        .add(Projections.sum("peso")));
               productoInventario = (List<ProductosInventario>) q.list();
               return productoInventario;
 

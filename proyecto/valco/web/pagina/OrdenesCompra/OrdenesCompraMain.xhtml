@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <ui:composition template="../templates/Template1.xhtml">
+
+
+
+            <ui:define name="content">
+                <h:form id="form">
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" />
+                    <p:menubar>
+
+                        <p:menuitem 
+                            value="Editar"
+                            id="btnEditar"
+                            icon="ui-icon-plusthick"                      
+                            partialSubmit="true"
+                            action= "#{ordenesCompraMainBean.obtenerProductosXOrdenAgrupados()}"
+                            oncomplete="PF('popupEditar').show();;"
+                            update=":formEditar:tablaEditar"
+
+                            />
+
+                        <p:menuitem 
+                            value="Modificar"  
+                            id="btnModificar"
+                            icon="ui-icon-pencil"
+                            partialSubmit="true"
+                            />
+                        <p:menuitem 
+                            value="Borrar"
+                            id="btnBorrar"
+                            icon="ui-icon-circle-close"
+                            partialSubmit="true"
+                            process="singleDT" 
+
+
+                            /> 
+                    </p:menubar>
+
+                    <p:dataTable id="singleDT" var="orden" value="#{ordenesCompraMainBean.ordenesCompra}" selectionMode="single" selection="#{ordenesCompraMainBean.ordenSeleccionado}" rowKey="#{orden.codigo}">
+                        <f:facet name="header">
+                            Ordenes de Compra
+                        </f:facet>
+                        <p:column headerText="Codigo">
+                            <h:outputText value="#{orden.codigo}" />
+                        </p:column>
+                        <p:column headerText="Fecha">
+                            <h:outputText value="#{orden.fecha}" />
+                        </p:column>
+                        <p:column headerText="Total">
+                            <h:outputText value="#{orden.total}" />
+                        </p:column>
+                        <p:column headerText="Proveedor">
+                            <h:outputText value="#{orden.proveedores.razonSocial}" />
+                        </p:column>
+
+                    </p:dataTable>
+                    <p:blockUI block="form" trigger="btnEditar btnModificar btnBorrar">
+                        Cargando.... Espere porfavor<br />
+                        <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
+
+                    </p:blockUI>
+                </h:form>
+                <h:form id="formEditar">
+
+                    <p:dialog header="Editar Productos" widgetVar="popupEditar" modal="true" position="top"
+                              id="popupEditar">
+                        <p:dataTable id="tablaEditar" var="producto" value="#{ordenesCompraMainBean.produuctosInventarioAgrupados}" selectionMode="single" selection="#{ordenesCompraMainBean.productoSeleccionadoAgrupado}" rowKey="#{producto}">
+                            <f:facet name="header">
+                                Captura de pesos
+                            </f:facet>
+                            <p:column headerText="Peso">
+                                <h:outputText value="#{producto.peso}" />
+                            </p:column>
+                            <p:column headerText="Descripción">
+                                <h:outputText value="#{producto.productosHasProveedores.productos.descripcion}" />
+                            </p:column>
+                            <p:column headerText="Precio">
+                                <p:inputText value="#{producto.precio}" />
+                            </p:column>
+                        </p:dataTable>
+
+                        <f:facet name="footer">
+
+                            <p:commandButton value="Guardar"  id="guardar1" update=":form:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'popupEditar' )"  action="#{ordenesCompraMainBean.guardarPrecio()}"/>
+
+                        </f:facet>
+
+
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

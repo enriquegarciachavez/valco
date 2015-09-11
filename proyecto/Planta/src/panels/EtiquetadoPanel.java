@@ -1,6 +1,7 @@
 package panels;
 
 import creators.PanelCreator;
+import dao.OrdenesCompraDAO;
 import dao.ProcesosDAO;
 import dao.ProductoDAO;
 import java.awt.ComponentOrientation;
@@ -45,6 +46,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import listeners.NumericKeyListener;
+import mapping.OrdenesCompra;
 import mapping.Procesos;
 import mapping.Productos;
 import mapping.ProductosHasProveedores;
@@ -78,12 +80,14 @@ public class EtiquetadoPanel extends CoustomPanel {
     DefaultTableModel model = new NoEditableTableModel();
     String formato = "##.##";
     JInternalFrame internalFrame;
+    OrdenesCompraDAO ordenesDAO = new OrdenesCompraDAO ();
     Action action = new AbstractAction("doSomething") {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("triggered the action");
         }
+     
 
     };
 
@@ -141,7 +145,9 @@ public class EtiquetadoPanel extends CoustomPanel {
     private Object[] getProcesosActivosArray() {
         Object[] procesosActivosArray = new Object[0];
         try {
-            procesosActivosArray = procesosDAO.getProcesosActivos().toArray();
+            OrdenesCompra orden = new OrdenesCompra();
+            orden.setCodigo(24);
+            procesosActivosArray = ordenesDAO.getProductosInventarioAgrupadoXOrden(orden).toArray();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", ERROR_MESSAGE);
         }
