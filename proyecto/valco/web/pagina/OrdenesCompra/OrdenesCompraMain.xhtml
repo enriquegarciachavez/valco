@@ -72,26 +72,81 @@
 
                     <p:dialog header="Editar Productos" widgetVar="popupEditar" modal="true" position="top"
                               id="popupEditar">
-                        <p:dataTable id="tablaEditar" var="producto" value="#{ordenesCompraMainBean.produuctosInventarioAgrupados}" selectionMode="single" selection="#{ordenesCompraMainBean.productoSeleccionadoAgrupado}" rowKey="#{producto}">
-                            <f:facet name="header">
-                                Captura de pesos
-                            </f:facet>
-                            <p:column headerText="Peso">
-                                <h:outputText value="#{producto.peso}" />
-                            </p:column>
-                            <p:column headerText="Descripción">
-                                <h:outputText value="#{producto.productosHasProveedores.productos.descripcion}" />
-                            </p:column>
-                            <p:column headerText="Precio">
-                                <p:inputText value="#{producto.precio}" />
-                            </p:column>
-                        </p:dataTable>
+                        <p:wizard widgetVar="wiz" flowListener="#{ordenesCompraMainBean.onFlowProcess}">
+                            <p:tab id="modificarProducto" title="Modificar Producto">
+                                <p:dataTable id="tablaEditar" editable="true" editMode="cell" var="producto" value="#{ordenesCompraMainBean.produuctosInventarioAgrupados}" selectionMode="single" selection="#{ordenesCompraMainBean.productoSeleccionadoAgrupado}" rowKey="#{producto}">
+                                    <f:facet name="header">
+                                        Captura de pesos
+                                    </f:facet>
+                                    <p:column headerText="Peso">
+                                        <h:outputText value="#{producto.peso}" />
+                                    </p:column>
 
-                        <f:facet name="footer">
+                                    <p:column headerText="Descripción">
+                                        <p:cellEditor>
+                                            <f:facet name="output">
+                                                <h:outputText value="#{producto.productoModificado}" />
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <p:selectOneMenu id="productoProveedor" required="true" value="#{producto.productoModificado}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
+                                                                 effect="fade" var="c" style="width:160px" filter="true" filterMatchMode="contains">
+                                                    <f:selectItems value="#{ordenesCompraMainBean.productosProveedor}" var="productoProveedor" itemLabel="#{productoProveedor}" itemValue="#{productoProveedor}" />
 
-                            <p:commandButton value="Guardar"  id="guardar1" update=":form:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'popupEditar' )"  action="#{ordenesCompraMainBean.guardarPrecio()}"/>
+                                                    <p:column style="width:10%">
+                                                        <h:outputText value="#{c.codigo}" />
+                                                    </p:column>
+                                                    <p:column>
+                                                        <h:outputText value="#{c}" />
+                                                    </p:column>
+                                                    <p:ajax event="change" update="tablaEditar"/>
+                                                </p:selectOneMenu>
 
-                        </f:facet>
+
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+
+
+                                    <p:column headerText="Precio">
+                                        <h:outputText value="#{producto.precio}" />
+
+                                    </p:column>
+                                </p:dataTable>
+                            </p:tab>
+
+                            <p:tab id="modificarPrecio" title="Modificar Precio">
+                                <p:dataTable id="tablaEditar2" editable="true" editMode="cell" var="producto" value="#{ordenesCompraMainBean.produuctosInventarioAgrupadosModificados}" selectionMode="single" selection="#{ordenesCompraMainBean.productoSeleccionadoAgrupado}" rowKey="#{producto}">
+                                    <f:facet name="header">
+                                        Captura de pesos
+                                    </f:facet>
+                                    <p:column headerText="Peso">
+                                        <h:outputText value="#{producto.peso}" />
+                                    </p:column>
+
+                                    <p:column headerText="Descripción">
+
+                                        <h:outputText value="#{producto.productoModificado}" />
+
+                                    </p:column>
+
+
+                                    <p:column headerText="Precio">
+                                        <p:inputText value="#{producto.precio}" />
+                                    </p:column>
+                                    <f:facet name="footer">
+
+                                        <p:commandButton   value="Guardar"  id="guardar1" update=":form:singleDT" oncomplete="PF('wiz').loadStep('modificarProducto', false)"  action="#{ordenesCompraMainBean.guardarPrecio()}">
+                                            
+                                        </p:commandButton>
+
+                                </f:facet>
+                                </p:dataTable>
+                                
+                            </p:tab>
+
+                        </p:wizard>
+
+
 
 
                     </p:dialog>

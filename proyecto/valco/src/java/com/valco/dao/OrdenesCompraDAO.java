@@ -7,7 +7,9 @@ package com.valco.dao;
 
 import com.valco.HibernateUtil;
 import com.valco.pojo.OrdenesCompra;
+import com.valco.pojo.ProductosHasProveedores;
 import com.valco.pojo.ProductosInventario;
+import com.valco.pojo.ProductosInventarioAgrupados;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Criteria;
@@ -158,21 +160,26 @@ public class OrdenesCompraDAO {
         }
     }
        
-        public List<ProductosInventario> getProductosInventarioAgrupadoXOrden(OrdenesCompra ordenCompra) throws Exception {
+        public List<ProductosInventarioAgrupados> getProductosInventarioAgrupadoXOrden(OrdenesCompra ordenCompra) throws Exception {
           Session session = HibernateUtil.getSessionFactory().getCurrentSession();
           Transaction tx = null;
-          List<ProductosInventario> productoInventario = new ArrayList<ProductosInventario>();
+          List<ProductosInventarioAgrupados> productoInventario = new ArrayList<ProductosInventarioAgrupados>();
           try {
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(ProductosInventario.class)
                       .add(Restrictions.eq("ordenesCompra", ordenCompra));
               q.setProjection(Projections.projectionList()
-                      .add(Projections.groupProperty("productosHasProveedores").as("productosHasProveedores"))
+                      .add(Projections.groupProperty("productosHasProveedores").as("producto"))
+                      .add(Projections.groupProperty("productosHasProveedores").as("productoModificado"))
                       .add(Projections.property("precio").as("precio"))
+                      .add(Projections.property("precio").as("precioModificado"))
                         .add(Projections.sum("peso").as("peso"))
               );
-              q.setResultTransformer(Transformers.aliasToBean(ProductosInventario.class));
-              productoInventario = (List<ProductosInventario>) q.list();
+              q.setResultTransformer(Transformers.aliasToBean(ProductosInventarioAgrupados.class));
+              productoInventario = (List<ProductosInventarioAgrupados>) q.list();
+              for(ProductosInventarioAgrupados productoAgrupado: productoInventario){
+                  productoAgrupado.setProductos(this.getProductosInventarioXOrdenYProducto(ordenCompra, productoAgrupado.getProducto()));
+              }
               return productoInventario;
 
           } catch (HibernateException he) {
@@ -188,5 +195,26 @@ public class OrdenesCompraDAO {
               }
         }
     }
+        
+       public List<ProductosInventario> getProductosInventarioXOrdenYProducto(OrdenesCompra ordenCompra, ProductosHasProveedores producto) throws Exception {
+         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+          Transaction tx = null;
+          List<ProductosInventario> productoInventario = new ArrayList<ProductosInventario>();
+          try {
+              //tx = session.beginTransaction();
+              Criteria q = session.createCriteria(ProductosInventario.class)
+                      .add(Restrictions.eq("ordenesCompra", ordenCompra))
+                      .add(Restrictions.eq("productosHasProveedores", producto));
+             
+              productoInventario = (List<ProductosInventario>) q.list();
+              return productoInventario;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los Productos de la Orden.");
+
+          } 
+    }
+    
+
     
 }
