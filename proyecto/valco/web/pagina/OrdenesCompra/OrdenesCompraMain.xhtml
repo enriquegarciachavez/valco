@@ -54,8 +54,8 @@
                         <p:column headerText="Fecha">
                             <h:outputText value="#{orden.fecha}" />
                         </p:column>
-                        <p:column headerText="Total">
-                            <h:outputText value="#{orden.total}" />
+                        <p:column headerText="Total" style="text-align:right">
+                            <h:outputText value="#{orden.total}"   />
                         </p:column>
                         <p:column headerText="Proveedor">
                             <h:outputText value="#{orden.proveedores.razonSocial}" />
@@ -78,8 +78,8 @@
                                     <f:facet name="header">
                                         Captura de pesos
                                     </f:facet>
-                                    <p:column headerText="Peso">
-                                        <h:outputText value="#{producto.peso}" />
+                                    <p:column headerText="Peso" style="text-align:right">
+                                        <h:outputText value="#{producto.peso}"  />
                                     </p:column>
 
                                     <p:column headerText="Descripción">
@@ -107,8 +107,8 @@
                                     </p:column>
 
 
-                                    <p:column headerText="Precio">
-                                        <h:outputText value="#{producto.precio}" />
+                                    <p:column headerText="Precio" style="text-align:right">
+                                        <h:outputText value="#{producto.precio}"  />
 
                                     </p:column>
                                 </p:dataTable>
@@ -119,8 +119,8 @@
                                     <f:facet name="header">
                                         Captura de pesos
                                     </f:facet>
-                                    <p:column headerText="Peso">
-                                        <h:outputText value="#{producto.peso}" />
+                                    <p:column headerText="Peso" style="text-align:right">
+                                        <h:outputText value="#{producto.peso}"  />
                                     </p:column>
 
                                     <p:column headerText="Descripción">
@@ -130,18 +130,65 @@
                                     </p:column>
 
 
-                                    <p:column headerText="Precio">
-                                        <p:inputText value="#{producto.precio}" />
+                                    <p:column headerText="Precio" style="text-align:right">
+                                        <p:inputText value="#{producto.precio}"  />
                                     </p:column>
+
+                                </p:dataTable>
+
+                            </p:tab>
+
+                            <p:tab id="resumen" title="Resumen ">
+
+                                <p:dataTable  id="tablaEditar3" editable="true" editMode="cell" var="producto" value="#{ordenesCompraMainBean.produuctosInventarioAgrupadosModificados}" selectionMode="single" selection="#{ordenesCompraMainBean.productoSeleccionadoAgrupado}" rowKey="#{producto}">
+                                    <f:facet name="header">
+                                        Captura de pesos
+                                    </f:facet>
+                                    <p:column headerText="Peso"  style="text-align:right">
+                                        <h:outputText value="#{producto.peso}"  />
+                                    </p:column>
+
+                                    <p:column headerText="Descripción">
+
+                                        <h:outputText value="#{producto.productoModificado}" />
+
+                                    </p:column>
+
+
+                                    <p:column headerText="Precio"  style="text-align:right">
+                                        <h:outputText value="#{producto.precio}" />
+                                    </p:column>
+
+                                    <p:columnGroup type="footer">
+                                        <p:row>
+                                            <p:column footerText="#{ordenesCompraMainBean.pesoTotal}"  style="text-align:right">
+
+                                            </p:column>
+
+                                            <p:column footerText="Total" style="text-align:right" >
+
+                                            </p:column>
+
+                                            <p:column footerText="$#{ordenesCompraMainBean.precioTotalFormateado}"  style="text-align:right">
+
+                                            </p:column>
+                                        </p:row>
+                                    </p:columnGroup>
+
                                     <f:facet name="footer">
 
                                         <p:commandButton   value="Guardar"  id="guardar1" update=":form:singleDT" oncomplete="PF('wiz').loadStep('modificarProducto', false)"  action="#{ordenesCompraMainBean.guardarPrecio()}">
-                                            
-                                        </p:commandButton>
 
-                                </f:facet>
+                                        </p:commandButton>  
+
+                                    </f:facet>
+
+
                                 </p:dataTable>
-                                
+
+
+
+
                             </p:tab>
 
                         </p:wizard>
