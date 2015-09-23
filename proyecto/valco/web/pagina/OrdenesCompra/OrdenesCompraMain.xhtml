@@ -23,7 +23,7 @@
                             partialSubmit="true"
                             action= "#{ordenesCompraMainBean.obtenerProductosXOrdenAgrupados()}"
                             oncomplete="PF('popupEditar').show();;"
-                            update=":formEditar:tablaEditar"
+                            update=":formEditar:tablaProductos"
 
                             />
 
@@ -32,6 +32,9 @@
                             id="btnModificar"
                             icon="ui-icon-pencil"
                             partialSubmit="true"
+                            oncomplete="PF('popupProductos').show();;"
+                            update=":formEditar:tablaProductos"
+                            action="#{ordenesCompraMainBean.obtenerProductosXOrdenAgrupados()}"
                             />
                         <p:menuitem 
                             value="Borrar"
@@ -73,6 +76,71 @@
                     <p:dialog header="Editar Productos" widgetVar="popupEditar" modal="true" position="top"
                               id="popupEditar">
                         <p:wizard widgetVar="wiz" flowListener="#{ordenesCompraMainBean.onFlowProcess}">
+                            <p:tab id="tabProductos" title="Modificar Producto">
+                                <p:menubar>
+
+                                    <p:menuitem 
+                                        value="Agregar"
+                                        id="btnAgregar"
+                                        icon="ui-icon-plusthick"                      
+                                        partialSubmit="true"
+                                        oncomplete="PF('popupAgregar').show();;"
+                                        update=":formAgregar"
+                                        
+
+                                        />
+                                    <p:menuitem 
+                                        value="Borrar"
+                                        id="btnBorrar"
+                                        icon="ui-icon-circle-close"
+                                        partialSubmit="true"
+                                        action="#{ordenesCompraMainBean.borrarProducto()}"
+                                        update="tablaProductos"
+
+
+                                        /> 
+                                </p:menubar>
+                                <p:dataTable id="tablaProductos" editable="true" editMode="cell" var="producto" value="#{ordenesCompraMainBean.produuctosInventario}" selectionMode="single" selection="#{ordenesCompraMainBean.productoSeleccionado}" rowKey="#{producto}">
+                                    <f:facet name="header">
+                                        Captura de pesos
+                                    </f:facet>
+                                    <p:column headerText="Peso" style="text-align:right">
+                                        <p:inputText value="#{producto.peso}"  />
+                                    </p:column>
+
+                                    <p:column headerText="Descripción">
+                                        <p:cellEditor>
+                                            <f:facet name="output">
+                                                <h:outputText value="#{producto.productosHasProveedores}" />
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <p:selectOneMenu id="productoProveedor" required="true" value="#{producto.productosHasProveedores}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
+                                                                 effect="fade" var="c" style="width:160px" filter="true" filterMatchMode="contains">
+                                                    <f:selectItems value="#{ordenesCompraMainBean.productosProveedor}" var="productoProveedor" itemLabel="#{productoProveedor}" itemValue="#{productoProveedor}" />
+
+                                                    <p:column style="width:10%">
+                                                        <h:outputText value="#{c.codigo}" />
+                                                    </p:column>
+                                                    <p:column>
+                                                        <h:outputText value="#{c}" />
+                                                    </p:column>
+                                                    <p:ajax event="change" update="tablaProductos"/>
+                                                </p:selectOneMenu>
+
+
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+
+
+
+
+
+
+
+                                </p:dataTable>
+                            </p:tab>
+
                             <p:tab id="modificarProducto" title="Modificar Producto">
                                 <p:dataTable id="tablaEditar" editable="true" editMode="cell" var="producto" value="#{ordenesCompraMainBean.produuctosInventarioAgrupados}" selectionMode="single" selection="#{ordenesCompraMainBean.productoSeleccionadoAgrupado}" rowKey="#{producto}">
                                     <f:facet name="header">
@@ -192,12 +260,43 @@
                             </p:tab>
 
                         </p:wizard>
+                    </p:dialog>
 
 
+                </h:form>
+                <h:form id="formAgregar">
+                    <p:dialog header="Agregar Producto" widgetVar="popupAgregar" modal="true" position="top"
+                              id="popupAgregar">
+                        <h:panelGrid id="ingresarGrid"  columns="2" cellpadding="5">
+                            <h:outputText value="Peso:"/>
+                            <p:inputText value="#{ordenesCompraMainBean.productoNuevo.peso}"  />
+                            <h:outputText value="Producto:"/>
+
+                            <p:selectOneMenu id="productoAgregar" required="true" value="#{ordenesCompraMainBean.productoNuevo.productosHasProveedores}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
+                                             effect="fade" var="c" style="width:160px" filter="true" filterMatchMode="contains">
+                                <f:selectItems value="#{ordenesCompraMainBean.productosProveedor}" var="productoProveedor" itemLabel="#{productoProveedor}" itemValue="#{productoProveedor}" />
+
+                                <p:column style="width:10%">
+                                    <h:outputText value="#{c.codigo}" />
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{c}" />
+                                </p:column>
+                               
+                            </p:selectOneMenu>
+
+                            <f:facet name="footer">
+
+                                <p:commandButton value="Guardar"  id="guardar1" update=":formEditar:tablaProductos" oncomplete="handleLoginRequest(xhr, status, args, 'popupAgregar' )"  action="#{ordenesCompraMainBean.agregarProductoNuevo()}"/>
+
+                            </f:facet>
+                        </h:panelGrid>
 
 
                     </p:dialog>
                 </h:form>
+
+
             </ui:define>
         </ui:composition>
     </body>

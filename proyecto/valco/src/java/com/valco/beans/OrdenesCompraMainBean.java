@@ -11,6 +11,7 @@ import com.valco.pojo.OrdenesCompra;
 import com.valco.pojo.ProductosHasProveedores;
 import com.valco.pojo.ProductosInventario;
 import com.valco.pojo.ProductosInventarioAgrupados;
+import com.valco.pojo.Ubicaciones;
 import com.valco.utility.MsgUtility;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -43,12 +44,17 @@ public class OrdenesCompraMainBean {
     private ProductosInventarioAgrupados productoSeleccionadoAgrupado;
     private List<ProductosHasProveedores> productosProveedor;
     private List<ProductosInventarioAgrupados> produuctosInventarioAgrupadosModificados = new ArrayList<>();
+    ProductosInventario productoSeleccionado;
+    private List<ProductosInventario> borrar= new ArrayList<>();
+    ProductosInventario productoNuevo = new ProductosInventario();
+    
 
     /**
      * Creates a new instance of OrdenesCompraMainBean
      */
     public OrdenesCompraMainBean() {
         try {
+            productoNuevo.setPeso(BigDecimal.ZERO);
             this.ordenesCompra = ordenesCompraDao.getOrdenesCompra();
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
@@ -60,6 +66,25 @@ public class OrdenesCompraMainBean {
     private void init() {
 
     }
+    
+    public void agregarProductoNuevo(){
+        productoNuevo.setPrecio(BigDecimal.ZERO);
+        productoNuevo.setOrdenesCompra(ordenSeleccionado);
+        Ubicaciones ubicacion= new Ubicaciones();
+        ubicacion.setCodigo(1);
+        productoNuevo.setUbicaciones(ubicacion);
+        productoNuevo.setEstatus("ACTIVO");
+        produuctosInventario.add(productoNuevo);
+        productoNuevo= new ProductosInventario();
+        productoNuevo.setPeso(BigDecimal.ZERO);
+        
+    }
+    
+    public void borrarProducto(){
+        this.borrar.add(productoSeleccionado);
+        this.produuctosInventario.remove(productoSeleccionado);
+        
+    }
 
     public void obtenerProductosXOrdenAgrupados() {
         try {
@@ -67,8 +92,10 @@ public class OrdenesCompraMainBean {
                     = this.ordenesCompraDao.getProductosInventarioAgrupadoXOrden(ordenSeleccionado);
             this.produuctosInventario = this.ordenesCompraDao.getProductosInventarioXOrden(ordenSeleccionado);
             this.productosProveedor = this.productoDao.getProductosXProveedor(ordenSeleccionado.getProveedores());
+            this.borrar= new ArrayList<>();
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
+            
         }
 
     }
@@ -125,6 +152,36 @@ public class OrdenesCompraMainBean {
 
             }
 
+        }else if (event.getNewStep().equals("modificarProducto")){
+            produuctosInventarioAgrupados =new ArrayList<>();
+            productosinventario : 
+            for (ProductosInventario producto : produuctosInventario){
+                ProductosInventarioAgrupados productoAgrupado = new ProductosInventarioAgrupados();
+                productoAgrupado.setPeso(producto.getPeso());
+                productoAgrupado.setPrecio(producto.getPrecio());
+                productoAgrupado.setPrecioModificado(producto.getPrecio());
+                productoAgrupado.setProducto(producto.getProductosHasProveedores());
+                productoAgrupado.setProductoModificado(producto.getProductosHasProveedores());
+                productoAgrupado.setProductos(new ArrayList<ProductosInventario>());
+                
+                productoAgrupado.getProductos().add(producto);
+                
+                if(!produuctosInventarioAgrupados.isEmpty()){
+               
+                for(ProductosInventarioAgrupados agrupadoCiclo : produuctosInventarioAgrupados){
+                    if(agrupadoCiclo.getProducto().equals(productoAgrupado.getProducto())){
+                        agrupadoCiclo.setPeso(agrupadoCiclo.getPeso().add(productoAgrupado.getPeso()));
+                        agrupadoCiclo.getProductos().add(producto);
+                        continue productosinventario ;
+                        
+                    }
+                }
+                }
+                produuctosInventarioAgrupados.add(productoAgrupado);
+                
+                
+            }
+            
         }
         return event.getNewStep();
     }
@@ -229,5 +286,31 @@ public class OrdenesCompraMainBean {
     public void setProduuctosInventarioAgrupadosModificados(List<ProductosInventarioAgrupados> produuctosInventarioAgrupadosModificados) {
         this.produuctosInventarioAgrupadosModificados = produuctosInventarioAgrupadosModificados;
     }
+
+    public ProductosInventario getProductoSeleccionado() {
+        return productoSeleccionado;
+    }
+
+    public void setProductoSeleccionado(ProductosInventario productoSeleccionado) {
+        this.productoSeleccionado = productoSeleccionado;
+    }
+
+    public List<ProductosInventario> getBorrar() {
+        return borrar;
+    }
+
+    public void setBorrar(List<ProductosInventario> borrar) {
+        this.borrar = borrar;
+    }
+
+    public ProductosInventario getProductoNuevo() {
+        return productoNuevo;
+    }
+
+    public void setProductoNuevo(ProductosInventario productoNuevo) {
+        this.productoNuevo = productoNuevo;
+    }
+    
+    
 
 }
