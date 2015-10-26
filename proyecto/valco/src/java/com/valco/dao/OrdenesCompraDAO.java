@@ -10,6 +10,7 @@ import com.valco.pojo.OrdenesCompra;
 import com.valco.pojo.ProductosHasProveedores;
 import com.valco.pojo.ProductosInventario;
 import com.valco.pojo.ProductosInventarioAgrupados;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Criteria;
@@ -213,6 +214,38 @@ public class OrdenesCompraDAO {
               throw new Exception("Ocurrió un error al consultar los Productos de la Orden.");
 
           } 
+    }
+        public void actualizarOrdenYProductos(List<ProductosInventario> productosActualizar, List<ProductosInventario> productosBorrar, OrdenesCompra orden) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            for(ProductosInventario producto : productosActualizar){
+                session.saveOrUpdate(producto);
+            }
+            for(ProductosInventario producto : productosBorrar){
+                session.delete(producto);
+            }
+            session.update(orden);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al modificar el producto.");
+                }
+            }
+            throw new Exception("Ocurrió un error al modificar el producto.");
+        } finally {
+            try {
+                if(session.isOpen()){
+                    session.close();
+                  }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al modificar el producto.");
+            }
+        }
     }
     
 

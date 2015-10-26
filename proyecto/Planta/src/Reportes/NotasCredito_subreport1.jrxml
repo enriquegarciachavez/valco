@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="NotasCredito_subreport1" language="groovy" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.366026910730141"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="FECHA" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT
+     NOTAS_CREDITO.`CODIGO` AS NOTAS_CREDITO_CODIGO,
+     NOTAS_CREDITO.`FECHA` AS NOTAS_CREDITO_FECHA,
+     IFNULL (NOTAS_CREDITO.`OBSERVACIONES`,'') AS  NOTAS_CREDITO_OBSERVACIONES,
+     NOTAS_CREDITO.`ESTATUS` AS NOTAS_CREDITO_ESTATUS,
+     NOTAS_CREDITO.`CANTIDAD` AS NOTAS_CREDITO_CANTIDAD,
+     NOTAS_CREDITO.`TIPO_NOTA` AS NOTAS_CREDITO_TIPO_NOTA,
+     NOTAS_CREDITO.`DEVOLUCION` AS NOTAS_CREDITO_DEVOLUCION,
+     NOTAS_CREDITO.`FACTURAS_CODIGO` AS NOTAS_CREDITO_FACTURAS_CODIGO,
+     FACTURAS.`FOLIO` AS FACTURAS_FOLIO,
+     NOTAS_DE_VENTA.`CODIGO` AS NOTAS_DE_VENTA_CODIGO,
+     NOTAS_DE_VENTA.`CLIENTES_CODIGO` AS NOTAS_DE_VENTA_CLIENTES_CODIGO,
+     CLIENTES.`CODIGO` AS CLIENTES_CODIGO,
+     CLIENTES.`RAZON_SOCIAL` AS CLIENTES_RAZON_SOCIAL,
+     FACTURAS.`CODIGO` AS FACTURAS_CODIGO,
+     NOTAS_DE_VENTA.`FACTURAS_CODIGO` AS NOTAS_DE_VENTA_FACTURAS_CODIGO,
+     FACTURAS.`TOTAL` AS FACTURAS_TOTAL,
+     NOTAS_DE_VENTA.`FOLIO` AS NOTAS_DE_VENTA_FOLIO
+FROM
+     `FACTURAS` FACTURAS INNER JOIN `NOTAS_CREDITO` NOTAS_CREDITO ON FACTURAS.`CODIGO` = NOTAS_CREDITO.`FACTURAS_CODIGO`
+     INNER JOIN `NOTAS_DE_VENTA` NOTAS_DE_VENTA ON FACTURAS.`CODIGO` = NOTAS_DE_VENTA.`FACTURAS_CODIGO`
+     AND NOTAS_DE_VENTA.`CODIGO` = FACTURAS.`NOTAS_DE_VENTA_CODIGO`
+     INNER JOIN `CLIENTES` CLIENTES ON NOTAS_DE_VENTA.`CLIENTES_CODIGO` = CLIENTES.`CODIGO`
+WHERE NOTAS_CREDITO.`FECHA` = $P{FECHA}]]>
+	</queryString>
+	<field name="NOTAS_CREDITO_CODIGO" class="java.lang.Integer"/>
+	<field name="NOTAS_CREDITO_FECHA" class="java.sql.Date"/>
+	<field name="NOTAS_CREDITO_OBSERVACIONES" class="java.lang.String"/>
+	<field name="NOTAS_CREDITO_ESTATUS" class="java.lang.String"/>
+	<field name="NOTAS_CREDITO_CANTIDAD" class="java.math.BigDecimal"/>
+	<field name="NOTAS_CREDITO_TIPO_NOTA" class="java.lang.String"/>
+	<field name="NOTAS_CREDITO_DEVOLUCION" class="java.lang.Boolean"/>
+	<field name="NOTAS_CREDITO_FACTURAS_CODIGO" class="java.lang.Integer"/>
+	<field name="FACTURAS_FOLIO" class="java.lang.Integer"/>
+	<field name="NOTAS_DE_VENTA_CODIGO" class="java.lang.Integer"/>
+	<field name="NOTAS_DE_VENTA_CLIENTES_CODIGO" class="java.lang.Integer"/>
+	<field name="CLIENTES_CODIGO" class="java.lang.Integer"/>
+	<field name="CLIENTES_RAZON_SOCIAL" class="java.lang.String"/>
+	<field name="FACTURAS_CODIGO" class="java.lang.Integer"/>
+	<field name="NOTAS_DE_VENTA_FACTURAS_CODIGO" class="java.lang.Integer"/>
+	<field name="FACTURAS_TOTAL" class="java.math.BigDecimal"/>
+	<field name="NOTAS_DE_VENTA_FOLIO" class="java.lang.Integer"/>
+	<variable name="TOTAL" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{FACTURAS_TOTAL}]]></variableExpression>
+	</variable>
+	<columnHeader>
+		<band height="20">
+			<textField>
+				<reportElement x="0" y="0" width="70" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new SimpleDateFormat("dd/MMM/yyyy").format($P{FECHA})]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<textField>
+				<reportElement x="70" y="0" width="56" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{NOTAS_DE_VENTA_FOLIO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="126" y="0" width="100" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CLIENTES_RAZON_SOCIAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="314" y="0" width="54" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{FACTURAS_FOLIO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="368" y="0" width="77" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA["\$ " +$F{FACTURAS_TOTAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="483" y="0" width="79" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOTAS_CREDITO_OBSERVACIONES}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="24">
+			<staticText>
+				<reportElement x="170" y="1" width="67" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<text><![CDATA[Total del Dia]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="368" y="0" width="77" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA["\$ " +$V{TOTAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="237" y="1" width="77" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new SimpleDateFormat("dd/MMM/yyyy").format($P{FECHA})]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="357" y="0" width="100" height="1"/>
+			</line>
+		</band>
+	</pageFooter>
+</jasperReport>

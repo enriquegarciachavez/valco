@@ -112,9 +112,9 @@ public class OrdenesCompraMainBean {
                 }
                 productosFinales.addAll(agrupado.getProductos());
             }
-            this.productoDao.actualizarProductosInventario(productosFinales);
+            
             this.ordenSeleccionado.setTotal(getPrecioTotal());
-            this.ordenesCompraDao.actualizarOrdenesCompra(ordenSeleccionado);
+            this.ordenesCompraDao.actualizarOrdenYProductos(this.produuctosInventario, this.borrar, ordenSeleccionado);
             produuctosInventarioAgrupados.clear();
             produuctosInventarioAgrupados.addAll(produuctosInventarioAgrupadosModificados);
             produuctosInventarioAgrupadosModificados.clear();

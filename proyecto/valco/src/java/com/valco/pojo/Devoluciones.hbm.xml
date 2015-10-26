@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 12/10/2015 09:38:45 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.valco.pojo.Devoluciones" table="DEVOLUCIONES" catalog="valco" optimistic-lock="version">
+        <id name="codigo" type="java.lang.Integer">
+            <column name="CODIGO" />
+            <generator class="identity" />
+        </id>
+        <property name="peso" type="big_decimal">
+            <column name="PESO" precision="9" />
+        </property>
+        <property name="devolucionTotal" type="java.lang.Boolean">
+            <column name="DEVOLUCION_TOTAL" />
+        </property>
+        <many-to-one name="notasCredito" class="com.valco.pojo.NotasCredito" fetch="select">
+            <column name="NOTAS_CREDITO_CODIGO" not-null="true" />
+        </many-to-one>
+        <many-to-one name="productosInventario" class="com.valco.pojo.ProductosInventario" fetch="select">
+            <column name="PRODUCTOS_INVENTARIO_CODIGO" not-null="true" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

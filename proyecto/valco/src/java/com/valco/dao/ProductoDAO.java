@@ -90,7 +90,7 @@ public class ProductoDAO {
         try {
             tx = session.beginTransaction();
             for(ProductosInventario producto : productos){
-                session.save(producto);
+                session.update(producto);
             }
             tx.commit();
         } catch (Exception e) {

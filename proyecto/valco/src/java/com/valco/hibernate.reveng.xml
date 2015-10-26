@@ -33,4 +33,5 @@
   <table-filter match-name="ACCESOS"/>
   <table-filter match-name="USUARIOS_ACCESOS"/>
   <table-filter match-name="USUARIOS_GRUPOS"/>
+  <table-filter match-name="DEVOLUCIONES"/>
 </hibernate-reverse-engineering>

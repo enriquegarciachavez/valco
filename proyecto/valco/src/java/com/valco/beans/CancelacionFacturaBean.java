@@ -6,8 +6,14 @@
 package com.valco.beans;
 
 import com.valco.dao.FacturasDAO;
+import com.valco.pojo.Devoluciones;
 import com.valco.pojo.Facturas;
+import com.valco.pojo.NotasCredito;
+import com.valco.pojo.NotasDeVenta;
+import com.valco.pojo.ProductosInventario;
 import com.valco.utility.MsgUtility;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +36,13 @@ public List<Facturas> facturasDisponibles;
 public Facturas facturaSeleccionada;
 @ManagedProperty(value="#{facturasDao}")
 private FacturasDAO facturasDao;
-private DataModel facturasModel;
+
+private List<NotasDeVenta> notasDeVenta;
+private NotasDeVenta notaSeleccionada;
+private NotasCredito notaNueva = new NotasCredito();
+private ProductosInventario productoSeleccionado;
+
+
 
     /**
      * Creates a new instance of CancelacionFacturaBean
@@ -38,10 +50,21 @@ private DataModel facturasModel;
     public CancelacionFacturaBean() {
     }
     
+    public void consultarNotasDeVentaXFactura(){
+    try {
+        this.notasDeVenta = this.facturasDao.getNotasXFactura(facturaSeleccionada);
+        System.out.println("HOA");
+    } catch (Exception ex) {
+        MsgUtility.showErrorMeage(ex.getMessage());
+    }
+        
+            
+    }
+    
     public void buscar() {
         try {
             this.facturasDisponibles = this.facturasDao.getFacturas(noFactura, noNota);
-            facturasModel = new ListDataModel(this.facturasDisponibles);
+
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
@@ -55,6 +78,47 @@ private DataModel facturasModel;
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
+    }
+    
+    public void crearNota(){
+        List<ProductosInventario> productos = new ArrayList<>();
+        List<Devoluciones> devoluciones = new ArrayList<>();
+        notaNueva.setFecha(new Date());
+        notaNueva.setFactura(facturaSeleccionada);
+        for(NotasDeVenta nota: this.notasDeVenta){
+            for(ProductosInventario producto: nota.getProductosInventarios()){
+                if (producto.getDevuelto()){
+                    if (producto.getMalEstado()){
+                        producto.setEstatus("MALESTADO");
+                        productos.add(producto);
+                    }else{
+                        if(producto.getDevolucionTotal()){
+                            producto.setEstatus("ACTIVO");
+                            Devoluciones devolucion= new Devoluciones();
+                            devolucion.setDevolucionTotal(Boolean.TRUE);
+                            devolucion.setPeso(producto.getPeso());
+                            devolucion.setProductosInventario(producto);
+                            devolucion.setNotasCredito(notaNueva);
+                            devoluciones.add(devolucion);
+                            productos.add(producto);
+                            
+                        }else {
+                            Devoluciones devolucion= new Devoluciones();
+                            devolucion.setDevolucionTotal(Boolean.FALSE);
+                            devolucion.setPeso(producto.getCantidadDevuelta());
+                            devolucion.setProductosInventario(producto);
+                            devolucion.setNotasCredito(notaNueva);
+                            devoluciones.add(devolucion);
+                        }
+                    }
+                }
+            }
+        }
+    try {
+        this.facturasDao.crearNotadeCredito(notaNueva, productos, devoluciones);
+    } catch (Exception ex) {
+        MsgUtility.showErrorMeage(ex.getMessage());
+    }
     }
 
     public Integer getNoFactura() {
@@ -97,12 +161,36 @@ private DataModel facturasModel;
         this.facturasDao = facturasDao;
     }
 
-    public DataModel getFacturasModel() {
-        return facturasModel;
+    public List<NotasDeVenta> getNotasDeVenta() {
+        return notasDeVenta;
     }
 
-    public void setFacturasModel(DataModel facturasModel) {
-        this.facturasModel = facturasModel;
+    public void setNotasDeVenta(List<NotasDeVenta> notasDeVenta) {
+        this.notasDeVenta = notasDeVenta;
+    }
+
+    public NotasCredito getNotaNueva() {
+        return notaNueva;
+    }
+
+    public void setNotaNueva(NotasCredito notaNueva) {
+        this.notaNueva = notaNueva;
+    }
+
+    public ProductosInventario getProductoSeleccionado() {
+        return productoSeleccionado;
+    }
+
+    public void setProductoSeleccionado(ProductosInventario productoSeleccionado) {
+        this.productoSeleccionado = productoSeleccionado;
+    }
+
+    public NotasDeVenta getNotaSeleccionada() {
+        return notaSeleccionada;
+    }
+
+    public void setNotaSeleccionada(NotasDeVenta notaSeleccionada) {
+        this.notaSeleccionada = notaSeleccionada;
     }
     
     

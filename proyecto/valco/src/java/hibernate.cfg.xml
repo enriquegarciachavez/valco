@@ -41,5 +41,6 @@
     <mapping resource="com/valco/pojo/UsuariosAccesos.hbm.xml"/>
     <mapping resource="com/valco/pojo/Accesos.hbm.xml"/>
     <mapping resource="com/valco/pojo/Grupos.hbm.xml"/>
+    <mapping resource="com/valco/pojo/Devoluciones.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

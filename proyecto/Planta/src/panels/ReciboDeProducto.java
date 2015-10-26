@@ -7,6 +7,7 @@ import dao.UbicacionesDAO;
 import dao.UsuariosDAO;
 import java.awt.ComponentOrientation;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class ReciboDeProducto extends javax.swing.JPanel {
     List<ProductosInventario> nuevosCanales = new ArrayList<ProductosInventario>();
     UsuariosDAO usuariosDao = new UsuariosDAO();
     String modoOperacion= "CANAL DE RES";
+    ProductosHasProveedores productoAnterior = new ProductosHasProveedores();
 
     /**
      * Creates new form ReciboDeProducto
@@ -122,6 +124,11 @@ public class ReciboDeProducto extends javax.swing.JPanel {
             }
         });
 
+        productoLov.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                productoLovItemStateChanged(evt);
+            }
+        });
         productoLov.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 productoLovActionPerformed(evt);
@@ -738,8 +745,11 @@ public class ReciboDeProducto extends javax.swing.JPanel {
 
     private void productoLovActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productoLovActionPerformed
         // TODO add your handling code here:
-        modoOperacion = this.productoLov.getSelectedItem().toString();
-        limpiar();
+        modoOperacion = ((ProductosHasProveedores)this.productoLov.getSelectedItem()).getProductos().getTipoProducto().getDescripcion();
+        if(!productoAnterior.getProductos().getTipoProducto().getDescripcion().equals(modoOperacion)){
+            limpiar();
+        }
+        
     }//GEN-LAST:event_productoLovActionPerformed
 
     private void pesoTxt2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoTxt2ActionPerformed
@@ -785,6 +795,13 @@ public class ReciboDeProducto extends javax.swing.JPanel {
     private void productoTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productoTxtActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_productoTxtActionPerformed
+
+    private void productoLovItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_productoLovItemStateChanged
+        // TODO add your handling code here:
+        if(evt.getStateChange()== ItemEvent.DESELECTED){
+            productoAnterior = (ProductosHasProveedores) evt.getItem();
+        }
+    }//GEN-LAST:event_productoLovItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

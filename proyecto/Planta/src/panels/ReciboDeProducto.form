@@ -160,6 +160,7 @@
                 </Component>
                 <Component class="javax.swing.JComboBox" name="productoLov">
                   <Events>
+                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="productoLovItemStateChanged"/>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="productoLovActionPerformed"/>
                   </Events>
                   <AuxValues>

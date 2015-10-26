@@ -403,7 +403,11 @@ public class ProductoDAO {
               Criteria q = session.createCriteria(ProductosHasProveedores.class)
                       .add(Restrictions.eq("proveedores", proveedor));
               Criteria x = q.createCriteria("productos").add(Restrictions.eq("generarSubproducto",true));
-              Criteria y= x.createCriteria("tipoProducto").add(Restrictions.eq("descripcion", "CANAL"));
+              Criteria y= x.createCriteria("tipoProducto").add( Restrictions.disjunction()
+                      .add(Restrictions.eq("descripcion", "CANAL DE RES"))
+                       .add(Restrictions.eq("descripcion", "CANAL DE EQUINO"))
+                        .add(Restrictions.eq("descripcion", "RES CASO ESPECIAL")));
+              
               productos = (List<ProductosHasProveedores>)q.list();
               for(ProductosHasProveedores producto: productos){
                   Hibernate.initialize(producto.getProductos());

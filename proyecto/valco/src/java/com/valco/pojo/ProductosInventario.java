@@ -21,6 +21,10 @@ public class ProductosInventario implements java.io.Serializable {
     private String codigoBarras;
     private String estatus;
     private Repartidores repartidor;
+    private Boolean devuelto;
+    private Boolean devolucionTotal;
+    private Boolean malEstado;
+    private BigDecimal cantidadDevuelta;
 
     public String getEstatus() {
         return estatus;
@@ -165,5 +169,38 @@ public class ProductosInventario implements java.io.Serializable {
         descripcion += " KG";
         return descripcion;
     }
+
+    public Boolean getDevuelto() {
+        return devuelto;
+    }
+
+    public void setDevuelto(Boolean devuelto) {
+        this.devuelto = devuelto;
+    }
+
+    public Boolean getDevolucionTotal() {
+        return devolucionTotal;
+    }
+
+    public void setDevolucionTotal(Boolean devolucionTotal) {
+        this.devolucionTotal = devolucionTotal;
+    }
+
+    public Boolean getMalEstado() {
+        return malEstado;
+    }
+
+    public void setMalEstado(Boolean malEstado) {
+        this.malEstado = malEstado;
+    }
+
+    public BigDecimal getCantidadDevuelta() {
+        return cantidadDevuelta;
+    }
+
+    public void setCantidadDevuelta(BigDecimal cantidadDevuelta) {
+        this.cantidadDevuelta = cantidadDevuelta;
+    }
+    
 
 }

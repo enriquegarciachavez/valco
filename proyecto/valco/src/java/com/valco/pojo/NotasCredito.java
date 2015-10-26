@@ -1,7 +1,8 @@
 package com.valco.pojo;
-// Generated 2/11/2014 06:06:42 PM by Hibernate Tools 4.3.1
+// Generated 12/10/2015 09:38:41 PM by Hibernate Tools 4.3.1
 
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -11,24 +12,31 @@ public class NotasCredito  implements java.io.Serializable {
 
 
      private Integer codigo;
-     private Clientes clientes;
+     private Facturas factura;
      private Date fecha;
      private String observaciones;
      private String estatus;
+     private String tipoNota;
+     private BigDecimal cantidad;
+     private Boolean devolucion;
 
     public NotasCredito() {
     }
 
 	
-    public NotasCredito(Clientes clientes, Date fecha) {
-        this.clientes = clientes;
+    public NotasCredito(Facturas factura, Date fecha, BigDecimal cantidad) {
+        this.factura = factura;
         this.fecha = fecha;
+        this.cantidad = cantidad;
     }
-    public NotasCredito(Clientes clientes, Date fecha, String observaciones, String estatus) {
-       this.clientes = clientes;
+    public NotasCredito(Facturas factura, Date fecha, String observaciones, String estatus, String tipoNota, BigDecimal cantidad, Boolean devolucion) {
+       this.factura = factura;
        this.fecha = fecha;
        this.observaciones = observaciones;
        this.estatus = estatus;
+       this.tipoNota = tipoNota;
+       this.cantidad = cantidad;
+       this.devolucion = devolucion;
     }
    
     public Integer getCodigo() {
@@ -38,13 +46,7 @@ public class NotasCredito  implements java.io.Serializable {
     public void setCodigo(Integer codigo) {
         this.codigo = codigo;
     }
-    public Clientes getClientes() {
-        return this.clientes;
-    }
-    
-    public void setClientes(Clientes clientes) {
-        this.clientes = clientes;
-    }
+
     public Date getFecha() {
         return this.fecha;
     }
@@ -65,6 +67,35 @@ public class NotasCredito  implements java.io.Serializable {
     
     public void setEstatus(String estatus) {
         this.estatus = estatus;
+    }
+    public String getTipoNota() {
+        return this.tipoNota;
+    }
+    
+    public void setTipoNota(String tipoNota) {
+        this.tipoNota = tipoNota;
+    }
+    public BigDecimal getCantidad() {
+        return this.cantidad;
+    }
+    
+    public void setCantidad(BigDecimal cantidad) {
+        this.cantidad = cantidad;
+    }
+    public Boolean getDevolucion() {
+        return this.devolucion;
+    }
+    
+    public void setDevolucion(Boolean devolucion) {
+        this.devolucion = devolucion;
+    }
+
+    public Facturas getFactura() {
+        return factura;
+    }
+
+    public void setFactura(Facturas factura) {
+        this.factura = factura;
     }
 
 

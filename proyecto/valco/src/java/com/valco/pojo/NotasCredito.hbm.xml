@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 2/11/2014 06:06:43 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 12/10/2015 09:38:45 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="com.valco.pojo.NotasCredito" table="NOTAS_CREDITO" catalog="valco" optimistic-lock="version">
+    <class name="com.valco.pojo.NotasCredito" table="NOTAS_CREDITO" catalog="valco">
         <id name="codigo" type="java.lang.Integer">
             <column name="CODIGO" />
-            <generator class="identity" />
+            <generator class="identity"></generator>
         </id>
-        <many-to-one name="clientes" class="com.valco.pojo.Clientes" fetch="select">
-            <column name="CLIENTES_CODIGO" not-null="true" />
+        <many-to-one name="factura" class="com.valco.pojo.Facturas" fetch="select">
+            <column name="FACTURAS_CODIGO" not-null="true" />
         </many-to-one>
         <property name="fecha" type="date">
             <column name="FECHA" length="10" not-null="true" />
@@ -19,6 +19,15 @@
         </property>
         <property name="estatus" type="string">
             <column name="ESTATUS" length="20" />
+        </property>
+        <property name="tipoNota" type="string">
+            <column name="TIPO_NOTA" length="30" />
+        </property>
+        <property name="cantidad" type="big_decimal">
+            <column name="CANTIDAD" precision="7" not-null="true" />
+        </property>
+        <property name="devolucion" type="java.lang.Boolean">
+            <column name="DEVOLUCION" />
         </property>
     </class>
 </hibernate-mapping>

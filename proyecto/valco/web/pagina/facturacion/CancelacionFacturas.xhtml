@@ -21,11 +21,11 @@
                                  cellpadding="5"
                                  cellspacing="5"
                                  style="text-align: right; margin: 0 auto;" >
-                                     
+
                         <p:outputLabel for="noFactura" value="Número de factura:"  />
                         <p:inputText id="noFactura"
                                      value="#{cancelacionFacturaBean.noFactura}"/>
-                        
+
                         <p:outputLabel for="noNota" value="Número de nota:"  />
                         <p:inputText id="noNota"
                                      value="#{cancelacionFacturaBean.noNota}"/>
@@ -34,11 +34,16 @@
                                              value="Buscar"
                                              action="#{cancelacionFacturaBean.buscar()}"
                                              update=":formTabla"/>
+
+
                         </f:facet>
-                        
+
+
+
+
                     </h:panelGrid>
                 </h:form>
-                
+
                 <h:form id="formTabla">
                     <p:menubar>
 
@@ -48,8 +53,16 @@
                             icon="ui-icon-circle-close"
                             partialSubmit="true"
                             action="#{cancelacionFacturaBean.cancelar()}"
-                            
-                           /> 
+
+                            /> 
+                        <p:menuitem 
+                            id="btnNotaCredito"
+                            icon="ui-icon-circle-close"
+                            value="Notas de Credito"
+                            action="#{cancelacionFacturaBean.consultarNotasDeVentaXFactura()}"
+                            update=":formCredito"
+                            oncomplete="PF('popupNotaCredito').show();"
+                            />
                     </p:menubar>
                     <p:dataTable id="tablaFacturas"
                                  var="fact"
@@ -57,31 +70,139 @@
                                  value="#{cancelacionFacturaBean.facturasDisponibles}"
                                  selection="#{cancelacionFacturaBean.facturaSeleccionada}"
                                  selectionMode="single">
-                        
+
                         <p:column headerText="Factura"> 
-                             <h:outputText value="#{fact.codigo}" />
+                            <h:outputText value="#{fact.codigo}" />
                         </p:column>
                         <p:column headerText="Nota">   
-                             <h:outputText value="#{fact.notasDeVenta.folio}" />
+                            <h:outputText value="#{fact.notasDeVenta.folio}" />
                         </p:column>
                         <p:column headerText="Fecha">  
-                             <h:outputText value="#{fact.fecha}" />
+                            <h:outputText value="#{fact.fecha}" />
                         </p:column>
                         <p:column headerText="Total">  
                             <h:outputText value="#{fact.total}" />
                         </p:column>
-                        
+
                     </p:dataTable>
                 </h:form>
-                
+
                 <p:blockUI block="formBusqueda formTabla" trigger="formBusqueda:btnBuscar formTabla:btnCancelar">
-                        Cargando.... Espere porfavor<br />
-                        <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
+                    Cargando.... Espere porfavor<br />
+                    <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
 
                 </p:blockUI>
-                
-            </ui:define>
 
+                <!--popUp-->
+                <h:form id="formCredito">
+                    <p:dialog header="Nota de Credito" widgetVar="popupNotaCredito" id="popupNotaCredito" modal="true" position="top">
+
+                        <h:panelGrid id="notaCreditoGrid"  columns="4" cellpadding="5">
+
+                            <h:outputText value="Cantidad"/>
+                            <p:inputText value="#{cancelacionFacturaBean.notaNueva.cantidad}"/>
+
+                            <h:outputText value="Tipo de Nota"/>
+                            <p:selectOneMenu id="tipoNota" required="true" value="#{cancelacionFacturaBean.notaNueva.tipoNota}"  panelStyle="width:180px"
+                                             effect="fade" var="c" style="width:160px" filter="true" filterMatchMode="contains">
+                                <f:selectItem itemLabel="Contado" itemValue="Contado" />
+                                <f:selectItem itemLabel="Credito" itemValue="Credito" />
+                            </p:selectOneMenu>
+
+                            <h:outputText value="Incluye Devolucion" />
+                            <p:selectBooleanCheckbox value="#{cancelacionFacturaBean.notaNueva.devolucion}" />
+
+                        </h:panelGrid>
+                        <p:dataTable id="tablaNotas" 
+                                     var="nota" 
+                                     value="#{cancelacionFacturaBean.notasDeVenta}"
+                                     selectionMode="single"
+                                     selection="#{cancelacionFacturaBean.notaSeleccionada}"
+                                     rowKey="#{nota.codigo}"
+                                     style="margin-bottom:40px"
+                                     >
+
+                            <f:facet name="header">
+                                Notas de ventas
+                            </f:facet>
+                            <p:column style="width:16px">
+                                <p:rowToggler />
+                            </p:column>
+
+                            <p:column  sortBy="#{nota.fechaDeVenta}" >
+                                <f:facet name="header">
+                                    <h:outputText value="Fecha Venta" />   
+                                </f:facet>
+                                <h:outputText value="#{nota.fechaDeVenta}" />
+                            </p:column>
+
+                            <p:column headerText="Nota de Venta"  sortBy="#{nota.folio}" >
+                                <h:outputText value="#{nota.folio}" />
+                            </p:column>
+
+
+
+                            <p:rowExpansion>
+                                <p:dataTable id="tablaProductos" 
+                                             var="producto" 
+                                             value="#{nota.productosInventarios}"
+                                             selectionMode="single" 
+                                             selection="#{cancelacionFacturaBean.productoSeleccionado}"
+                                             rowKey="#{producto.codigo}"
+                                             style="margin-bottom:40px"
+                                             >
+
+                                    <p:column >
+                                        <f:facet name="header">
+                                            <h:outputText value="Peso" />   
+                                        </f:facet>
+                                        <h:outputText value="#{producto.peso}" />
+                                    </p:column>
+                                    <p:column >
+                                        <f:facet name="header">
+                                            <h:outputText value="Producto" />   
+                                        </f:facet>
+                                        <h:outputText value="#{producto.productosHasProveedores}" />
+                                    </p:column>
+                                    <p:column >
+                                        <f:facet name="header">
+                                            <h:outputText value="Devolucion" />   
+                                        </f:facet>
+                                        <p:selectBooleanCheckbox value="#{producto.devuelto}" />
+
+                                    </p:column>
+                                    <p:column >
+                                        <f:facet name="header">
+                                            <h:outputText value="Devolucion Completa" />   
+                                        </f:facet>
+                                        <p:selectBooleanCheckbox value="#{producto.devolucionTotal}" />
+                                    </p:column>
+                                    <p:column >
+                                        <f:facet name="header">
+                                            <h:outputText value="Merma" />   
+                                        </f:facet>
+                                        <p:selectBooleanCheckbox value="#{producto.malEstado}" />
+                                    </p:column>
+                                    <p:column >
+                                        <f:facet name="header">
+                                            <h:outputText value="Peso Devuelto" />   
+                                        </f:facet>
+                                        <p:inputText value="#{producto.cantidadDevuelta}" />
+                                    </p:column>
+
+
+
+                                </p:dataTable>
+                            </p:rowExpansion>
+                            <f:facet name="footer">
+                                <p:commandButton action="#{cancelacionFacturaBean.crearNota()}" value="Crear nota de credito" />
+                            </f:facet>
+                        </p:dataTable>
+
+                    </p:dialog>
+                </h:form>
+
+            </ui:define>
         </ui:composition>
 
     </body>

@@ -8,9 +8,12 @@ package com.valco.dao;
 import com.valco.HibernateUtil;
 import com.valco.pojo.Clientes;
 import com.valco.pojo.ConceptosFactura;
+import com.valco.pojo.Devoluciones;
 import com.valco.pojo.Facturas;
 import com.valco.pojo.Impuestos;
+import com.valco.pojo.NotasCredito;
 import com.valco.pojo.NotasDeVenta;
+import com.valco.pojo.ProductosInventario;
 import com.valco.servlets.ReportesXls;
 import java.io.OutputStream;
 import java.io.Serializable;
@@ -73,7 +76,7 @@ public class FacturasDAO implements Serializable {
             for (NotasDeVenta nota : notas) {
                 session.update(nota);
                 session.save(nota.getFacturas());
-                for(ConceptosFactura concepto: nota.getFacturas().getConceptosFacturas()){
+                for (ConceptosFactura concepto : nota.getFacturas().getConceptosFacturas()) {
                     concepto.setFacturas(nota.getFacturas());
                     session.save(concepto);
                 }
@@ -98,39 +101,39 @@ public class FacturasDAO implements Serializable {
             }
         }
     }
-    
+
     public void insertarFacturaYActualizarNota(NotasDeVenta nota) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-                session.update(nota);
-                session.save(nota.getFacturas());
-                for(ConceptosFactura concepto: nota.getFacturas().getConceptosFacturas()){
-                    concepto.setFacturas(nota.getFacturas());
-                    session.save(concepto);
-                }
-                for(Impuestos impuesto: nota.getFacturas().getImpuestoses()){
-                    impuesto.setFacturas(nota.getFacturas());
-                    session.save(impuesto);
-                }
+            session.update(nota);
+            session.save(nota.getFacturas());
+            for (ConceptosFactura concepto : nota.getFacturas().getConceptosFacturas()) {
+                concepto.setFacturas(nota.getFacturas());
+                session.save(concepto);
+            }
+            for (Impuestos impuesto : nota.getFacturas().getImpuestoses()) {
+                impuesto.setFacturas(nota.getFacturas());
+                session.save(impuesto);
+            }
             tx.commit();
         } catch (Exception e) {
             if (tx != null) {
                 try {
                     tx.rollback();
                 } catch (HibernateException he) {
-                    throw new Exception("Factura "+this.getConsecutivo()+": Ocurrió un error al crear la factura.");
+                    throw new Exception("Factura " + this.getConsecutivo() + ": Ocurrió un error al crear la factura.");
                 }
             }
-            throw new Exception("Factura "+this.getConsecutivo()+":Ocurrió un error al crear la factura.");
+            throw new Exception("Factura " + this.getConsecutivo() + ":Ocurrió un error al crear la factura.");
         } finally {
             try {
                 if (session.isOpen()) {
                     session.close();
                 }
             } catch (HibernateException he) {
-                throw new Exception("Factura "+this.getConsecutivo()+":Ocurrió un error al crear las facturas.");
+                throw new Exception("Factura " + this.getConsecutivo() + ":Ocurrió un error al crear las facturas.");
             }
         }
     }
@@ -163,13 +166,13 @@ public class FacturasDAO implements Serializable {
             }
         }
     }
-    
+
     public void actualizarFactura(Facturas factura) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-                session.update(factura);
+            session.update(factura);
             tx.commit();
         } catch (Exception e) {
             if (tx != null) {
@@ -247,20 +250,20 @@ public class FacturasDAO implements Serializable {
             }
         }
     }
-    
+
     public List<Facturas> getFacturas(Integer noFactura, Integer noNota) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         List<Facturas> facturas = new ArrayList<Facturas>();
         try {
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(Facturas.class);
-            if(noFactura != null){
+            if (noFactura != null) {
                 q.add(Restrictions.eq("codigo", noFactura));
             }
-            if(noNota != null){
+            if (noNota != null) {
                 q.createCriteria("notasDeVenta").add(Restrictions.eq("folio", noNota));
-            //q.createAlias("notasDeVenta", "nota").add(Restrictions.eqProperty("codigo", noNota.toString()));
+                //q.createAlias("notasDeVenta", "nota").add(Restrictions.eqProperty("codigo", noNota.toString()));
             }
             facturas = (List<Facturas>) q.list();
 
@@ -296,11 +299,75 @@ public class FacturasDAO implements Serializable {
             rs.next();
             Integer consecutivo = rs.getInt("SECUENCIA");
             return consecutivo;
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new Exception("Ocurrió un error al consultar el consecutivo");
         }
 
+    }
 
+    public List<NotasDeVenta> getNotasXFactura(Facturas factura) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        List<NotasDeVenta> notasDeVenta = new ArrayList<NotasDeVenta>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(NotasDeVenta.class);
+            q.add(Restrictions.eq("facturas", factura));
+
+            notasDeVenta = (List<NotasDeVenta>) q.list();
+            for(NotasDeVenta nota: notasDeVenta){
+                for(ProductosInventario producto: nota.getProductosInventarios() ){
+                    Hibernate.initialize(producto);
+                }
+            }
+
+            return notasDeVenta;
+
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar las Notas de venta.");
+
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar las Notas de venta.");
+            }
+        }
+    }
+    
+    public void crearNotadeCredito(NotasCredito nota, List<ProductosInventario> productos,List<Devoluciones> devoluciones) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.save(nota);
+            for(ProductosInventario producto : productos){
+                session.saveOrUpdate(producto);
+            }
+            for(Devoluciones devolucion : devoluciones){
+                session.save(devolucion);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al registrar el cliente.");
+                }
+            }
+            throw new Exception("Ocurrió un error al registrar el cliente.");
+        } finally {
+            try {
+                if(session.isOpen()){
+                session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al registrar el cliente.");
+            }
+        }
     }
 
 }
