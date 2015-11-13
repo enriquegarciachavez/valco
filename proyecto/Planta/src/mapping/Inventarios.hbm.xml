@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 11/11/2015 10:22:17 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="valco" name="mapping.Inventarios" optimistic-lock="version" table="INVENTARIOS">
+    <id name="codigo" type="java.lang.Integer">
+      <column name="CODIGO"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="mapping.Usuarios" fetch="select" name="usuariosByUsuariosInicio">
+      <column name="USUARIOS_INICIO" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="mapping.Usuarios" fetch="select" name="usuariosByUsuariosFin">
+      <column name="USUARIOS_FIN" not-null="false"/>
+    </many-to-one>
+    <property name="fechaInicio" type="date">
+      <column length="10" name="FECHA_INICIO" not-null="true"/>
+    </property>
+    <property name="fechaFinl" type="date">
+      <column length="10" name="FECHA_FINl"/>
+    </property>
+    <property name="estatus" type="string">
+      <column length="20" name="ESTATUS"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="productosDelInventarios" table="PRODUCTOS_DEL_INVENTARIO">
+      <key>
+        <column name="INVENTARIOS_CODIGO" not-null="true"/>
+      </key>
+      <one-to-many class="mapping.ProductosDelInventario"/>
+    </set>
+  </class>
+</hibernate-mapping>

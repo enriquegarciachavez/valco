@@ -1,4 +1,4 @@
-package dao;
+package mapping;
 // Generated 11/11/2015 10:22:15 PM by Hibernate Tools 4.3.1
 
 

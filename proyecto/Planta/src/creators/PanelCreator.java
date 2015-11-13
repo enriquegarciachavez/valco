@@ -11,6 +11,7 @@ import panels.EtiquetadoPanel;
 import javax.swing.JPanel;
 import panels.AbrirProcesoPanel;
 import panels.ConfigBascula;
+import panels.InventariosMain;
 import panels.ReciboDeProducto;
 
 /**
@@ -31,6 +32,8 @@ public class PanelCreator {
             return new EtiquetadoPanel(mainPanel);
         }else if("Configuración de la báscula".equals(panelName)){
             return new ConfigBascula();
+        }else if("Inventarios".equals(panelName)){
+            return new InventariosMain();
         }
         return null;
     } 
