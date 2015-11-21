@@ -77,6 +77,9 @@ public class ProductosDelInventario  implements java.io.Serializable {
         this.estatus = estatus;
     }
 
+    public String toString(){
+        return this.getProductos().getDescripcion();
+    }
 
 
 

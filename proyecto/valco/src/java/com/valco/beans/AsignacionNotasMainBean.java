@@ -7,9 +7,12 @@ package com.valco.beans;
 
 import com.valco.dao.NotasVentaDAO;
 import com.valco.dao.RepartidoresDAO;
+import com.valco.dao.UsuariosDAO;
 import com.valco.pojo.NotasDeVenta;
 import com.valco.pojo.Repartidores;
 import com.valco.pojo.Usuarios;
+import com.valco.utility.MsgUtility;
+import com.valco.utility.UsuariosUtility;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -22,6 +25,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
+import sun.misc.Request;
 
 /**
  *
@@ -35,6 +39,8 @@ public class AsignacionNotasMainBean {
             private NotasVentaDAO notadeVentaDao;
     @ManagedProperty(value="#{repartidoresDao}")
             private RepartidoresDAO repartidoresDao;
+    @ManagedProperty(value = "#{usuariosDao}")
+        private UsuariosDAO usuariosDao;
     List<NotasDeVenta> notasDeVenta;
     List<Repartidores> repartidores;
     Repartidores repartidor;
@@ -93,13 +99,13 @@ public class AsignacionNotasMainBean {
         }
 
         for (int x = folioInicial; x <= folioFinal; x++) {
-            Usuarios usuario = new Usuarios();
-            usuario.setCodigo(1);
+            
+            
             NotasDeVenta notaNueva = new NotasDeVenta();
             notaNueva.setEstatus("ACTIVO");
             notaNueva.setFolio(x);
             notaNueva.setRepartidores(repartidor);
-            notaNueva.setUsuarios(usuario);
+            notaNueva.setUsuarios(UsuariosUtility.getUsuarioFirmado());
             notas.add(notaNueva);
 
         }
@@ -218,6 +224,14 @@ public class AsignacionNotasMainBean {
 
     public void setNotasSeleccionadas(List<NotasDeVenta> notasSeleccionadas) {
         this.notasSeleccionadas = notasSeleccionadas;
+    }
+
+    public UsuariosDAO getUsuariosDao() {
+        return usuariosDao;
+    }
+
+    public void setUsuariosDao(UsuariosDAO usuariosDao) {
+        this.usuariosDao = usuariosDao;
     }
 
 }

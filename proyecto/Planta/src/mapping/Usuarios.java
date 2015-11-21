@@ -133,6 +133,10 @@ public class Usuarios  implements java.io.Serializable {
     public void setOrdenesCompras(Set<OrdenesCompra> ordenesCompras) {
         this.ordenesCompras = ordenesCompras;
     }
+    
+    public String toString(){
+        return this.getNombre()+" "+this.getApellidoPaterno()+" "+this.getApellidoMaterno();
+    }
 
 
 

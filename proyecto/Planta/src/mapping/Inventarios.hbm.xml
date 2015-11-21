@@ -13,10 +13,10 @@
     <many-to-one class="mapping.Usuarios" fetch="select" name="usuariosByUsuariosFin">
       <column name="USUARIOS_FIN" not-null="false"/>
     </many-to-one>
-    <property name="fechaInicio" type="date">
+    <property name="fechaInicio" type="timestamp">
       <column length="10" name="FECHA_INICIO" not-null="true"/>
     </property>
-    <property name="fechaFinl" type="date">
+    <property name="fechaFinl" type="timestamp">
       <column length="10" name="FECHA_FINl"/>
     </property>
     <property name="estatus" type="string">

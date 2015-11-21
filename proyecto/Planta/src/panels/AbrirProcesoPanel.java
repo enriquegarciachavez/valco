@@ -50,6 +50,7 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
     List<ProductosInventario> destination = new ArrayList<>();
     Procesos procesoEdicion;
     BarCodeScannerKeyDispatcher dispacher;
+    public List<Component> exceptions = new ArrayList<>();
     
     /**
      * Creates new form AbrirProcesoPanel
@@ -62,7 +63,8 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
         }
         initComponents();
         manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-        dispacher= new BarCodeScannerKeyDispatcher(barCodeTxt, manager, observacionesTxt);
+        exceptions.add(observacionesTxt);
+        dispacher= new BarCodeScannerKeyDispatcher(barCodeTxt, manager, exceptions);
         manager.addKeyEventDispatcher(dispacher);
         
         
@@ -78,7 +80,8 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
         }
         initComponents();
         manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-         dispacher= new BarCodeScannerKeyDispatcher(barCodeTxt, manager, observacionesTxt);
+        exceptions.add(observacionesTxt);
+        dispacher= new BarCodeScannerKeyDispatcher(barCodeTxt, manager, exceptions);
         manager.addKeyEventDispatcher(dispacher);
         modoEdicion= true;
        
@@ -234,6 +237,11 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
+        barCodeTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                barCodeTxtActionPerformed(evt);
+            }
+        });
         barCodeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 barCodeTxtKeyTyped(evt);
@@ -395,6 +403,10 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
                 changeScanned(barCodeTxt.getText());
             }
     }//GEN-LAST:event_barCodeTxtKeyTyped
+
+    private void barCodeTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barCodeTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_barCodeTxtActionPerformed
 
     private void changeScanned(String barCode){
         for(int x = 0 ; x < lmDisponibles.getSize(); x++){
