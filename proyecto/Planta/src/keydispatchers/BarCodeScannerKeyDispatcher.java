@@ -10,6 +10,7 @@ import java.awt.Component;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
+import java.util.List;
 import javax.swing.JTextField;
 
 /**
@@ -19,19 +20,21 @@ import javax.swing.JTextField;
 public class BarCodeScannerKeyDispatcher implements KeyEventDispatcher{
     private JTextField barcodeField;
     private KeyboardFocusManager manager;
-    private Component exception;
+    private List<Component> exceptions;
     
-    public BarCodeScannerKeyDispatcher(JTextField barcodeField, KeyboardFocusManager manager, Component exception){
+    public BarCodeScannerKeyDispatcher(JTextField barcodeField, KeyboardFocusManager manager, List<Component> exceptions){
         this.barcodeField = barcodeField;
         this.manager = manager;
-        this.exception = exception;
+        this.exceptions = exceptions;
     }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
+        for(Component exception: exceptions){
         if(exception.equals(e.getSource())){
             manager.redispatchEvent(exception, e);
             return true;
+        }
         }
         manager.redispatchEvent(barcodeField, e);
         return true;

@@ -23,6 +23,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -232,7 +233,9 @@ public class ProductoDAO {
                           q.add(Restrictions.eq("codigo", new Integer( criterio)));
                       }else{
                           
-                          q.add(Restrictions.eq("descripcion", criterio));
+                          q.add(Restrictions.like("descripcion", criterio + "%"))
+                                  .addOrder(Order.asc("descripcion"))
+                                 .setMaxResults(1);
                       }
                       
                               
@@ -264,6 +267,7 @@ public class ProductoDAO {
               Criteria q = session.createCriteria(ProductosInventario.class)
                       .add(Restrictions.eq("codigoBarras", codigo));
               producto = (ProductosInventario)q.uniqueResult();
+              Hibernate.initialize(producto.getProductosHasProveedores().getProductos());
               return producto;
 
           } catch (HibernateException he) {

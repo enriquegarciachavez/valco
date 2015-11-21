@@ -147,7 +147,7 @@ public class EtiquetadoPanel extends CoustomPanel {
         try {
             OrdenesCompra orden = new OrdenesCompra();
             orden.setCodigo(24);
-            procesosActivosArray = ordenesDAO.getProductosInventarioAgrupadoXOrden(orden).toArray();
+            procesosActivosArray = procesosDAO.getProcesosActivos().toArray();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", ERROR_MESSAGE);
         }
@@ -472,8 +472,9 @@ public class EtiquetadoPanel extends CoustomPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pesoBasculaLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(productosLov, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -912,23 +913,27 @@ public class EtiquetadoPanel extends CoustomPanel {
 
     private void productoCodigoAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyReleased
         char c = evt.getKeyChar();
-        if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
-            evt.consume();
-        } else {
+        
             if (!productoCodigoArea.getText().equals("")) {
+                ProductosHasProveedores productoProveedor = new ProductosHasProveedores();
                 Productos producto = new Productos();
-                producto.setCodigo(new Integer(productoCodigoArea.getText()));
-                productosLov.setSelectedItem(producto);
+                try {
+                    producto = productoDAO.getProductosXDescripcionOCodigo(productoCodigoArea.getText());
+                } catch (Exception ex) {
+                    Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                productoProveedor.setProductos(producto);
+                Proveedores prov = new Proveedores();
+                prov.setCodigo(1);
+                productoProveedor.setProveedores(prov);
+                productosLov.setSelectedItem(productoProveedor);
                 productosLov.repaint();
             }
-        }
+        
     }//GEN-LAST:event_productoCodigoAreaKeyReleased
 
     private void productoCodigoAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyTyped
-        char c = evt.getKeyChar();
-        if (!(Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
-            evt.consume();
-        }
+     
     }//GEN-LAST:event_productoCodigoAreaKeyTyped
 
     private void pesoManualChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoManualChkActionPerformed

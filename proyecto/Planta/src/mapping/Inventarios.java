@@ -2,6 +2,7 @@ package mapping;
 // Generated 11/11/2015 10:22:15 PM by Hibernate Tools 4.3.1
 
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -87,6 +88,23 @@ public class Inventarios  implements java.io.Serializable {
     
     public void setProductosDelInventarios(Set<ProductosDelInventario> productosDelInventarios) {
         this.productosDelInventarios = productosDelInventarios;
+    }
+    
+    public BigDecimal getPeso(){
+        if(productosDelInventarios==null|| productosDelInventarios.isEmpty()){
+            return BigDecimal.ZERO;
+            
+        }else {
+            BigDecimal peso = new BigDecimal("0.00");
+            for(ProductosDelInventario producto:productosDelInventarios){
+                peso = peso.add(producto.getPeso());
+            }
+            return peso;
+        }
+    }
+    
+    public String toString (){
+        return codigo + "_" +fechaInicio.toString() + "_"+ usuariosByUsuariosInicio;
     }
 
 
