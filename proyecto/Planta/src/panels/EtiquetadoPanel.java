@@ -147,7 +147,7 @@ public class EtiquetadoPanel extends CoustomPanel {
         try {
             OrdenesCompra orden = new OrdenesCompra();
             orden.setCodigo(24);
-            procesosActivosArray = ordenesDAO.getProductosInventarioAgrupadoXOrden(orden).toArray();
+            procesosActivosArray = procesosDAO.getProcesosActivos().toArray();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", ERROR_MESSAGE);
         }
@@ -980,7 +980,7 @@ public class EtiquetadoPanel extends CoustomPanel {
         productoInventario.setCodigoBarras(getCodigoBarras());
         try {
             productoDAO.insertarProducto(productoInventario);
-            this.imprimirCodigo();
+            this.imprimirCodigo(productoInventario);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex, "Errot", ERROR_MESSAGE);
         }
@@ -1176,13 +1176,14 @@ public class EtiquetadoPanel extends CoustomPanel {
                 + consecutivoLbl.getText();
     }
 
-    private void imprimirCodigo() {
+    private void imprimirCodigo(ProductosInventario producto) {
         // aca obtenemos la printer default  
         PrintService printService = PrintServiceLookup.lookupDefaultPrintService();
 
         String zplCommand = "^XA"
-                + "^FO30,150^ARN,11,7^FD "+ this.productosLov.getSelectedItem()+""
-                + "^BCN, 80, Y, Y, Y^FD >"+getCodigoBarras()+" ^FS "
+                + "^FO230,50^ARN,16,9^FD "+ this.productosLov.getSelectedItem()+"^FS"
+                + "^FO300,100^ARN,16,9^FD "+ producto.getPeso()+" KG^BY1,3.0^FS"
+                + "^FO230,180^BCN, 80, Y, N, N^FD"+producto.getCodigoBarras()+"^FS "
                 + "^XZ";
 
 // convertimos el comando a bytes  
