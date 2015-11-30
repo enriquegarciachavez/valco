@@ -82,7 +82,9 @@ public class ReportesXls extends HttpServlet {
             } else if (parametro.contains("Date")) {
                 mapa.put(parametro.split("Date")[0], new Date(request.getParameter(parametro)));
             }
+        
         }
+        mapa.put("SUBREPORT_DIR", realPath);
         
         JasperReport jasperReport = JasperCompileManager.compileReport(input);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Abarrotes_subfamilia" language="groovy" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="familiaCodigo" class="java.lang.Integer"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaInicial" class="java.util.Date"/>
+	<parameter name="fechaFinal" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT
+     SUBFAMILIAS.`CODIGO` AS SUBFAMILIAS_CODIGO,
+     SUBFAMILIAS.`DESCRIPCION` AS SUBFAMILIAS_DESCRIPCION,
+     SUBFAMILIAS.`ABREVIACION` AS SUBFAMILIAS_ABREVIACION,
+     SUBFAMILIAS.`ESTATUS` AS SUBFAMILIAS_ESTATUS,
+     SUBFAMILIAS.`FAMILIAS_CODIGO` AS SUBFAMILIAS_FAMILIAS_CODIGO,
+     PRODUCTOS_INVENTARIO.`CODIGO` AS PRODUCTOS_INVENTARIO_CODIGO,
+     PRODUCTOS_has_PROVEEDORES.`CODIGO` AS PRODUCTOS_has_PROVEEDORES_CODIGO,
+     PRODUCTOS_has_PROVEEDORES.`PRODUCTOS_CODIGO` AS PRODUCTOS_has_PROVEEDORES_PRODUCTOS_CODIGO,
+     NOTAS_DE_VENTA.`CODIGO` AS NOTAS_DE_VENTA_CODIGO,
+     NOTAS_DE_VENTA.`FECHA_DE_VENTA` AS NOTAS_DE_VENTA_FECHA_DE_VENTA,
+     PRODUCTOS.`CODIGO` AS PRODUCTOS_CODIGO,
+     PRODUCTOS.`SUBFAMILIAS_CODIGO` AS PRODUCTOS_SUBFAMILIAS_CODIGO,
+     PRODUCTOS_INVENTARIO.`PRODUCTOS_has_PROVEEDORES_CODIGO` AS PRODUCTOS_INVENTARIO_PRODUCTOS_has_PROVEEDORES_CODIGO,
+     PRODUCTOS_INVENTARIO.`NOTAS_DE_VENTA_CODIGO` AS PRODUCTOS_INVENTARIO_NOTAS_DE_VENTA_CODIGO,
+     FAMILIAS.`CODIGO` AS FAMILIAS_CODIGO,
+     FAMILIAS.`DESCRIPCION` AS FAMILIAS_DESCRIPCION,
+     FAMILIAS.`ABREVIACION` AS FAMILIAS_ABREVIACION,
+     FAMILIAS.`ESTATUS` AS FAMILIAS_ESTATUS
+FROM
+     `PRODUCTOS_has_PROVEEDORES` PRODUCTOS_has_PROVEEDORES INNER JOIN `PRODUCTOS_INVENTARIO` PRODUCTOS_INVENTARIO ON PRODUCTOS_has_PROVEEDORES.`CODIGO` = PRODUCTOS_INVENTARIO.`PRODUCTOS_has_PROVEEDORES_CODIGO`
+     INNER JOIN `NOTAS_DE_VENTA` NOTAS_DE_VENTA ON PRODUCTOS_INVENTARIO.`NOTAS_DE_VENTA_CODIGO` = NOTAS_DE_VENTA.`CODIGO`
+     INNER JOIN `PRODUCTOS` PRODUCTOS ON PRODUCTOS_has_PROVEEDORES.`PRODUCTOS_CODIGO` = PRODUCTOS.`CODIGO`
+     INNER JOIN `SUBFAMILIAS` SUBFAMILIAS ON PRODUCTOS.`SUBFAMILIAS_CODIGO` = SUBFAMILIAS.`CODIGO`
+     INNER JOIN `FAMILIAS` FAMILIAS ON SUBFAMILIAS.`FAMILIAS_CODIGO` = FAMILIAS.`CODIGO`
+WHERE
+     SUBFAMILIAS.`FAMILIAS_CODIGO` = $P{familiaCodigo}
+ AND NOTAS_DE_VENTA.`FECHA_DE_VENTA` BETWEEN $P{fechaInicial} AND $P{fechaFinal}
+GROUP BY
+     SUBFAMILIAS.`CODIGO`]]>
+	</queryString>
+	<field name="SUBFAMILIAS_CODIGO" class="java.lang.Integer"/>
+	<field name="SUBFAMILIAS_DESCRIPCION" class="java.lang.String"/>
+	<field name="SUBFAMILIAS_ABREVIACION" class="java.lang.String"/>
+	<field name="SUBFAMILIAS_ESTATUS" class="java.lang.String"/>
+	<field name="SUBFAMILIAS_FAMILIAS_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_has_PROVEEDORES_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_has_PROVEEDORES_PRODUCTOS_CODIGO" class="java.lang.Integer"/>
+	<field name="NOTAS_DE_VENTA_CODIGO" class="java.lang.Integer"/>
+	<field name="NOTAS_DE_VENTA_FECHA_DE_VENTA" class="java.sql.Date"/>
+	<field name="PRODUCTOS_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_SUBFAMILIAS_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_PRODUCTOS_has_PROVEEDORES_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_NOTAS_DE_VENTA_CODIGO" class="java.lang.Integer"/>
+	<field name="FAMILIAS_CODIGO" class="java.lang.Integer"/>
+	<field name="FAMILIAS_DESCRIPCION" class="java.lang.String"/>
+	<field name="FAMILIAS_ABREVIACION" class="java.lang.String"/>
+	<field name="FAMILIAS_ESTATUS" class="java.lang.String"/>
+	<variable name="Total_Total" class="java.math.BigDecimal" calculation="Sum"/>
+	<variable name="Util_Total" class="java.math.BigDecimal" calculation="Sum"/>
+	<detail>
+		<band height="62">
+			<rectangle>
+				<reportElement x="0" y="0" width="572" height="20" backcolor="#E4E3E3"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="108" y="0" width="198" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{SUBFAMILIAS_DESCRIPCION}+" | "+ $F{SUBFAMILIAS_ABREVIACION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="45" y="0" width="63" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<text><![CDATA[Subfamilia]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="0" y="20" width="572" height="42"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="subfamiliaCodigo">
+					<subreportParameterExpression><![CDATA[$F{SUBFAMILIAS_CODIGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fechaFin">
+					<subreportParameterExpression><![CDATA[$P{fechaFinal}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fechaInicio">
+					<subreportParameterExpression><![CDATA[$P{fechaInicial}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="Total_Total" toVariable="Total_Total" calculation="Sum"/>
+				<returnValue subreportVariable="Util_Total" toVariable="Util_Total" calculation="Sum"/>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR}+"Abarrotes_subfamilia_productos.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="21">
+			<textField>
+				<reportElement x="353" y="0" width="61" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font fontName="Arial Black"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA["\$" + $V{Total_Total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="509" y="0" width="63" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font fontName="Arial Black"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA["\$" + $V{Util_Total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="229" y="0" width="124" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font fontName="Arial Black"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["SUMA " + $F{FAMILIAS_DESCRIPCION} + ":"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+</jasperReport>

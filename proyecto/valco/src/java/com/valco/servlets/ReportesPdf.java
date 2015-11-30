@@ -65,7 +65,8 @@ public class ReportesPdf extends HttpServlet {
             //Loading Jasper Report File from Local file system
             String jrxmlFile = request.getParameter("reporte");//"C:/SAT/facturas/Factura.jrxml";
             String realPath = request.getSession().getServletContext().getRealPath(jrxmlFile);
-            InputStream input = new FileInputStream(new File(realPath));
+            File reporte = new File(realPath);
+            InputStream input = new FileInputStream(reporte);
             Map mapa = new HashMap();
             Enumeration<String> parametros = request.getParameterNames();
             while (parametros.hasMoreElements()) {
@@ -74,14 +75,19 @@ public class ReportesPdf extends HttpServlet {
                     mapa.put(parametro.split("Int")[0], new Integer(request.getParameter(parametro)));
                 } else if (parametro.contains("Date")) {
                     mapa.put(parametro.split("Date")[0], new Date(request.getParameter(parametro)));
-                } else if (parametro.contains("Bool")){
+                } else if (parametro.contains("Bool")) {
                     mapa.put(parametro.split("Bool")[0], new Boolean(request.getParameter(parametro)));
                 }
+
             }
+            String absolutePath = reporte.getAbsolutePath();
+            String filePath = absolutePath.
+                    substring(0, absolutePath.lastIndexOf(File.separator));
+            mapa.put("SUBREPORT_DIR", filePath + "\\");
             JasperReport jasperReport = JasperCompileManager.compileReport(input);
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
             JasperExportManager.exportReportToPdfStream(jasperPrint, output);
-        }catch (SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
         } catch (JRException ex) {
             Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);

@@ -960,7 +960,7 @@ public class EtiquetadoPanel extends CoustomPanel {
 
     private void productosLovActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productosLovActionPerformed
         productoLbl.setText(productosLov.getSelectedItem().toString());
-        productoCodigoArea.setText(((Productos) productosLov.getSelectedItem()).getCodigo().toString());
+        productoCodigoArea.setText(((ProductosHasProveedores) productosLov.getSelectedItem()).getCodigo().toString());
     }//GEN-LAST:event_productosLovActionPerformed
 
     private void imprimirEtiquetaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imprimirEtiquetaBtnActionPerformed
