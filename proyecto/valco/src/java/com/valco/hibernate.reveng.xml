@@ -34,4 +34,7 @@
   <table-filter match-name="USUARIOS_ACCESOS"/>
   <table-filter match-name="USUARIOS_GRUPOS"/>
   <table-filter match-name="DEVOLUCIONES"/>
+  <table-filter match-name="FAMILIAS"/>
+  <table-filter match-name="SUBFAMILIAS"/>
+  <table-filter match-name="PRODUCTOS"/>
 </hibernate-reverse-engineering>

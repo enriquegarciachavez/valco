@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 29/11/2015 05:47:39 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="valco" name="com.valco.pojo.Subfamilias" optimistic-lock="version" table="SUBFAMILIAS">
+    <id name="codigo" type="java.lang.Integer">
+      <column name="CODIGO"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="com.valco.pojo.Familias" fetch="select" name="familias">
+      <column name="FAMILIAS_CODIGO" not-null="true"/>
+    </many-to-one>
+    <property name="descripcion" type="string">
+      <column length="45" name="DESCRIPCION" not-null="true"/>
+    </property>
+    <property name="abreviacion" type="string">
+      <column length="45" name="ABREVIACION" not-null="true"/>
+    </property>
+    <property name="estatus" type="string">
+      <column length="20" name="ESTATUS" not-null="true"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="productoses" table="PRODUCTOS">
+      <key>
+        <column name="SUBFAMILIAS_CODIGO" not-null="true"/>
+      </key>
+      <one-to-many class="com.valco.pojo.Productos"/>
+    </set>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,165 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../templates/Template1.xhtml">
+
+            <ui:define name="title">
+                Catálogo Familias
+            </ui:define>
+
+            <ui:define name="content">
+                <h:form id="form">
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" />
+                    <p:menubar>
+
+                        <p:menuitem 
+
+                            icon="ui-icon-plusthick"                      
+                            value="Ingresar" 
+                            partialSubmit="true" 
+                            update=":formingresar:popupingresar" 
+                            oncomplete="PF('popupingresar').show();"  
+
+
+                            <p:menuitem 
+                                icon="ui-icon-pencil"
+                                value="Modificar"  
+                                process="singleDT" 
+                                update=":formmodificar:popupmodificar" 
+                                oncomplete="PF('popupmodificar').show();"
+
+                                partialSubmit="true"
+                                />
+                            <p:menuitem 
+
+                                icon="ui-icon-circle-close"
+                                value="Borrar" 
+                                process="singleDT" 
+                                update=":popupborrar" 
+                                oncomplete="PF('popupborrar').show();" 
+
+                                /> 
+                    </p:menubar>
+
+                    <p:dataTable id="singleDT" var="familias" value="#{familiasMainBean.familias}" 
+                                 selectionMode="single" 
+                                 selection="#{familiasMainBean.familiaSeleccionada}" 
+                                 rowKey="#{familias.codigo}">
+                        <f:facet name="header">
+                            Familias
+                        </f:facet>
+                        <p:column headerText="Codigo">
+                            <h:outputText value="#{familias.codigo}" />
+                        </p:column>
+                        <p:column headerText="Descripción">
+                            <h:outputText value="#{familias.descripcion}" />
+                        </p:column>
+                        <p:column headerText="Abreviación">
+                            <h:outputText value="#{familias.abreviacion}" />
+                        </p:column>
+
+                    </p:dataTable>
+                </h:form>
+
+                <!-- BOTON INGRESAR PRODUCTO-->
+
+                <h:form id="formingresar">
+                    <p:dialog header="Ingresar Familia" widgetVar="popupingresar" modal="true" position="top"
+                              id="popupingresar">
+
+
+                        <h:panelGrid id="ingresarGrid"  columns="3" cellpadding="5">
+
+                            <f:facet name="header">
+                                <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
+                            </f:facet>
+
+                            <p:outputLabel for="descripcion" value="Ingresar Familia " />
+                            <p:inputText id="descripcion"  required="true" label="descripcion" value="#{familiasMainBean.familiaNueva.descripcion}" >
+                            </p:inputText>
+                            <p:message for="descripcion" display="icon" />
+
+                            <p:outputLabel for="abreviacion" value="Abreviación: " />
+                            <p:inputText id="abreviacion"  required="true" label="abreviacion" value="#{familiasMainBean.familiaNueva.abreviacion}" >
+                            </p:inputText>
+                            <p:message for="abreviacion" display="icon" />
+
+
+                            <f:facet name="footer">
+
+                                <p:commandButton value="Guardar"  id="guardar1" update="ingresarGrid :form:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'popupingresar' )"  action="#{familiasMainBean.insertarFamilia()}"/>
+
+                            </f:facet>
+                        </h:panelGrid>
+
+
+                    </p:dialog>
+                </h:form>
+
+                <!-- BOTON MODIFICAR PRODUCTO-->
+                <!-- <p:commandButton value="Modificar" type="button" onclick="PF('popupmodificar').show();" /> -->
+
+                <h:form id="formmodificar">
+                    <p:dialog header="Modificar Producto" widgetVar="popupmodificar" id="popupmodificar" modal="true" position="top">
+
+                        <h:panelGrid id="modificarGrid"  columns="3" cellpadding="5">
+
+                            <f:facet name="header">
+                                <p:messages id="msgsmodificar" style="font-size: 12px; text-align: left;"/>
+                            </f:facet>
+
+                            <p:outputLabel for="descripcion1" value="Ingresar Descripción " />
+                            <p:inputText id="descripcion1" required="true"  label="descripcion1" value="#{familiasMainBean.familiaSeleccionada.descripcion}">
+
+                            </p:inputText>
+                            <p:message for="descripcion1" display="icon" />
+
+                            <p:outputLabel for="abreviacion2" value="Abreviación: " />
+                            <p:inputText id="abreviacion2" required="true" label="abreviacion2" value="#{familiasMainBean.familiaSeleccionada.abreviacion}" >
+                            </p:inputText>
+                            <p:message for="abreviacion2" display="icon" />
+
+                            <p:outputLabel for="estatus2" value="Estatus" />
+                            <p:selectOneMenu id="estatus2" required="true" value="#{familiasMainBean.familiaSeleccionada.estatus}" style="width:125px">
+                                <f:selectItem itemLabel="Selecciona Uno" itemValue="" />
+                                <f:selectItem itemLabel="ACTIVO" itemValue="ACTIVO" />
+                                <f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO" />
+                            </p:selectOneMenu>
+                            <p:message for="estatus2" display="icon" />
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Guardar" id="guardar" oncomplete="handleLoginRequest(xhr, status, args, 'popupmodificar' )" update="modificarGrid :form:singleDT" action="#{familiasMainBean.actualizarFamilia()}"/>
+                            </f:facet>
+                        </h:panelGrid>
+
+                    </p:dialog>
+                </h:form>
+
+                <!--BOTON ELIMINAR PRODUCTO-->
+
+                <p:dialog header="Borrar Producto" widgetVar="popupborrar" modal="true" id="popupborrar">
+                    <h:form>
+                        <h:panelGrid   columns="4" cellpadding="5">
+                            <h:outputText value="Esta seguro?" /> 
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Si" id="si" partialSubmit="true" ajax="false" action="#{productoMainBean.borrarProducto()}"/>
+                                <p:commandButton value="No" id="no"  ajax="false" />
+                            </f:facet>
+                        </h:panelGrid>
+                    </h:form>
+
+                </p:dialog>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

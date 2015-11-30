@@ -1,5 +1,5 @@
 package com.valco.pojo;
-// Generated 2/11/2014 06:06:42 PM by Hibernate Tools 4.3.1
+// Generated 29/11/2015 05:47:35 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -13,13 +13,14 @@ public class Productos  implements java.io.Serializable {
 
 
      private Integer codigo;
+     private Subfamilias subfamilias;
      private TipoProducto tipoProducto;
      private UnidadesDeMedida unidadesDeMedida;
      private String descripcion;
+     private BigDecimal precioSugerido;
      private boolean incluyeVicera;
      private boolean generarSubproducto;
      private boolean aplicaInventarioFisico;
-     private BigDecimal precioSugerido;
      private String estatus;
      private Set<ProductosHasProveedores> productosHasProveedoreses = new HashSet<ProductosHasProveedores>(0);
      private Set<Productos> productosesForProductosCodigoHijo = new HashSet<Productos>(0);
@@ -29,18 +30,20 @@ public class Productos  implements java.io.Serializable {
     }
 
 	
-    public Productos(TipoProducto tipoProducto, UnidadesDeMedida unidadesDeMedida, String descripcion, boolean incluyeVicera, boolean generarSubproducto, boolean aplicaInventarioFisico) {
+    public Productos(TipoProducto tipoProducto, UnidadesDeMedida unidadesDeMedida, String descripcion, BigDecimal precioSugerido, boolean incluyeVicera, boolean generarSubproducto, boolean aplicaInventarioFisico) {
         this.tipoProducto = tipoProducto;
         this.unidadesDeMedida = unidadesDeMedida;
         this.descripcion = descripcion;
+        this.precioSugerido = precioSugerido;
         this.incluyeVicera = incluyeVicera;
         this.generarSubproducto = generarSubproducto;
         this.aplicaInventarioFisico = aplicaInventarioFisico;
     }
-    public Productos(TipoProducto tipoProducto, UnidadesDeMedida unidadesDeMedida, String descripcion, boolean incluyeVicera, boolean generarSubproducto, boolean aplicaInventarioFisico, String estatus, Set<ProductosHasProveedores> productosHasProveedoreses, Set<Productos> productosesForProductosCodigoHijo, Set<Productos> productosesForProductosCodigoPadre) {
+    public Productos(TipoProducto tipoProducto, UnidadesDeMedida unidadesDeMedida, String descripcion, BigDecimal precioSugerido, boolean incluyeVicera, boolean generarSubproducto, boolean aplicaInventarioFisico, String estatus, Set<ProductosHasProveedores> productosHasProveedoreses, Set<Productos> productosesForProductosCodigoHijo, Set<Productos> productosesForProductosCodigoPadre) {
        this.tipoProducto = tipoProducto;
        this.unidadesDeMedida = unidadesDeMedida;
        this.descripcion = descripcion;
+       this.precioSugerido = precioSugerido;
        this.incluyeVicera = incluyeVicera;
        this.generarSubproducto = generarSubproducto;
        this.aplicaInventarioFisico = aplicaInventarioFisico;
@@ -48,6 +51,14 @@ public class Productos  implements java.io.Serializable {
        this.productosHasProveedoreses = productosHasProveedoreses;
        this.productosesForProductosCodigoHijo = productosesForProductosCodigoHijo;
        this.productosesForProductosCodigoPadre = productosesForProductosCodigoPadre;
+    }
+
+    public Subfamilias getSubfamilias() {
+        return subfamilias;
+    }
+
+    public void setSubfamilias(Subfamilias subfamilias) {
+        this.subfamilias = subfamilias;
     }
    
     public Integer getCodigo() {
@@ -77,6 +88,13 @@ public class Productos  implements java.io.Serializable {
     
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+    public BigDecimal getPrecioSugerido() {
+        return this.precioSugerido;
+    }
+    
+    public void setPrecioSugerido(BigDecimal precioSugerido) {
+        this.precioSugerido = precioSugerido;
     }
     public boolean isIncluyeVicera() {
         return this.incluyeVicera;
@@ -126,14 +144,6 @@ public class Productos  implements java.io.Serializable {
     
     public void setProductosesForProductosCodigoPadre(Set<Productos> productosesForProductosCodigoPadre) {
         this.productosesForProductosCodigoPadre = productosesForProductosCodigoPadre;
-    }
-
-    public BigDecimal getPrecioSugerido() {
-        return precioSugerido;
-    }
-
-    public void setPrecioSugerido(BigDecimal precioSugerido) {
-        this.precioSugerido = precioSugerido;
     }
 
 
