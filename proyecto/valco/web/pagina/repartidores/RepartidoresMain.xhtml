@@ -12,37 +12,40 @@
 
                 <h:form id="form">
                     <p:messages id="messages" showDetail="true" autoUpdate="true" />
-                    
+
                     <p:menubar>
-                        
+
                         <p:menuitem 
+                            id="btnIngresar"
                             icon="ui-icon-plusthick"                      
                             value="Ingresar" 
                             partialSubmit="true" 
                             update=":formingresar:popupingresar" 
                             oncomplete="PF('popupingresar').show();"  
                             action="#{repartidoresMainBean.inicializarRepartidor()}"/>
-                            
+
                         <p:menuitem 
-                            value="Modificar"  
-                            process="singleDT" 
-                            update=":formmodificar:popupmodificar" 
-                            oncomplete="PF('popupmodificar').show();"  
+                            id="btnModificar"
                             icon="ui-icon-pencil"
+                            value="Modificar"  
+                            update=":formmodificar:popupmodificar" 
+                            oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupmodificar').show();"  
+                            actionListener="#{repartidoresMainBean.validarRepartidorSeleccionada(actionEvent)}"
                             partialSubmit="true"
+
                             />
                         <p:menuitem 
-                            value="Borrar" 
-                            process="singleDT" 
-                            update=":popupborrar" 
-                            oncomplete="PF('popupborrar').show();" 
+                            id="btnBorrar"
                             icon="ui-icon-circle-close"
-                            partialSubmit="true"
+                            value="Borrar" 
+                            update=":formborrar:popupborrar" 
+                            oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupborrar').show();" 
+                            actionListener="#{repartidoresMainBean.validarRepartidorSeleccionada(actionEvent)}"
 
 
                             /> 
                     </p:menubar>
-                 
+
                     <p:dataTable id="singleDT" var="repartidor" value="#{repartidoresMainBean.modeloRepartidores}" selectionMode="single" selection="#{repartidoresMainBean.repartidorSeleccionado}" rowKey="#{repartidor.codigo}">
                         <f:facet name="header">
                             Repartidores
@@ -56,21 +59,24 @@
                         <p:column headerText="Nombres">
                             <h:outputText value="#{repartidor.nombres}" />
                         </p:column>
-                       <!-- <f:facet name="footer">
-                            <p:commandButton value="Ingresar" 
-                                             partialSubmit="true" 
-                                             update=":formingresar:popupingresar" 
-                                             oncomplete="PF('popupingresar').show();"  
-                                             action=""/>
-                            <p:commandButton value="Modificar"  
-                                             process="singleDT" 
-                                             update=":formmodificar:popupmodificar" 
-                                             oncomplete="PF('popupmodificar').show();"/>
-                            <p:commandButton value="Borrar" 
-                                             process="singleDT" 
-                                             update=":popupborrar" 
-                                             oncomplete="PF('popupborrar').show();" />
-                        </f:facet>  -->
+                        <p:column headerText="Estatus">
+                            <h:outputText value="#{repartidor.estatus}" />
+                        </p:column>
+                        <!-- <f:facet name="footer">
+                             <p:commandButton value="Ingresar" 
+                                              partialSubmit="true" 
+                                              update=":formingresar:popupingresar" 
+                                              oncomplete="PF('popupingresar').show();"  
+                                              action=""/>
+                             <p:commandButton value="Modificar"  
+                                              process="singleDT" 
+                                              update=":formmodificar:popupmodificar" 
+                                              oncomplete="PF('popupmodificar').show();"/>
+                             <p:commandButton value="Borrar" 
+                                              process="singleDT" 
+                                              update=":popupborrar" 
+                                              oncomplete="PF('popupborrar').show();" />
+                         </f:facet>  -->
                     </p:dataTable>
                 </h:form>
 
@@ -150,12 +156,13 @@
                             </p:inputText>
                             <p:message for="nombres1" display="icon" />
 
-                            <p:outputLabel for="estatus" value="Estatus:" />
-                            <p:inputText id="estatus" validatorMessage="El campo Estatus solo puede contener letras" required="true" label="estatus" value="#{repartidoresMainBean.repartidorSeleccionado.estatus}">
-                                <f:validateRegex
-                                    pattern="^[A-Za-z\s]+$"/>
-                            </p:inputText>
-                            <p:message for="estatus" display="icon" />
+
+                            <p:outputLabel for="estatus2" value="Estatus" />
+                            <p:selectOneMenu id="estatus2" required="true" value="#{repartidoresMainBean.repartidorSeleccionado.estatus}" style="width:125px">
+                                <f:selectItem itemLabel="ACTIVO" itemValue="ACTIVO" />
+                                <f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO" />
+                            </p:selectOneMenu>
+                            <p:message for="estatus2" display="icon" />
 
 
 
@@ -169,9 +176,10 @@
                 </h:form>
 
                 <!--BOTON ELIMINAR REPARTIDOR-->
+                <h:form id="formborrar">
+                    <p:dialog header="Borrar Repartidor" widgetVar="popupborrar" modal="true" id="popupborrar">
 
-                <p:dialog header="Borrar Repartidor" widgetVar="popupborrar" modal="true" id="popupborrar">
-                    <h:form>
+
                         <h:panelGrid   columns="4" cellpadding="5">
                             <h:outputText value="Esta seguro?" /> 
 
@@ -180,9 +188,17 @@
                                 <p:commandButton value="No" id="no"  ajax="false" />
                             </f:facet>
                         </h:panelGrid>
-                    </h:form>
 
-                </p:dialog>
+
+
+
+                    </p:dialog>
+                </h:form>
+                <p:blockUI block="form" trigger=":form:btnIngresar :form:btnModificar :form:btnBorrar :formingresar:guardar1 :formmodificar:guardar   ">
+                    Cargando.... Espere porfavor<br />
+                    <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
+
+                </p:blockUI>
 
                 <script type="text/javascript">
                     function handleLoginRequest(xhr, status, args, popupname) {

@@ -69,7 +69,18 @@ public class Familias  implements java.io.Serializable {
         this.subfamiliases = subfamiliases;
     }
 
-
+     public String toString (){
+         return this.descripcion;
+     }
+     
+     public boolean equals(Object o){
+         if (o == null|| !Familias.class.isInstance(o)|| ((Familias)o).getCodigo()!= this.getCodigo()){
+             return false;       
+             
+         }else{
+             return true;
+         }
+     }
 
 
 }

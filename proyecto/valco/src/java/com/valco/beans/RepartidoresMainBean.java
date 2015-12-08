@@ -8,6 +8,7 @@ package com.valco.beans;
 import com.valco.dao.RepartidoresDAO;
 import com.valco.pojo.Repartidores;
 import com.valco.utility.MsgUtility;
+import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,6 +17,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.component.UIInput;
+import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 
@@ -117,7 +119,16 @@ public class RepartidoresMainBean {
         this.nombres = nombres;
     }
 
-    
+    public void validarRepartidorSeleccionada(ActionEvent actionEvent) {
+       
+            if(repartidorSeleccionado == null){
+                MsgUtility.showErrorMeage("Debe seleccionar un repartidor");
+                FacesContext.getCurrentInstance().validationFailed();
+                
+            }
+            
+       
+    }
  
     public void insertarRepartidor() {
         try {

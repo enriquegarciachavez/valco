@@ -1,0 +1,196 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../templates/Template1.xhtml">
+
+            <ui:define name="title">
+                Productos Has Proveedores
+            </ui:define>
+
+            <ui:define name="content">
+                <h:form id="form">
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" />
+                    <p:menubar>
+
+                        <p:menuitem 
+                            id="btnIngresar"
+                            icon="ui-icon-plusthick"                      
+                            value="Ingresar" 
+                            partialSubmit="true" 
+                            update=":formingresar:popupingresar" 
+                            oncomplete="PF('popupingresar').show();"  
+                            />
+
+
+                        <p:menuitem 
+                            id="btnModificar"
+                            icon="ui-icon-pencil"
+                            value="Modificar"  
+                            update=":formmodificar:popupmodificar" 
+                            oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupmodificar').show();"
+                            actionListener="#{productosHasProveedoresMainBean.validarProductosHasProveedoresSeleccionado(actionEvent)}"
+
+                            partialSubmit="true"
+                            />
+                        <p:menuitem 
+                            id="btnBorrar"
+                            icon="ui-icon-circle-close"
+                            value="Borrar" 
+                            update=":formborrar:popupborrar" 
+                            oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupborrar').show();"
+                            actionListener="#{productosHasProveedoresMainBean.validarProductosHasProveedoresSeleccionado(actionEvent)}"
+
+                            /> 
+                    </p:menubar>
+
+                    <p:dataTable id="singleDT" var="productosHasProveedores" value="#{productosHasProveedoresMainBean.productosHasProveedores}" 
+                                 selectionMode="single" 
+                                 selection="#{productosHasProveedoresMainBean.productosHasProveedoresSeleccionado}" 
+                                 rowKey="#{productosHasProveedores.codigo}"
+                                 filteredValue="#{productosHasProveedoresMainBean.productosHasProveedoresFiltrados}">
+                        <f:facet name="header">
+                            Familias
+                        </f:facet>
+                        <p:column headerText="Codigo" filterMatchMode="contains" filterBy="#{productosHasProveedores.codigo}">
+                            <h:outputText value="#{productosHasProveedores.codigo}" />
+                        </p:column>
+                        <p:column headerText="Productos" filterMatchMode="contains" filterBy="#{productosHasProveedores.productos.descripcion}">
+                            <h:outputText value="#{productosHasProveedores.productos.descripcion}" />
+                        </p:column>
+                        <p:column headerText="Proveedores" filterMatchMode="contains" filterBy="#{productosHasProveedores.proveedores.razonSocial}">
+                            <h:outputText value="#{productosHasProveedores.proveedores.razonSocial}" />
+                        </p:column>
+                        <p:column headerText="Codigo Proveedor" filterMatchMode="contains" filterBy="#{productosHasProveedores.codigoProveedor}">
+                            <h:outputText value="#{productosHasProveedores.codigoProveedor}" />
+                        </p:column>
+                        <p:column headerText="Precio Sugerido" filterMatchMode="contains" filterBy="#{productosHasProveedores.precioSugerido}">
+                            <h:outputText value="#{productosHasProveedores.precioSugerido}" />
+                        </p:column>
+
+                    </p:dataTable>
+
+                </h:form>
+
+                <!-- BOTON INGRESAR PRODUCTO-->
+
+                <h:form id="formingresar">
+                    <p:dialog header="Ingresar Familia" widgetVar="popupingresar" modal="true" position="top"
+                              id="popupingresar">
+
+
+                        <h:panelGrid id="ingresarGrid"  columns="3" cellpadding="5">
+
+                            <f:facet name="header">
+                                <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
+                            </f:facet>
+
+                            <p:outputLabel for="proveedor" value="Proveedor" />
+                            <p:selectOneMenu id="proveedor" required="true" converter="omnifaces.SelectItemsConverter" value="#{productosHasProveedoresMainBean.productosHasProveedoresNuevo.proveedores}" style="width:125px">
+                                <f:selectItems value="#{productosHasProveedoresMainBean.proveedores}" var="proveedor" itemLabel="#{proveedor}" itemValue="#{proveedor}"  />
+                            </p:selectOneMenu>
+                            <p:message for="proveedor" display="icon" />
+                            
+                            <p:outputLabel for="producto" value="Producto" />
+                            <p:selectOneMenu id="producto" required="true" converter="omnifaces.SelectItemsConverter" value="#{productosHasProveedoresMainBean.productosHasProveedoresNuevo.productos}" style="width:125px">
+                                <f:selectItems value="#{productosHasProveedoresMainBean.productos}" var="producto" itemLabel="#{producto.descripcion}" itemValue="#{producto}"  />
+                            </p:selectOneMenu>
+                            <p:message for="producto" display="icon" />
+
+                            <p:outputLabel for="codigoproveedor" value="Codigo Proveedor: " />
+                            <p:inputText id="codigoproveedor"  required="true" label="codigoproveedor" value="#{productosHasProveedoresMainBean.productosHasProveedoresNuevo.codigoProveedor}" >
+                            </p:inputText>
+                            <p:message for="codigoproveedor" display="icon" />
+                            
+                            <p:outputLabel for="preciosugerido" value="Precio Sugerido " />
+                            <p:inputText id="preciosugerido"  required="true" label="preciosugerido" value="#{productosHasProveedoresMainBean.productosHasProveedoresNuevo.precioSugerido}" >
+                            </p:inputText>
+                            <p:message for="preciosugerido" display="icon" />
+
+
+                            <f:facet name="footer">
+
+                                <p:commandButton value="Guardar"  id="guardar1" update="ingresarGrid :form:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'popupingresar' )"  action="#{productosHasProveedoresMainBean.insertarProductosHasProveedores()}"/>
+
+                            </f:facet>
+                        </h:panelGrid>
+
+
+                    </p:dialog>
+                </h:form>
+
+                <!-- BOTON MODIFICAR PRODUCTO-->
+                <!-- <p:commandButton value="Modificar" type="button" onclick="PF('popupmodificar').show();" /> -->
+
+                <h:form id="formmodificar">
+                    <p:dialog header="Modificar Producto" widgetVar="popupmodificar" id="popupmodificar" modal="true" position="top">
+
+                        <h:panelGrid id="modificarGrid"  columns="3" cellpadding="5">
+
+                            <f:facet name="header">
+                                <p:messages id="msgsmodificar" style="font-size: 12px; text-align: left;"/>
+                            </f:facet>
+
+                            <p:outputLabel for="proveedor1" value="Proveedor" />
+                            <p:selectOneMenu id="proveedor1" required="true" converter="omnifaces.SelectItemsConverter" value="#{productosHasProveedoresMainBean.productosHasProveedoresSeleccionado.proveedores}" style="width:125px">
+                                <f:selectItems value="#{productosHasProveedoresMainBean.proveedores}" var="proveedor1" itemLabel="#{proveedor}" itemValue="#{proveedor}"  />
+                            </p:selectOneMenu>
+                            <p:message for="proveedor1" display="icon" />
+                            
+                            <p:outputLabel for="producto1" value="Producto" />
+                            <p:selectOneMenu id="producto1" required="true" converter="omnifaces.SelectItemsConverter" value="#{productosHasProveedoresMainBean.productosHasProveedoresSeleccionado.productos}" style="width:125px">
+                                <f:selectItems value="#{productosHasProveedoresMainBean.productos}" var="producto1" itemLabel="#{producto.descripcion}" itemValue="#{producto}"  />
+                            </p:selectOneMenu>
+                            <p:message for="producto1" display="icon" />
+
+                            <p:outputLabel for="codigoproveedor1" value="Codigo Proveedor: " />
+                            <p:inputText id="codigoproveedor1"  required="true" label="codigoproveedor1" value="#{productosHasProveedoresMainBean.productosHasProveedoresSeleccionado.codigoProveedor}" >
+                            </p:inputText>
+                            <p:message for="codigoproveedor1" display="icon" />
+                            
+                            <p:outputLabel for="preciosugerido1" value="Precio Sugerido " />
+                            <p:inputText id="preciosugerido1"  required="true" label="preciosugerido1" value="#{productosHasProveedoresMainBean.productosHasProveedoresSeleccionado.precioSugerido}" >
+                            </p:inputText>
+                            <p:message for="preciosugerido1" display="icon" />
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Guardar" id="guardar" oncomplete="handleLoginRequest(xhr, status, args, 'popupmodificar' )" update="modificarGrid :form:singleDT" action="#{productosHasProveedoresMainBean.actualizarProductosHasProveedores()}"/>
+                            </f:facet>
+                        </h:panelGrid>
+
+                    </p:dialog>
+                </h:form>
+
+                <!--BOTON ELIMINAR PRODUCTO-->
+                <h:form id="formborrar">
+                    <p:dialog header="Borrar Producto" widgetVar="popupborrar" modal="true" id="popupborrar">
+
+                        <h:panelGrid   columns="4" cellpadding="5">
+                            <h:outputText value="Esta seguro?" /> 
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Si" id="si" partialSubmit="true" ajax="false" action="#{productosHasProveedoresMainBean.borrarProductosHasProveedores()}"/>
+                                <p:commandButton value="No" id="no"  ajax="false" />
+                            </f:facet>
+                        </h:panelGrid>
+
+
+                    </p:dialog>
+                </h:form>
+                <p:blockUI block="form" trigger=":form:btnIngresar :form:btnModificar :form:btnBorrar :formingresar:guardar1 :formmodificar:guardar   ">
+                    Cargando.... Espere porfavor<br />
+                    <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
+
+                </p:blockUI>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

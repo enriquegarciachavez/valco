@@ -68,7 +68,14 @@ public class TipoProducto  implements java.io.Serializable {
         this.productoses = productoses;
     }
 
-
+    public boolean equals(Object o){
+         if (o == null|| !TipoProducto.class.isInstance(o)|| ((TipoProducto)o).getCodigo()!= this.getCodigo()){
+             return false;       
+             
+         }else{
+             return true;
+         }
+     }
 
 
 }

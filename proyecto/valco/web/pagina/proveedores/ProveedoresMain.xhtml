@@ -11,9 +11,9 @@
             <ui:define name="content">
                 <h:form id="form">
                     <p:messages id="messages" showDetail="true" autoUpdate="true" />
-                    
+
                     <p:menubar>
-                        
+
                         <p:menuitem 
                             value="Ingresar" 
                             id="btnIngresar"
@@ -22,29 +22,29 @@
                             update=":formingresar:popupingresar" 
                             oncomplete="PF('popupingresar').show();"  
                             action="#{proveedoresMainBean.inicializarProveedor()}"/>
-                            
+
                         <p:menuitem 
                             value="Modificar"
                             id="btnModificar"
-                            process="singleDT" 
                             update=":formmodificar:popupmodificar" 
-                            oncomplete="PF('popupmodificar').show();"  
+                            oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupmodificar').show();"  
                             icon="ui-icon-pencil"
                             partialSubmit="true"
+                            actionListener="#{proveedoresMainBean.validarProveedorSeleccionado(actionEvent)}"
                             />
                         <p:menuitem 
                             value="Borrar" 
                             id="btnBorrar"
-                            process="singleDT" 
-                            update=":popupborrar" 
-                            oncomplete="PF('popupborrar').show();" 
+                            update=":formborrar:popupborrar" 
+                            oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupborrar').show();" 
                             icon="ui-icon-circle-close"
                             partialSubmit="true"
+                            actionListener="#{proveedoresMainBean.validarProveedorSeleccionado(actionEvent)}"
 
 
                             /> 
                     </p:menubar>
-                    
+
                     <p:dataTable id="singleDT" var="proveedor" value="#{proveedoresMainBean.modeloProveedores}" selectionMode="single" selection="#{proveedoresMainBean.proveedorSeleccionado}" rowKey="#{proveedor.codigo}">
                         <f:facet name="header">
                             Proveedores
@@ -61,13 +61,12 @@
                         <p:column headerText="Nombres">
                             <h:outputText value="#{proveedor.nombres}" />
                         </p:column>
-                       
-                    </p:dataTable>
-                    <p:blockUI block="form" trigger="btnIngresar btnModificar btnBorrar">
-                Cargando.... Espere porfavor<br />
-                <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
+                        <p:column headerText="Estatus">
+                            <h:outputText value="#{proveedor.estatus}" />
+                        </p:column>
 
-            </p:blockUI>
+                    </p:dataTable>
+                    
                 </h:form>
 
 
@@ -216,8 +215,12 @@
                             <p:inputText id="rfc2" required="false" label="rfc" value="#{proveedoresMainBean.proveedorSeleccionado.rfc}"/>
                             <p:message for="rfc2" display="icon" />
 
+
                             <p:outputLabel for="estatus2" value="Estatus" />
-                            <p:inputText id="estatus2" required="true" label="estatus" value="#{proveedoresMainBean.proveedorSeleccionado.estatus}"/>
+                            <p:selectOneMenu id="estatus2" required="true" value="#{proveedoresMainBean.proveedorSeleccionado.estatus}" style="width:125px">
+                                <f:selectItem itemLabel="ACTIVO" itemValue="ACTIVO" />
+                                <f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO" />
+                            </p:selectOneMenu>
                             <p:message for="estatus2" display="icon" />
 
                             <p:outputLabel for="posicionpesoinicial2" value="Posicion peso inicial" />
@@ -248,9 +251,9 @@
 
 
                 <!--BOTON ELIMINAR PROVEEDORES-->
+                <h:form id="formborrar">
+                    <p:dialog header="Borrar Preoveedor" widgetVar="popupborrar" modal="true" id="popupborrar">
 
-                <p:dialog header="Borrar Preoveedor" widgetVar="popupborrar" modal="true" id="popupborrar">
-                    <h:form>
                         <h:panelGrid   columns="4" cellpadding="5">
                             <h:outputText value="Esta seguro?" /> 
 
@@ -259,19 +262,25 @@
                                 <p:commandButton value="No" id="no"  ajax="false" />
                             </f:facet>
                         </h:panelGrid>
-                    </h:form>
 
-                </p:dialog>
+
+                    </p:dialog>
+                </h:form>
+                <p:blockUI block="form" trigger=":form:btnIngresar :form:btnModificar :form:btnBorrar :formingresar:guardar1 :formmodificar:guardar   ">
+                    Cargando.... Espere porfavor<br />
+                    <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
+
+                </p:blockUI>
 
                 <script type="text/javascript">
                     function handleLoginRequest(xhr, status, args, popupname) {
-                        if(args.validationFailed ) {
-                            PF(popupname).jq.effect("shake", {times:5}, 100);
-                    }
-                    el se {
-                        PF(popupname).hide();
+                        if (args.validationFailed) {
+                            PF(popupname).jq.effect("shake", {times: 5}, 100);
+                        }
+                        el se {
+                            PF(popupname).hide();
                             $('#loginLink').fadeOut();
-                    }
+                        }
                     }
                 </script>
             </ui:define>

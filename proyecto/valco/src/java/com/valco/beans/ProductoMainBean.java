@@ -5,13 +5,19 @@
  */
 package com.valco.beans;
 
+import com.valco.dao.FamiliasDAO;
 import com.valco.dao.ProductoDAO;
+import com.valco.dao.SubfamiliasDAO;
 import com.valco.dao.TipoProductoDAO;
 import com.valco.dao.UnidadesDeMedidaDAO;
+import com.valco.pojo.Familias;
 import com.valco.pojo.Productos;
+import com.valco.pojo.Subfamilias;
 import com.valco.pojo.TipoProducto;
 import com.valco.pojo.UnidadesDeMedida;
 import com.valco.utility.MsgUtility;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,6 +58,13 @@ public class ProductoMainBean {
     UISelectBoolean incluyeViscera;
     UISelectBoolean generarSubproducto;
     UISelectBoolean aplicaInventarioFisico;
+    @ManagedProperty(value = "#{familiasDAO}")
+    private FamiliasDAO familiasDAO;
+    @ManagedProperty(value = "#{subfamiliasDAO}")
+    private SubfamiliasDAO subfamiliasDAO;
+    List<Familias> familias = new ArrayList<>();
+    List<Subfamilias> subfamilias = new ArrayList<>();
+    Familias familiaSelecionada= new Familias();
     
     
     /**
@@ -59,7 +72,74 @@ public class ProductoMainBean {
      */
     public ProductoMainBean() {
     }
+    
+    public void validarProductoSeleccionado(ActionEvent actionEvent) {
+       
+            if(productoSeleccionado == null){
+                MsgUtility.showErrorMeage("Debe seleccionar un Producto");
+                FacesContext.getCurrentInstance().validationFailed();
+                
+            }else{
+                familiaSelecionada = productoSeleccionado.getSubfamilias().getFamilias();
+                try {
+                    subfamilias = subfamiliasDAO.getSubfamilias(familiaSelecionada);
+                } catch (Exception ex) {
+                    Logger.getLogger(ProductoMainBean.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+       
+    }
 
+    public Familias getFamiliaSelecionada() {
+        return familiaSelecionada;
+    }
+    
+    public void obtenerSubfamiliasXFamilias(){
+        try {
+            this.subfamilias= subfamiliasDAO.getSubfamilias(familiaSelecionada);
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+    }
+
+    public void setFamiliaSelecionada(Familias familiaSelecionada) {
+        this.familiaSelecionada = familiaSelecionada;
+    }
+    
+
+    public List<Familias> getFamilias() {
+        return familias;
+    }
+
+    public void setFamilias(List<Familias> familias) {
+        this.familias = familias;
+    }
+
+    public List<Subfamilias> getSubfamilias() {
+        return subfamilias;
+    }
+
+    public void setSubfamilias(List<Subfamilias> subfamilias) {
+        this.subfamilias = subfamilias;
+    }
+    
+    public FamiliasDAO getFamiliasDAO() {
+        return familiasDAO;
+    }
+
+    public void setFamiliasDAO(FamiliasDAO familiasDAO) {
+        this.familiasDAO = familiasDAO;
+    }
+
+    public SubfamiliasDAO getSubfamiliasDAO() {
+        return subfamiliasDAO;
+    }
+
+    public void setSubfamiliasDAO(SubfamiliasDAO subfamiliasDAO) {
+        this.subfamiliasDAO = subfamiliasDAO;
+    }
+    
     public UnidadesDeMedidaDAO getUnidadesdemedidaDao() {
         return unidadesdemedidaDao;
     }
@@ -196,6 +276,7 @@ public class ProductoMainBean {
     public void borrarProducto() {
         try {
             productoDao.borrarProducto(productoSeleccionado);
+            productos.remove(productoSeleccionado);
             MsgUtility.showInfoMeage("El producto se borró con éxito");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
@@ -215,10 +296,12 @@ public class ProductoMainBean {
         limpiarIngresarForm();}
     
     @PostConstruct
-    public void init(){
+        public void init(){
         try {
             this.unidadesDeMedida = unidadesdemedidaDao.getUnidadesDeMedida();
             this.tipoProducto = tipoproductoDao.getTipoProducto();
+            this.familias= familiasDAO.getFamilias();
+            
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }

@@ -4,7 +4,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -28,32 +29,55 @@ width: 500px
             <ui:insert name="top">
                 <h:form id="logout" onsubmit="this.action = '#{facesContext.externalContext.requestContextPath}/logout';" prependId="false" >
                     <p:menubar>
+                        <c:set var="root" value="/faces/pagina" />
                         <p:submenu label="Catálogos">
-                            <p:menuitem value="Clientes" url="../clientes/ClientesMain.xhtml" /> 
-                            <p:menuitem value="Productos" url="../productos/ProductosMain.xhtml" />
-                            <p:menuitem value="Proveedores" url="../proveedores/ProveedoresMain.xhtml" />
-                            <p:menuitem value="Repartidores" url="../repartidores/RepartidoresMain.xhtml" />
-                            <p:menuitem value="Tipos de producto" url="../tipoproducto/TipoProductoMain.xhtml" />
-                            <p:menuitem value="Ubicaciones" url="../ubicaciones/UbicacionesMain.xhtml" />
-                            <p:menuitem value="unidades de medida" url="../unidadesDeMedida/UnidadesDeMedidaMain.xhtml" />
-                            <p:menuitem value="Usuarios" url="../usuarios/UsuariosMain.xhtml" />
-                            <p:menuitem value="Accesos" url="../configuracionAccesos/ConfiguracionAccesos.xhtml" />
+                            <p:menuitem value="Clientes" url="#{root}/clientes/ClientesMain.xhtml" /> 
+                            <p:menuitem value="Productos" url="#{root}/productos/ProductosMain.xhtml" />
+                            <p:menuitem value="Proveedores" url="#{root}/proveedores/ProveedoresMain.xhtml" />
+                            <p:menuitem value="Repartidores" url="#{root}/repartidores/RepartidoresMain.xhtml" />
+                            <p:menuitem value="Tipos de producto" url="#{root}/tipoproducto/TipoProductoMain.xhtml" />
+                            <p:menuitem value="Ubicaciones" url="#{root}/ubicaciones/UbicacionesMain.xhtml" />
+                            <p:menuitem value="Unidades de Medida" url="#{root}/unidadesDeMedida/UnidadesDeMedidaMain.xhtml" />
+                            <p:menuitem value="Usuarios" url="#{root}/usuarios/UsuariosMain.xhtml" />
+                            <p:menuitem value="Accesos" url="#{root}/configuracionAccesos/ConfiguracionAccesos.xhtml" />
+                            <p:menuitem value="Parametros Generales" url="#{root}/parametrosgenerales/ParametrosGeneralesMain.xhtml" />
+                            <p:menuitem value="Familias" url="#{root}/Familias/FamiliasMain.xhtml" />
+                            <p:menuitem value="Subfamilias" url="#{root}/Familias/SubfamiliasMain.xhtml" />
+                            <p:menuitem value="Productos por Proveedor" url="#{root}/proveedores/ProductosHasProveedoresMain.xhtml" />
                         </p:submenu>
                         <p:submenu label="Notas de venta">
-                            <p:menuitem value="Notas de venta" url="../notasventa/NotasVentaMain.xhtml" />
-                            <p:menuitem value="Asignación de notas" url="../notasventa/AsignacionNotasMain.xhtml" />
+                            <p:menuitem value="Notas de venta" url="#{root}/notasventa/NotasVentaMain.xhtml" />
+                            <p:menuitem value="Asignación de notas" url="#{root}/notasventa/AsignacionNotasMain.xhtml" />
                         </p:submenu>
                         <p:submenu label="Productos">
-                            <p:menuitem value="Recepción de productos" url="../productos/RecepcionProductos.xhtml" />
-                            <p:menuitem value="Asignación de producto a repartidor" url="../productos/AsignacionProductoRepartidor.xhtml" />
-                            <p:menuitem value="Producto no vendido" url="../productos/ProductoNoVendido.xhtml" />
+                            <p:menuitem value="Recepción de productos" url="#{root}/productos/RecepcionProductos.xhtml" />
+                            <p:menuitem value="Asignación de producto a repartidor" url="#{root}/productos/AsignacionProductoRepartidor.xhtml" />
+                            <p:menuitem value="Producto no vendido" url="#{root}/productos/ProductoNoVendido.xhtml" />
+                            <p:menuitem value="Ordenes de Compra" url="#{root}/OrdenesCompra/OrdenesCompraMain.xhtml" />
                         </p:submenu>
                         <p:submenu label="Transferencias">
-                            <p:menuitem value="Recepcion de producto transferido" url="../transferencias/RecepcionTransferencias.xhtml" />
-                            <p:menuitem value="Transferencia de producto" url="../transferencias/transferencias.xhtml" />
+                            <p:menuitem value="Recepcion de producto transferido" url="#{root}/transferencias/RecepcionTransferencias.xhtml" />
+                            <p:menuitem value="Transferencia de producto" url="#{root}/transferencias/transferencias.xhtml" />
                         </p:submenu>
                         <p:submenu label="Consultas">
-                            <p:menuitem value="Abonos a cuentas por cobrar" url="../cuentasxcobrar/consultaAbonosCuentasXCobrar.xhtml" />
+                            <p:menuitem value="Abonos a cuentas por cobrar" url="#{root}/cuentasxcobrar/AbonosCuentasXCobrarMain.xhtml" />
+                            <p:menuitem value="Consulta de Abonos a Cuentas por Cobrar" url="#{root}/cuentasxcobrar/consultaAbonosCuentasXCobrar.xhtml" />
+                            <p:menuitem value="Abonos a Cuentas por Pagar" url="#{root}/cuentasXpagar/AbonosCuentasXPagarMain.xhtml" />
+                            <p:menuitem value="Consulta Notas por Repartidor" url="#{root}/repartidores/ConsultaNotasXRepartidor.xhtml" />
+                        </p:submenu>
+                        <p:submenu label="Facturación">
+                            <p:menuitem value="Creación de Factura" url="#{root}/facturacion/CracionFactura.xhtml" />
+                            <p:menuitem value="Cancelación de Factura" url="#{root}/facturacion/CancelacionFacturas.xhtml" />
+                            <p:menuitem value="Reimpresión de Factura" url="#{root}/facturacion/ReimpresionFactura.xhtml" />
+                        </p:submenu>
+                        <p:submenu label="Reportes">
+                            
+                            <p:menuitem value="Reporte de Ventas" url="#{root}/reportes/VentasXFamilias/ReportesSubfamilias.xhtml" />
+                            <p:menuitem value="Reporte Facturas por Cobrar" url="#{root}/reportes/facturasxcobrar/ReporteFacturasXCobrar.xhtml" />
+                            <p:menuitem value="Reporte Notas de Credito" url="#{root}/reportes/notasdecredito/NotaCreditoReporte.xhtml" />
+                            <p:menuitem value="Reporte Ventas con Factura" url="#{root}/reportes/ventasconfactura/ReporteVentasConFactura.xhtml" />
+                            <p:menuitem value="Reporte Ventas por Repartidor" url="#{root}/reportes/ventasporrepartidor/ReporteVentasXRepartidor.xhtml" />
+                            
                         </p:submenu>
                         <f:facet name="options">
                             <p:inputText style="margin-right:10px" placeholder="Search"/>

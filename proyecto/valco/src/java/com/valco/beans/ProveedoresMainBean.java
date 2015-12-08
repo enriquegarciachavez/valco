@@ -8,6 +8,7 @@ package com.valco.beans;
 import com.valco.dao.ProveedorDAO;
 import com.valco.pojo.Proveedores;
 import com.valco.utility.MsgUtility;
+import java.awt.event.ActionEvent;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
@@ -52,14 +53,12 @@ public class ProveedoresMainBean implements Serializable {
     UIInput posicionCodigoInicial;
     UIInput posicionCodigoFinal;
 
-    
-    
     /**
      * Creates a new instance of ProveedoresMainBean
      */
     public ProveedoresMainBean() {
     }
-    
+
     public void limpiarIngresarForm() {
         apellidoPaterno.setValue(null);
         apellidoMaterno.setValue(null);
@@ -73,20 +72,27 @@ public class ProveedoresMainBean implements Serializable {
         posicionCodigoFinal.setValue(null);
         posicionPesoInicial.setValue(null);
         posicionPesoFinal.setValue(null);
-        
-        
 
     }
-    
+
     @PostConstruct
-    public void init(){
+    public void init() {
         try {
             proveedores = proveedorDAO.getProveedores();
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
     }
-    
+
+    public void validarProveedorSeleccionado(ActionEvent actionEvent) {
+
+        if (proveedorSeleccionado == null) {
+            MsgUtility.showErrorMeage("Debe seleccionar una familia");
+            FacesContext.getCurrentInstance().validationFailed();
+        }
+
+    }
+
     public void insertarProveedor() {
         try {
             proveedorNuevo.setEstatus("ACTIVO");
@@ -97,39 +103,42 @@ public class ProveedoresMainBean implements Serializable {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
     }
-    public void borrarProveedor(){
+
+    public void borrarProveedor() {
         try {
             proveedorDAO.borrarProveedor(proveedorSeleccionado);
             MsgUtility.showInfoMeage("El cliente se borró con éxito");
             this.proveedores.remove(proveedorSeleccionado);
         } catch (Exception ex) {
-          MsgUtility.showErrorMeage(ex.getMessage());
+            MsgUtility.showErrorMeage(ex.getMessage());
         }
     }
-    
-     public void actualizarProveedor(){
+
+    public void actualizarProveedor() {
         try {
             proveedorDAO.actualizarProveedor(proveedorSeleccionado);
             MsgUtility.showInfoMeage("El proveedor se actualizó con éxito");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
-        
+
     }
-     public void inicializarProveedor() {
-         this.proveedorNuevo = new Proveedores();
-        limpiarIngresarForm();}
-    
+
+    public void inicializarProveedor() {
+        this.proveedorNuevo = new Proveedores();
+        limpiarIngresarForm();
+    }
+
     public void validarRazonSocial(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
         Proveedores razon = null;
-        razon = 
-                this.proveedorDAO.getProveedoresXRazonSocial(value.toString());
-        if(razon != null){
-            throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe")); 
+        razon
+                = this.proveedorDAO.getProveedoresXRazonSocial(value.toString());
+        if (razon != null) {
+            throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe"));
         }
-        
+
     }
-    
+
     public void validarModificarRazonSocial(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
         Proveedores razon = null;
         razon
@@ -173,7 +182,7 @@ public class ProveedoresMainBean implements Serializable {
         this.proveedorNuevo = proveedorNuevo;
     }
 
-    public DataModel getModeloProveedores()  {
+    public DataModel getModeloProveedores() {
         try {
             modeloProveedores = new ListDataModel(proveedores);
             return modeloProveedores;
@@ -187,7 +196,7 @@ public class ProveedoresMainBean implements Serializable {
         this.modeloProveedores = modeloProveedores;
     }
 
-       public UIInput getRazonSocial() {
+    public UIInput getRazonSocial() {
         return razonSocial;
     }
 
@@ -290,5 +299,5 @@ public class ProveedoresMainBean implements Serializable {
     public void setPosicionCodigoFinal(UIInput posicionCodigoFinal) {
         this.posicionCodigoFinal = posicionCodigoFinal;
     }
-    
+
 }

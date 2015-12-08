@@ -8,12 +8,16 @@ package com.valco.beans;
 import com.valco.dao.FamiliasDAO;
 import com.valco.pojo.Familias;
 import com.valco.utility.MsgUtility;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 
 /**
  *
@@ -26,7 +30,8 @@ public class FamiliasMainBean {
     @ManagedProperty(value = "#{familiasDAO}")
     private FamiliasDAO familiasDAO;
     List<Familias> familias = new ArrayList<>();
-    Familias familiaSeleccionada = new Familias();
+    List<Familias> familiasFiltradas;
+    Familias familiaSeleccionada = null;
     Familias familiaNueva = new Familias();
     
     
@@ -48,12 +53,26 @@ public class FamiliasMainBean {
     }
     public void actualizarFamilia() {
         try {
+            if(familiaSeleccionada == null){
+                throw new Exception("Debe seleccionar una familia para modificar");
+            }
             familiasDAO.actualizarFamilia(familiaSeleccionada);
+            familiaSeleccionada=null;
             MsgUtility.showInfoMeage("La familia se actualizó con éxito");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
 
+    }
+    public void validarFamiliaSeleccionada(ActionEvent actionEvent) {
+       
+            if(familiaSeleccionada == null){
+                MsgUtility.showErrorMeage("Debe seleccionar una familia");
+                FacesContext.getCurrentInstance().validationFailed();
+                
+            }
+            
+       
     }
     
     public void insertarFamilia() {
@@ -61,6 +80,7 @@ public class FamiliasMainBean {
             familiaNueva.setEstatus("ACTIVO");
             familiasDAO.insertarFamilia(familiaNueva);
             this.familias.add(familiaNueva);
+            familiaNueva = new Familias();
             MsgUtility.showInfoMeage("La familia se ingresó con éxito");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
@@ -107,6 +127,14 @@ public class FamiliasMainBean {
 
     public void setFamiliaNueva(Familias familiaNueva) {
         this.familiaNueva = familiaNueva;
+    }
+
+    public List<Familias> getFamiliasFiltradas() {
+        return familiasFiltradas;
+    }
+
+    public void setFamiliasFiltradas(List<Familias> familiasFiltradas) {
+        this.familiasFiltradas = familiasFiltradas;
     }
     
     

@@ -48,6 +48,7 @@
     <bean id="ordenesCompraDao" class="com.valco.dao.OrdenesCompraDAO"/>
     <bean id="familiasDAO" class="com.valco.dao.FamiliasDAO"/>
     <bean id="subfamiliasDAO" class="com.valco.dao.SubfamiliasDAO"/>
+    <bean id="productosHasProveedoresDAO" class="com.valco.dao.ProductosHasProveedoresDAO"/>
     <bean id="AuthorizationManager"
           class="com.valco.filters.AuthorizationManagerDefaultImpl"/>
 </beans>

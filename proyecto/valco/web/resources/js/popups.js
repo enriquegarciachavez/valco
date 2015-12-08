@@ -14,3 +14,13 @@
                             $('#loginLink').fadeOut();
                         }
                     }
+                    
+                    function handleValidation(xhr, status, args, popupname) {
+                        if (args.validationFailed) {
+                            PF(popupname).jq.effect("shake", {times: 5}, 100);
+                        }
+                        else {
+                            PF(popupname).show()();
+                            //$('#loginLink').fadeOut();
+                        }
+                    }

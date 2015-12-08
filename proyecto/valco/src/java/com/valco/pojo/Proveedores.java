@@ -194,7 +194,9 @@ public class Proveedores  implements java.io.Serializable {
         this.productosHasProveedoreses = productosHasProveedoreses;
     }
 
-
+    public String toString (){
+        return razonSocial; 
+    }
 
 
 }

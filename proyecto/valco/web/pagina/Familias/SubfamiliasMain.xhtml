@@ -11,7 +11,7 @@
         <ui:composition template="./../templates/Template1.xhtml">
 
             <ui:define name="title">
-                Catálogo Familias
+                Catalogos Subfamilias
             </ui:define>
 
             <ui:define name="content">
@@ -35,7 +35,8 @@
                             value="Modificar"  
                             update=":formmodificar:popupmodificar" 
                             oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupmodificar').show();"
-                            actionListener="#{familiasMainBean.validarFamiliaSeleccionada(actionEvent)}"
+                            actionListener="#{subfamiliasMainBean.validarSubfamiliaSeleccionada(actionEvent)}"
+
                             partialSubmit="true"
                             />
                         <p:menuitem 
@@ -44,30 +45,33 @@
                             value="Borrar" 
                             update=":formborrar:popupborrar" 
                             oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupborrar').show();"
-                            actionListener="#{familiasMainBean.validarFamiliaSeleccionada(actionEvent)}"
+                            actionListener="#{subfamiliasMainBean.validarSubfamiliaSeleccionada(actionEvent)}"
 
                             /> 
                     </p:menubar>
 
-                    <p:dataTable id="singleDT" var="familias" value="#{familiasMainBean.familias}" 
+                    <p:dataTable id="singleDT" var="subfamilias" value="#{subfamiliasMainBean.subfamilias}" 
                                  selectionMode="single" 
-                                 selection="#{familiasMainBean.familiaSeleccionada}" 
-                                 rowKey="#{familias.codigo}"
-                                 filteredValue="#{familiasMainBean.familiasFiltradas}">
+                                 selection="#{subfamiliasMainBean.subfamiliaSeleccionada}" 
+                                 rowKey="#{subfamilias.codigo}"
+                                 filteredValue="#{subfamiliasMainBean.subfamiliasFiltradas}">
                         <f:facet name="header">
-                            Familias
+                            Subfamilias
                         </f:facet>
-                        <p:column headerText="Codigo" filterMatchMode="contains" filterBy="#{familias.codigo}">
-                            <h:outputText value="#{familias.codigo}" />
+                        <p:column headerText="Codigo" filterMatchMode="contains" filterBy="#{subfamilias.codigo}">
+                            <h:outputText value="#{subfamilias.codigo}" />
                         </p:column>
-                        <p:column headerText="Descripción" filterMatchMode="contains" filterBy="#{familias.descripcion}">
-                            <h:outputText value="#{familias.descripcion}" />
+                        <p:column headerText="Descripción" filterMatchMode="contains" filterBy="#{subfamilias.descripcion}">
+                            <h:outputText value="#{subfamilias.descripcion}" />
                         </p:column>
-                        <p:column headerText="Abreviación" filterMatchMode="contains" filterBy="#{familias.abreviacion}">
-                            <h:outputText value="#{familias.abreviacion}" />
+                        <p:column headerText="Abreviación" filterMatchMode="contains" filterBy="#{subfamilias.abreviacion}">
+                            <h:outputText value="#{subfamilias.abreviacion}" />
                         </p:column>
-                        <p:column headerText="Estatus" filterMatchMode="contains" filterBy="#{familias.estatus}">
-                            <h:outputText value="#{familias.estatus}" />
+                        <p:column headerText="Estatus" filterMatchMode="contains" filterBy="#{subfamilias.estatus}">
+                            <h:outputText value="#{subfamilias.estatus}" />
+                        </p:column>
+                        <p:column headerText="Familia" filterMatchMode="contains" filterBy="#{subfamilias.familias.descripcion}">
+                            <h:outputText value="#{subfamilias.familias.descripcion}" />
                         </p:column>
 
                     </p:dataTable>
@@ -87,20 +91,26 @@
                                 <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
                             </f:facet>
 
-                            <p:outputLabel for="descripcion" value="Ingresar Familia " />
-                            <p:inputText id="descripcion"  required="true" label="descripcion" value="#{familiasMainBean.familiaNueva.descripcion}" >
+                            <p:outputLabel for="descripcion" value="Ingresar Subfamilia " />
+                            <p:inputText id="descripcion"  required="true" label="descripcion" value="#{subfamiliasMainBean.subfamiliaNueva.descripcion}" >
                             </p:inputText>
                             <p:message for="descripcion" display="icon" />
 
                             <p:outputLabel for="abreviacion" value="Abreviación: " />
-                            <p:inputText id="abreviacion"  required="true" label="abreviacion" value="#{familiasMainBean.familiaNueva.abreviacion}" >
+                            <p:inputText id="abreviacion"  required="true" label="abreviacion" value="#{subfamiliasMainBean.subfamiliaNueva.abreviacion}" >
                             </p:inputText>
                             <p:message for="abreviacion" display="icon" />
+
+                            <p:outputLabel for="familia" value="Familia" />
+                            <p:selectOneMenu id="familia" required="true" converter="omnifaces.SelectItemsConverter" value="#{subfamiliasMainBean.subfamiliaNueva.familias}" style="width:125px">
+                                <f:selectItems value="#{subfamiliasMainBean.familias}" var="familia" itemLabel="#{familia.descripcion}" itemValue="#{familia}"  />
+                            </p:selectOneMenu>
+                            <p:message for="familia" display="icon" />
 
 
                             <f:facet name="footer">
 
-                                <p:commandButton value="Guardar"  id="guardar1" update="ingresarGrid :form:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'popupingresar' )"  action="#{familiasMainBean.insertarFamilia()}"/>
+                                <p:commandButton value="Guardar"  id="guardar1" update="ingresarGrid :form:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'popupingresar' )"  action="#{subfamiliasMainBean.insertarSubfamilia()}"/>
 
                             </f:facet>
                         </h:panelGrid>
@@ -122,25 +132,31 @@
                             </f:facet>
 
                             <p:outputLabel for="descripcion1" value="Ingresar Descripción " />
-                            <p:inputText id="descripcion1" required="true"  label="descripcion1" value="#{familiasMainBean.familiaSeleccionada.descripcion}">
+                            <p:inputText id="descripcion1" required="true"  label="descripcion1" value="#{subfamiliasMainBean.subfamiliaSeleccionada.descripcion}">
 
                             </p:inputText>
                             <p:message for="descripcion1" display="icon" />
 
                             <p:outputLabel for="abreviacion2" value="Abreviación: " />
-                            <p:inputText id="abreviacion2" required="true" label="abreviacion2" value="#{familiasMainBean.familiaSeleccionada.abreviacion}" >
+                            <p:inputText id="abreviacion2" required="true" label="abreviacion2" value="#{subfamiliasMainBean.subfamiliaSeleccionada.abreviacion}" >
                             </p:inputText>
                             <p:message for="abreviacion2" display="icon" />
 
                             <p:outputLabel for="estatus2" value="Estatus" />
-                            <p:selectOneMenu id="estatus2" required="true" value="#{familiasMainBean.familiaSeleccionada.estatus}" style="width:125px">
+                            <p:selectOneMenu id="estatus2" required="true" value="#{subfamiliasMainBean.subfamiliaSeleccionada.estatus}" style="width:125px">
                                 <f:selectItem itemLabel="ACTIVO" itemValue="ACTIVO" />
                                 <f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO" />
                             </p:selectOneMenu>
                             <p:message for="estatus2" display="icon" />
+                            
+                            <p:outputLabel for="familia1" value="Familia" />
+                            <p:selectOneMenu id="familia1" required="true" converter="omnifaces.SelectItemsConverter" value="#{subfamiliasMainBean.subfamiliaSeleccionada.familias}" style="width:125px">
+                                <f:selectItems value="#{subfamiliasMainBean.familias}" var="familia1" itemLabel="#{familia.descripcion}" itemValue="#{familia}"  />
+                            </p:selectOneMenu>
+                            <p:message for="familia1" display="icon" />
 
                             <f:facet name="footer">
-                                <p:commandButton value="Guardar" id="guardar" oncomplete="handleLoginRequest(xhr, status, args, 'popupmodificar' )" update="modificarGrid :form:singleDT" action="#{familiasMainBean.actualizarFamilia()}"/>
+                                <p:commandButton value="Guardar" id="guardar" oncomplete="handleLoginRequest(xhr, status, args, 'popupmodificar' )" update="modificarGrid :form:singleDT" action="#{subfamiliasMainBean.actualizarSubfamilia()}"/>
                             </f:facet>
                         </h:panelGrid>
 
@@ -155,7 +171,7 @@
                             <h:outputText value="Esta seguro?" /> 
 
                             <f:facet name="footer">
-                                <p:commandButton value="Si" id="si" partialSubmit="true" ajax="false" action="#{familiasMainBean.borrarFamilia()}"/>
+                                <p:commandButton value="Si" id="si" partialSubmit="true" ajax="false" action="#{subfamiliasMainBean.borrarSubfamilia()}"/>
                                 <p:commandButton value="No" id="no"  ajax="false" />
                             </f:facet>
                         </h:panelGrid>
@@ -168,7 +184,6 @@
                     <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
 
                 </p:blockUI>
-
             </ui:define>
 
         </ui:composition>

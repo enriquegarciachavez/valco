@@ -146,7 +146,9 @@ public class Productos  implements java.io.Serializable {
         this.productosesForProductosCodigoPadre = productosesForProductosCodigoPadre;
     }
 
-
+    public String toString (){
+        return descripcion; 
+    }
 
 
 }

@@ -150,6 +150,10 @@ public class ProductoDAO {
                       .setFetchMode("tipoProducto", FetchMode.JOIN);
               q.setFetchMode("unidadesDeMedida", FetchMode.JOIN);
               productos = (List<Productos>) q.list();
+              for(Productos producto: productos){
+                  Hibernate.initialize(producto.getSubfamilias());
+                  Hibernate.initialize(producto.getSubfamilias().getFamilias());
+              }
             return productos;
 
         } catch (HibernateException he) {

@@ -79,7 +79,14 @@ public class Subfamilias  implements java.io.Serializable {
         this.productoses = productoses;
     }
 
-
+    public boolean equals(Object o){
+         if (o == null|| !Subfamilias.class.isInstance(o)|| ((Subfamilias)o).getCodigo()!= this.getCodigo()){
+             return false;       
+             
+         }else{
+             return true;
+         }
+     }
 
 
 }

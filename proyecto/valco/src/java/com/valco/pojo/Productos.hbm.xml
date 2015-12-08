@@ -2,12 +2,12 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 29/11/2015 05:47:39 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-  <class catalog="valco" name="com.valco.pojo.Productos" table="PRODUCTOS">
+  <class catalog="valco" name="com.valco.pojo.Productos" table="PRODUCTOS" >
     <id name="codigo" type="java.lang.Integer">
       <column name="CODIGO"/>
       <generator class="identity"/>
     </id>
-    <many-to-one class="com.valco.pojo.Subfamilias" fetch="select" name="subfamilias">
+    <many-to-one class="com.valco.pojo.Subfamilias" fetch="select" name="subfamilias" >
       <column name="SUBFAMILIAS_CODIGO" not-null="true"/>
     </many-to-one>
     <many-to-one class="com.valco.pojo.TipoProducto" fetch="select" name="tipoProducto">

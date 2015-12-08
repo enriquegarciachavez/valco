@@ -76,6 +76,15 @@ public class ClienteMainBean implements Serializable {
         }
     }
     
+    public void validarClienteSeleccionado(ActionEvent actionEvent) {
+       
+            if(clienteSeleccionado == null){
+                MsgUtility.showErrorMeage("Debe seleccionar un cliente");
+                FacesContext.getCurrentInstance().validationFailed();
+                
+            }
+    }
+    
      public DataModel getClientesModel() {
         try {
             modeloClientes = new ListDataModel(clientes);

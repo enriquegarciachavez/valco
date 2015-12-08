@@ -12,7 +12,7 @@
 
             <ui:define name="content" id="content">
 
-                
+
                 <h:form id="form">
                     <p:messages id="messages" showDetail="true" autoUpdate="true" />
                     <p:menubar>
@@ -30,18 +30,19 @@
                             value="Modificar"  
                             id="btnModificar"
                             update=":popupmodificar" 
-                            oncomplete="PF('popupmodificar').show();" 
+                            oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupmodificar').show();" 
                             icon="ui-icon-pencil"
                             partialSubmit="true"
+                            actionListener="#{clienteMainBean.validarClienteSeleccionado(actionEvent)}"
                             />
                         <p:menuitem 
                             value="Borrar"
                             id="btnBorrar"
                             icon="ui-icon-circle-close"
-                            partialSubmit="true"
-                            process="singleDT" 
-                            update=":popupborrar" 
-                            oncomplete="PF('popupborrar').show();" 
+                            partialSubmit="true"                             
+                            update=":formborrar:popupborrar" 
+                            oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupborrar').show();" 
+                            actionListener="#{clienteMainBean.validarClienteSeleccionado(actionEvent)}"
 
                             /> 
                     </p:menubar>
@@ -64,11 +65,7 @@
                         </p:column>
 
                     </p:dataTable>
-                                <p:blockUI block="form" trigger="btnIngresar btnModificar btnBorrar">
-                Cargando.... Espere porfavor<br />
-                <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
 
-            </p:blockUI>
                 </h:form>
 
                 <!-- BOTON INGRESAR CLIENTE-->
@@ -278,9 +275,12 @@
                             <p:outputLabel for="banco2" value="Banco" />
                             <p:inputText id="banco2" required="false" label="banco" value="#{clienteMainBean.clienteSeleccionado.banco}"/>
                             <p:message for="banco2" display="icon" />
-
+                            
                             <p:outputLabel for="estatus2" value="Estatus" />
-                            <p:inputText id="estatus2" required="true" label="estatus" value="#{clienteMainBean.clienteSeleccionado.estatus}"/>
+                            <p:selectOneMenu id="estatus2" required="true" value="#{clienteMainBean.clienteSeleccionado.estatus}" style="width:125px">
+                                <f:selectItem itemLabel="ACTIVO" itemValue="ACTIVO" />
+                                <f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO" />
+                            </p:selectOneMenu>
                             <p:message for="estatus2" display="icon" />
 
                             <h:outputText value="Incobrable: " />
@@ -304,9 +304,9 @@
 
 
                 <!--BOTON ELIMINAR CLIENTE-->
+                <h:form id="formborrar">
+                    <p:dialog header="Borrar Cliente" widgetVar="popupborrar" modal="true" id="popupborrar">
 
-                <p:dialog header="Borrar Cliente" widgetVar="popupborrar" modal="true" id="popupborrar">
-                    <h:form>
                         <h:panelGrid   columns="4" cellpadding="5">
                             <h:outputText value="Esta seguro?" /> 
 
@@ -315,16 +315,18 @@
                                 <p:commandButton value="No" id="no"  ajax="false" />
                             </f:facet>
                         </h:panelGrid>
-                    </h:form>
-
-                </p:dialog>
-
+                    </p:dialog>
+                </h:form>
 
 
+                <p:blockUI block="form" trigger=":form:btnIngresar :form:btnModificar :form:btnBorrar :formingresar:guardar1 :formmodificar:guardar   ">
+                    Cargando.... Espere porfavor<br />
+                    <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
+
+                </p:blockUI>
 
             </ui:define>
 
-         
         </ui:composition>
     </body>
 </html>
