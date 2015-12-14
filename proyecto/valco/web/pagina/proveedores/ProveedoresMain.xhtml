@@ -49,19 +49,19 @@
                         <f:facet name="header">
                             Proveedores
                         </f:facet>
-                        <p:column headerText="Razón Social">
+                        <p:column headerText="Razón Social" filterMatchMode="contains" filterBy="#{proveedor.razonSocial}">
                             <h:outputText value="#{proveedor.razonSocial}" />
                         </p:column>
-                        <p:column headerText="Apellido Paterno">
+                        <p:column headerText="Apellido Paterno" filterMatchMode="contains" filterBy="#{proveedor.apellidoPaterno}">
                             <h:outputText value="#{proveedor.apellidoPaterno}" />
                         </p:column>
-                        <p:column headerText="Apellido Materno">
+                        <p:column headerText="Apellido Materno" filterMatchMode="contains" filterBy="#{proveedor.apellidoMaterno}">
                             <h:outputText value="#{proveedor.apellidoMaterno}" />
                         </p:column>
-                        <p:column headerText="Nombres">
+                        <p:column headerText="Nombres" filterMatchMode="contains" filterBy="#{proveedor.nombres}">
                             <h:outputText value="#{proveedor.nombres}" />
                         </p:column>
-                        <p:column headerText="Estatus">
+                        <p:column headerText="Estatus" >
                             <h:outputText value="#{proveedor.estatus}" />
                         </p:column>
 

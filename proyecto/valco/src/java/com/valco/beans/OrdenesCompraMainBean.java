@@ -13,6 +13,7 @@ import com.valco.pojo.ProductosInventario;
 import com.valco.pojo.ProductosInventarioAgrupados;
 import com.valco.pojo.Ubicaciones;
 import com.valco.utility.MsgUtility;
+import com.valco.utility.UsuariosUtility;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -70,9 +71,7 @@ public class OrdenesCompraMainBean {
     public void agregarProductoNuevo(){
         productoNuevo.setPrecio(BigDecimal.ZERO);
         productoNuevo.setOrdenesCompra(ordenSeleccionado);
-        Ubicaciones ubicacion= new Ubicaciones();
-        ubicacion.setCodigo(1);
-        productoNuevo.setUbicaciones(ubicacion);
+        productoNuevo.setUbicaciones(UsuariosUtility.getUsuarioFirmado().getUbicaciones());
         productoNuevo.setEstatus("ACTIVO");
         produuctosInventario.add(productoNuevo);
         productoNuevo= new ProductosInventario();

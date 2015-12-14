@@ -12,67 +12,56 @@
             <ui:define name="content">
 
                 <h:form id="form">
-                    
+
                     <p:messages id="messages" showDetail="true" autoUpdate="true" />
-                    
-                     <p:menubar>
-                        
-                         <p:menuitem 
-                             value="Ingresar" 
-                             partialSubmit="true" 
-                             update=":formingresar:popupingresar" 
-                             oncomplete="PF('popupingresar').show();"  
-                             action="#{unidadesDeMedidaMainBean.inicializarUnidad()}"
-                             icon="ui-icon-plusthick"                      
-                             />
-                            
-                         <p:menuitem 
-                             value="Modificar"  
-                             process="singleDT" 
-                             update=":formmodificar:popupmodificar" 
-                             oncomplete="PF('popupmodificar').show();"
-                             icon="ui-icon-pencil"
-                             partialSubmit="true"
-                             />
-                         <p:menuitem 
-                             value="Borrar" 
-                             process="singleDT" 
-                             update=":popupborrar" 
-                             oncomplete="PF('popupborrar').show();"
-                             icon="ui-icon-circle-close"
-                             partialSubmit="true"
-                             /> 
+
+                    <p:menubar>
+
+                        <p:menuitem 
+                            id="btnIngresar"
+                            value="Ingresar" 
+                            partialSubmit="true" 
+                            update=":formingresar:popupingresar" 
+                            oncomplete="PF('popupingresar').show();"  
+                            action="#{unidadesDeMedidaMainBean.inicializarUnidad()}"
+                            icon="ui-icon-plusthick"                      
+                            />
+
+                        <p:menuitem 
+                            id="btnModificar"
+                            value="Modificar"  
+                            update=":formmodificar:popupmodificar" 
+                            oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupmodificar').show();"
+                            icon="ui-icon-pencil"
+                            partialSubmit="true"
+                            actionListener="#{unidadesDeMedidaMainBean.validarUnidadSeleccionada(actionEvent)}"
+                            />
+                        <p:menuitem 
+                            id="btnBorrar"
+                            value="Borrar" 
+                            update=":formborrar:popupborrar" 
+                            oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupborrar').show();"
+                            icon="ui-icon-circle-close"
+                            partialSubmit="true"
+                            actionListener="#{unidadesDeMedidaMainBean.validarUnidadSeleccionada(actionEvent)}"
+                            /> 
                     </p:menubar>
-                    
+
                     <p:dataTable id="singleDT" var="unidad" value="#{unidadesDeMedidaMainBean.modeloUnidad}" selectionMode="single" selection="#{unidadesDeMedidaMainBean.unidadSeleccionado}" rowKey="#{unidad.codigo}">
                         <f:facet name="header">
                             Unidades de Medida
                         </f:facet>
-                        <p:column headerText="Descripcion">
+                        <p:column headerText="Descripcion" filterMatchMode="contains" filterBy="#{unidad.descripcion}">
                             <h:outputText value="#{unidad.descripcion}" />
                         </p:column>
-                        <p:column headerText=" Abreviacion">
+                        <p:column headerText=" Abreviacion" filterMatchMode="contains" filterBy="#{unidad.abreviacion}">
                             <h:outputText value="#{unidad.abreviacion}" />
                         </p:column>
-                        <p:column headerText=" Estatus">
+                        <p:column headerText=" Estatus" filterMatchMode="contains" filterBy="#{unidad.estatus}">
                             <h:outputText value="#{unidad.estatus}" />
                         </p:column>
 
-<!--                        <f:facet name="footer">
-                            <p:commandButton value="Ingresar" 
-                                             partialSubmit="true" 
-                                             update=":formingresar:popupingresar" 
-                                             oncomplete="PF('popupingresar').show();"  
-                                             action="#{unidadesDeMedidaMainBean.inicializarUnidad()}"/>
-                            <p:commandButton value="Modificar"  
-                                             process="singleDT" 
-                                             update=":formmodificar:popupmodificar" 
-                                             oncomplete="PF('popupmodificar').show();"/>
-                            <p:commandButton value="Borrar" 
-                                             process="singleDT" 
-                                             update=":popupborrar" 
-                                             oncomplete="PF('popupborrar').show();" /> 
-                        </f:facet>   -->
+
                     </p:dataTable>
                 </h:form>
 
@@ -140,11 +129,11 @@
                             </p:inputText>
                             <p:message for="abreviacion1" display="icon" />
 
-                            <p:outputLabel for="estatus2" value="Estatus:" />
-                            <p:inputText id="estatus2" validatorMessage="El campo estatus paterno solo puede contener letras" required="true" label="estatus" value="#{unidadesDeMedidaMainBean.unidadSeleccionado.estatus}">
-                                <f:validateRegex
-                                    pattern="^[A-Za-z\s]+$"/>
-                            </p:inputText>
+                            <p:outputLabel for="estatus2" value="Estatus" />
+                            <p:selectOneMenu id="estatus2" required="true" value="#{unidadesDeMedidaMainBean.unidadSeleccionado.estatus}" style="width:125px">
+                                <f:selectItem itemLabel="ACTIVO" itemValue="ACTIVO" />
+                                <f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO" />
+                            </p:selectOneMenu>
                             <p:message for="estatus2" display="icon" />
 
 
@@ -159,9 +148,9 @@
                 </h:form>
 
                 <!--BOTON ELIMINAR UNIDAD-->
+                <h:form id="formborrar">
+                    <p:dialog header="Borrar Unidad de Medida" widgetVar="popupborrar" modal="true" id="popupborrar">
 
-                <p:dialog header="Borrar Unidad de Medida" widgetVar="popupborrar" modal="true" id="popupborrar">
-                    <h:form>
                         <h:panelGrid   columns="4" cellpadding="5">
                             <h:outputText value="Esta seguro?" /> 
 
@@ -170,9 +159,13 @@
                                 <p:commandButton value="No" id="no"  ajax="false" />
                             </f:facet>
                         </h:panelGrid>
-                    </h:form>
+                    </p:dialog>
+                </h:form>
+                <p:blockUI block="form" trigger=":form:btnIngresar :form:btnModificar :form:btnBorrar :formingresar:guardar1 :formmodificar:guardar   ">
+                    Cargando.... Espere porfavor<br />
+                    <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
 
-                </p:dialog>
+                </p:blockUI>
 
 
                 <script type="text/javascript">

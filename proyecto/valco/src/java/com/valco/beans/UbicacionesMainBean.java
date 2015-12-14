@@ -8,6 +8,7 @@ package com.valco.beans;
 import com.valco.dao.UbicacionesDAO;
 import com.valco.pojo.Ubicaciones;
 import com.valco.utility.MsgUtility;
+import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -175,6 +176,15 @@ public class UbicacionesMainBean {
                 throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe"));
             }
         }
+    }
+    
+    public void validarUbicacionSeleccionado(ActionEvent actionEvent) {
+       
+            if(ubicacionSelecionado == null){
+                MsgUtility.showErrorMeage("Debe seleccionar una Ubicación");
+                FacesContext.getCurrentInstance().validationFailed();
+                
+            }
     }
     
     

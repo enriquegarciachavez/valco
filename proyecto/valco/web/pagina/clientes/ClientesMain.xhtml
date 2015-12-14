@@ -51,16 +51,16 @@
                         <f:facet name="header">
                             Clientes
                         </f:facet>
-                        <p:column headerText="Razón Social">
+                        <p:column headerText="Razón Social" filterMatchMode="contains" filterBy="#{cliente.razonSocial}">
                             <h:outputText value="#{cliente.razonSocial}" />
                         </p:column>
-                        <p:column headerText="Apellido Paterno">
+                        <p:column headerText="Apellido Paterno" filterMatchMode="contains" filterBy="#{cliente.apellidoPaterno}">
                             <h:outputText value="#{cliente.apellidoPaterno}" />
                         </p:column>
-                        <p:column headerText="Apellido Materno">
+                        <p:column headerText="Apellido Materno" filterMatchMode="contains" filterBy="#{cliente.apellidoMaterno}"> 
                             <h:outputText value="#{cliente.apellidoMaterno}" />
                         </p:column>
-                        <p:column headerText="Nombres">
+                        <p:column headerText="Nombres" filterMatchMode="contains" filterBy="#{cliente.nombres}">
                             <h:outputText value="#{cliente.nombres}" />
                         </p:column>
 

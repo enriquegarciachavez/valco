@@ -8,6 +8,7 @@ package com.valco.beans;
 import com.valco.dao.TipoProductoDAO;
 import com.valco.pojo.TipoProducto;
 import com.valco.utility.MsgUtility;
+import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,7 +57,14 @@ public class TipoProductoMainBean {
         }
     }
 
-
+    public void validarTipoSeleccionado(ActionEvent actionEvent) {
+       
+            if(tipoSeleccionado == null){
+                MsgUtility.showErrorMeage("Debe seleccionar un Tipo producto");
+                FacesContext.getCurrentInstance().validationFailed();
+                
+            }
+    }
     
     public void insertarTipoProducto() {
         try {

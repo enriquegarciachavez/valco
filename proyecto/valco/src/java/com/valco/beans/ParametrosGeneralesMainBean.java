@@ -8,11 +8,13 @@ package com.valco.beans;
 import com.valco.dao.ParametrosGeneralesDAO;
 import com.valco.pojo.ParametrosGenerales;
 import com.valco.utility.MsgUtility;
+import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIInput;
+import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 
@@ -157,6 +159,15 @@ public class ParametrosGeneralesMainBean {
            MsgUtility.showErrorMeage(ex.getMessage());
         }
     }
+     
+     public void validarParametroSeleccionado(ActionEvent actionEvent) {
+       
+            if(parametroSeleccionado == null){
+                MsgUtility.showErrorMeage("Debe seleccionar un parametro");
+                FacesContext.getCurrentInstance().validationFailed();
+                
+            }
+     }
      
      
     

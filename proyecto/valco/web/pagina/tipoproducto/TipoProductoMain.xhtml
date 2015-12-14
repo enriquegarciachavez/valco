@@ -18,6 +18,7 @@
                      <p:menubar>
                         
                          <p:menuitem 
+                             id="btnIngresar"
                              value="Ingresar" 
                              partialSubmit="true" 
                              update=":formingresar:popupingresar"
@@ -27,20 +28,22 @@
                              />
                             
                          <p:menuitem 
-                             value="Modificar"  
-                             process="singleDT" 
+                             id="btnModificar"
+                             value="Modificar"                               
                              update=":formmodificar:popupmodificar" 
-                             oncomplete="PF('popupmodificar').show();"  
+                             oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupmodificar').show();"  
                              icon="ui-icon-pencil"
                              partialSubmit="true"
+                             actionListener="#{tipoProductoMainBean.validarTipoSeleccionado(actionEvent)}"
                              />
                          <p:menuitem 
-                             value="Borrar" 
-                             process="singleDT" 
-                             update=":popupborrar" 
-                             oncomplete="PF('popupborrar').show();"
+                             id="btnBorrar"
+                             value="Borrar"                              
+                             update=":formborrar:popupborrar" 
+                             oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupborrar').show();"
                              icon="ui-icon-circle-close"
                              partialSubmit="true"
+                             actionListener="#{tipoProductoMainBean.validarTipoSeleccionado(actionEvent)}"
                              /> 
                     </p:menubar>
                     
@@ -48,10 +51,10 @@
                         <f:facet name="header">
                             Tipo Productos
                         </f:facet>
-                        <p:column headerText="Tipo producto">
+                        <p:column headerText="Tipo producto" filterMatchMode="contains" filterBy="#{tipoProductos.descripcion}">
                             <h:outputText value="#{tipoProductos.descripcion}" />
                         </p:column>
-                        <p:column headerText="Observaciones">
+                        <p:column headerText="Observaciones" filterMatchMode="contains" filterBy="#{tipoProductos.observaciones}">
                             <h:outputText value="#{tipoProductos.observaciones}" />
                         </p:column>
                         <p:column headerText="Estatus">
@@ -126,11 +129,11 @@
                             </p:inputText>
                             <p:message for="descripcion1" display="icon" />
 
-                            <p:outputLabel for="estatus2" value="Estatus:" />
-                            <p:inputText id="estatus2" validatorMessage="El campo estatus paterno solo puede contener letras" required="true" label="estatus" value="#{tipoProductoMainBean.tipoProductoSeleccionado.estatus}">
-                                <f:validateRegex
-                                    pattern="^[A-Za-z\s]+$"/>
-                            </p:inputText>
+                            <p:outputLabel for="estatus2" value="Estatus" />
+                            <p:selectOneMenu id="estatus2" required="true" value="#{tipoProductoMainBean.tipoProductoSeleccionado.estatus}" style="width:125px">
+                                <f:selectItem itemLabel="ACTIVO" itemValue="ACTIVO" />
+                                <f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO" />
+                            </p:selectOneMenu>
                             <p:message for="estatus2" display="icon" />
 
                             <h>Observaciones</h>
@@ -149,8 +152,9 @@
                 </h:form>
 
                 <!--BOTON ELIMINAR TIPO PRODUCTO-->
+                <h:form id="formborrar">
                 <p:dialog header="Borrar Tipo Producto" widgetVar="popupborrar" modal="true" id="popupborrar">
-                    <h:form>
+                    
                         <h:panelGrid   columns="4" cellpadding="5">
                             <h:outputText value="Esta seguro?" /> 
 
@@ -159,9 +163,15 @@
                                 <p:commandButton value="No" id="no"  ajax="false" />
                             </f:facet>
                         </h:panelGrid>
-                    </h:form>
+                    
 
                 </p:dialog>
+                    </h:form>
+                <p:blockUI block="form" trigger=":form:btnIngresar :form:btnModificar :form:btnBorrar :formingresar:guardar1 :formmodificar:guardar   ">
+                    Cargando.... Espere porfavor<br />
+                    <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
+
+                </p:blockUI>
 
                 <script type="text/javascript">
                     function handleLoginRequest(xhr, status, args, popupname) {

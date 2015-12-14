@@ -6,7 +6,9 @@
 package com.valco.dao;
 
 import com.valco.HibernateUtil;
+import com.valco.pojo.Grupos;
 import com.valco.pojo.Usuarios;
+import com.valco.pojo.UsuariosGrupos;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Criteria;
@@ -31,6 +33,16 @@ public class UsuariosDAO {
         try {
             tx = session.beginTransaction();
             session.save(usuarios);
+            
+            
+            Grupos grupo = new Grupos();
+            grupo.setCodigo(3);
+            UsuariosGrupos usuariosGrupos = new UsuariosGrupos();
+            usuariosGrupos.setGrupos(grupo);
+            usuariosGrupos.setUsuarios(usuarios);
+            session.save(usuariosGrupos);
+            
+            
             tx.commit();
         } catch (Exception e) {
             if (tx != null) {
@@ -137,7 +149,9 @@ public class UsuariosDAO {
               Criteria q = session.createCriteria(Usuarios.class)
                       .add(Restrictions.eq("correo", correo));
               usuario = (Usuarios)q.uniqueResult();
+              if(usuario != null ){
               Hibernate.initialize(usuario.getUbicaciones());
+              }
               return usuario;
 
           } catch (HibernateException he) {
@@ -165,4 +179,5 @@ public class UsuariosDAO {
             throw new Exception("Ocurrió un error al consultar el usuario.");
         } 
     }
+        
 }
