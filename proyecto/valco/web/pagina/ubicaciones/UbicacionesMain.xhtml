@@ -13,64 +13,71 @@
 
                 <h:form id="form">
                     <p:messages id="messages" showDetail="true" autoUpdate="true" />
-                    
+
                     <p:menubar>
-                        
+
                         <p:menuitem 
+                            id="btnIngresar"
                             value="Ingresar" 
                             partialSubmit="true" 
                             update=":formingresar:popupingresar" 
                             oncomplete="PF('popupingresar').show();" 
                             action="#{ubicacionesMainBean.inicializarUbicacion()}"
-                            icon="ui-icon-plusthick"                      
-                            />
+                            icon="ui-icon-plusthick" 
                             
+                            />
+
                         <p:menuitem 
+                            id="btnModificar"
                             value="Modificar"  
-                            process="singleDT" 
                             update=":formmodificar:popupmodificar" 
-                            oncomplete="PF('popupmodificar').show();" 
+                            oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupmodificar').show();" 
                             icon="ui-icon-pencil"
                             partialSubmit="true"
+                            actionListener="#{ubicacionesMainBean.validarUbicacionSeleccionado(actionEvent)}"
                             />
                         <p:menuitem 
+                            id="btnBorrar"
                             value="Borrar" 
-                            process="singleDT" 
-                            update=":popupborrar" 
-                            oncomplete="PF('popupborrar').show();" 
+                            update=":formborrar:popupborrar" 
+                            oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupborrar').show();" 
                             icon="ui-icon-circle-close"
                             partialSubmit="true"
+                            actionListener="#{ubicacionesMainBean.validarUbicacionSeleccionado(actionEvent)}"
                             /> 
                     </p:menubar>
-                    
+
                     <p:dataTable id="singleDT" var="ubicacion" value="#{ubicacionesMainBean.modeloUbicaciones}" selectionMode="single" selection="#{ubicacionesMainBean.ubicacionSelecionado}" rowKey="#{ubicacion.codigo}">
                         <f:facet name="header">
                             Ubicaciones
                         </f:facet>
-                        <p:column headerText="Estado">
+                        <p:column headerText="Estado" filterMatchMode="contains" filterBy="#{ubicacion.estado}">
                             <h:outputText value="#{ubicacion.estado}" />
                         </p:column>
-                        <p:column headerText="Ciudad">
+                        <p:column headerText="Ciudad" filterMatchMode="contains" filterBy="#{ubicacion.ciudad}">
                             <h:outputText value="#{ubicacion.ciudad}" />
                         </p:column>
-                        <p:column headerText="Oficina">
+                        <p:column headerText="Oficina" filterMatchMode="contains" filterBy="#{ubicacion.oficina}">
                             <h:outputText value="#{ubicacion.oficina}" />
                         </p:column>
-                       <!-- <f:facet name="footer">
-                            <p:commandButton value="Ingresar" 
-                                             partialSubmit="true" 
-                                             update=":formingresar:popupingresar" 
-                                             oncomplete="PF('popupingresar').show();" 
-                                             action=""/>
-                            <p:commandButton value="Modificar"  
-                                             process="singleDT" 
-                                             update=":formmodificar:popupmodificar" 
-                                             oncomplete="PF('popupmodificar').show();"/>
-                            <p:commandButton value="Borrar" 
-                                             process="singleDT" 
-                                             update=":popupborrar" 
-                                             oncomplete="PF('popupborrar').show();" />
-                        </f:facet>  -->
+                        <p:column headerText="Estatus">
+                            <h:outputText value="#{ubicacion.estatus}" />
+                        </p:column>
+                        <!-- <f:facet name="footer">
+                             <p:commandButton value="Ingresar" 
+                                              partialSubmit="true" 
+                                              update=":formingresar:popupingresar" 
+                                              oncomplete="PF('popupingresar').show();" 
+                                              action=""/>
+                             <p:commandButton value="Modificar"  
+                                              process="singleDT" 
+                                              update=":formmodificar:popupmodificar" 
+                                              oncomplete="PF('popupmodificar').show();"/>
+                             <p:commandButton value="Borrar" 
+                                              process="singleDT" 
+                                              update=":popupborrar" 
+                                              oncomplete="PF('popupborrar').show();" />
+                         </f:facet>  -->
                     </p:dataTable>
                 </h:form>
 
@@ -150,12 +157,12 @@
                             </p:inputText>
                             <p:message for="oficina1" display="icon" />
 
-                            <p:outputLabel for="estatus" value="Estatus:" />
-                            <p:inputText id="estatus" validatorMessage="El campo Estatus solo puede contener letras" required="true" label="estatus" value="#{ubicacionesMainBean.ubicacionSelecionado.estatus}">
-                                <f:validateRegex
-                                    pattern="^[A-Za-z\s]+$"/>
-                            </p:inputText>
-                            <p:message for="estatus" display="icon" />
+                            <p:outputLabel for="estatus2" value="Estatus" />
+                            <p:selectOneMenu id="estatus2" required="true" value="#{ubicacionesMainBean.ubicacionSelecionado.estatus}" style="width:125px">
+                                <f:selectItem itemLabel="ACTIVO" itemValue="ACTIVO" />
+                                <f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO" />
+                            </p:selectOneMenu>
+                            <p:message for="estatus2" display="icon" />
 
 
 
@@ -170,9 +177,8 @@
 
 
                 <!--BOTON ELIMINAR UBICACION-->
-
-                <p:dialog header="Borrar Ubicacion" widgetVar="popupborrar" modal="true" id="popupborrar">
-                    <h:form>
+                <h:form id="formborrar">
+                    <p:dialog header="Borrar Ubicacion" widgetVar="popupborrar" modal="true" id="popupborrar">
                         <h:panelGrid   columns="4" cellpadding="5">
                             <h:outputText value="Esta seguro?" /> 
 
@@ -181,9 +187,13 @@
                                 <p:commandButton value="No" id="no"  ajax="false" />
                             </f:facet>
                         </h:panelGrid>
-                    </h:form>
+                    </p:dialog>
+                </h:form>
+                <p:blockUI block="form" trigger=":form:btnIngresar :form:btnModificar :form:btnBorrar :formingresar:guardar1 :formmodificar:guardar   ">
+                    Cargando.... Espere porfavor<br />
+                    <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
 
-                </p:dialog>
+                </p:blockUI>
 
 
                 <script type="text/javascript">

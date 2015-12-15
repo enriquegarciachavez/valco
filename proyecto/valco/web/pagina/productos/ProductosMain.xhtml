@@ -50,23 +50,23 @@
                         <f:facet name="header">
                             Productos
                         </f:facet>
-                        <p:column headerText="Producto">
+                        <p:column headerText="Producto" filterMatchMode="contains" filterBy="#{productos.descripcion}">
                             <h:outputText value="#{productos.descripcion}" />
                         </p:column>
-                        <p:column headerText="Tipo Producto">
+                        <p:column headerText="Tipo Producto" filterMatchMode="contains" filterBy="#{productos.tipoProducto.descripcion}">
                             <h:outputText value="#{productos.tipoProducto.descripcion}" />
                         </p:column>
-                        <p:column headerText="Precio Sugerido">
+                        <p:column headerText="Precio Sugerido" filterMatchMode="contains" filterBy="#{productos.precioSugerido}">
                             <h:outputText value="#{productos.precioSugerido}" />
                         </p:column>
-                        <p:column headerText="Estatus">
+                        <p:column headerText="Estatus" >
                             <h:outputText value="#{productos.estatus}" />
                         </p:column>
-                        <p:column headerText="Familia">
+                        <p:column headerText="Familia" filterMatchMode="contains" filterBy="#{productos.subfamilias.familias.descripcion}">
                             <h:outputText value="#{productos.subfamilias.familias.descripcion}" />
                         </p:column>
                         
-                        <p:column headerText="Subfamilias">
+                        <p:column headerText="Subfamilias" filterMatchMode="contains" filterBy="#{productos.subfamilias.descripcion}">
                             <h:outputText value="#{productos.subfamilias.descripcion}" />
                         </p:column>
                         <!--  <f:facet name="footer">

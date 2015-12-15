@@ -7,7 +7,9 @@ package com.valco.dao;
 
 import com.valco.HibernateUtil;
 import com.valco.pojo.Accesos;
+import com.valco.pojo.Grupos;
 import com.valco.pojo.UsuariosAccesos;
+import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
@@ -243,4 +245,7 @@ public class AccesosDAO {
             }
         }
     }
+    
+    
+
 }

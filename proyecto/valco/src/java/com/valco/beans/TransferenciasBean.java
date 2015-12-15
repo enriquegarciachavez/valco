@@ -18,6 +18,7 @@ import com.valco.pojo.Tranferencias;
 import com.valco.pojo.Ubicaciones;
 import com.valco.pojo.Usuarios;
 import com.valco.utility.MsgUtility;
+import com.valco.utility.UsuariosUtility;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -97,9 +98,7 @@ public class TransferenciasBean {
         transferencia.setFechaEnvio(new Date());
         transferencia.setUbicacionesByDestino(ubicacionSeleccionado);
         transferencia.setUbicacionesBySalida(productosInventario.get(0).getUbicaciones());
-        Usuarios usuario = new Usuarios();
-        usuario.setCodigo(1);
-        transferencia.setUsuario(usuario);
+        transferencia.setUsuario(UsuariosUtility.getUsuarioFirmado());
         if(Objects.equals(transferencia.getUbicacionesBySalida().getCodigo(), transferencia.getUbicacionesByDestino().getCodigo())){
             MsgUtility.showInfoMeage("Debe seleccionar una ubicación de destino diferente a la ubicación de salida.");
             return;

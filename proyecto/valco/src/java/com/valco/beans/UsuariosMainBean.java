@@ -7,9 +7,14 @@ package com.valco.beans;
 
 import com.valco.dao.UbicacionesDAO;
 import com.valco.dao.UsuariosDAO;
+import com.valco.pojo.Grupos;
 import com.valco.pojo.Ubicaciones;
 import com.valco.pojo.Usuarios;
 import com.valco.utility.MsgUtility;
+import static groovy.xml.dom.DOMCategory.text;
+import java.awt.event.ActionEvent;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,14 +37,15 @@ import javax.faces.validator.ValidatorException;
 @ManagedBean
 @ViewScoped
 public class UsuariosMainBean {
-    
+
     @ManagedProperty(value = "#{usuariosDao}")
-        private UsuariosDAO usuariosDao;
-    
+    private UsuariosDAO usuariosDao;
+
     @ManagedProperty(value = "#{ubicacionesDao}")
-        private UbicacionesDAO ubicacionesDao;
+    private UbicacionesDAO ubicacionesDao;
     List<Usuarios> usuarios;
     List<Ubicaciones> ubicaciones;
+    List<Grupos> grupos;
     Usuarios usuarioNuevo;
     Usuarios usuarioSeleccionado;
     DataModel modeloUsuarios;
@@ -48,17 +54,14 @@ public class UsuariosMainBean {
     UIInput apellidoPaterno;
     UIInput apellidoMaterno;
     UIInput password;
-    
-    
-    
-    
-    
 
     /**
      * Creates a new instance of UsuariosMainBean
      */
     public UsuariosMainBean() {
     }
+    
+    
 
     public UsuariosDAO getUsuariosDao() {
         return usuariosDao;
@@ -114,8 +117,8 @@ public class UsuariosMainBean {
             modeloUsuarios = new ListDataModel(usuarios);
             return modeloUsuarios;
         } catch (Exception ex) {
-             MsgUtility.showErrorMeage(ex.getMessage());
-             return modeloUsuarios;
+            MsgUtility.showErrorMeage(ex.getMessage());
+            return modeloUsuarios;
         }
     }
 
@@ -155,8 +158,6 @@ public class UsuariosMainBean {
         this.apellidoMaterno = apellidoMaterno;
     }
 
-    
-
     public UIInput getPassword() {
         return password;
     }
@@ -164,25 +165,27 @@ public class UsuariosMainBean {
     public void setPassword(UIInput password) {
         this.password = password;
     }
-    
-    
+
     public void insertarUsuario() {
         try {
             usuarioNuevo.setEstatus("ACTIVO");
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(usuarioNuevo.getPassword().getBytes(StandardCharsets.UTF_8));
+            String shaPass = bytesToHex(hash);
+            usuarioNuevo.setPassword(shaPass);            
             usuariosDao.insertarUsuario(usuarioNuevo);
             MsgUtility.showInfoMeage("El usuario se insertó con éxito");
         } catch (Exception ex) {
-           MsgUtility.showErrorMeage(ex.getMessage());  
+            MsgUtility.showErrorMeage(ex.getMessage());
         }
     }
-    
-    
+
     public void actualizarUsuario() {
         try {
             usuariosDao.actualizarUsuario(usuarioSeleccionado);
             MsgUtility.showInfoMeage("El usuario se actualizó con éxito");
         } catch (Exception ex) {
-           MsgUtility.showErrorMeage(ex.getMessage());  
+            MsgUtility.showErrorMeage(ex.getMessage());
         }
 
     }
@@ -192,53 +195,82 @@ public class UsuariosMainBean {
             usuariosDao.borrarUsuario(usuarioSeleccionado);
             MsgUtility.showInfoMeage("El usuario se borró con éxito");
         } catch (Exception ex) {
-             MsgUtility.showErrorMeage(ex.getMessage());
+            MsgUtility.showErrorMeage(ex.getMessage());
         }
     }
-    
+
     public void limpiarIngresarForm() {
         correo.setValue(null);
         nombre.setValue(null);
         apellidoPaterno.setValue(null);
         apellidoMaterno.setValue(null);
-        
-    }
-    
-    
-    public void inicializarUsuario() {
-        this.usuarioNuevo = new Usuarios();
-        limpiarIngresarForm();}
-    
-    @PostConstruct
-    public void init(){
-        try {
-            this.ubicaciones = ubicacionesDao.getUbicaciones();
-            } catch (Exception ex) {
-            
-        }
-    }
-    
-    public void validarCorreo(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
-        Usuarios correo = null;
-        correo = 
-                this.usuariosDao.getUsuariosXCorreo(value.toString());
-        if(correo != null){
-            throw new ValidatorException(new FacesMessage("El correo que capturó ya existe")); 
-        }
-        
-    }
-    
-    public void validarModificarCorreo(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
-        Usuarios correo = null;
-        correo = 
-                this.usuariosDao.getUsuariosXCorreo(value.toString());
-        if(correo != null){
-            if(correo.getCodigo() != usuarioSeleccionado.getCodigo()){
-            throw new ValidatorException(new FacesMessage("El correo que capturó ya existe")); 
-        }
-        }
+
     }
 
-     
+    public void inicializarUsuario() {
+        this.usuarioNuevo = new Usuarios();
+        limpiarIngresarForm();
+    }
+
+    @PostConstruct
+    public void init() {
+        try {
+            
+            this.ubicaciones = ubicacionesDao.getUbicaciones();
+        } catch (Exception ex) {
+
+        }
+    }
     
+    
+
+    public void validarUsuarioSeleccionada(ActionEvent actionEvent) {
+
+        if (usuarioSeleccionado == null) {
+            MsgUtility.showErrorMeage("Debe seleccionar un usuario");
+            FacesContext.getCurrentInstance().validationFailed();
+
+        }
+
+    }
+
+    public void validarCorreo(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        Usuarios correo = null;
+        correo
+                = this.usuariosDao.getUsuariosXCorreo(value.toString());
+        if (correo != null) {
+            throw new ValidatorException(new FacesMessage("El correo que capturó ya existe"));
+        }
+
+    }
+
+    public void validarModificarCorreo(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        Usuarios correo = null;
+        correo
+                = this.usuariosDao.getUsuariosXCorreo(value.toString());
+        if (correo != null) {
+            if (correo.getCodigo() != usuarioSeleccionado.getCodigo()) {
+                throw new ValidatorException(new FacesMessage("El correo que capturó ya existe"));
+            }
+        }
+    }
+    
+    private static String bytesToHex(byte[] bytes) {
+        StringBuffer result = new StringBuffer();
+        for (byte byt : bytes) {
+            result.append(Integer.toString((byt & 0xff) + 0x100, 16).substring(1));
+        }
+        return result.toString();
+    }
+
+    public List<Grupos> getGrupos() {
+        return grupos;
+    }
+
+    public void setGrupos(List<Grupos> grupos) {
+        this.grupos = grupos;
+    }
+    
+    
+
 }

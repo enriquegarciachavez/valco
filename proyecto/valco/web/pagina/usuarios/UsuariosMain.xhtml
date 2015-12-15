@@ -11,79 +11,82 @@
 
             <ui:define name="content">
                 <h:form id="form">
-                    
+
                     <p:messages id="messages" showDetail="true" autoUpdate="true" />
-                    
-                     <p:menubar>
-                        
-                         <p:menuitem 
-                             value="Ingresar" 
-                             partialSubmit="true" 
-                             update=":formingresar:popupingresar" 
-                             oncomplete="PF('popupingresar').show();"  
-                             action="#{usuariosMainBean.inicializarUsuario()}"
-                             icon="ui-icon-plusthick"                      
-                             />
-                            
-                         <p:menuitem 
-                             value="Modificar"  
-                             process="singleDT" 
-                             update=":formmodificar:popupmodificar" 
-                             oncomplete="PF('popupmodificar').show();"
-                             icon="ui-icon-pencil"
-                             partialSubmit="true"
-                             />
-                         <p:menuitem 
-                             value="Borrar" 
-                             process="singleDT" 
-                             update=":popupborrar" 
-                             oncomplete="PF('popupborrar').show();" 
-                             icon="ui-icon-circle-close"
-                             partialSubmit="true"
-                             /> 
+
+                    <p:menubar>
+
+                        <p:menuitem 
+                            id="btnIngresar"
+                            value="Ingresar" 
+                            partialSubmit="true" 
+                            update=":formingresar:popupingresar" 
+                            oncomplete="PF('popupingresar').show();"  
+                            action="#{usuariosMainBean.inicializarUsuario()}"
+                            icon="ui-icon-plusthick"                      
+                            />
+
+                        <p:menuitem 
+                            id="btnModificar"
+                            value="Modificar"  
+                            update=":formmodificar:popupmodificar" 
+                            oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupmodificar').show();"
+                            icon="ui-icon-pencil"
+                            partialSubmit="true"
+                            actionListener="#{usuariosMainBean.validarUsuarioSeleccionada(actionEvent)}"
+                            />
+                        <p:menuitem
+                            id="btnBorrar"
+                            value="Borrar" 
+                            update=":formborrar:popupborrar" 
+                            oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupborrar').show();" 
+                            icon="ui-icon-circle-close"
+                            partialSubmit="true"
+                            actionListener="#{usuariosMainBean.validarUsuarioSeleccionada(actionEvent)}"
+                            /> 
                     </p:menubar>
-                    
+
                     <p:dataTable id="singleDT" var="usuarios" value="#{usuariosMainBean.modeloUsuarios}" selectionMode="single" selection="#{usuariosMainBean.usuarioSeleccionado}" rowKey="#{usuarios.codigo}">
                         <f:facet name="header">
                             Usuarios
                         </f:facet>
-                        <p:column headerText="Correo">
+                        <p:column headerText="Correo" filterMatchMode="contains" filterBy="#{usuarios.correo}">
                             <h:outputText value="#{usuarios.correo}" />
                         </p:column>
-                        <p:column headerText="Apellido Paterno">
+                        <p:column headerText="Apellido Paterno" filterMatchMode="contains" filterBy="#{usuarios.apellidoPaterno}">
                             <h:outputText value="#{usuarios.apellidoPaterno}" />
                         </p:column>
-                        <p:column headerText="Apellido Materno">
+                        <p:column headerText="Apellido Materno" filterMatchMode="contains" filterBy="#{usuarios.apellidoMaterno}">
                             <h:outputText value="#{usuarios.apellidoMaterno}" />
                         </p:column>
-                        <p:column headerText="Nombre">
+                        <p:column headerText="Nombre" filterMatchMode="contains" filterBy="#{usuarios.nombre}">
                             <h:outputText value="#{usuarios.nombre}" />
                         </p:column>
-                        <p:column headerText="Contraseña">
+                        <p:column headerText="Contraseña" >
                             <h:outputText value="#{usuarios.password}" />
                         </p:column>
-                        <p:column headerText="Ubicacion Ciudad ">
+                        <p:column headerText="Ubicacion Ciudad " filterMatchMode="contains" filterBy="#{usuarios.ubicaciones.ciudad}">
                             <h:outputText value="#{usuarios.ubicaciones.ciudad}" />
                         </p:column>
-                        <p:column headerText="Ubicacion Oficina ">
+                        <p:column headerText="Ubicacion Oficina " filterMatchMode="contains" filterBy="#{usuarios.ubicaciones.oficina}">
                             <h:outputText value="#{usuarios.ubicaciones.oficina}" />
                         </p:column>
 
-                      <!--  <f:facet name="footer">
-                            <p:commandButton value="Ingresar" 
-                                             partialSubmit="true" 
-                                             update=":formingresar:popupingresar" 
-                                             oncomplete="PF('popupingresar').show();"  
-                                             action=""/>
-                            <p:commandButton value="Modificar"  
-                                             process="singleDT" 
-                                             update=":formmodificar:popupmodificar" 
-                                             oncomplete="PF('popupmodificar').show();"/>
-                            <p:commandButton value="Borrar" 
-                                             process="singleDT" 
-                                             update=":popupborrar" 
-                                             oncomplete="PF('popupborrar').show();" />
-                        </f:facet>  -->
+                        <!--  <f:facet name="footer">
+                              <p:commandButton value="Ingresar" 
+                                               partialSubmit="true" 
+                                               update=":formingresar:popupingresar" 
+                                               oncomplete="PF('popupingresar').show();"  
+                                               action=""/>
+                              <p:commandButton value="Modificar"  
+                                               process="singleDT" 
+                                               update=":formmodificar:popupmodificar" 
+                                               oncomplete="PF('popupmodificar').show();"/>
+                              <p:commandButton value="Borrar" 
+                                               process="singleDT" 
+                                               update=":popupborrar" 
+                                               oncomplete="PF('popupborrar').show();" />
+                          </f:facet>  -->
                     </p:dataTable>
                 </h:form>
 
@@ -150,6 +153,8 @@
                                 <f:selectItems value="#{usuariosMainBean.ubicaciones}" var="ubicaciones" itemLabel="#{ubicaciones.codigo} | #{ubicaciones.oficina}" itemValue="#{ubicaciones}" />
                             </p:selectOneMenu>
                             <p:message for="ubicacionn0" display="icon" /> 
+                            
+                          
 
                             <!--<p:outputLabel for="password" value="Contraseña:" />
                              <p:inputText id="password" validatorMessage="El campo password solo puede contener letras" binding="{usuariosMainBean.password}" required="true" label="password" value="{usuariosMainBean.usuarioNuevo.password}" >
@@ -213,12 +218,12 @@
                             </p:inputText>
                             <p:message for="password1" display="icon" />
 
-                            <p:outputLabel for="estatus" value="Estatus" />
-                            <p:inputText id="estatus" required="true" validatorMessage="El campo Estatus solo puede contener letras" label="estatus" value="#{usuariosMainBean.usuarioSeleccionado.estatus}">
-                                <f:validateRegex
-                                    pattern="^[A-Za-z\s]+$"/>
-                            </p:inputText>
-                            <p:message for="estatus" display="icon" />                     
+                            <p:outputLabel for="estatus2" value="Estatus" />
+                            <p:selectOneMenu id="estatus2" required="true" value="#{usuariosMainBean.usuarioSeleccionado.estatus}" style="width:125px">
+                                <f:selectItem itemLabel="ACTIVO" itemValue="ACTIVO" />
+                                <f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO" />
+                            </p:selectOneMenu>
+                            <p:message for="estatus2" display="icon" />                     
 
                             <p:outputLabel for="ubicacion2" value="Ubicacion Oficina"  />
                             <p:selectOneMenu id="ubicacion2" value="#{usuariosMainBean.usuarioSeleccionado.ubicaciones}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
@@ -243,9 +248,9 @@
 
 
                 <!--BOTON ELIMINAR USUARIO-->
+                <h:form id="formborrar">
+                    <p:dialog header="Borrar Usuario" widgetVar="popupborrar" modal="true" id="popupborrar">
 
-                <p:dialog header="Borrar Usuario" widgetVar="popupborrar" modal="true" id="popupborrar">
-                    <h:form>
                         <h:panelGrid   columns="4" cellpadding="5">
                             <h:outputText value="Esta seguro?" /> 
 
@@ -254,9 +259,13 @@
                                 <p:commandButton value="No" id="no"  ajax="false" />
                             </f:facet>
                         </h:panelGrid>
-                    </h:form>
+                    </p:dialog>
+                </h:form>
+                <p:blockUI block="form" trigger=":form:btnIngresar :form:btnModificar :form:btnBorrar :formingresar:guardar1 :formmodificar:guardar   ">
+                    Cargando.... Espere porfavor<br />
+                    <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
 
-                </p:dialog>
+                </p:blockUI>
 
                 <script type="text/javascript">
                     function handleLoginRequest(xhr, status, args, popupname) {

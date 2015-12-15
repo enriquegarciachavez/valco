@@ -11,54 +11,57 @@
         <ui:composition template="../templates/Template1.xhtml">
 
             <ui:define name="content">
-                
-                   <h:form id="form">
+
+                <h:form id="form">
                     <p:messages id="messages" showDetail="true" autoUpdate="true" />
-                     <p:menubar>
-                        
+                    <p:menubar>
+
                         <p:menuitem 
+                            id="btnIngresar"
                             value="Ingresar" 
                             icon="ui-icon-plusthick"                      
                             partialSubmit="true"
                             oncomplete="PF('popupingresar').show();;" 
                             update=":formingresar:popupingresar"
                             action="#{parametrosGeneralesMainBean.inicializarParametro}"/>
-                        <p:menuitem 
+                        <p:menuitem
+                            id="btnModificar"
                             value="Modificar"  
                             icon="ui-icon-pencil"
                             partialSubmit="true"
-                            oncomplete="PF('popupmodificar').show();"
-                            process="singleDT" 
+                            oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupmodificar').show();"
                             update=":formmodificar:popupmodificar"
-                          />
-                           
+                            actionListener="#{parametrosGeneralesMainBean.validarParametroSeleccionado(actionEvent)}"
+                            />
+
                         <p:menuitem 
+                            id="btnBorrar"
                             value="Borrar " 
                             icon="ui-icon-circle-close"
                             partialSubmit="true"
-                            oncomplete="PF('popupborrar').show();" 
-                            process="singleDT"
-                            update=":popupborrar"
-                             />    
+                            oncomplete="if (args &amp;&amp; !args.validationFailed) PF('popupborrar').show();" 
+                            update=":formborrar:popupborrar"
+                            actionListener="#{parametrosGeneralesMainBean.validarParametroSeleccionado(actionEvent)}"
+                            />    
                     </p:menubar>
-                    
-                    
+
+
                     <p:dataTable id="singleDT" var="parametros" value="#{parametrosGeneralesMainBean.modeloParametros}" selectionMode="single" selection="#{parametrosGeneralesMainBean.parametroSeleccionado}" rowKey="#{parametros.codigo}">
                         <f:facet name="header">
                             Parametros
                         </f:facet>
-                        <p:column headerText="Clave">
+                        <p:column headerText="Clave" filterMatchMode="contains" filterBy="#{parametros.clave}">
                             <h:outputText value="#{parametros.clave}" />
                         </p:column>
-                        <p:column headerText="Valor">
+                        <p:column headerText="Valor" filterMatchMode="contains" filterBy="#{parametros.valor}">
                             <h:outputText value="#{parametros.valor}" />
                         </p:column>
-                        <p:column headerText="Estatus">
+                        <p:column headerText="Estatus" >
                             <h:outputText value="#{parametros.estatus}" />
                         </p:column>
                     </p:dataTable>
-                     </h:form>
-                
+                </h:form>
+
                 <!-- BOTON INGRESAR PARAMETRO-->
                 <!-- <p:commandButton value="Ingresar" type="button" onclick="PF('popupingresar').show();" /> -->
                 <h:form id="formingresar">
@@ -80,7 +83,7 @@
                             <p:inputText id="valor" binding="#{parametrosGeneralesMainBean.valor}" required="true" label="valor" value="#{parametrosGeneralesMainBean.parametroNuevo.valor}"/>
                             <p:message for="valor" display="icon" />
 
-                            
+
 
                             <f:facet name="footer">
 
@@ -88,9 +91,9 @@
 
                             </f:facet>
                         </h:panelGrid>
-                        </p:dialog>
-                    </h:form>
-                
+                    </p:dialog>
+                </h:form>
+
                 <!-- BOTON MODIFICAR pARAMETROS-->
                 <!-- <p:commandButton value="Modificar" type="button" onclick="PF('popupmodificar').show();" /> -->
 
@@ -110,7 +113,7 @@
                                          value="#{parametrosGeneralesMainBean.parametroSeleccionado.clave}" />
                             <p:message for="clave2" display="icon" />
 
-                            
+
                             <p:outputLabel for="valor2" value="Valor:" />
                             <p:inputText id="valor2" 
                                          required="true" 
@@ -118,10 +121,6 @@
                                          value="#{parametrosGeneralesMainBean.parametroSeleccionado.valor}"/>
                             <p:message for="valor2" display="icon" />
 
-                            
-                            
-                            
-                            
                             <p:outputLabel for="estatus3" value="Estatus:"  />
                             <p:selectOneMenu id="estatus3" value="#{parametrosGeneralesMainBean.parametroSeleccionado.estatus}" 
                                              converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
@@ -134,7 +133,7 @@
                             </p:selectOneMenu>
                             <p:message for="estatus3" display="icon" />
 
-                            
+
                             <f:facet name="footer">
                                 <p:commandButton value="Guardar" id="guardar" oncomplete="handleLoginRequest(xhr, status, args, 'popupmodificar' )" update="modificarGrid :form:singleDT" action="#{parametrosGeneralesMainBean.actualizarParametro()}"/>
                             </f:facet>
@@ -142,11 +141,12 @@
 
                     </p:dialog>
                 </h:form>
-                
-                
-                 <!--BOTON ELIMINAR PARAMETRO-->
-                <p:dialog header="Borrar parametro" widgetVar="popupborrar" modal="true" id="popupborrar">
-                    <h:form>
+
+
+                <!--BOTON ELIMINAR PARAMETRO-->
+                <h:form id="formborrar">
+                    <p:dialog header="Borrar parametro" widgetVar="popupborrar" modal="true" id="popupborrar">
+
                         <h:panelGrid   columns="4" cellpadding="5">
                             <h:outputText value="Esta seguro?" /> 
 
@@ -155,13 +155,18 @@
                                 <p:commandButton value="No" id="no"  ajax="false" />
                             </f:facet>
                         </h:panelGrid>
-                    </h:form>
 
-                </p:dialog>
-                </ui:define>
+                    </p:dialog>
+                </h:form>
+                <p:blockUI block="form" trigger=":form:btnIngresar :form:btnModificar :form:btnBorrar :formingresar:guardar1 :formmodificar:guardar   ">
+                    Cargando.... Espere porfavor<br />
+                    <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
 
-            
-            
+                </p:blockUI>
+            </ui:define>
+
+
+
 
         </ui:composition>
 

@@ -62,6 +62,7 @@ import net.sf.jasperreports.view.JasperViewer;
 import table.custom.EtiquetadoTableCellRendered;
 import table.custom.NoEditableTableModel;
 import threads.PesoThread;
+import utilities.UsuarioFirmado;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -965,10 +966,8 @@ public class EtiquetadoPanel extends CoustomPanel {
 
     private void imprimirEtiquetaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imprimirEtiquetaBtnActionPerformed
         ProductosInventario productoInventario = new ProductosInventario();
-        Ubicaciones ubicacion = new Ubicaciones();
-        ubicacion.setCodigo(1);
         productoInventario.setProductosHasProveedores((ProductosHasProveedores) productosLov.getSelectedItem());
-        productoInventario.setUbicaciones(ubicacion);
+        productoInventario.setUbicaciones(UsuarioFirmado.getUsuarioFirmado().getUbicaciones());
         if (pesoManualChk.isSelected()) {
             if (pesoManualLbl.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "Debe introducir el peso de la caja.");

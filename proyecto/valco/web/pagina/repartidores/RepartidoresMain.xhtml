@@ -50,13 +50,13 @@
                         <f:facet name="header">
                             Repartidores
                         </f:facet>
-                        <p:column headerText="Apellido Paterno">
+                        <p:column headerText="Apellido Paterno" filterMatchMode="contains" filterBy="#{repartidor.apellidoPaterno}">
                             <h:outputText value="#{repartidor.apellidoPaterno}" />
                         </p:column>
-                        <p:column headerText="Apellido Materno">
+                        <p:column headerText="Apellido Materno" filterMatchMode="contains" filterBy="#{repartidor.apellidoMaterno}">
                             <h:outputText value="#{repartidor.apellidoMaterno}" />
                         </p:column>
-                        <p:column headerText="Nombres">
+                        <p:column headerText="Nombres" filterMatchMode="contains" filterBy="#{repartidor.nombres}">
                             <h:outputText value="#{repartidor.nombres}" />
                         </p:column>
                         <p:column headerText="Estatus">

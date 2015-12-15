@@ -105,6 +105,14 @@ public class Ubicaciones  implements java.io.Serializable {
     public void setTranferenciasesForDestino(Set<Tranferencias> tranferenciasesForDestino) {
         this.tranferenciasesForDestino = tranferenciasesForDestino;
     }
+    public boolean equals(Object o){
+         if (o == null|| !Ubicaciones.class.isInstance(o)|| ((Ubicaciones)o).getCodigo()!= this.getCodigo()){
+             return false;       
+             
+         }else{
+             return true;
+         }
+     }
 
 
 

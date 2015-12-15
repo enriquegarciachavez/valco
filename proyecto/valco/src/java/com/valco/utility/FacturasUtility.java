@@ -77,7 +77,8 @@ import sun.misc.BASE64Encoder;
 public class FacturasUtility {
 
     public static OutputStream getCadenaOriginal(String cadenaOriginalDir, String xml) throws Exception {
-        StreamSource sourceXSL = new StreamSource(new File(cadenaOriginalDir));
+        InputStream content = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream(cadenaOriginalDir);
+        StreamSource sourceXSL = new StreamSource(content);
         StringReader reader = new StringReader(xml);
         TransformerFactory tFactory = TransformerFactory.newInstance();
         Transformer transformer = null;
@@ -221,12 +222,16 @@ public class FacturasUtility {
             throw new Exception("Ocurrió un error al formar el XML de la factura");
         }
         OutputStream cadenaOriginal = null;
+       
         try {
-            cadenaOriginal = getCadenaOriginal("C:/SAT/cadenaoriginal_3_2.xslt", new String(xml.getBytes("Windows-1252")));
+            
+            cadenaOriginal = getCadenaOriginal("//resources//xslt//cadenaoriginal_3_2.xslt", new String(xml.getBytes("Windows-1252")));
         } catch (UnsupportedEncodingException ex) {
             throw new Exception("Ocurrió un error al obtener la cadena original");
         }
-        factura.setCadenaOriginal(cadenaOriginal.toString());
+        String cadena = cadenaOriginal.toString();
+        cadena= cadena.replace("\n", "").replace("\r", "");
+        factura.setCadenaOriginal(cadena);
         byte[] bytesKey = null;
         java.security.PrivateKey pk = null;
         try {
@@ -237,7 +242,9 @@ public class FacturasUtility {
         }
         byte[] bytesCadenaFirmada = null;
         try {
-            bytesCadenaFirmada = getBytesCadenaFirmada(pk, cadenaOriginal);
+            OutputStream cadenaOriginal2 = new ByteArrayOutputStream();
+            cadenaOriginal2.write(cadena.getBytes());
+            bytesCadenaFirmada = getBytesCadenaFirmada(pk, cadenaOriginal2);
         } catch (Exception ex) {
             throw new Exception("Ocurrió un error al ofirmar la cadena original");
         }

@@ -8,6 +8,7 @@ package com.valco.beans;
 import com.valco.pojo.UnidadesDeMedida;
 import com.valco.dao.UnidadesDeMedidaDAO;
 import com.valco.utility.MsgUtility;
+import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -188,6 +189,17 @@ public class UnidadesDeMedidaMainBean {
             throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe")); 
         }
         }  
+    }
+    
+    public void validarUnidadSeleccionada(ActionEvent actionEvent) {
+       
+            if(unidadSeleccionado == null){
+                MsgUtility.showErrorMeage("Debe seleccionar una unidad");
+                FacesContext.getCurrentInstance().validationFailed();
+                
+            }
+            
+       
     }
      
      

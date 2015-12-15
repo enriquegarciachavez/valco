@@ -1,4 +1,4 @@
-/*
+﻿/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -168,7 +168,9 @@ public class UsuariosDAO {
             cr.add(Expression.eq("correo", correo));
             cr.add(Expression.eq("password", password));
             Usuarios usuarios = (Usuarios) cr.uniqueResult();
-            Hibernate.initialize(usuarios.getUbicaciones());
+            if(usuarios != null){
+                Hibernate.initialize(usuarios.getUbicaciones());
+            }
             return usuarios;
         } catch (HibernateException he) {
             throw new Exception("Ocurrió un error al consultar el usuario.");
