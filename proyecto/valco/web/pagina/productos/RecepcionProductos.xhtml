@@ -12,6 +12,7 @@
 
             <ui:define name="content">
                 <h:form id="formAsignar">
+                    <p:ajax event="keyup" update=":formAsignar" listener="#{recepcionProductoBean.listenerTest()}" />
                     <h:panelGrid id="ingresarGrid"  columns="5" cellpadding="5"> 
                         <f:facet name="header">
                             <p:messages id="msgs" showDetail="true" style="font-size: 12px; text-align: left;"/>
@@ -71,6 +72,7 @@
                         </p:column>
                     </p:dataTable>
                 </h:form>
+                
             </ui:define>
 
         </ui:composition>

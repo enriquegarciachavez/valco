@@ -353,6 +353,7 @@ public class ProductoDAO {
                       .add(Restrictions.eq("proveedores", proveedor))
                       .add(Restrictions.eq("codigoProveedor", codigo));
               producto = (ProductosHasProveedores)q.uniqueResult();
+              Hibernate.initialize(producto.getProductos());
               return producto;
 
           } catch (HibernateException he) {

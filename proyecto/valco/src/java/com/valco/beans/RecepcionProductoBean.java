@@ -111,6 +111,10 @@ public class RecepcionProductoBean {
             MsgUtility.showErrorMeage("Ocurrió un error al recibir los productos.");
         }
     }
+    
+    public void listenerTest(){
+        MsgUtility.showErrorMeage("Test fired.");
+    }
 
     public ProductoDAO getProductoDao() {
         return productoDao;

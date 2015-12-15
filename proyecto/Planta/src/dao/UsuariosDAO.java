@@ -16,6 +16,7 @@ import java.util.List;
 import mapping.Usuarios;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -167,6 +168,7 @@ public class UsuariosDAO {
             cr.add(Expression.eq("correo", correo));
             cr.add(Expression.eq("password", password));
             Usuarios usuarios = (Usuarios) cr.uniqueResult();
+            Hibernate.initialize(usuarios.getUbicaciones());
             return usuarios;
         } catch (HibernateException he) {
             throw new Exception("Ocurrió un error al consultar el usuario.");

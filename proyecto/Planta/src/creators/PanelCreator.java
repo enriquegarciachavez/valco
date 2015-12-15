@@ -13,6 +13,7 @@ import panels.AbrirProcesoPanel;
 import panels.ConfigBascula;
 import panels.InventariosMain;
 import panels.ReciboDeProducto;
+import panels.ReciboProductoBC;
 
 /**
  *
@@ -34,6 +35,8 @@ public class PanelCreator {
             return new ConfigBascula();
         }else if("Inventarios".equals(panelName)){
             return new InventariosMain();
+        }else if("Recibo de producto".equals(panelName)){
+            return new ReciboProductoBC();
         }
         return null;
     } 
