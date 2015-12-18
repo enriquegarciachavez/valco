@@ -51,7 +51,7 @@ public class ProductoMainBean {
     List<Productos> productos;
     List<TipoProducto> tipoProducto;
     List<UnidadesDeMedida> unidadesDeMedida;
-    Productos productoNuevo;
+    Productos productoNuevo = new Productos();
     Productos productoSeleccionado;
     DataModel modeloProducto;
     UIInput descripcion;
@@ -293,7 +293,8 @@ public class ProductoMainBean {
     
     public void inicializarProducto() {
         this.productoNuevo = new Productos();
-        limpiarIngresarForm();}
+        
+    }
     
     @PostConstruct
         public void init(){
