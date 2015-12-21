@@ -4,6 +4,7 @@ package panels;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import gnu.io.CommPortIdentifier;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -36,7 +37,7 @@ public class ConfigBascula extends javax.swing.JPanel {
         try {
             readCsv();
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Ocurrio un error al leer los datos de la bascula", "Error", ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Ocurrio un error al leer la configuración de la bascula", "Error", ERROR_MESSAGE);
         }
     }
 
@@ -140,7 +141,7 @@ public class ConfigBascula extends javax.swing.JPanel {
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2)))
-                .addContainerGap(457, Short.MAX_VALUE))
+                .addContainerGap(453, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -182,10 +183,22 @@ public class ConfigBascula extends javax.swing.JPanel {
     }//GEN-LAST:event_puertoComboActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String csv = "C:\\apps\\valco\\valco\\proyecto\\Planta\\src\\confBascula.csv";
+        String csvDir = "C:\\valco\\";
+        String csvName = "confBascula.csv";
         CSVWriter writer = null;
+        File csvFileDir = new File(csvDir);
+        File csvFile = new File(csvDir+csvName);
+        if(!csvFile.exists()){
+            try {
+                csvFileDir.mkdir();
+                csvFile.createNewFile();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Error al guardar el archivo de configuración");
+                return;
+            }
+        }
         try {
-            writer = new CSVWriter(new FileWriter(csv));
+            writer = new CSVWriter(new FileWriter(csvDir+csvName));
         } catch (IOException ex) {
             Logger.getLogger(ConfigBascula.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -201,6 +214,7 @@ public class ConfigBascula extends javax.swing.JPanel {
 
         try {
             writer.close();
+            JOptionPane.showMessageDialog(null, "La configuración se guardo correctamente");
         } catch (IOException ex) {
             Logger.getLogger(ConfigBascula.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -221,7 +235,7 @@ public class ConfigBascula extends javax.swing.JPanel {
     }
 
     private void readCsv() throws FileNotFoundException, IOException {
-        String csvFilename = "C:\\apps\\valco\\valco\\proyecto\\Planta\\src\\confBascula.csv";
+        String csvFilename = "C:\\valco\\confBascula.csv";
         CSVReader csvReader = new CSVReader(new FileReader(csvFilename));
         String[] row = null;
         while ((row = csvReader.readNext()) != null) {

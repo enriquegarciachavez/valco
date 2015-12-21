@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Facturas_subreport1" language="groovy" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="5372f1c6-9ace-4ceb-aec4-820a9c67e870">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Facturas_subreport1" language="groovy" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
 	<property name="ireport.zoom" value="2.357947691000002"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -40,55 +40,55 @@ WHERE FACTURAS.`FECHA` =$P{fecha}]]>
 		<groupFooter>
 			<band height="26">
 				<staticText>
-					<reportElement x="101" y="0" width="100" height="20" forecolor="#000000" uuid="2601b41b-e9b3-4d38-bcdb-55862a65a092"/>
-					<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<reportElement x="101" y="0" width="100" height="20" forecolor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom" lineSpacing="Single">
 						<font fontName="Arial" size="10"/>
 					</textElement>
 					<text><![CDATA[Total del Dia]]></text>
 				</staticText>
 				<line>
-					<reportElement x="201" y="0" width="100" height="1" uuid="67ac9a5a-fb88-473e-9ff5-e0554f63ccf9"/>
+					<reportElement x="201" y="0" width="100" height="1"/>
 				</line>
 				<textField pattern="$ #,##0.00">
-					<reportElement x="201" y="1" width="100" height="20" uuid="f75f5f39-6c27-4d8b-bf8f-7947ea0bff68"/>
-					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
-					<textFieldExpression><![CDATA[$V{totalImporte}]]></textFieldExpression>
+					<reportElement x="201" y="1" width="100" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom" lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$V{totalImporte}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
 	</group>
 	<background>
-		<band splitType="Stretch"/>
+		<band/>
 	</background>
 	<detail>
-		<band height="26" splitType="Stretch">
+		<band height="26">
 			<textField>
-				<reportElement x="101" y="0" width="100" height="20" uuid="4ed5c40d-c0a1-4125-9573-caec0c69a51b"/>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
+				<reportElement x="101" y="0" width="100" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" lineSpacing="Single">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CLIENTES_RAZON_SOCIAL}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CLIENTES_RAZON_SOCIAL}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="37" y="0" width="64" height="20" uuid="1e5a8207-4be6-4844-af81-5c119de1c532"/>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
+				<reportElement x="37" y="0" width="64" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" lineSpacing="Single">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FACTURAS_FOLIO}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_FOLIO}]]></textFieldExpression>
 			</textField>
 			<textField pattern="$ #,##0.00">
-				<reportElement x="201" y="0" width="100" height="20" uuid="ed6abc8a-27b2-431b-913c-d862a21ad3c7"/>
-				<textElement textAlignment="Right" verticalAlignment="Bottom">
+				<reportElement x="201" y="0" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom" lineSpacing="Single">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FACTURAS_TOTAL}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_TOTAL}]]></textFieldExpression>
 			</textField>
 			<textField pattern="">
-				<reportElement x="338" y="0" width="100" height="20" uuid="d98736e9-6b52-4d5a-849f-e453b2746c66"/>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
+				<reportElement x="338" y="0" width="100" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" lineSpacing="Single">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FACTURAS_OBSERVACIONES}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_OBSERVACIONES}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

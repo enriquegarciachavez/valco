@@ -33,7 +33,7 @@ import javax.faces.validator.ValidatorException;
  */
 @ManagedBean
 @ViewScoped
-public class ClienteMainBean implements Serializable {
+public class ClienteMainBean {
 
     @ManagedProperty(value = "#{clienteDao}")
     private ClienteDAO clienteDao;

@@ -12,6 +12,7 @@ import gnu.io.NoSuchPortException;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,28 +39,38 @@ public class PesoThread implements Runnable {
         String parity = null;
         String data = null;
         String stop = null;
-        
-        String csvFilename = "C:\\apps\\valco\\valco\\proyecto\\Planta\\src\\confBascula.csv";
-        CSVReader csvReader = new CSVReader(new FileReader(csvFilename));
-        String[] row = null;
-        while ((row = csvReader.readNext()) != null) {
-            cadenaPedir = row[1];
-            puerto = row[0];
-            baudios = row[2];
-            parity = row[3];
-            data = row[4];
-            stop = row[5];
-        }
+
+        String csvFilename = "C:\\valco\\confBascula.csv";
+        File csvFile = new File(csvFilename);
+        if (csvFile.exists()) {
+            CSVReader csvReader = new CSVReader(new FileReader(csvFilename));
+            String[] row = null;
+            while ((row = csvReader.readNext()) != null) {
+                cadenaPedir = row[1];
+                puerto = row[0];
+                baudios = row[2];
+                parity = row[3];
+                data = row[4];
+                stop = row[5];
+            }
 //...
-        csvReader.close();
-        
+            csvReader.close();
+        } else {
+            cadenaPedir = "P";
+                puerto = "COM1";
+                baudios = "9600";
+                parity = "0";
+                data = "8";
+                stop = "1";
+        }
+
         try {
             portIdentifier = CommPortIdentifier.getPortIdentifier(puerto);
         } catch (NoSuchPortException ex) {
             throw new Exception("No se encontro el puerto especificado en la configuracion");
         }
         if (portIdentifier.isCurrentlyOwned()) {
-             throw new Exception("El puerto de la bascula ya se encuentra en uso");
+            throw new Exception("El puerto de la bascula ya se encuentra en uso");
         } else {
             CommPort commPort = null;
             try {
@@ -84,7 +95,6 @@ public class PesoThread implements Runnable {
             }
         }
     }
-    
 
     public void run() {
         byte[] buffer = new byte[1024];
@@ -126,6 +136,4 @@ public class PesoThread implements Runnable {
         this.out = out;
     }
 
-    
-    
 }

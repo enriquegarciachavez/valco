@@ -687,7 +687,7 @@ WHERE
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="11" isBold="true"/>
 				</textElement>
-				<text><![CDATA[RFC DCV9612126N6]]></text>
+				<text><![CDATA[RFC  DCV9612126N6]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="232" y="29" width="113" height="10"/>

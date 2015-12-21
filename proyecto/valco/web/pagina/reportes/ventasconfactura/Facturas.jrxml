@@ -42,7 +42,7 @@ WHERE
 				<textFieldExpression class="java.lang.String"><![CDATA["DEL "+new SimpleDateFormat("dd/MMM/yyyy").format($P{fecha_inicial})+" AL "+new SimpleDateFormat("dd/MMM/yyyy").format($P{fecha_final})]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="0" y="0" width="115" height="75"/>
+				<reportElement x="0" y="1" width="115" height="75"/>
 				<imageExpression class="java.lang.String"><![CDATA["C:\\Valco\\Imagenes\\logo.jpg"]]></imageExpression>
 			</image>
 		</band>
