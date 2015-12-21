@@ -51,18 +51,18 @@ public class SubfamiliasMainBean {
             familias = familiasDAO.getFamilias();
             subfamilias = subfamiliasDAO.getSubfamilias();
         } catch (Exception ex) {
-            MsgUtility.showErrorMeage("Ocurrió un error al consultar las familias");
+            MsgUtility.showErrorMeage("Ocurrió un error al consultar las subfamilias");
         }
     }
 
     public void actualizarSubfamilia() {
         try {
             if (subfamiliaSeleccionada == null) {
-                throw new Exception("Debe seleccionar una familia para modificar");
+                throw new Exception("Debe seleccionar una subfamilia para modificar");
             }
             subfamiliasDAO.actualizarSubfamilia(subfamiliaSeleccionada);
             subfamiliaSeleccionada = null;
-            MsgUtility.showInfoMeage("La familia se actualizó con éxito");
+            MsgUtility.showInfoMeage("La subfamilia se actualizó con éxito");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
@@ -84,7 +84,7 @@ public class SubfamiliasMainBean {
             subfamiliasDAO.insertarSubfamilia(subfamiliaNueva);
             this.subfamilias.add(subfamiliaNueva);
             subfamiliaNueva = new Subfamilias();
-            MsgUtility.showInfoMeage("La familia se ingresó con éxito");
+            MsgUtility.showInfoMeage("La subfamilia se ingresó con éxito");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
@@ -94,7 +94,7 @@ public class SubfamiliasMainBean {
         try {
             subfamiliasDAO.borrarSubfamilia(subfamiliaSeleccionada);
             this.subfamilias.remove(subfamiliaSeleccionada);
-            MsgUtility.showInfoMeage("La familia se borro con éxito");
+            MsgUtility.showInfoMeage("La subfamilia se borro con éxito");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }

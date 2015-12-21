@@ -70,6 +70,8 @@ public class TipoProductoMainBean {
         try {
             tipoNuevo.setEstatus("ACTIVO");
             tipoProductoDao.insertarTipoProducto(tipoNuevo);
+            this.tipoProducto.add(tipoNuevo);
+            tipoNuevo = new TipoProducto();
            MsgUtility.showInfoMeage("El tipo producto se insertó con éxito");
            
         } catch (Exception ex) {
@@ -81,6 +83,7 @@ public class TipoProductoMainBean {
     public void borrarTipoProducto(){
         try {
             tipoProductoDao.borrarTipoProducto(tipoSeleccionado);
+            this.tipoProducto.remove(tipoSeleccionado);
             MsgUtility.showInfoMeage("El tipo producto se borró con éxito");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());

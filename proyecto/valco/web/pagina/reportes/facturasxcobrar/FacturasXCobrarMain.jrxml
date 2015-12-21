@@ -8,7 +8,7 @@
 	<parameter name="fechaInicial" class="java.util.Date"/>
 	<parameter name="fechaFinal" class="java.util.Date"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["C:\\apps\\valco\\producto\\reportes\\facturas x cobrar\\"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["C:\\apps\\valco\\producto\\reportes\\facturasxcobrar\\"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT DISTINCT
@@ -40,7 +40,7 @@ AND FACTURAS.`FECHA` BETWEEN   $P{fechaInicial} AND $P{fechaFinal}]]>
 		<band height="79">
 			<image>
 				<reportElement x="0" y="0" width="115" height="75"/>
-				<imageExpression class="java.lang.String"><![CDATA["C:\\apps\\valco\\producto\\logo.png"]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA["C:\\Valco\\Imagenes\\logo.jpg"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="144" y="0" width="287" height="20"/>

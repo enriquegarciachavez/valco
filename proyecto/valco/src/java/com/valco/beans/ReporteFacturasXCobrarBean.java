@@ -40,7 +40,7 @@ public class ReporteFacturasXCobrarBean{
     public void mostrarXls(){
         try {
             Faces.redirect("/valco/ReportesXls?reporte=%s&clienteInicialInt=%s&clienteFinalInt=%s&fechaInicialDate=%s&fechaFinalDate=%s", 
-                    "//pagina//reportes//facturas x cobrar//FacturasXCobrarMain.jrxml"
+                    "//pagina//reportes//facturasxcobrar//FacturasXCobrarMain.jrxml"
                     ,clienteInicial,
                     clienteFinal,
                     fechaInicial.toString(),
@@ -52,7 +52,7 @@ public class ReporteFacturasXCobrarBean{
     
     public void mostrarPdf(){
         String url = "/valco/ReportesPdf?reporte="
-                + "//pagina//reportes//facturas x cobrar//FacturasXCobrarMain.jrxml"
+                + "//pagina//reportes//facturasxcobrar//FacturasXCobrarMain.jrxml"
                 + "&clienteInicialInt="+clienteInicial
                 + "&clienteFinalInt="+clienteFinal
                 + "&fechaInicialDate="+fechaInicial.toString()

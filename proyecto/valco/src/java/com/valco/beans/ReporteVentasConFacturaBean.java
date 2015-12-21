@@ -32,7 +32,7 @@ public class ReporteVentasConFacturaBean {
     public void mostrarXls(){
         try {
             Faces.redirect("/valco/ReportesXls?reporte=%s&fecha_inicialDate=%s&fecha_finalDate=%s",
-                    "//pagina//reportes//ventas con factura//Facturas.jrxml",
+                    "//pagina//reportes//ventasconfactura//Facturas.jrxml",
                     fechaInicial.toString(),
                     fechaFinal.toString());
         } catch (IOException ex) {
@@ -42,7 +42,7 @@ public class ReporteVentasConFacturaBean {
     
     public void mostrarPdf(){
         String url = "/valco/ReportesPdf?reporte="
-                + "//pagina//reportes//ventas con factura//Facturas.jrxml"
+                + "//pagina//reportes//ventasconfactura//Facturas.jrxml"
                 + "&fecha_inicialDate="+fechaInicial.toString()
                 + "&fecha_finalDate="+fechaFinal.toString();
         

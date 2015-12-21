@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="NotasCredito" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.5394743546921197"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="185"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="FECHA_INICIO" class="java.util.Date"/>
 	<parameter name="FECHA_FIN" class="java.util.Date"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
@@ -53,7 +53,7 @@ WHERE FECHA BETWEEN $P{FECHA_INICIO} AND $P{FECHA_FIN}]]>
 			</textField>
 			<image>
 				<reportElement x="11" y="4" width="115" height="75"/>
-				<imageExpression class="java.lang.String"><![CDATA["C:\\apps\\valco\\proyecto\\Planta\\src\\Reportes\\logo.jpg"]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA["C:\\valco\\Imagenes\\logo.jpg"]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement x="472" y="4" width="100" height="20"/>

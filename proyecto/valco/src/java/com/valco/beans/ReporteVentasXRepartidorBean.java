@@ -51,7 +51,7 @@ private RepartidoresDAO repartidoresDao;
     public void mostrarXls(){
         try {
             Faces.redirect("/valco/ReportesXls?reporte=%s&fechaInicialDate=%s&fechaFinalDate=%s&codigoRepartidorInt=%s",
-                    "//pagina//reportes//ventas por repartidor//VentasXRepartidor.jrxml",
+                    "//pagina//reportes//ventasporrepartidor//VentasXRepartidor.jrxml",
                     fechaInicial.toString(),
                     fechaFinal.toString(),
                     repartidorSeleccionado.getCodigo().toString());
@@ -62,7 +62,7 @@ private RepartidoresDAO repartidoresDao;
     
     public void mostrarPdf(){
         String url = "/valco/ReportesPdf?reporte="
-                + "//pagina//reportes//ventas por repartidor//VentasXRepartidor.jrxml"
+                + "//pagina//reportes//ventasporrepartidor//VentasXRepartidor.jrxml"
                 + "&fechaInicialDate="+fechaInicial.toString()
                 + "&fechaFinalDate="+fechaFinal.toString()
                 + "&codigoRepartidorInt="+repartidorSeleccionado.getCodigo();

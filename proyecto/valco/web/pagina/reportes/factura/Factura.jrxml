@@ -1,383 +1,383 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Factura" language="groovy" pageWidth="612" pageHeight="792" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e63e840a-d227-424b-845a-eddd775cec3f">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Factura" language="groovy" pageWidth="612" pageHeight="792" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="334"/>
+	<property name="ireport.y" value="0"/>
 	<import value="com.keepdynamic.barcode.generator.jasperreports.BarcodeFactory"/>
-	<style name="table">
+	<style name="table" lineSpacing="Single">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table_TH" mode="Opaque" backcolor="#908181">
+	<style name="table_TH" mode="Opaque" backcolor="#908181" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table_CH" mode="Opaque" backcolor="#FFE6E6">
+	<style name="table_CH" mode="Opaque" backcolor="#FFE6E6" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 		<conditionalStyle>
 			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
-			<style backcolor="#FFF8F8"/>
+			<style backcolor="#FFF8F8" lineSpacing="Single"/>
 		</conditionalStyle>
 	</style>
-	<style name="table 1">
+	<style name="table 1" lineSpacing="Single">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 1_TH" mode="Opaque" backcolor="#DEB887">
+	<style name="table 1_TH" mode="Opaque" backcolor="#DEB887" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 1_CH" mode="Opaque" backcolor="#FFE3BF">
+	<style name="table 1_CH" mode="Opaque" backcolor="#FFE3BF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 2">
+	<style name="table 2" lineSpacing="Single">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 2_TH" mode="Opaque" backcolor="#DEB887">
+	<style name="table 2_TH" mode="Opaque" backcolor="#DEB887" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 2_CH" mode="Opaque" backcolor="#FFE3BF">
+	<style name="table 2_CH" mode="Opaque" backcolor="#FFE3BF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 		<conditionalStyle>
 			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
-			<style backcolor="#FFF8EF"/>
+			<style backcolor="#FFF8EF" lineSpacing="Single"/>
 		</conditionalStyle>
 	</style>
-	<style name="table 3">
+	<style name="table 3" lineSpacing="Single">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 3_TH" mode="Opaque" backcolor="#C89C64">
+	<style name="table 3_TH" mode="Opaque" backcolor="#C89C64" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 3_CH" mode="Opaque" backcolor="#E6DBCF">
+	<style name="table 3_CH" mode="Opaque" backcolor="#E6DBCF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+	<style name="table 3_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 		<conditionalStyle>
 			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
-			<style backcolor="#F8F6F3"/>
+			<style backcolor="#F8F6F3" lineSpacing="Single"/>
 		</conditionalStyle>
 	</style>
-	<style name="table 4">
+	<style name="table 4" lineSpacing="Single">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 4_TH" mode="Opaque" backcolor="#C89C64">
+	<style name="table 4_TH" mode="Opaque" backcolor="#C89C64" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 4_CH" mode="Opaque" backcolor="#E6DBCF">
+	<style name="table 4_CH" mode="Opaque" backcolor="#E6DBCF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 4_TD" mode="Opaque" backcolor="#FFFFFF">
+	<style name="table 4_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 		<conditionalStyle>
 			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
-			<style backcolor="#F8F6F3"/>
+			<style backcolor="#F8F6F3" lineSpacing="Single"/>
 		</conditionalStyle>
 	</style>
-	<style name="table 5">
+	<style name="table 5" lineSpacing="Single">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 5_TH" mode="Opaque" backcolor="#F0F8FF">
+	<style name="table 5_TH" mode="Opaque" backcolor="#F0F8FF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 5_CH" mode="Opaque" backcolor="#BFE1FF">
+	<style name="table 5_CH" mode="Opaque" backcolor="#BFE1FF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 5_TD" mode="Opaque" backcolor="#FFFFFF">
+	<style name="table 5_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 6">
+	<style name="table 6" lineSpacing="Single">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 6_TH" mode="Opaque" backcolor="#F0F8FF">
+	<style name="table 6_TH" mode="Opaque" backcolor="#F0F8FF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 6_CH" mode="Opaque" backcolor="#BFE1FF">
+	<style name="table 6_CH" mode="Opaque" backcolor="#BFE1FF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 6_TD" mode="Opaque" backcolor="#FFFFFF">
+	<style name="table 6_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 7">
+	<style name="table 7" lineSpacing="Single">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 7_TH" mode="Opaque" backcolor="#F0F8FF">
+	<style name="table 7_TH" mode="Opaque" backcolor="#F0F8FF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 7_CH" mode="Opaque" backcolor="#BFE1FF">
+	<style name="table 7_CH" mode="Opaque" backcolor="#BFE1FF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 7_TD" mode="Opaque" backcolor="#FFFFFF">
+	<style name="table 7_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 8">
+	<style name="table 8" lineSpacing="Single">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 8_TH" mode="Opaque" backcolor="#C89C64">
+	<style name="table 8_TH" mode="Opaque" backcolor="#C89C64" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 8_CH" mode="Opaque" backcolor="#E6DBCF">
+	<style name="table 8_CH" mode="Opaque" backcolor="#E6DBCF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 8_TD" mode="Opaque" backcolor="#FFFFFF">
+	<style name="table 8_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 		<conditionalStyle>
 			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
-			<style backcolor="#F8F6F3"/>
+			<style backcolor="#F8F6F3" lineSpacing="Single"/>
 		</conditionalStyle>
 	</style>
-	<style name="table 9">
+	<style name="table 9" lineSpacing="Single">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 9_TH" mode="Opaque" backcolor="#C89C64">
+	<style name="table 9_TH" mode="Opaque" backcolor="#C89C64" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 9_CH" mode="Opaque" backcolor="#E6DBCF">
+	<style name="table 9_CH" mode="Opaque" backcolor="#E6DBCF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 9_TD" mode="Opaque" backcolor="#FFFFFF">
+	<style name="table 9_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 		<conditionalStyle>
 			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
-			<style backcolor="#F8F6F3"/>
+			<style backcolor="#F8F6F3" lineSpacing="Single"/>
 		</conditionalStyle>
 	</style>
-	<style name="table 10">
+	<style name="table 10" lineSpacing="Single">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 10_TH" mode="Opaque" backcolor="#C89C64">
+	<style name="table 10_TH" mode="Opaque" backcolor="#C89C64" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 10_CH" mode="Opaque" backcolor="#E6DBCF">
+	<style name="table 10_CH" mode="Opaque" backcolor="#E6DBCF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 10_TD" mode="Opaque" backcolor="#FFFFFF">
+	<style name="table 10_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 		<conditionalStyle>
 			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
-			<style backcolor="#F8F6F3"/>
+			<style backcolor="#F8F6F3" lineSpacing="Single"/>
 		</conditionalStyle>
 	</style>
-	<style name="table 11">
+	<style name="table 11" lineSpacing="Single">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 11_TH" mode="Opaque" backcolor="#C89C64">
+	<style name="table 11_TH" mode="Opaque" backcolor="#C89C64" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 11_CH" mode="Opaque" backcolor="#E6DBCF">
+	<style name="table 11_CH" mode="Opaque" backcolor="#E6DBCF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 11_TD" mode="Opaque" backcolor="#FFFFFF">
+	<style name="table 11_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 		<conditionalStyle>
 			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
-			<style backcolor="#F8F6F3"/>
+			<style backcolor="#F8F6F3" lineSpacing="Single"/>
 		</conditionalStyle>
 	</style>
-	<style name="table 12">
+	<style name="table 12" lineSpacing="Single">
 		<box>
 			<topPen lineWidth="1.0" lineColor="#000000"/>
 			<bottomPen lineWidth="1.0" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 12_TH" mode="Opaque" backcolor="#F0F8FF">
+	<style name="table 12_TH" mode="Opaque" backcolor="#F0F8FF" lineSpacing="Single">
 		<box>
 			<topPen lineWidth="0.5" lineColor="#000000"/>
 			<bottomPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 12_CH" mode="Opaque" backcolor="#BFE1FF">
+	<style name="table 12_CH" mode="Opaque" backcolor="#BFE1FF" lineSpacing="Single">
 		<box>
 			<topPen lineWidth="0.5" lineColor="#000000"/>
 			<bottomPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 12_TD" mode="Opaque" backcolor="#FFFFFF">
-		<box>
-			<topPen lineWidth="0.5" lineColor="#000000"/>
-			<bottomPen lineWidth="0.5" lineColor="#000000"/>
-		</box>
-		<conditionalStyle>
-			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
-			<style backcolor="#EFF7FF"/>
-		</conditionalStyle>
-	</style>
-	<style name="table 13">
-		<box>
-			<topPen lineWidth="1.0" lineColor="#000000"/>
-			<bottomPen lineWidth="1.0" lineColor="#000000"/>
-		</box>
-	</style>
-	<style name="table 13_TH" mode="Opaque" backcolor="#A68E53">
-		<box>
-			<topPen lineWidth="0.5" lineColor="#000000"/>
-			<bottomPen lineWidth="0.5" lineColor="#000000"/>
-		</box>
-	</style>
-	<style name="table 13_CH" mode="Opaque" backcolor="#E6DFCF">
-		<box>
-			<topPen lineWidth="0.5" lineColor="#000000"/>
-			<bottomPen lineWidth="0.5" lineColor="#000000"/>
-		</box>
-	</style>
-	<style name="table 13_TD" mode="Opaque" backcolor="#FFFFFF">
-		<box>
-			<topPen lineWidth="0.5" lineColor="#000000"/>
-			<bottomPen lineWidth="0.5" lineColor="#000000"/>
-		</box>
-	</style>
-	<style name="table 14">
-		<box>
-			<topPen lineWidth="1.0" lineColor="#000000"/>
-			<bottomPen lineWidth="1.0" lineColor="#000000"/>
-		</box>
-	</style>
-	<style name="table 14_TH" mode="Opaque" backcolor="#C89C64">
-		<box>
-			<topPen lineWidth="0.5" lineColor="#000000"/>
-			<bottomPen lineWidth="0.5" lineColor="#000000"/>
-		</box>
-	</style>
-	<style name="table 14_CH" mode="Opaque" backcolor="#E6DBCF">
-		<box>
-			<topPen lineWidth="0.5" lineColor="#000000"/>
-			<bottomPen lineWidth="0.5" lineColor="#000000"/>
-		</box>
-	</style>
-	<style name="table 14_TD" mode="Opaque" backcolor="#FFFFFF">
+	<style name="table 12_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
 		<box>
 			<topPen lineWidth="0.5" lineColor="#000000"/>
 			<bottomPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 		<conditionalStyle>
 			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
-			<style backcolor="#F8F6F3"/>
+			<style backcolor="#EFF7FF" lineSpacing="Single"/>
 		</conditionalStyle>
 	</style>
-	<style name="table 15">
+	<style name="table 13" lineSpacing="Single">
+		<box>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 13_TH" mode="Opaque" backcolor="#A68E53" lineSpacing="Single">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 13_CH" mode="Opaque" backcolor="#E6DFCF" lineSpacing="Single">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 13_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 14" lineSpacing="Single">
+		<box>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 14_TH" mode="Opaque" backcolor="#C89C64" lineSpacing="Single">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 14_CH" mode="Opaque" backcolor="#E6DBCF" lineSpacing="Single">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 14_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#F8F6F3" lineSpacing="Single"/>
+		</conditionalStyle>
+	</style>
+	<style name="table 15" lineSpacing="Single">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 15_TH" mode="Opaque" backcolor="#C89C64">
+	<style name="table 15_TH" mode="Opaque" backcolor="#C89C64" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 15_CH" mode="Opaque" backcolor="#E6DBCF">
+	<style name="table 15_CH" mode="Opaque" backcolor="#E6DBCF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="table 15_TD" mode="Opaque" backcolor="#FFFFFF">
+	<style name="table 15_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<subDataset name="Table Dataset 1" uuid="8ab6cad8-773a-4fc9-aa13-71a013ce09e0"/>
-	<subDataset name="Tabla1Dataset" uuid="316f5623-bb21-476b-b440-9e24f252a289">
+	<subDataset name="Table Dataset 1"/>
+	<subDataset name="Tabla1Dataset">
 		<parameter name="FacturaId" class="java.lang.Integer"/>
 		<queryString>
 			<![CDATA[SELECT
@@ -417,7 +417,7 @@ WHERE FACTURAS.`CODIGO` = $P{FacturaId}]]>
 		<field name="FACTURAS_NO_SERIE_CERT_SAT" class="java.lang.String"/>
 		<field name="FACTURAS_NO_SEIE_CERT_EMISOR" class="java.lang.String"/>
 	</subDataset>
-	<subDataset name="Tabla2 Dataset" uuid="dd367c80-5f37-4ca4-9c42-b8a9a408613c">
+	<subDataset name="Tabla2 Dataset">
 		<parameter name="FacturaId" class="java.lang.Integer"/>
 		<queryString>
 			<![CDATA[SELECT
@@ -432,7 +432,7 @@ WHERE FACTURAS.`CODIGO` = $P{FacturaId}]]>
 		<field name="FACTURAS_LUGAR" class="java.lang.String"/>
 		<field name="FACTURAS_FECHA" class="java.sql.Timestamp"/>
 	</subDataset>
-	<subDataset name="Tabla3 Dataset" uuid="92e15ed8-0a4b-448a-a013-98ab49a69812">
+	<subDataset name="Tabla3 Dataset">
 		<parameter name="FacturaId" class="java.lang.Integer"/>
 		<queryString>
 			<![CDATA[SELECT
@@ -472,7 +472,7 @@ WHERE FACTURAS.`CODIGO` = $P{FacturaId}]]>
 		<field name="CLIENTES_PAIS" class="java.lang.String"/>
 		<field name="CLIENTES_RFC" class="java.lang.String"/>
 	</subDataset>
-	<subDataset name="Tabla4 DataSource" uuid="ab9d5227-be5f-49ab-a35e-e885daf005ea">
+	<subDataset name="Tabla4 DataSource">
 		<parameter name="FacturaId" class="java.lang.Integer"/>
 		<queryString>
 			<![CDATA[SELECT
@@ -497,7 +497,7 @@ WHERE FACTURAS.`CODIGO` = $P{FacturaId}]]>
 		<field name="FACTURAS_BANCO" class="java.lang.String"/>
 		<field name="FACTURAS_CONDICION_PAGO" class="java.lang.String"/>
 	</subDataset>
-	<subDataset name="TablaConceptosDataSet" uuid="3871a38c-0035-4cb3-abc2-83037d1c7377">
+	<subDataset name="TablaConceptosDataSet">
 		<queryString language="SQL">
 			<![CDATA[SELECT
      CONCEPTOS_FACTURA.`CODIGO` AS CONCEPTOS_FACTURA_CODIGO,
@@ -520,7 +520,7 @@ FROM
 		<field name="CONCEPTOS_FACTURA_IMPORTE_TOTAL" class="java.math.BigDecimal"/>
 		<field name="CONCEPTOS_FACTURA_FACTURAS_CODIGO" class="java.lang.Integer"/>
 	</subDataset>
-	<subDataset name="Tabla conceptos Dataset" uuid="742b4e99-1de0-402f-86c0-9b8430786be2">
+	<subDataset name="Tabla conceptos Dataset">
 		<queryString language="SQL">
 			<![CDATA[SELECT
      CONCEPTOS_FACTURA.`CODIGO` AS CONCEPTOS_FACTURA_CODIGO,
@@ -543,8 +543,8 @@ FROM
 		<field name="CONCEPTOS_FACTURA_IMPORTE_TOTAL" class="java.math.BigDecimal"/>
 		<field name="CONCEPTOS_FACTURA_FACTURAS_CODIGO" class="java.lang.Integer"/>
 	</subDataset>
-	<subDataset name="dataset1" uuid="2be361bd-cbde-4522-a014-8919a1383542"/>
-	<subDataset name="TotalesDataSet" uuid="d5aa0354-65b0-40ab-a80b-26626e8c2bb5">
+	<subDataset name="dataset1"/>
+	<subDataset name="TotalesDataSet">
 		<parameter name="FacturasId" class="java.lang.Integer"/>
 		<queryString>
 			<![CDATA[SELECT
@@ -563,7 +563,7 @@ WHERE FACTURAS.`CODIGO` = $P{FacturasId}]]>
 	</subDataset>
 	<parameter name="FacturaId" class="java.lang.Integer"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["C:\\apps\\valco\\valco\\proyecto\\valco\\web\\pagina\\reportes\\factura\\"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["C:\\apps\\valco\\proyecto\\valco\\web\\pagina\\reportes\\factura\\"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="isCopia" class="java.lang.Boolean"/>
 	<queryString>
@@ -629,565 +629,152 @@ WHERE
 	<field name="FACTURAS_NOTAS_DE_VENTA_CODIGO" class="java.lang.Integer"/>
 	<field name="CLIENTES_RFC" class="java.lang.String"/>
 	<background>
-		<band splitType="Stretch"/>
+		<band/>
 	</background>
 	<title>
-		<band height="695" splitType="Stretch">
+		<band height="695">
 			<rectangle>
-				<reportElement x="0" y="287" width="26" height="183" uuid="83a0803c-8d61-450a-8e93-e4f677647b13"/>
+				<reportElement x="0" y="287" width="26" height="183"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="442" y="287" width="135" height="183" uuid="40b622e2-4406-4ce9-ae14-fa0666bc61bd"/>
+				<reportElement x="442" y="287" width="135" height="183"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="370" y="287" width="72" height="183" uuid="0f6a486f-5b09-4a1f-9583-07d39d38ff88"/>
+				<reportElement x="370" y="287" width="72" height="183"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="331" y="287" width="39" height="183" uuid="dba9c994-966a-4199-8e99-de879f72356b"/>
+				<reportElement x="331" y="287" width="39" height="183"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="112" y="287" width="219" height="183" uuid="abb96d61-cc9c-4ffe-afa7-1b243c37fa91"/>
+				<reportElement x="112" y="287" width="219" height="183"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="71" y="287" width="41" height="183" uuid="1579da1d-46b4-4d75-ba7f-a99efb6cabc9"/>
+				<reportElement x="71" y="287" width="41" height="183"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="26" y="287" width="45" height="183" uuid="09026666-e7d4-412e-bd4b-d2c5efdf7457"/>
+				<reportElement x="26" y="287" width="45" height="183"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="442" y="274" width="135" height="13" uuid="32da77da-cc4b-418b-b663-805597e4f09f"/>
+				<reportElement x="442" y="274" width="135" height="13"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="370" y="274" width="72" height="13" uuid="ea7b291e-5dd1-4a81-82f7-d279d9dcd045"/>
+				<reportElement x="370" y="274" width="72" height="13"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="331" y="274" width="39" height="13" uuid="980a046b-fbf5-4c44-b1fd-370345723385"/>
+				<reportElement x="331" y="274" width="39" height="13"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="112" y="274" width="219" height="13" uuid="ef8b77b9-a264-4017-9a5e-ab704633c623"/>
+				<reportElement x="112" y="274" width="219" height="13"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="71" y="274" width="41" height="13" uuid="147394bb-5e5e-4544-84fa-79df605ef8c0"/>
+				<reportElement x="71" y="274" width="41" height="13"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="0" y="274" width="26" height="13" uuid="353a5de1-f1f9-4e39-a4d4-478195080a52"/>
+				<reportElement x="0" y="274" width="26" height="13"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="26" y="274" width="45" height="13" uuid="cb1e5528-1023-4eb9-b797-292ff8671b8f"/>
+				<reportElement x="26" y="274" width="45" height="13"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="144" y="0" width="292" height="17" uuid="5c8bb727-2310-458f-b80f-8b053ca8a842"/>
-				<textElement textAlignment="Center" verticalAlignment="Top">
+				<reportElement x="144" y="0" width="292" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
 					<font fontName="SansSerif" size="11" isBold="true" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[DISTRIBUIDORA DE CARNES VALCO S.A. DE C.V.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="232" y="12" width="113" height="17" uuid="ef64929e-bd55-4e4d-9d96-c414dc5558d6"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<reportElement x="232" y="12" width="113" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[RFC DCV9612126N6]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="232" y="29" width="113" height="10" uuid="63704399-ba47-4ece-86bd-807690215022"/>
-				<textElement textAlignment="Center">
+				<reportElement x="232" y="29" width="113" height="10"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
 					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[CALLE PARRAL No. 246]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="204" y="39" width="170" height="10" uuid="3172dfc0-8325-4986-a1a0-a78f9c4b8157"/>
-				<textElement textAlignment="Center">
+				<reportElement x="204" y="39" width="170" height="10"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
 					<font fontName="Arial" size="8" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[COLONIA REVOLUCION C.P. 31110]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="204" y="49" width="170" height="17" uuid="ed12e551-4946-4b0e-8714-d794bc2c12a6"/>
-				<textElement textAlignment="Center">
+				<reportElement x="204" y="49" width="170" height="17"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
 					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[CHIHUAHUA, CHIHUAHUA, MÉXICO]]></text>
 			</staticText>
-			<componentElement>
-				<reportElement key="table 3" style="table 3" x="453" y="-11" width="90" height="50" uuid="598e385e-6f52-4b9b-97be-2dfb84516905"/>
-				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="Tabla1Dataset" uuid="2acbf5dc-5519-4a33-9e03-7964e104265e">
-						<datasetParameter name="FacturaId">
-							<datasetParameterExpression><![CDATA[$P{FacturaId}]]></datasetParameterExpression>
-						</datasetParameter>
-						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					</datasetRun>
-					<jr:column width="121" uuid="8162e1cd-9f94-4de8-9803-5be82a0bf021">
-						<jr:tableHeader style="table 3_TH" height="14" rowSpan="1">
-							<staticText>
-								<reportElement x="0" y="0" width="121" height="13" forecolor="#FFFFFF" uuid="9e99dd19-1ddf-4df3-b973-dcda5b084490"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font size="6" isBold="true"/>
-								</textElement>
-								<text><![CDATA[Comprobante: Factura]]></text>
-							</staticText>
-						</jr:tableHeader>
-						<jr:detailCell style="table 3_TD" height="119" rowSpan="1">
-							<textField>
-								<reportElement x="0" y="0" width="121" height="11" uuid="8f67736f-f00a-416f-b662-639b8df833dd"/>
-								<textElement textAlignment="Center">
-									<font size="6"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{FACTURAS_FOLIO}]]></textFieldExpression>
-							</textField>
-							<staticText>
-								<reportElement mode="Opaque" x="0" y="11" width="121" height="11" backcolor="#F5D9B3" uuid="6f70c9f7-4e9c-45fa-926d-e8cd4237a8dd"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font size="6" isBold="true"/>
-								</textElement>
-								<text><![CDATA[Folio Fiscal]]></text>
-							</staticText>
-							<textField pattern="" isBlankWhenNull="false">
-								<reportElement mode="Transparent" x="0" y="22" width="121" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="43c0764a-2a85-47f7-b83c-331162e5e8a0"/>
-								<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
-									<font fontName="SansSerif" size="6" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{FACTURAS_FOLIO_FISCAL}]]></textFieldExpression>
-							</textField>
-							<staticText>
-								<reportElement mode="Opaque" x="0" y="33" width="121" height="11" forecolor="#000000" backcolor="#F5D9B3" uuid="d4276777-2b3a-4ba8-87bf-4e8098702ca0"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-									<font fontName="SansSerif" size="6" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<text><![CDATA[Fecha y Hora de Certificación]]></text>
-							</staticText>
-							<textField pattern="" isBlankWhenNull="false">
-								<reportElement mode="Transparent" x="0" y="44" width="121" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="406da8fb-2a69-403c-8d68-3504f54317ca"/>
-								<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
-									<font fontName="SansSerif" size="6" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{FACTURAS_FECHA_TIMBRADO}]]></textFieldExpression>
-							</textField>
-							<staticText>
-								<reportElement mode="Opaque" x="0" y="55" width="121" height="11" forecolor="#000000" backcolor="#F5D9B3" uuid="667e2068-2543-4a47-a5a6-9e96b4560245"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-									<font fontName="SansSerif" size="6" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<text><![CDATA[No. de Serie del Certificado del SAT]]></text>
-							</staticText>
-							<textField pattern="" isBlankWhenNull="false">
-								<reportElement mode="Transparent" x="0" y="66" width="121" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="2c8e3a3f-3abf-45ae-8db5-6b07a174d256"/>
-								<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
-									<font fontName="SansSerif" size="6" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{FACTURAS_NO_SERIE_CERT_SAT}]]></textFieldExpression>
-							</textField>
-							<staticText>
-								<reportElement mode="Opaque" x="0" y="77" width="121" height="11" forecolor="#000000" backcolor="#F5D9B3" uuid="877b518f-feb8-48c4-87f9-395cc87ddf43"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-									<font fontName="SansSerif" size="6" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<text><![CDATA[No. de Serie del Certificado Emisor]]></text>
-							</staticText>
-							<textField pattern="" isBlankWhenNull="false">
-								<reportElement mode="Transparent" x="0" y="88" width="121" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="f389299b-6d62-42cd-b883-cf8740cff56d"/>
-								<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
-									<font fontName="SansSerif" size="6" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{FACTURAS_NO_SEIE_CERT_EMISOR}]]></textFieldExpression>
-							</textField>
-							<componentElement>
-								<reportElement x="0" y="99" width="121" height="20" uuid="efd2d995-7151-410e-8daa-f0dc1f32d4d0"/>
-								<jr:barbecue type="Code128" drawText="false" checksumRequired="false" barHeight="50">
-									<jr:codeExpression><![CDATA["00001000000203163383"]]></jr:codeExpression>
-								</jr:barbecue>
-							</componentElement>
-						</jr:detailCell>
-					</jr:column>
-				</jr:table>
-			</componentElement>
 			<image>
-				<reportElement x="0" y="-11" width="144" height="77" uuid="77d92a5c-8443-4aa8-8880-1a3339712118"/>
-				<imageExpression><![CDATA["C:\\apps\\valco\\producto\\logo.jpg"]]></imageExpression>
+				<reportElement x="0" y="1" width="144" height="77"/>
+				<imageExpression class="java.lang.String"><![CDATA["C:\\valco\\Imagenes\\logo.jpg"]]></imageExpression>
 			</image>
-			<componentElement>
-				<reportElement key="table 8" style="table 8" x="0" y="77" width="360" height="26" uuid="afc26070-7626-48d6-be40-5f4ee8c2f33e"/>
-				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="Tabla2 Dataset" uuid="bd91bc7f-a26c-4548-aa01-6eb77b9a00ca">
-						<datasetParameter name="FacturaId">
-							<datasetParameterExpression><![CDATA[$P{FacturaId}]]></datasetParameterExpression>
-						</datasetParameter>
-						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					</datasetRun>
-					<jr:column width="189" uuid="592ea6e0-3a3e-47b9-b0b3-8cfef4dc075d">
-						<jr:tableHeader style="table 8_TH" height="10" rowSpan="1">
-							<staticText>
-								<reportElement x="0" y="0" width="189" height="10" forecolor="#FFFFFF" uuid="c09b6d38-88ba-4afb-882c-3a632bfe800f"/>
-								<textElement textAlignment="Center">
-									<font size="6" isBold="true"/>
-								</textElement>
-								<text><![CDATA[Lugar y fecha de elaboración]]></text>
-							</staticText>
-						</jr:tableHeader>
-						<jr:detailCell style="table 8_TD" height="11" rowSpan="1">
-							<textField>
-								<reportElement x="0" y="0" width="189" height="11" uuid="cfb6c500-f96d-4b1c-b4b9-2c9a15297aaf"/>
-								<textElement textAlignment="Center">
-									<font size="6"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{FACTURAS_LUGAR}+ " A: "+$F{FACTURAS_FECHA}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-				</jr:table>
-			</componentElement>
-			<componentElement>
-				<reportElement key="table 9" style="table 9" x="0" y="144" width="360" height="50" uuid="d1b877ce-2432-429c-b169-b3b43ccd6bcf"/>
-				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="Tabla3 Dataset" uuid="ea31daa9-11e9-4cde-a640-4731b9ac642c">
-						<datasetParameter name="FacturaId">
-							<datasetParameterExpression><![CDATA[$P{FacturaId}]]></datasetParameterExpression>
-						</datasetParameter>
-						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					</datasetRun>
-					<jr:column width="434" uuid="7e3b81c2-b607-48c8-ad58-243cd6587f67">
-						<jr:tableHeader style="table 9_TH" height="22" rowSpan="1">
-							<staticText>
-								<reportElement x="0" y="0" width="416" height="19" uuid="9becc527-5c2a-4a30-b979-9e93f75cc94d"/>
-								<textElement textAlignment="Center">
-									<font size="14" isBold="true"/>
-								</textElement>
-								<text><![CDATA[Vendido A:]]></text>
-							</staticText>
-						</jr:tableHeader>
-						<jr:detailCell style="table 9_TD" height="55" rowSpan="1">
-							<textField>
-								<reportElement x="10" y="0" width="424" height="13" uuid="4aebb2d3-36b2-4aec-8826-127dfd34d8e8"/>
-								<textElement>
-									<font size="10" isBold="true"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{CLIENTES_RAZON_SOCIAL}]]></textFieldExpression>
-							</textField>
-							<textField>
-								<reportElement x="10" y="13" width="406" height="11" uuid="c5d8e8cf-c14a-4ade-b812-7a5a091381c3"/>
-								<textElement>
-									<font size="8"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{CLIENTES_RFC}]]></textFieldExpression>
-							</textField>
-							<textField pattern="" isBlankWhenNull="false">
-								<reportElement mode="Transparent" x="10" y="22" width="406" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="bcab60bd-deeb-42e0-a52b-a3581676c402"/>
-								<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
-									<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{CLIENTES_DIRECCION}]]></textFieldExpression>
-							</textField>
-							<textField pattern="" isBlankWhenNull="false">
-								<reportElement mode="Transparent" x="10" y="33" width="406" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="538e57fd-2f6f-4aab-a266-68a670f75e44"/>
-								<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
-									<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{CLIENTES_COLONIA} +" C.P. "+$F{CLIENTES_CODIGO_POSTAL}]]></textFieldExpression>
-							</textField>
-							<textField pattern="" isBlankWhenNull="false">
-								<reportElement mode="Transparent" x="10" y="44" width="406" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="358aff6a-5264-45b1-8905-3f113694beec"/>
-								<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
-									<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{CLIENTES_CIUDAD}+","+$F{CLIENTES_ESTADO}+","+$F{CLIENTES_PAIS}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-				</jr:table>
-			</componentElement>
-			<componentElement>
-				<reportElement key="table 10" style="table 10" x="0" y="237" width="360" height="50" uuid="89c40209-fb92-48d2-ab65-ed8a3e3ce74d"/>
-				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="Tabla4 DataSource" uuid="d0e64435-3d1a-4607-b0cf-e8ab2bbbc58c">
-						<datasetParameter name="FacturaId">
-							<datasetParameterExpression><![CDATA[$P{FacturaId}]]></datasetParameterExpression>
-						</datasetParameter>
-						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					</datasetRun>
-					<jr:column width="81" uuid="f16f4a72-a826-426e-9833-22e0eff85a30">
-						<jr:tableHeader style="table 10_TH" height="11" rowSpan="1">
-							<staticText>
-								<reportElement x="0" y="0" width="81" height="11" uuid="855dd141-a00a-4853-aeb6-f18f5fd406ef"/>
-								<textElement textAlignment="Center">
-									<font size="7"/>
-								</textElement>
-								<text><![CDATA[FECHA FACTURA]]></text>
-							</staticText>
-						</jr:tableHeader>
-						<jr:detailCell style="table 10_TD" height="15" rowSpan="1">
-							<textField>
-								<reportElement x="0" y="0" width="81" height="15" uuid="3bc9e059-d171-4b4a-a8dd-3e24d4ef8098"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font size="7"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{FACTURAS_FECHA}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="170" uuid="458cc2d1-8358-497a-bd01-67ffff72daec">
-						<jr:tableHeader style="table 10_TH" height="11" rowSpan="1">
-							<staticText>
-								<reportElement mode="Transparent" x="0" y="0" width="170" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="bcca946b-6c3f-423a-8deb-19bdf5389c8a"/>
-								<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
-									<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<text><![CDATA[MÉTODO DE PAGO]]></text>
-							</staticText>
-						</jr:tableHeader>
-						<jr:detailCell style="table 10_TD" height="15" rowSpan="1">
-							<textField pattern="" isBlankWhenNull="false">
-								<reportElement mode="Transparent" x="0" y="0" width="170" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="3f26ee34-fd6d-43ed-a419-9440a53e334e"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-									<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{FACTURAS_FORMA_PAGO}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="68" uuid="79481471-b7d9-4421-ae3a-b446e34dad02">
-						<jr:tableHeader style="table 10_TH" height="11" rowSpan="1">
-							<staticText>
-								<reportElement mode="Transparent" x="0" y="0" width="68" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="815088c2-0021-44f3-86c8-37db55013773"/>
-								<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
-									<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<text><![CDATA[MONEDA]]></text>
-							</staticText>
-						</jr:tableHeader>
-						<jr:detailCell style="table 10_TD" height="15" rowSpan="1">
-							<textField pattern="" isBlankWhenNull="false">
-								<reportElement mode="Transparent" x="0" y="0" width="68" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="fd7c6a61-c04c-41d1-89b2-bcc06378a039"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-									<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{FACTURAS_MONEDA}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="62" uuid="6d1c4a7c-33e4-4c5f-8412-72322e435201">
-						<jr:tableHeader style="table 10_TH" height="11" rowSpan="1">
-							<staticText>
-								<reportElement mode="Transparent" x="0" y="0" width="62" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="b67f980e-587c-416d-962c-737808833288"/>
-								<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
-									<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<text><![CDATA[No. CLIENTE]]></text>
-							</staticText>
-						</jr:tableHeader>
-						<jr:detailCell style="table 10_TD" height="15" rowSpan="1">
-							<textField pattern="" isBlankWhenNull="false">
-								<reportElement mode="Transparent" x="0" y="0" width="62" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="e42135ec-f052-4c41-90c3-9f21d5eefeef"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-									<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{FACTURAS_NO_CLIENTE}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="71" uuid="fe63d416-44f2-4164-9fc9-5233fad045c4">
-						<jr:tableHeader style="table 10_TH" height="11" rowSpan="1">
-							<staticText>
-								<reportElement mode="Transparent" x="0" y="0" width="71" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="01ca65bc-e258-4789-b754-d91e0d6c8e23"/>
-								<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
-									<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<text><![CDATA[BANCO]]></text>
-							</staticText>
-						</jr:tableHeader>
-						<jr:detailCell style="table 10_TD" height="15" rowSpan="1">
-							<textField pattern="" isBlankWhenNull="false">
-								<reportElement mode="Transparent" x="0" y="0" width="71" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="5446eefd-2348-4321-aab8-cb494575161e"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-									<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{FACTURAS_BANCO}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="125" uuid="493d3447-80a0-4c5e-9eb5-5245d0e77e87">
-						<jr:tableHeader style="table 10_TH" height="11" rowSpan="1">
-							<staticText>
-								<reportElement mode="Transparent" x="0" y="0" width="125" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="64906665-337e-4c58-9aaa-3ca6677618db"/>
-								<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
-									<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<text><![CDATA[CONDICIONES DE PAGO]]></text>
-							</staticText>
-						</jr:tableHeader>
-						<jr:detailCell style="table 10_TD" height="15" rowSpan="1">
-							<textField pattern="" isBlankWhenNull="false">
-								<reportElement mode="Transparent" x="0" y="0" width="125" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="7c298a0a-dda4-4f2d-8fd1-d64771784ac0"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-									<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{FACTURAS_CONDICION_PAGO}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-				</jr:table>
-			</componentElement>
 			<subreport>
-				<reportElement mode="Transparent" x="0" y="274" width="577" height="196" forecolor="#000000" backcolor="#FFFFFF" uuid="22d73141-b95c-4579-870b-137c4576c6d5"/>
+				<reportElement mode="Transparent" x="0" y="274" width="577" height="196" forecolor="#000000" backcolor="#FFFFFF"/>
 				<subreportParameter name="FacturaId">
 					<subreportParameterExpression><![CDATA[$F{FACTURAS_CODIGO}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Factura_subreport1.jasper"]]></subreportExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "Factura_subreport1.jasper"]]></subreportExpression>
 			</subreport>
-			<componentElement>
-				<reportElement key="table 15" style="table 15" x="112" y="485" width="330" height="50" uuid="6bcbf6a2-4f32-40c9-b7a7-49b818846695"/>
-				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="TotalesDataSet" uuid="6284a7ef-b3f0-41ec-9be3-c6d4c35ece57">
-						<datasetParameter name="FacturasId">
-							<datasetParameterExpression><![CDATA[$P{FacturaId}]]></datasetParameterExpression>
-						</datasetParameter>
-						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					</datasetRun>
-					<jr:column width="90" uuid="9495f23b-eb96-46ac-acab-e797a09e777d">
-						<jr:tableHeader style="table 15_TH" height="16" rowSpan="1">
-							<staticText>
-								<reportElement x="0" y="0" width="90" height="16" uuid="44d5c14c-7873-454e-85c6-492bd92184f8"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font size="8" isBold="true"/>
-								</textElement>
-								<text><![CDATA[Sub total]]></text>
-							</staticText>
-						</jr:tableHeader>
-						<jr:detailCell style="table 15_TD" height="17" rowSpan="1">
-							<textField>
-								<reportElement x="0" y="0" width="90" height="12" uuid="e9cb34aa-627b-4e6f-bdef-2d21c7c70989"/>
-								<textElement textAlignment="Center">
-									<font size="8" isBold="true"/>
-								</textElement>
-								<textFieldExpression><![CDATA["\$"+$F{FACTURAS_SUBTOTAL}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="90" uuid="6984b028-e698-446b-bb5c-40122e257b52">
-						<jr:tableHeader style="table 15_TH" height="16" rowSpan="1">
-							<staticText>
-								<reportElement mode="Transparent" x="0" y="0" width="90" height="16" forecolor="#000000" backcolor="#FFFFFF" uuid="fa435d8b-92fc-40b9-a940-36648e1854cb"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-									<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<text><![CDATA[I.V.A.]]></text>
-							</staticText>
-						</jr:tableHeader>
-						<jr:detailCell style="table 15_TD" height="17" rowSpan="1">
-							<textField pattern="" isBlankWhenNull="false">
-								<reportElement mode="Transparent" x="0" y="0" width="90" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="d9583882-646d-462c-ae02-6bb64cafe328"/>
-								<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
-									<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<textFieldExpression><![CDATA["\$"+$F{FACTURAS_IVA}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="158" uuid="6b4aeed5-b219-4c78-a65d-58170ffdfa75">
-						<jr:tableHeader style="table 15_TH" height="16" rowSpan="1">
-							<staticText>
-								<reportElement mode="Transparent" x="0" y="0" width="158" height="16" forecolor="#000000" backcolor="#FFFFFF" uuid="88be9f11-71e4-4980-81de-4df53a077a88"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-									<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<text><![CDATA[TOTAL]]></text>
-							</staticText>
-						</jr:tableHeader>
-						<jr:detailCell style="table 15_TD" height="17" rowSpan="1">
-							<textField pattern="" isBlankWhenNull="false">
-								<reportElement mode="Transparent" x="0" y="0" width="158" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="3a3ccf1e-e63a-47c1-8f6c-4fd9deae4572"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-									<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-									<paragraph lineSpacing="Single"/>
-								</textElement>
-								<textFieldExpression><![CDATA["\$"+$F{FACTURAS_TOTAL}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-				</jr:table>
-			</componentElement>
 			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
-				<reportElement mode="Transparent" x="453" y="125" width="124" height="112" uuid="f732d1ab-3fff-4cdb-8e5d-928bb0406e5f"/>
-				<imageExpression><![CDATA[com.google.zxing.client.j2se.MatrixToImageWriter.toBufferedImage(
+				<reportElement mode="Transparent" x="453" y="125" width="124" height="112"/>
+				<imageExpression class="java.lang.String"><![CDATA[com.google.zxing.client.j2se.MatrixToImageWriter.toBufferedImage(
      new com.google.zxing.qrcode.QRCodeWriter().encode("?re="+"DCV9612126N6"+"&rr="+$F{CLIENTES_RFC}+"&tt="+$F{FACTURAS_TOTAL}+"&UUID="+$F{FACTURAS_FOLIO_FISCAL},
          com.google.zxing.BarcodeFormat.QR_CODE, 300, 300))]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="0" y="574" width="112" height="20" uuid="15a4da44-1e08-4297-9bc3-a14a67fa0831"/>
-				<textElement verticalAlignment="Middle">
+				<reportElement x="0" y="574" width="112" height="20"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
 					<font size="8" isBold="true" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Sello digital del CFDI:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="0" y="594" width="572" height="20" uuid="c3b72850-0c1d-4331-8d1a-f6d502651433"/>
-				<textElement>
+				<reportElement x="0" y="594" width="572" height="20"/>
+				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FACTURAS_SELLO_CDFI}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_SELLO_CDFI}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Transparent" x="0" y="614" width="100" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="6d3ae9ff-02c9-4418-bf63-2a3c85f49131"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+				<reportElement mode="Transparent" x="0" y="614" width="100" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
 					<font fontName="SansSerif" size="8" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[SELLO DEL SAT:]]></text>
 			</staticText>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="0" y="634" width="572" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="c57ccd91-b011-4d98-86b6-8c2980fad67a"/>
-				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+				<reportElement mode="Transparent" x="0" y="634" width="572" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single" markup="none">
 					<font fontName="SansSerif" size="6" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FACTURAS_SELLO_SAT}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_SELLO_SAT}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Transparent" x="0" y="654" width="401" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="e40129c4-9ca4-4464-9192-7b5a510ff1be"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+				<reportElement mode="Transparent" x="0" y="654" width="401" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
 					<font fontName="SansSerif" size="8" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[CADENA ORIGINAL DEL COMPLEMENTO DE CERTIFICACIÓN DEL SAT:]]></text>
 			</staticText>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="0" y="674" width="572" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="5121be81-6da1-43d4-b765-1b5e5e891cc2"/>
-				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+				<reportElement mode="Transparent" x="0" y="674" width="572" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single" markup="none">
 					<font fontName="SansSerif" size="6" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA["||1.0|"+$F{FACTURAS_FOLIO_FISCAL}+"|"+$F{FACTURAS_FECHA_TIMBRADO}+"|"+$F{FACTURAS_SELLO_CDFI}+"|"+$F{FACTURAS_NO_SEIE_CERT_EMISOR}+"||"]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["||1.0|"+$F{FACTURAS_FOLIO_FISCAL}+"|"+$F{FACTURAS_FECHA_TIMBRADO}+"|"+$F{FACTURAS_SELLO_CDFI}+"|"+$F{FACTURAS_NO_SEIE_CERT_EMISOR}+"||"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Transparent" x="112" y="386" width="219" height="84" forecolor="#CCCCCC" uuid="cd6ee8d5-66ed-466e-8981-cee4b3e0bdfb">
+				<reportElement mode="Transparent" x="112" y="386" width="219" height="84" forecolor="#CCCCCC">
 					<printWhenExpression><![CDATA[$P{isCopia}]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="66"/>
 				</textElement>
 				<text><![CDATA[COPIA]]></text>

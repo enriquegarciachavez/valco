@@ -49,6 +49,7 @@
 
                         <p:menuitem 
                             id="btnCancelar"
+                            update="formTabla"
                             value="Cancelar" 
                             icon="ui-icon-circle-close"
                             partialSubmit="true"
@@ -82,6 +83,9 @@
                         </p:column>
                         <p:column headerText="Total">  
                             <h:outputText value="#{fact.total}" />
+                        </p:column>
+                        <p:column headerText="Estatus">  
+                            <h:outputText value="#{fact.estatus}" />
                         </p:column>
 
                     </p:dataTable>

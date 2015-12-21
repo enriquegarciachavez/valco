@@ -9,18 +9,18 @@
 
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <h:outputStylesheet name="./css/default.css"/>
-        <h:outputStylesheet name="./css/cssLayout.css"/>
         <h:outputScript library="js" name="popups.js" />
+        <link href="../../resources/css/cssLayout.css" rel="stylesheet" type="text/css"/>
+        <link href="../../resources/css/default.css" rel="stylesheet" type="text/css"/>
         <title><ui:insert name="title">Login</ui:insert></title>
-        
-<style>
-.ui-picklist .ui-picklist-list{
-height:500px;
-width: 500px
-}
 
-</style>
+        <style>
+            .ui-picklist .ui-picklist-list{
+                height:500px;
+                width: 500px
+            }
+
+        </style>
     </h:head>
 
     <h:body>
@@ -71,13 +71,13 @@ width: 500px
                             <p:menuitem value="Reimpresión de Factura" url="#{root}/facturacion/ReimpresionFactura.xhtml" />
                         </p:submenu>
                         <p:submenu label="Reportes">
-                            
+
                             <p:menuitem value="Reporte de Ventas" url="#{root}/reportes/VentasXFamilias/ReportesSubfamilias.xhtml" />
                             <p:menuitem value="Reporte Facturas por Cobrar" url="#{root}/reportes/facturasxcobrar/ReporteFacturasXCobrar.xhtml" />
                             <p:menuitem value="Reporte Notas de Credito" url="#{root}/reportes/notasdecredito/NotaCreditoReporte.xhtml" />
                             <p:menuitem value="Reporte Ventas con Factura" url="#{root}/reportes/ventasconfactura/ReporteVentasConFactura.xhtml" />
                             <p:menuitem value="Reporte Ventas por Repartidor" url="#{root}/reportes/ventasporrepartidor/ReporteVentasXRepartidor.xhtml" />
-                            
+
                         </p:submenu>
                         <f:facet name="options">
                             <p:inputText style="margin-right:10px" placeholder="Search"/>
@@ -91,14 +91,14 @@ width: 500px
         <div id="content" class="center_content">
             <ui:insert name="content">Content</ui:insert>
         </div>
-        
+
         <div id="bottom" class="bottom">
             <ui:insert name="bottom">
                 <p:separator />
                 Sistema valco SA de CV.
             </ui:insert>
         </div>
-        
+
     </h:body>
 
 </html>
