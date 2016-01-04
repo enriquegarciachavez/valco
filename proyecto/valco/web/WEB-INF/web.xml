@@ -57,6 +57,10 @@
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>com.valco.servlets.LogoutServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Welcome</servlet-name>
+        <jsp-file>/pagina/PaginaInicio/BienvenidoInicio.xhtml</jsp-file>
+    </servlet>
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>*.htm</url-pattern>
@@ -77,13 +81,17 @@
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Welcome</servlet-name>
+        <url-pattern>/PaginaInicio</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>faces/login.xhtml</welcome-file>
+        <welcome-file>pagina/PaginaInicio/BienvenidoInicio.xhtml</welcome-file>
     </welcome-file-list>
     <security-constraint>
         <display-name>UsuarioConstraint</display-name>

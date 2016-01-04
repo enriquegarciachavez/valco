@@ -30,6 +30,7 @@
                 <h:form id="logout" onsubmit="this.action = '#{facesContext.externalContext.requestContextPath}/logout';" prependId="false" >
                     <p:menubar>
                         <c:set var="root" value="/faces/pagina" />
+                        <p:menuitem value="Inicio " url="#{root}/PaginaInicio/BienvenidoInicio.xhtml" />
                         <p:submenu label="Catálogos">
                             <p:menuitem value="Clientes" url="#{root}/clientes/ClientesMain.xhtml" /> 
                             <p:menuitem value="Productos" url="#{root}/productos/ProductosMain.xhtml" />

@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      template="../templates/Template1.xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      >
+
+    <body>
+
+        <ui:composition template="./../templates/Template1.xhtml">
+
+            <ui:define name="title">
+                Bienvenido
+
+
+            </ui:define>
+
+            <ui:define name="content">
+                <h:form>
+
+                    <p:outputPanel deferred="true" deferredMode="visible">
+                        <H2 align="center" ><FONT SIZE="5.5" face="Arial">Bienvenido</FONT></H2>
+                        <img style="display:block;margin:0 auto 0 auto;" src="../../resources/imagenes/logo3.jpg" alt="" width="250" height="200"/> 
+                        <p><H3  align="center">Distribuidora De Carnes Valco, S.A. De C.V </H3></p>
+                        <p><H3  align="center">Dirección: Parral 246, Revolución, 31135 Chihuahua, Chih</H3></p> 
+                        <p><H3  align="center">Telefono: 614 419 9180</H3></p> 
+
+                    </p:outputPanel>
+
+
+                    <p:growl id="msgs" showDetail="true" />
+                    <p:fieldset legend="Mision" toggleable="true" toggleSpeed="500">
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <h:outputText value="Francis Ford Coppola's legendary continuation and sequel to his landmark 1972 film, The_Godfather, parallels the young Vito Corleone's rise with his son Michael's spiritual fall, deepening The_Godfather's depiction of the dark side of the American dream.
+                                          In the early 1900s, the child Vito flees his Sicilian village for America after the local Mafia kills his family. Vito struggles to make a living, legally or illegally, for his wife and growing brood in Little Italy,
+                                          killing the local Black Hand Fanucci after he demands his customary cut of the tyro's business. With Fanucci gone, Vito's communal stature grows."></h:outputText>
+                        </h:panelGrid>
+                    </p:fieldset>
+
+                    <p:fieldset legend="Vision" toggleable="true" toggleSpeed="500">
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <h:outputText value="Francis Ford Coppola's legendary continuation and sequel to his landmark 1972 film, The_Godfather, parallels the young Vito Corleone's rise with his son Michael's spiritual fall, deepening The_Godfather's depiction of the dark side of the American dream.
+                                          In the early 1900s, the child Vito flees his Sicilian village for America after the local Mafia kills his family. Vito struggles to make a living, legally or illegally, for his wife and growing brood in Little Italy,
+                                          killing the local Black Hand Fanucci after he demands his customary cut of the tyro's business. With Fanucci gone, Vito's communal stature grows."></h:outputText>
+                        </h:panelGrid>
+                    </p:fieldset>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

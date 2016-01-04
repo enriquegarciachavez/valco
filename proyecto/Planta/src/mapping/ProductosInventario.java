@@ -190,7 +190,14 @@ public class ProductosInventario  implements java.io.Serializable {
         descripcion += " KG";
         return descripcion;
     }
-
+    public boolean equals(Object o){
+         if (o == null|| !((ProductosInventario)o).getCodigo().equals(this.getCodigo())){
+             return false;       
+             
+         }else{
+             return true;
+         }
+     }
 
 }
 

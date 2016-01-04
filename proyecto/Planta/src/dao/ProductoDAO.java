@@ -268,6 +268,8 @@ public class ProductoDAO {
                       .add(Restrictions.eq("codigoBarras", codigo));
               producto = (ProductosInventario)q.uniqueResult();
               Hibernate.initialize(producto.getProductosHasProveedores().getProductos());
+              Hibernate.initialize(producto.getUbicaciones());
+              Hibernate.initialize(producto.getProductosHasProveedores().getProveedores());
               return producto;
 
           } catch (HibernateException he) {

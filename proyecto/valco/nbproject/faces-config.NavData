@@ -1,6 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scene Scope="Project" version="2">
     <Scope Scope="Faces Configuration Only"/>
-    <Scope Scope="Project"/>
+    <Scope Scope="Project">
+        <Node id="pagina/Familias/SubfamiliasMain.xhtml" x="650" y="300" zoom="true"/>
+        <Node id="pagina/ubicaciones/UbicacionesMain.xhtml" x="1900" y="150" zoom="true"/>
+        <Node id="pagina/productos/ProductosMain.xhtml" x="150" y="750" zoom="true"/>
+        <Node id="pagina/cuentasxcobrar/consultaAbonosCuentasXCobrar.xhtml" x="400" y="600" zoom="true"/>
+        <Node id="pagina/clientes/ClientesMain.xhtml" x="400" y="150" zoom="true"/>
+        <Node id="pagina/proveedores/ProveedoresMain.xhtml" x="900" y="750" zoom="true"/>
+        <Node id="pagina/templates/Template1.xhtml" x="150" y="150" zoom="true"/>
+        <Node id="pagina/repartidores/ConsultaNotasXRepartidor.xhtml" x="400" y="900" zoom="true"/>
+        <Node id="loginError.xhtml" x="900" y="450" zoom="true"/>
+        <Node id="error.jsp" x="400" y="450" zoom="true"/>
+        <Node id="pagina/reportes/ventasconfactura/ReporteVentasConFactura.xhtml" x="1650" y="450" zoom="true"/>
+        <Node id="pagina/repartidores/RepartidoresMain.xhtml" x="1650" y="150" zoom="true"/>
+        <Node id="pagina/transferencias/transferencias.xhtml" x="1150" y="150" zoom="true"/>
+        <Node id="pagina/usuarios/UsuariosMain.xhtml" x="900" y="900" zoom="true"/>
+        <Node id="pagina/notasventa/AsignacionNotasMain.xhtml" x="1150" y="300" zoom="true"/>
+        <Node id="welcomePrimefaces.xhtml" x="2150" y="150" zoom="true"/>
+        <Node id="pagina/notasventa/NotasVentaMain.xhtml" x="400" y="750" zoom="true"/>
+        <Node id="pagina/reportes/VentasXFamilias/ReportesSubfamilias.xhtml" x="150" y="1200" zoom="true"/>
+        <Node id="pagina/reportes/ventasporrepartidor/ReporteVentasXRepartidor.xhtml" x="1400" y="300" zoom="true"/>
+        <Node id="pagina/facturacion/ReimpresionFactura.xhtml" x="1650" y="300" zoom="true"/>
+        <Node id="redirect.jsp" x="900" y="150" zoom="true"/>
+        <Node id="login.xhtml" x="900" y="300" zoom="true"/>
+        <Node id="pagina/reportes/notasdecredito/NotaCreditoReporte.xhtml" x="900" y="600" zoom="true"/>
+        <Node id="pagina/transferencias/RecepcionTransferencias.xhtml" x="150" y="1050" zoom="true"/>
+        <Node id="pagina/facturacion/CancelacionFacturas.xhtml" x="650" y="750" zoom="true"/>
+        <Node id="pagina/notasventa/notas2.xhtml" x="1150" y="450" zoom="true"/>
+        <Node id="pagina/parametrosgenerales/ParametrosGeneralesMain.xhtml" x="650" y="450" zoom="true"/>
+        <Node id="pagina/Familias/FamiliasMain.xhtml" x="150" y="300" zoom="true"/>
+        <Node id="pagina/productos/RecepcionProductos.xhtml" x="1400" y="600" zoom="true"/>
+        <Node id="pagina/unidadesDeMedida/UnidadesDeMedidaMain.xhtml" x="150" y="450" zoom="true"/>
+        <Node id="pagina/OrdenesCompra/OrdenesCompraMain.xhtml" x="400" y="300" zoom="true"/>
+        <Node id="pagina/cuentasxcobrar/AbonosCuentasXCobrarMain.xhtml" x="1400" y="150" zoom="true"/>
+        <Node id="pagina/cuentasXpagar/AbonosCuentasXPagarMain.xhtml" x="1150" y="600" zoom="true"/>
+        <Node id="pagina/tipoproducto/TipoProductoMain.xhtml" x="1400" y="450" zoom="true"/>
+        <Node id="index.xhtml" x="650" y="600" zoom="true"/>
+        <Node id="pagina/productos/ProductoNoVendido.xhtml" x="400" y="1050" zoom="true"/>
+        <Node id="pagina/configuracionAccesos/ConfiguracionAccesos.xhtml" x="1150" y="750" zoom="true"/>
+        <Node id="pagina/facturacion/CracionFactura.xhtml" x="650" y="900" zoom="true"/>
+        <Node id="pagina/PaginaInicio/BienvenidoInicio.xhtml" x="150" y="900" zoom="true"/>
+        <Node id="pagina/proveedores/ProductosHasProveedoresMain.xhtml" x="150" y="600" zoom="true"/>
+        <Node id="pagina/reportes/facturasxcobrar/ReporteFacturasXCobrar.xhtml" x="1900" y="300" zoom="true"/>
+        <Node id="pagina/productos/AsignacionProductoRepartidor.xhtml" x="650" y="150" zoom="true"/>
+    </Scope>
     <Scope Scope="All Faces Configurations"/>
 </Scene>

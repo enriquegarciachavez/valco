@@ -11,6 +11,7 @@ import panels.EtiquetadoPanel;
 import javax.swing.JPanel;
 import panels.AbrirProcesoPanel;
 import panels.ConfigBascula;
+import panels.EnviosPanel;
 import panels.InventariosMain;
 import panels.ReciboDeProducto;
 import panels.ReciboProductoBC;
@@ -37,6 +38,8 @@ public class PanelCreator {
             return new InventariosMain();
         }else if("Recibo de producto".equals(panelName)){
             return new ReciboProductoBC();
+        }else if("Transferencia de Producto".equals(panelName)){
+            return new EnviosPanel();
         }
         return null;
     } 
