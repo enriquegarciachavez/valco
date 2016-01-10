@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../templates/Template1.xhtml">
+
+            <ui:define name="title">
+                Consulta de abonos a cuentas por Pagar
+            </ui:define>
+
+            <ui:define name="content">
+                <h:form>
+                    <h:panelGrid columns="4"
+                                 cellpadding="5"
+                                 cellspacing="5"
+                                 style="text-align: right; margin: 0 auto; ">
+
+                        <p:outputLabel for="fechaInicial" value="Fecha Inicial:" />
+                        <p:calendar id="fechaInicial"  showOn="button" value="#{consultaAbonosCuentasXPagasBean.fechaInicial}" />
+
+                        <p:outputLabel for="fechaFinal" value="Fecha Final:" />
+                        <p:calendar id="fechaFinal"  showOn="button" value="#{consultaAbonosCuentasXPagasBean.fechaFinal}" />
+
+
+                        <p:outputLabel for="proveedor" value="Proveedor:"  />
+                        <p:selectOneMenu 
+                            id="proveedor" 
+                            converter="omnifaces.SelectItemsConverter" 
+                            panelStyle="width:180px"
+                            effect="fade" 
+                            var="p" 
+                            style="width:100%" 
+                            filter="true" 
+                            filterMatchMode="contains"
+                            value="#{consultaAbonosCuentasXPagasBean.proveedorSelecionado}">
+                            <f:selectItem itemLabel="Seleccionar proveedor" itemValue="" />
+                            <f:selectItems value="#{consultaAbonosCuentasXPagasBean.proveedor}" var="proveedor" itemLabel="#{proveedor.codigo} | #{proveedor.razonSocial}" itemValue="#{cliente}" />
+
+                            <p:column style="width:10%">
+                                <h:outputText value="#{p.codigo}" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{p.razonSocial} " />
+                            </p:column>
+                        </p:selectOneMenu>
+
+
+                        <p:outputLabel for="orden" value="Orden:" style="text-align: right;"/>
+                        <p:inputText id="orden" style="width: 100%;" value="#{consultaAbonosCuentasXPagasBean.orden}"/>
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Buscar"
+                                             update="tablaOrdenes"
+                                             action="#{consultaAbonosCuentasXPagasBean.consultarAbonos()}"/>
+                        </f:facet>
+
+                    </h:panelGrid>
+
+                    <p:dataTable id="tablaOrdenes" 
+                                 var="orden" 
+                                 value="#{consultaAbonosCuentasXPagasBean.ordenes}"
+                                 selectionMode="single" 
+                                 selection="#{consultaAbonosCuentasXPagasBean.ordenSeleccionado}"
+                                 rowKey="#{orden.codigo}"
+                                 style="margin-bottom:40px"
+                                 >
+
+                        <f:facet name="header">
+                            Ordenes de Compra
+                        </f:facet>
+                        <p:column style="width:16px">
+                            <p:rowToggler />
+                        </p:column>
+                        
+                        <p:column headerText="Codigo" >
+                            <h:outputText value="#{orden.cuentaXPagar.codigo}" />
+                        </p:column>
+
+                        <p:column  sortBy="#{orden.fecha}" >
+                            <f:facet name="header">
+                                <h:outputText value="Fecha" />   
+                            </f:facet>
+                            <h:outputText value="#{orden.fecha}" />
+                        </p:column>
+
+
+                        <p:column headerText="Importe" >
+                            <h:outputText value="#{orden.cuentaXPagar.importe}" />
+                        </p:column>
+
+                        <p:column headerText="Importe Abonado " >
+                            <h:outputText value="#{orden.cuentaXPagar.importeAbonado}" />
+                        </p:column>
+                        <p:column headerText="Saldo a la fecha " >
+                            <h:outputText value="#{orden.cuentaXPagar.importe - orden.cuentaXPagar.importeAbonado}" />
+                        </p:column>
+
+                        <p:rowExpansion>
+                            <p:dataTable id="tablaAbonos" 
+                                         var="abono" 
+                                         value="#{orden.cuentaXPagar.abonosCuentasXPagars}"
+                                         selectionMode="single" 
+                                         selection="#{consultaAbonosCuentasXPagasBean.abonoSeleccionada}"
+                                         rowKey="#{abono.codigo}"
+                                         style="margin-bottom:40px"
+                                         >
+
+                                <p:column >
+                                    <f:facet name="header">
+                                        <h:outputText value="Fecha" />   
+                                    </f:facet>
+                                    <h:outputText value="#{abono.fecha}" />
+                                </p:column>
+
+                                <p:column headerText="Importe" >
+                                    <h:outputText value="#{abono.importe}" />
+                                </p:column>
+
+                                <p:column headerText="Observaciones" >
+                                    <h:outputText value="#{abono.observaciones}" />
+                                </p:column>
+
+                                <p:column headerText="Estatus " >
+                                    <h:outputText value="#{abono.estatus}" />
+                                </p:column>
+
+                            </p:dataTable>
+                        </p:rowExpansion>
+                    </p:dataTable>
+
+
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

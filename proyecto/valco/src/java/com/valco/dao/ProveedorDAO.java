@@ -187,7 +187,34 @@ public class ProveedorDAO implements Serializable{
               }
         }
     }
-    
+    //Hecho karla , para ConsultaAbonosCuentasXPagas
+    public List<Proveedores> getProveedorAPagar() throws Exception {
+          Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+          Transaction tx = null;
+          List<Proveedores> proveedores = new ArrayList<Proveedores>();
+          try {
+              tx = session.beginTransaction();
+              Query q = session.createQuery("FROM Proveedores");
+              proveedores = (List<Proveedores>) q.list();
+              for(Proveedores proveedor : proveedores){
+                  for(OrdenesCompra orden : proveedor.getOrdenesCompras()){
+                      Hibernate.initialize(orden);
+                      Hibernate.initialize(orden.getCuentasXPagars());
+                  }
+              }
+              return proveedores;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los proveedores.");
+
+          } finally {
+              try {
+                  session.close();
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los proveedores.");
+              }
+        }
+    }
     
     
 }

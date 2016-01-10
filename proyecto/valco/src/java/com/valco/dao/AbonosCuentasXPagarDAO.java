@@ -8,12 +8,17 @@ package com.valco.dao;
 import com.valco.HibernateUtil;
 import com.valco.pojo.AbonosCuentasXPagar;
 import com.valco.pojo.OrdenesCompra;
+import com.valco.pojo.Proveedores;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -150,4 +155,53 @@ public class AbonosCuentasXPagarDAO {
               }
         }
     }
+     //karla para ConsultaAbonosCuentasPagar
+     public List<OrdenesCompra> getOrdenesCompra(Date fechaInicial, Date fechaFinal, 
+                                                Proveedores proveedor, Integer numeroOrden, 
+                                                String estatus) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+          Transaction tx = null;
+          List<OrdenesCompra> ordenes = new ArrayList<OrdenesCompra>();
+          try {
+              tx = session.beginTransaction();
+              Criteria criteria = session.createCriteria(OrdenesCompra.class);
+              if(fechaInicial != null && fechaFinal != null){
+                  criteria.add(Restrictions.between("fecha",fechaInicial,fechaFinal));
+              }else if(fechaInicial != null){
+                  criteria.add(Restrictions.eq("fecha", fechaInicial));
+              }else if(fechaFinal != null){
+                  criteria.add(Restrictions.eq("fecha", fechaFinal));
+              }
+              
+              if(proveedor != null){
+                  criteria.add(Restrictions.eq("proveedores", proveedor));
+              }
+              if(numeroOrden != null){
+                  criteria.add(Restrictions.eq("codigo", numeroOrden));
+              }
+              if(estatus != null){
+                  criteria.add(Restrictions.eq("estatus", estatus));
+              }
+              ordenes = (List<OrdenesCompra>) criteria.list();
+              for(OrdenesCompra orden : ordenes){
+                  Hibernate.initialize(orden.getCuentasXPagars());
+                  if(orden.getCuentaXPagar()!= null){
+                    Hibernate.initialize(orden.getCuentaXPagar().getAbonosCuentasXPagars());
+                  }
+              }
+              return ordenes;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los abonos.");
+
+          } finally {
+              try {
+                  if(session.isOpen()){
+                    session.close();
+                  }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los abonos.");
+              }
+        }
+}
 }
