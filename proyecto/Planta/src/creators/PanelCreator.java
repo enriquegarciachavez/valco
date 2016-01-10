@@ -15,6 +15,7 @@ import panels.EnviosPanel;
 import panels.InventariosMain;
 import panels.ReciboDeProducto;
 import panels.ReciboProductoBC;
+import panels.ReciboTransferenciasPanel;
 
 /**
  *
@@ -40,6 +41,8 @@ public class PanelCreator {
             return new ReciboProductoBC();
         }else if("Transferencia de Producto".equals(panelName)){
             return new EnviosPanel();
+        }else if("Recibo de transferencias".equals(panelName)){
+            return new ReciboTransferenciasPanel();
         }
         return null;
     } 

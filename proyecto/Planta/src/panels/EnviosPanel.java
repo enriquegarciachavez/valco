@@ -6,14 +6,16 @@
 package panels;
 
 import dao.ProductoDAO;
+import dao.TransferenciasDAO;
 import dao.UbicacionesDAO;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
-import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractButton;
@@ -27,7 +29,10 @@ import mapping.Productos;
 import mapping.ProductosHasProveedores;
 import mapping.ProductosInventario;
 import mapping.Proveedores;
+import mapping.Tranferencias;
+import mapping.Ubicaciones;
 import table.custom.NoEditableTableModel;
+import threads.PesoThread;
 import utilities.UsuarioFirmado;
 
 /**
@@ -42,6 +47,7 @@ public class EnviosPanel extends javax.swing.JPanel {
     KeyboardFocusManager manager;
     BarCodeScannerKeyDispatcher dispacher;
     public List<Component> exceptions = new ArrayList<>();
+    private TransferenciasDAO transferenciasDao = new TransferenciasDAO();
     
 
     /**
@@ -54,6 +60,20 @@ public class EnviosPanel extends javax.swing.JPanel {
         exceptions.add(productoCodigoArea);
         dispacher = new BarCodeScannerKeyDispatcher(barCodeTxt, manager, exceptions);
         manager.addKeyEventDispatcher(dispacher);
+        PesoThread pesoThread = null;
+        try {
+            pesoThread = new PesoThread();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Ocurrio un error al leer el peso de la bascula", "Error", ERROR_MESSAGE);
+            pesoManualChk.setSelected(true);
+            pesoManualChk.setEnabled(false);
+            pesoBasculaLbl.setEnabled(false);
+            pesoManualLbl.setEnabled(true);
+            return;
+        }
+        pesoThread.setPesoLbl(pesoBasculaLbl);
+        Thread thread = new Thread(pesoThread);
+        thread.start();
     }
 
     /**
@@ -85,6 +105,8 @@ public class EnviosPanel extends javax.swing.JPanel {
         jPanel5 = new javax.swing.JPanel();
         almacenLOV = new javax.swing.JComboBox();
         jLabel5 = new javax.swing.JLabel();
+        enviarBtn = new javax.swing.JButton();
+        quitarBtn = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaCanales = new javax.swing.JTable();
@@ -168,6 +190,11 @@ public class EnviosPanel extends javax.swing.JPanel {
         pesoManualLbl.addKeyListener(new NumericKeyListener());
 
         jButton2.setText("Agregar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -183,7 +210,7 @@ public class EnviosPanel extends javax.swing.JPanel {
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel4Layout.createSequentialGroup()
                             .addComponent(pesoBasculaLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(10, 10, 10)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(productosLov, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)))
@@ -196,7 +223,7 @@ public class EnviosPanel extends javax.swing.JPanel {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(179, Short.MAX_VALUE)
+                .addContainerGap(196, Short.MAX_VALUE)
                 .addComponent(jButton2)
                 .addGap(28, 28, 28))
             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -233,6 +260,20 @@ public class EnviosPanel extends javax.swing.JPanel {
 
         jLabel5.setText("Almacen:");
 
+        enviarBtn.setText("Transferir");
+        enviarBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enviarBtnActionPerformed(evt);
+            }
+        });
+
+        quitarBtn.setText("Quitar producto");
+        quitarBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quitarBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -242,7 +283,11 @@ public class EnviosPanel extends javax.swing.JPanel {
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(almacenLOV, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(1176, Short.MAX_VALUE))
+                .addGap(40, 40, 40)
+                .addComponent(quitarBtn)
+                .addGap(156, 156, 156)
+                .addComponent(enviarBtn)
+                .addContainerGap(792, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -250,7 +295,9 @@ public class EnviosPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(almacenLOV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(almacenLOV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(enviarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(quitarBtn))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -330,6 +377,7 @@ public class EnviosPanel extends javax.swing.JPanel {
             canal[3] = productoNuevo.getUbicaciones();
 
             model.addRow(canal);
+            barCodeTxt.setText("");
             
         
     }
@@ -389,10 +437,73 @@ public class EnviosPanel extends javax.swing.JPanel {
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        ProductosInventario productoNuevo = new ProductosInventario();
+        String peso = "";
+        if (pesoManualChk.isSelected()) {
+            peso = pesoManualLbl.getText();
+        }else{
+            peso = pesoBasculaLbl.getText();
+        }
+        try {
+            productoNuevo = productoDAO.getProductoPesado(peso, ((ProductosHasProveedores)productosLov.getSelectedItem()).getProductos(),model);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+        if(isProductoRepetido(model, productoNuevo)){
+            return;
+        }
+            Object[] canal = new Object[5];
+
+            canal[0] = productoNuevo.getPeso();
+            canal[1] = productoNuevo.getProductosHasProveedores().getProveedores().getRazonSocial();
+            canal[2] = productoNuevo;
+            canal[3] = productoNuevo.getUbicaciones();
+
+            model.addRow(canal);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void enviarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enviarBtnActionPerformed
+        List<ProductosInventario> productos = new ArrayList<>();
+        for(int row = 0; row < model.getRowCount(); row++){
+            productos.add((ProductosInventario) model.getValueAt(row, 2));
+        }
+        if(productos == null || productos.isEmpty()){
+            JOptionPane.showMessageDialog(null,"Debe seleccionar almenos un producto para transferir");
+            return;
+        }
+        Tranferencias transferencia = new Tranferencias();
+        transferencia.setEstatus("EN PROCESO");
+        transferencia.setFechaEnvio(new Date());
+        transferencia.setUbicacionesByDestino((Ubicaciones) almacenLOV.getSelectedItem());
+        transferencia.setUbicacionesBySalida(productos.get(0).getUbicaciones());
+        transferencia.setUsuarios(UsuarioFirmado.getUsuarioFirmado());
+        if(Objects.equals(transferencia.getUbicacionesBySalida().getCodigo(), transferencia.getUbicacionesByDestino().getCodigo())){
+            JOptionPane.showMessageDialog(null,"Debe seleccionar una ubicación de destino diferente a la ubicación de salida.");
+            return;
+        }
+        for(ProductosInventario producto : productos){
+            producto.setEstatus("EN TRANSFERENCIA");
+            producto.setTranferencias(transferencia);
+        }
+        try{
+        transferenciasDao.Transferir(transferencia, productos);
+        model.setRowCount(0);
+        JOptionPane.showMessageDialog(null,"El producto se envió correctamente");
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null,"Ocurrió un error al transferir los productos.");
+        }
+    }//GEN-LAST:event_enviarBtnActionPerformed
+
+    private void quitarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitarBtnActionPerformed
+        model.removeRow(tablaCanales.getSelectedRow());
+    }//GEN-LAST:event_quitarBtnActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox almacenLOV;
     private javax.swing.JTextField barCodeTxt;
+    private javax.swing.JButton enviarBtn;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
@@ -413,6 +524,7 @@ public class EnviosPanel extends javax.swing.JPanel {
     private javax.swing.JTextField pesoManualLbl;
     private javax.swing.JTextArea productoCodigoArea;
     private javax.swing.JComboBox productosLov;
+    private javax.swing.JButton quitarBtn;
     private javax.swing.JTable tablaCanales;
     // End of variables declaration//GEN-END:variables
 }

@@ -2,12 +2,12 @@
 <Scene Scope="Project" version="2">
     <Scope Scope="Faces Configuration Only"/>
     <Scope Scope="Project">
-        <Node id="pagina/Familias/SubfamiliasMain.xhtml" x="650" y="300" zoom="true"/>
         <Node id="pagina/ubicaciones/UbicacionesMain.xhtml" x="1900" y="150" zoom="true"/>
+        <Node id="pagina/Familias/SubfamiliasMain.xhtml" x="650" y="300" zoom="true"/>
         <Node id="pagina/productos/ProductosMain.xhtml" x="150" y="750" zoom="true"/>
         <Node id="pagina/cuentasxcobrar/consultaAbonosCuentasXCobrar.xhtml" x="400" y="600" zoom="true"/>
-        <Node id="pagina/clientes/ClientesMain.xhtml" x="400" y="150" zoom="true"/>
         <Node id="pagina/proveedores/ProveedoresMain.xhtml" x="900" y="750" zoom="true"/>
+        <Node id="pagina/clientes/ClientesMain.xhtml" x="400" y="150" zoom="true"/>
         <Node id="pagina/templates/Template1.xhtml" x="150" y="150" zoom="true"/>
         <Node id="pagina/repartidores/ConsultaNotasXRepartidor.xhtml" x="400" y="900" zoom="true"/>
         <Node id="loginError.xhtml" x="900" y="450" zoom="true"/>
@@ -24,8 +24,8 @@
         <Node id="pagina/facturacion/ReimpresionFactura.xhtml" x="1650" y="300" zoom="true"/>
         <Node id="redirect.jsp" x="900" y="150" zoom="true"/>
         <Node id="login.xhtml" x="900" y="300" zoom="true"/>
-        <Node id="pagina/reportes/notasdecredito/NotaCreditoReporte.xhtml" x="900" y="600" zoom="true"/>
         <Node id="pagina/transferencias/RecepcionTransferencias.xhtml" x="150" y="1050" zoom="true"/>
+        <Node id="pagina/reportes/notasdecredito/NotaCreditoReporte.xhtml" x="900" y="600" zoom="true"/>
         <Node id="pagina/facturacion/CancelacionFacturas.xhtml" x="650" y="750" zoom="true"/>
         <Node id="pagina/notasventa/notas2.xhtml" x="1150" y="450" zoom="true"/>
         <Node id="pagina/parametrosgenerales/ParametrosGeneralesMain.xhtml" x="650" y="450" zoom="true"/>

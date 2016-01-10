@@ -2,6 +2,7 @@ package mapping;
 // Generated 24-may-2015 21:47:34 by Hibernate Tools 4.3.1
 
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,8 +19,9 @@ public class Tranferencias  implements java.io.Serializable {
      private Usuarios usuarios;
      private String estatus;
      private Date fechaEnvio;
-     private String fechaLlegada;
+     private Date fechaLlegada;
      private Set<ProductosInventario> productosInventarios = new HashSet<ProductosInventario>(0);
+     private Set<Mermas> mermas = new HashSet<Mermas>(0);
 
     public Tranferencias() {
     }
@@ -32,7 +34,7 @@ public class Tranferencias  implements java.io.Serializable {
         this.estatus = estatus;
         this.fechaEnvio = fechaEnvio;
     }
-    public Tranferencias(Ubicaciones ubicacionesByDestino, Ubicaciones ubicacionesBySalida, Usuarios usuarios, String estatus, Date fechaEnvio, String fechaLlegada, Set<ProductosInventario> productosInventarios) {
+    public Tranferencias(Ubicaciones ubicacionesByDestino, Ubicaciones ubicacionesBySalida, Usuarios usuarios, String estatus, Date fechaEnvio, Date fechaLlegada, Set<ProductosInventario> productosInventarios) {
        this.ubicacionesByDestino = ubicacionesByDestino;
        this.ubicacionesBySalida = ubicacionesBySalida;
        this.usuarios = usuarios;
@@ -84,11 +86,11 @@ public class Tranferencias  implements java.io.Serializable {
     public void setFechaEnvio(Date fechaEnvio) {
         this.fechaEnvio = fechaEnvio;
     }
-    public String getFechaLlegada() {
+    public Date getFechaLlegada() {
         return this.fechaLlegada;
     }
     
-    public void setFechaLlegada(String fechaLlegada) {
+    public void setFechaLlegada(Date fechaLlegada) {
         this.fechaLlegada = fechaLlegada;
     }
     public Set<ProductosInventario> getProductosInventarios() {
@@ -99,7 +101,29 @@ public class Tranferencias  implements java.io.Serializable {
         this.productosInventarios = productosInventarios;
     }
 
+    public Set<Mermas> getMermas() {
+        return mermas;
+    }
 
+    public void setMermas(Set<Mermas> mermas) {
+        this.mermas = mermas;
+    }
+
+    public BigDecimal getPesoTotal(){
+        BigDecimal pesoTotal = new BigDecimal("0.00");
+        for(ProductosInventario producto : this.productosInventarios){
+            pesoTotal = pesoTotal.add(producto.getPeso());
+        }
+        return pesoTotal;
+    }
+    
+    public BigDecimal getMermaTotal(){
+        BigDecimal mermaTotal = new BigDecimal("0.00");
+        for(Mermas merma : this.mermas){
+            mermaTotal = mermaTotal.add(merma.getPeso());
+        }
+        return mermaTotal;
+    }
 
 
 }

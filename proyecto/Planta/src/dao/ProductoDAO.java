@@ -6,10 +6,12 @@
 package dao;
 
 import Hibernate.HibernateUtil;
+import java.math.BigDecimal;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.swing.table.DefaultTableModel;
 import mapping.CuentasXPagar;
 import mapping.OrdenesCompra;
 import mapping.Productos;
@@ -21,6 +23,7 @@ import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
@@ -265,7 +268,12 @@ public class ProductoDAO {
           try {
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(ProductosInventario.class)
-                      .add(Restrictions.eq("codigoBarras", codigo));
+                      .add(Restrictions.eq("codigoBarras", codigo))
+                      .add(Restrictions.eq("estatus", "ACTIVO"));
+              q.setMaxResults(1);
+              if(q.uniqueResult() == null){
+                  throw new Exception("No se encontró el producto buscado.");
+              }
               producto = (ProductosInventario)q.uniqueResult();
               Hibernate.initialize(producto.getProductosHasProveedores().getProductos());
               Hibernate.initialize(producto.getUbicaciones());
@@ -526,6 +534,51 @@ public class ProductoDAO {
             }
         }
     
+    }
+    
+    public ProductosInventario getProductoPesado(String peso, Productos producto,DefaultTableModel model) throws Exception{
+        Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          ProductosInventario productoInventario = new ProductosInventario();
+          String hql = "From ProductosInventario PI "
+                  + "inner join PI.productosHasProveedores as PHP"
+                  + " inner join PHP.productos as P "
+                  + "where PI.estatus = \"ACTIVO\" and  P.codigo ="+producto.getCodigo();
+          if(model.getRowCount()>0){
+              hql += " AND PI.codigo not in (";
+              for(int row = 0; row < model.getRowCount(); row++){
+                  hql += ((ProductosInventario)model.getValueAt(row, 2)).getCodigo();
+                  if(model.getRowCount()-1 != row){
+                      hql += ",";
+                  }
+              }
+              hql += ")";
+          }
+              hql += " order by abs(peso - "+peso+")";
+          try {
+              Query query = session.createQuery(hql);
+              query.setMaxResults(1);
+              if(query.uniqueResult() == null){
+                  throw new Exception("No se encontró el producto buscado en el inventario.");
+              }
+              productoInventario = (ProductosInventario) ((Object[])query.uniqueResult())[0];
+              Hibernate.initialize(productoInventario.getProductosHasProveedores().getProductos());
+              Hibernate.initialize(productoInventario.getUbicaciones());
+              Hibernate.initialize(productoInventario.getProductosHasProveedores().getProveedores());
+              return productoInventario;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los productos.");
+
+          } finally {
+              try {
+                  if(session.isOpen()){
+                    session.close();
+                  }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los productos.");
+              }
+        }
     }
     
 }

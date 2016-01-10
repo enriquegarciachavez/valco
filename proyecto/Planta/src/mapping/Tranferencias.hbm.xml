@@ -23,7 +23,7 @@
         <property name="fechaEnvio" type="date">
             <column name="FECHA_ENVIO" length="10" not-null="true" />
         </property>
-        <property name="fechaLlegada" type="string">
+        <property name="fechaLlegada" type="date">
             <column name="FECHA_LLEGADA" length="45" />
         </property>
         <set name="productosInventarios" table="PRODUCTOS_INVENTARIO" inverse="true" lazy="true" fetch="select">
@@ -31,6 +31,12 @@
                 <column name="TRANFERENCIAS_CODIGO" />
             </key>
             <one-to-many class="mapping.ProductosInventario" />
+        </set>
+        <set name="mermas" table="MERMAS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="TRANFERENCIAS_CODIGO" />
+            </key>
+            <one-to-many class="mapping.Mermas" />
         </set>
     </class>
 </hibernate-mapping>

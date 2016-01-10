@@ -41,10 +41,8 @@
     <mapping resource="mapping/MetodosPago.hbm.xml"/>
     <mapping resource="mapping/OrdenesCompra.hbm.xml"/>
     <mapping resource="mapping/Movimientos.hbm.xml"/>
-    
     <mapping resource="mapping/ProductosDelInventario.hbm.xml"/>
-    
     <mapping resource="mapping/Inventarios.hbm.xml"/>
-   
+    <mapping resource="mapping/Mermas.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

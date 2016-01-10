@@ -30,4 +30,5 @@
   <table-filter match-name="ABONOS_CUENTAS_X_COBRAR"/>
   <table-filter match-name="USUARIOS"/>
   <table-filter match-name="CONCEPTOS_FACTURA"/>
+  <table-filter match-name="MERMAS"/>
 </hibernate-reverse-engineering>

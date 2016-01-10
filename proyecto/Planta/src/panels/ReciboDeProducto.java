@@ -355,7 +355,7 @@ public class ReciboDeProducto extends javax.swing.JPanel {
             }
         });
 
-        limpiarBtn.setText("Eliminar");
+        limpiarBtn.setText("Limpiar");
         limpiarBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 limpiarBtnActionPerformed(evt);
