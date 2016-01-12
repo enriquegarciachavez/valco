@@ -364,7 +364,7 @@
                             </Property>
                           </Properties>
                           <AuxValues>
-                            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="       String[] columnNames = {&#xd;&#xa;        &quot;Peso&quot;,&#xd;&#xa;        &quot;Proveedor&quot;,&#xd;&#xa;        &quot;Producto&quot;,&#xd;&#xa;        &quot;Almacen&quot;};&#xd;&#xa;         model.setColumnIdentifiers(columnNames); &#xd;&#xa;"/>
+                            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="if(modoOperacion.equals(&quot;RECIBO&quot;)){       &#xd;&#xa;String[] columnNames = {&#xd;&#xa;        &quot;Peso&quot;,&#xd;&#xa;        &quot;Proveedor&quot;,&#xd;&#xa;        &quot;Producto&quot;,&#xd;&#xa;        &quot;Almacen&quot;,&#xd;&#xa;        &quot;Estatus&quot;,&#xd;&#xa;        &quot;Merma&quot;};&#xd;&#xa;model.setColumnIdentifiers(columnNames); &#xd;&#xa;}else{&#xd;&#xa;    String[] columnNames = {&#xd;&#xa;        &quot;Peso&quot;,&#xd;&#xa;        &quot;Proveedor&quot;,&#xd;&#xa;        &quot;Producto&quot;,&#xd;&#xa;        &quot;Almacen&quot;};&#xd;&#xa;model.setColumnIdentifiers(columnNames); &#xd;&#xa;}&#xd;&#xa;         &#xd;&#xa;"/>
                           </AuxValues>
                         </Component>
                       </SubComponents>

@@ -56,5 +56,11 @@
         <property name="numeroCanal" type="java.lang.Integer">
             <column name="NUMERO_CANAL" />
         </property>
+        <set name="mermas" table="MERMAS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="TRANFERENCIAS_CODIGO" />
+            </key>
+            <one-to-many class="mapping.Mermas" />
+        </set>
     </class>
 </hibernate-mapping>

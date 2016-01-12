@@ -175,6 +175,14 @@ public class MainFrame extends javax.swing.JFrame {
         if (internalFrame != null) {
             if(prueb instanceof AbrirProcesoPanel){
                 ((AbrirProcesoPanel)prueb).manager.removeKeyEventDispatcher(((AbrirProcesoPanel)prueb).dispacher);
+            }else if(prueb instanceof InventariosMain){
+                ((InventariosMain)prueb).manager.removeKeyEventDispatcher(((AbrirProcesoPanel)prueb).dispacher);
+            }else if(prueb instanceof ReciboProductoBC){
+                ((ReciboProductoBC)prueb).manager.removeKeyEventDispatcher(((AbrirProcesoPanel)prueb).dispacher);
+            }else if(prueb instanceof EnviosPanel){
+                ((EnviosPanel)prueb).manager.removeKeyEventDispatcher(((AbrirProcesoPanel)prueb).dispacher);
+            }else if(prueb instanceof ReciboTransferenciasPanel){
+                ((ReciboTransferenciasPanel)prueb).manager.removeKeyEventDispatcher(((AbrirProcesoPanel)prueb).dispacher);
             }
             mainPanel.remove(internalFrame);
         }

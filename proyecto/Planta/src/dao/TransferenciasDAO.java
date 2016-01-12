@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import mapping.Mermas;
 import mapping.ProductosInventario;
 import mapping.Tranferencias;
 import org.hibernate.Criteria;
@@ -84,31 +85,30 @@ public class TransferenciasDAO {
         }
     }
 
-    public void actualizarTransferencias(Set<Tranferencias> transferencias) throws Exception {
+    public void actualizarTransferencias(Tranferencias transferencia, Mermas merma) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
-        Tranferencias trans = null;
         try {
             tx = session.beginTransaction();
-            for (Tranferencias transferencia : transferencias) {
-                Criteria q = session.createCriteria(Tranferencias.class)
-                        .add(Restrictions.eq("codigo", transferencia.getCodigo()));
-                trans = (Tranferencias) q.uniqueResult();
                 boolean transferenciaCompleta = true;
-                for (ProductosInventario producto : trans.getProductosInventarios()) {
+                for (ProductosInventario producto : transferencia.getProductosInventarios()) {
+                    session.update(producto);
                     if (producto.getEstatus().equals("EN TRANSFERENCIA")) {
                         transferenciaCompleta = false;
                         break;
                     }
                 }
                 if (transferenciaCompleta) {
-                    trans.setEstatus("COMPLETA");
-                    trans.setFechaLlegada(new Date());
+                    transferencia.setEstatus("COMPLETA");
+                    transferencia.setFechaLlegada(new Date());
                 } else {
-                    trans.setEstatus("INCOMPLETA");
+                    transferencia.setEstatus("INCOMPLETA");
                 }
-                session.update(trans);
-            }
+                if(merma != null){
+                    session.save(merma);
+                }
+                session.update(transferencia);
+            
             tx.commit();
         } catch (HibernateException he) {
             throw new Exception("Ocurrió un error al recibir la transferencia.");
@@ -139,6 +139,43 @@ public class TransferenciasDAO {
                 Hibernate.initialize(transferencia.getUbicacionesByDestino());
             }
             return transferencias;
+
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar las transferencias.");
+
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar las transferencias.");
+            }
+        }
+    }
+    
+    public Tranferencias getTransferenciaXCodigo(Integer codigo) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        Tranferencias transferencia = new Tranferencias();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(Tranferencias.class)
+                    .add(Restrictions.eq("codigo", codigo));
+            if(q.uniqueResult() == null){
+                throw new Exception("No se encontrò la transferencia buscada");
+            }
+            transferencia = (Tranferencias) q.uniqueResult();
+            Hibernate.initialize(transferencia.getProductosInventarios());
+            for(ProductosInventario producto : transferencia.getProductosInventarios()){
+                Hibernate.initialize(producto.getProductosHasProveedores().getProveedores());
+                Hibernate.initialize(producto.getProductosHasProveedores().getProductos());
+                Hibernate.initialize(producto.getMermas());
+            }
+            Hibernate.initialize(transferencia.getMermas());
+            Hibernate.initialize(transferencia.getUbicacionesBySalida());
+            Hibernate.initialize(transferencia.getUbicacionesByDestino());
+            return transferencia;
 
         } catch (HibernateException he) {
             throw new Exception("Ocurrió un error al consultar las transferencias.");

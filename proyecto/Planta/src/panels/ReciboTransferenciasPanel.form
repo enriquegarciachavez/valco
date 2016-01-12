@@ -72,6 +72,9 @@
                               <JTableSelectionModel selectionMode="0"/>
                             </Property>
                           </Properties>
+                          <Events>
+                            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="transferenciasTableMouseClicked"/>
+                          </Events>
                           <AuxValues>
                             <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="       String[] columnNames = {&#xd;&#xa;        &quot;C&#xf3;digo&quot;,&#xd;&#xa;        &quot;Est&#xe1;tus&quot;,&#xd;&#xa;        &quot;Lugar de salida&quot;,&#xd;&#xa;        &quot;Lugar de recepcion&quot;,&#xd;&#xa;        &quot;Fecha de envio&quot;,&#xd;&#xa;        &quot;Fecha de llegada&quot;,&#xd;&#xa;        &quot;Peso total del envio&quot;,&#xd;&#xa;        &quot;Merma&quot;};&#xd;&#xa;         model.setColumnIdentifiers(columnNames); &#xd;&#xa;"/>
                           </AuxValues>
@@ -104,7 +107,7 @@
             </Container>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel2">
+        <Container class="javax.swing.JPanel" name="pesajePanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Pesaje y escaneo">
@@ -113,18 +116,7 @@
             </Constraint>
           </Constraints>
 
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="395" max="32767" attributes="0"/>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="272" max="32767" attributes="0"/>
-              </Group>
-            </DimensionLayout>
-          </Layout>
+          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
         </Container>
       </SubComponents>
     </Container>

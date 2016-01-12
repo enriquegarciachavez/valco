@@ -25,6 +25,7 @@ import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import javax.swing.table.DefaultTableModel;
 import keydispatchers.BarCodeScannerKeyDispatcher;
 import listeners.NumericKeyListener;
+import mapping.Mermas;
 import mapping.Productos;
 import mapping.ProductosHasProveedores;
 import mapping.ProductosInventario;
@@ -40,6 +41,7 @@ import utilities.UsuarioFirmado;
  * @author Karla
  */
 public class EnviosPanel extends javax.swing.JPanel {
+
     ProductoDAO productoDAO = new ProductoDAO();
     UbicacionesDAO ubicacionesDAO = new UbicacionesDAO();
     DefaultTableModel model = new NoEditableTableModel();
@@ -48,12 +50,35 @@ public class EnviosPanel extends javax.swing.JPanel {
     BarCodeScannerKeyDispatcher dispacher;
     public List<Component> exceptions = new ArrayList<>();
     private TransferenciasDAO transferenciasDao = new TransferenciasDAO();
-    
+    private String modoOperacion;
+    private Tranferencias transferenciaSeleccionada;
 
-    /**
-     * Creates new form EnviosPanel
-     */
+    public EnviosPanel(String modoOperacion) {
+        this.modoOperacion = modoOperacion;
+        initComponents();
+        manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        exceptions.add(pesoManualLbl);
+        exceptions.add(productoCodigoArea);
+        dispacher = new BarCodeScannerKeyDispatcher(barCodeTxt, manager, exceptions);
+        manager.addKeyEventDispatcher(dispacher);
+        PesoThread pesoThread = null;
+        try {
+            pesoThread = new PesoThread();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Ocurrio un error al leer el peso de la bascula", "Error", ERROR_MESSAGE);
+            pesoManualChk.setSelected(true);
+            pesoManualChk.setEnabled(false);
+            pesoBasculaLbl.setEnabled(false);
+            pesoManualLbl.setEnabled(true);
+            return;
+        }
+        pesoThread.setPesoLbl(pesoBasculaLbl);
+        Thread thread = new Thread(pesoThread);
+        thread.start();
+    }
+
     public EnviosPanel() {
+        modoOperacion = "ENVIO";
         initComponents();
         manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         exceptions.add(pesoManualLbl);
@@ -306,12 +331,24 @@ public class EnviosPanel extends javax.swing.JPanel {
         jPanel6.setLayout(new javax.swing.BoxLayout(jPanel6, javax.swing.BoxLayout.LINE_AXIS));
 
         tablaCanales.setModel(model);
-        String[] columnNames = {
-            "Peso",
-            "Proveedor",
-            "Producto",
-            "Almacen"};
-        model.setColumnIdentifiers(columnNames); 
+        if(modoOperacion.equals("RECIBO")){       
+            String[] columnNames = {
+                "Peso",
+                "Proveedor",
+                "Producto",
+                "Almacen",
+                "Estatus",
+                "Merma"};
+            model.setColumnIdentifiers(columnNames); 
+        }else{
+            String[] columnNames = {
+                "Peso",
+                "Proveedor",
+                "Producto",
+                "Almacen"};
+            model.setColumnIdentifiers(columnNames); 
+        }
+
         jScrollPane1.setViewportView(tablaCanales);
 
         jPanel6.add(jScrollPane1);
@@ -336,8 +373,7 @@ public class EnviosPanel extends javax.swing.JPanel {
         }
         return productosArray;
     }
-    
-    
+
     private Object[] getUbicacionesArray() {
         Object[] ubicaciones = null;
         try {
@@ -349,26 +385,41 @@ public class EnviosPanel extends javax.swing.JPanel {
     }
     private void barCodeTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barCodeTxtActionPerformed
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_barCodeTxtActionPerformed
 
     private void barCodeTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_barCodeTxtKeyTyped
-        if(evt.getKeyChar()== KeyEvent.VK_ENTER)
-        {
+        if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
             changeScanned(barCodeTxt.getText());
         }
     }//GEN-LAST:event_barCodeTxtKeyTyped
 
-    private void changeScanned(String barCode){
-        ProductosInventario productoNuevo = new ProductosInventario();
-        try {
-            productoNuevo = productoDAO.getProductosXCodigoBarras(barCode);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
-        }
-        if(isProductoRepetido(model, productoNuevo)){
-            return;
-        }
+    private void changeScanned(String barCode) {
+        if (modoOperacion.equals("RECIBO")) {
+            for (int row = 0; row < model.getRowCount(); row++) {
+                ProductosInventario productoRow = (ProductosInventario) model.getValueAt(row, 2);
+                if (productoRow.getCodigoBarras() != null && productoRow.getCodigoBarras().equals(barCode)) {
+                    productoRow.setEstatus("ACTIVO");
+                    model.setValueAt("ACTIVO", row, 4);
+                    model.setValueAt(productoRow.getTranferencias().getUbicacionesByDestino(), row, 3);
+                    productoRow.setUbicaciones(productoRow.getTranferencias().getUbicacionesByDestino());
+                    try {
+                        transferenciasDao.actualizarTransferencias(productoRow.getTranferencias(),null);
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, ex.getMessage());
+                    }
+                }
+            }
+        } else {
+            ProductosInventario productoNuevo = new ProductosInventario();
+            try {
+                productoNuevo = productoDAO.getProductosXCodigoBarras(barCode);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
+            if (isProductoRepetido(model, productoNuevo)) {
+                return;
+            }
             Object[] canal = new Object[5];
 
             canal[0] = productoNuevo.getPeso();
@@ -378,16 +429,18 @@ public class EnviosPanel extends javax.swing.JPanel {
 
             model.addRow(canal);
             barCodeTxt.setText("");
-            
-        
+
+        }
     }
-    private boolean isProductoRepetido (DefaultTableModel model, ProductosInventario producto){
-        for(int count=0; count < model.getRowCount(); count++){
-            if(producto.equals((ProductosInventario)model.getValueAt(count, 2))){
+
+    private boolean isProductoRepetido(DefaultTableModel model, ProductosInventario producto) {
+        for (int count = 0; count < model.getRowCount(); count++) {
+            if (producto.equals((ProductosInventario) model.getValueAt(count, 2))) {
                 return true;
             }
-        } return false;
-        
+        }
+        return false;
+
     }
     private void productoCodigoAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyReleased
         char c = evt.getKeyChar();
@@ -415,7 +468,7 @@ public class EnviosPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_productoCodigoAreaKeyTyped
 
     private void productosLovActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productosLovActionPerformed
-        
+
         productoCodigoArea.setText(((ProductosHasProveedores) productosLov.getSelectedItem()).getCodigo().toString());
     }//GEN-LAST:event_productosLovActionPerformed
 
@@ -432,9 +485,9 @@ public class EnviosPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_pesoManualChkActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+
         changeScanned(barCodeTxt.getText());
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -442,17 +495,53 @@ public class EnviosPanel extends javax.swing.JPanel {
         String peso = "";
         if (pesoManualChk.isSelected()) {
             peso = pesoManualLbl.getText();
-        }else{
+        } else {
             peso = pesoBasculaLbl.getText();
         }
-        try {
-            productoNuevo = productoDAO.getProductoPesado(peso, ((ProductosHasProveedores)productosLov.getSelectedItem()).getProductos(),model);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
-        }
-        if(isProductoRepetido(model, productoNuevo)){
-            return;
-        }
+        if (modoOperacion.equals("RECIBO")) {
+try {
+                productoNuevo = productoDAO.getProductoPesado(peso, ((ProductosHasProveedores) productosLov.getSelectedItem()).getProductos(), transferenciaSeleccionada);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+                return;
+            }
+            if (isProductoRepetido(model, productoNuevo)) {
+                return;
+            }
+            for (int row = 0; row < model.getRowCount(); row++) {
+                ProductosInventario productoRow = (ProductosInventario) model.getValueAt(row, 2);
+                if (productoRow.equals(productoNuevo)) {
+                    Mermas merma = null;
+                    productoRow.setEstatus("ACTIVO");
+                    if(productoNuevo.getPeso().compareTo(productoRow.getPeso())==1){
+                        merma = new Mermas();
+                        merma.setFecha(new Date());
+                        merma.setProductosInventario(productoRow);
+                        merma.setTranferencias(transferenciaSeleccionada);
+                        merma.setPeso(productoNuevo.getPeso().subtract(productoRow.getPeso()));
+                        model.setValueAt(merma.getPeso(), row, 5);
+                    }
+                    model.setValueAt("ACTIVO", row, 4);
+                    model.setValueAt(productoRow.getTranferencias().getUbicacionesByDestino(), row, 3);
+                    productoRow.setUbicaciones(productoRow.getTranferencias().getUbicacionesByDestino());
+                    try {
+                        transferenciasDao.actualizarTransferencias(productoRow.getTranferencias(),merma);
+                        return;
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, ex.getMessage());
+                        return;
+                    }
+                }
+            }
+        } else {
+            try {
+                productoNuevo = productoDAO.getProductoPesado(peso, ((ProductosHasProveedores) productosLov.getSelectedItem()).getProductos(), model);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
+            if (isProductoRepetido(model, productoNuevo)) {
+                return;
+            }
             Object[] canal = new Object[5];
 
             canal[0] = productoNuevo.getPeso();
@@ -461,15 +550,16 @@ public class EnviosPanel extends javax.swing.JPanel {
             canal[3] = productoNuevo.getUbicaciones();
 
             model.addRow(canal);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void enviarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enviarBtnActionPerformed
         List<ProductosInventario> productos = new ArrayList<>();
-        for(int row = 0; row < model.getRowCount(); row++){
+        for (int row = 0; row < model.getRowCount(); row++) {
             productos.add((ProductosInventario) model.getValueAt(row, 2));
         }
-        if(productos == null || productos.isEmpty()){
-            JOptionPane.showMessageDialog(null,"Debe seleccionar almenos un producto para transferir");
+        if (productos == null || productos.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar almenos un producto para transferir");
             return;
         }
         Tranferencias transferencia = new Tranferencias();
@@ -478,20 +568,20 @@ public class EnviosPanel extends javax.swing.JPanel {
         transferencia.setUbicacionesByDestino((Ubicaciones) almacenLOV.getSelectedItem());
         transferencia.setUbicacionesBySalida(productos.get(0).getUbicaciones());
         transferencia.setUsuarios(UsuarioFirmado.getUsuarioFirmado());
-        if(Objects.equals(transferencia.getUbicacionesBySalida().getCodigo(), transferencia.getUbicacionesByDestino().getCodigo())){
-            JOptionPane.showMessageDialog(null,"Debe seleccionar una ubicación de destino diferente a la ubicación de salida.");
+        if (Objects.equals(transferencia.getUbicacionesBySalida().getCodigo(), transferencia.getUbicacionesByDestino().getCodigo())) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar una ubicación de destino diferente a la ubicación de salida.");
             return;
         }
-        for(ProductosInventario producto : productos){
+        for (ProductosInventario producto : productos) {
             producto.setEstatus("EN TRANSFERENCIA");
             producto.setTranferencias(transferencia);
         }
-        try{
-        transferenciasDao.Transferir(transferencia, productos);
-        model.setRowCount(0);
-        JOptionPane.showMessageDialog(null,"El producto se envió correctamente");
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null,"Ocurrió un error al transferir los productos.");
+        try {
+            transferenciasDao.Transferir(transferencia, productos);
+            model.setRowCount(0);
+            JOptionPane.showMessageDialog(null, "El producto se envió correctamente");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Ocurrió un error al transferir los productos.");
         }
     }//GEN-LAST:event_enviarBtnActionPerformed
 
@@ -499,6 +589,15 @@ public class EnviosPanel extends javax.swing.JPanel {
         model.removeRow(tablaCanales.getSelectedRow());
     }//GEN-LAST:event_quitarBtnActionPerformed
 
+    public Tranferencias getTransferenciaSeleccionada() {
+        return transferenciaSeleccionada;
+    }
+
+    public void setTransferenciaSeleccionada(Tranferencias transferenciaSeleccionada) {
+        this.transferenciaSeleccionada = transferenciaSeleccionada;
+    }
+
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox almacenLOV;

@@ -18,6 +18,7 @@ import mapping.Productos;
 import mapping.ProductosHasProveedores;
 import mapping.ProductosInventario;
 import mapping.Proveedores;
+import mapping.Tranferencias;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
@@ -543,7 +544,8 @@ public class ProductoDAO {
           String hql = "From ProductosInventario PI "
                   + "inner join PI.productosHasProveedores as PHP"
                   + " inner join PHP.productos as P "
-                  + "where PI.estatus = \"ACTIVO\" and  P.codigo ="+producto.getCodigo();
+                  + "where PI.estatus = \"ACTIVO\" and  P.codigo ="+producto.getCodigo()
+                  + " and PI.peso >= "+peso;
           if(model.getRowCount()>0){
               hql += " AND PI.codigo not in (";
               for(int row = 0; row < model.getRowCount(); row++){
@@ -562,6 +564,46 @@ public class ProductoDAO {
                   throw new Exception("No se encontró el producto buscado en el inventario.");
               }
               productoInventario = (ProductosInventario) ((Object[])query.uniqueResult())[0];
+              Hibernate.initialize(productoInventario.getProductosHasProveedores().getProductos());
+              Hibernate.initialize(productoInventario.getUbicaciones());
+              Hibernate.initialize(productoInventario.getProductosHasProveedores().getProveedores());
+              return productoInventario;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los productos.");
+
+          } finally {
+              try {
+                  if(session.isOpen()){
+                    session.close();
+                  }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los productos.");
+              }
+        }
+    }
+    
+    
+    public ProductosInventario getProductoPesado(String peso, Productos producto,Tranferencias transferencia) throws Exception{
+        Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          ProductosInventario productoInventario = new ProductosInventario();
+          String hql = "From Tranferencias TR "
+                  + "inner join TR.productosInventarios PI "
+                  + "inner join PI.productosHasProveedores as PHP"
+                  + " inner join PHP.productos as P "
+                  + "where PI.estatus = \"EN TRANSFERENCIA\" and  P.codigo ="+producto.getCodigo()
+                  + " and TR.codigo="+transferencia.getCodigo()
+                  + " and PI.peso >= "+peso;
+          
+              hql += " order by abs(peso - "+peso+")";
+          try {
+              Query query = session.createQuery(hql);
+              query.setMaxResults(1);
+              if(query.uniqueResult() == null){
+                  throw new Exception("No se encontró el producto buscado en el inventario.");
+              }
+              productoInventario = (ProductosInventario) ((Object[])query.uniqueResult())[1];
               Hibernate.initialize(productoInventario.getProductosHasProveedores().getProductos());
               Hibernate.initialize(productoInventario.getUbicaciones());
               Hibernate.initialize(productoInventario.getProductosHasProveedores().getProveedores());
