@@ -95,7 +95,6 @@ public class TransferenciasDAO {
                     session.update(producto);
                     if (producto.getEstatus().equals("EN TRANSFERENCIA")) {
                         transferenciaCompleta = false;
-                        break;
                     }
                 }
                 if (transferenciaCompleta) {

@@ -176,13 +176,13 @@ public class MainFrame extends javax.swing.JFrame {
             if(prueb instanceof AbrirProcesoPanel){
                 ((AbrirProcesoPanel)prueb).manager.removeKeyEventDispatcher(((AbrirProcesoPanel)prueb).dispacher);
             }else if(prueb instanceof InventariosMain){
-                ((InventariosMain)prueb).manager.removeKeyEventDispatcher(((AbrirProcesoPanel)prueb).dispacher);
+                ((InventariosMain)prueb).manager.removeKeyEventDispatcher(((InventariosMain)prueb).dispacher);
             }else if(prueb instanceof ReciboProductoBC){
-                ((ReciboProductoBC)prueb).manager.removeKeyEventDispatcher(((AbrirProcesoPanel)prueb).dispacher);
+                ((ReciboProductoBC)prueb).manager.removeKeyEventDispatcher(((ReciboProductoBC)prueb).dispacher);
             }else if(prueb instanceof EnviosPanel){
-                ((EnviosPanel)prueb).manager.removeKeyEventDispatcher(((AbrirProcesoPanel)prueb).dispacher);
+                ((EnviosPanel)prueb).manager.removeKeyEventDispatcher(((EnviosPanel)prueb).dispacher);
             }else if(prueb instanceof ReciboTransferenciasPanel){
-                ((ReciboTransferenciasPanel)prueb).manager.removeKeyEventDispatcher(((AbrirProcesoPanel)prueb).dispacher);
+                ((ReciboTransferenciasPanel)prueb).manager.removeKeyEventDispatcher(((ReciboTransferenciasPanel)prueb).dispacher);
             }
             mainPanel.remove(internalFrame);
         }

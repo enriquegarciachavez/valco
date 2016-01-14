@@ -12,6 +12,7 @@ import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -505,20 +506,19 @@ try {
                 JOptionPane.showMessageDialog(null, ex.getMessage());
                 return;
             }
-            if (isProductoRepetido(model, productoNuevo)) {
-                return;
-            }
+
             for (int row = 0; row < model.getRowCount(); row++) {
                 ProductosInventario productoRow = (ProductosInventario) model.getValueAt(row, 2);
                 if (productoRow.equals(productoNuevo)) {
                     Mermas merma = null;
+                    productoNuevo.setPeso(new BigDecimal(peso));
                     productoRow.setEstatus("ACTIVO");
-                    if(productoNuevo.getPeso().compareTo(productoRow.getPeso())==1){
+                    if(productoNuevo.getPeso().compareTo(productoRow.getPeso())==-1){
                         merma = new Mermas();
                         merma.setFecha(new Date());
                         merma.setProductosInventario(productoRow);
                         merma.setTranferencias(transferenciaSeleccionada);
-                        merma.setPeso(productoNuevo.getPeso().subtract(productoRow.getPeso()));
+                        merma.setPeso(productoNuevo.getPeso().subtract(productoRow.getPeso()).abs());
                         model.setValueAt(merma.getPeso(), row, 5);
                     }
                     model.setValueAt("ACTIVO", row, 4);
