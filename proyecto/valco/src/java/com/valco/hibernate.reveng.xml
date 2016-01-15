@@ -37,4 +37,6 @@
   <table-filter match-name="FAMILIAS"/>
   <table-filter match-name="SUBFAMILIAS"/>
   <table-filter match-name="PRODUCTOS"/>
+  <table-filter match-name="POLIZAS"/>
+  <table-filter match-name="CONCEPTOS"/>
 </hibernate-reverse-engineering>

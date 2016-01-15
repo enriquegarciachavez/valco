@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 16/03/2015 07:32:12 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.valco.pojo.Conceptos" table="CONCEPTOS" catalog="valco" optimistic-lock="version">
+        <id name="codigo" type="java.lang.Integer">
+            <column name="CODIGO" />
+            <generator class="identity" />
+        </id>
+        <property name="debe" type="big_decimal">
+            <column name="DEBE" precision="8" not-null="true"/>
+        </property>
+        <property name="haber" type="big_decimal">
+            <column name="HABER" precision="8" not-null="true" />
+        </property>
+        <many-to-one name="poliza" class="com.valco.pojo.Polizas" fetch="select">
+            <column name="POLIZAS_CODIGO" not-null="true" />
+         </many-to-one>
+         <many-to-one name="cuentaContable" class="com.valco.pojo.CuentasContables" fetch="select">
+            <column name="CUENTAS_CONTABLES_CODIGO" not-null="true" />
+         </many-to-one>
+    </class>
+</hibernate-mapping>

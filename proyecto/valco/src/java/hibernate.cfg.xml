@@ -44,5 +44,7 @@
     <mapping resource="com/valco/pojo/Devoluciones.hbm.xml"/>
     <mapping resource="com/valco/pojo/Familias.hbm.xml"/>
     <mapping resource="com/valco/pojo/Subfamilias.hbm.xml"/>
+    <mapping resource="com/valco/pojo/Polizas.hbm.xml"/>
+    <mapping resource="com/valco/pojo/Conceptos.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>
