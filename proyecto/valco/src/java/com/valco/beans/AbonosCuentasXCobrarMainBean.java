@@ -10,7 +10,9 @@ import com.valco.pojo.Clientes;
 import com.valco.dao.AbonosCuentasXCobrarDAO;
 import com.valco.dao.NotasVentaDAO;
 import com.valco.pojo.AbonosCuentasXCobrar;
+import com.valco.pojo.AbonosCuentasXPagar;
 import com.valco.pojo.CuentasXCobrar;
+import com.valco.pojo.CuentasXPagar;
 import com.valco.pojo.NotasDeVenta;
 import com.valco.utility.MsgUtility;
 import java.text.SimpleDateFormat;
@@ -59,6 +61,7 @@ public class AbonosCuentasXCobrarMainBean {
     DataModel modeloNotas;
     UIInput importe;
     Date fecha;
+    
     
     
     
@@ -232,6 +235,9 @@ public class AbonosCuentasXCobrarMainBean {
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
+
+      
+    
     
     @PostConstruct
     public void init(){
@@ -251,7 +257,7 @@ public class AbonosCuentasXCobrarMainBean {
             abonoSeleccionado.setEstatus("ACTIVO");
             abonoSeleccionado.setCuentasXCobrar(notaSeleccionado.getCuentaXCobrar());
             abonoscuentascobrarDAO.insertarAbono(abonoSeleccionado);
-           
+                      
             MsgUtility.showInfoMeage("Se realizó el abono correctamente.");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
@@ -262,12 +268,14 @@ public class AbonosCuentasXCobrarMainBean {
         try {
             abonoSeleccionado.setEstatus("CANCELADO");
             abonoscuentascobrarDAO.actualizarAbono(abonoSeleccionado);
-            MsgUtility.showInfoMeage("Se canceló el abono correctamente.");
+           MsgUtility.showInfoMeage("Se canceló el abono correctamente.");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
 
     }
+    
+   
     
     
     

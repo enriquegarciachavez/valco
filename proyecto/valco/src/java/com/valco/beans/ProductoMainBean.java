@@ -313,7 +313,7 @@ public class ProductoMainBean {
         descripcion = 
                 this.productoDao.getProductosXDescripcion(value.toString());
         if(descripcion != null){
-            throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe")); 
+            throw new ValidatorException(new FacesMessage("El producto que capturó ya existe")); 
         }
         
     }

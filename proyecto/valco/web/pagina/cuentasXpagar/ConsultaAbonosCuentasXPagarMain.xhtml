@@ -15,7 +15,7 @@
             </ui:define>
 
             <ui:define name="content">
-                <h:form>
+                <h:form id="form">
                     <h:panelGrid columns="4"
                                  cellpadding="5"
                                  cellspacing="5"
@@ -55,9 +55,11 @@
                         <p:inputText id="orden" style="width: 100%;" value="#{consultaAbonosCuentasXPagasBean.orden}"/>
 
                         <f:facet name="footer">
-                            <p:commandButton value="Buscar"
-                                             update="tablaOrdenes"
-                                             action="#{consultaAbonosCuentasXPagasBean.consultarAbonos()}"/>
+                            <p:commandButton 
+                                id="btnBuscar"
+                                value="Buscar"
+                                update="tablaOrdenes"
+                                action="#{consultaAbonosCuentasXPagasBean.consultarAbonos()}"/>
                         </f:facet>
 
                     </h:panelGrid>
@@ -77,7 +79,7 @@
                         <p:column style="width:16px">
                             <p:rowToggler />
                         </p:column>
-                        
+
                         <p:column headerText="Codigo" >
                             <h:outputText value="#{orden.cuentaXPagar.codigo}" />
                         </p:column>
@@ -136,6 +138,14 @@
 
 
                 </h:form>
+
+                
+                <p:blockUI block="form" trigger=":form:btnBuscar   ">
+                    Cargando.... Espere porfavor<br />
+                    <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
+
+                </p:blockUI>
+                
             </ui:define>
 
         </ui:composition>

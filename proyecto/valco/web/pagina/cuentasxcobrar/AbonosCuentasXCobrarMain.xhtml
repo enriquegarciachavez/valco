@@ -17,13 +17,15 @@
                     <p:menubar>
                         
                         <p:menuitem 
+                            id="btnAbonar"
                             value="Abonar" 
                             icon="ui-icon-plusthick"
                             action="#{abonosCuentasXCobrarMainBean.insertarAbono()}" 
-                            update="tabla"  
+                            update=":formAsignar:tabla"  
                             
                             partialSubmit="true"/>
                         <p:menuitem 
+                            id="btnCancelar"
                           value="Cancelar Abono" 
                             icon="ui-icon-circle-close"
                             oncomplete="PF('cancelar').show();;" 
@@ -78,14 +80,7 @@
                         <p:message for="importe" 
                                    display="icon" />
 
-                        <p:commandButton 
-                            id="guardar"
-                            value="Abonar" 
-                            icon="ui-icon-plusthick"
-                            partialSubmit="false"
-                            update="formAsignar :formAsignar:tabla"
-                            action="#{abonosCuentasXCobrarMainBean.insertarAbono()}"
-                            />
+                        
 
 
                     </h:panelGrid>
@@ -198,6 +193,13 @@
                         
                     </p:dialog>
                 </h:form>
+                
+                
+                <p:blockUI block="formAsignar" trigger=":formAsignar:btnAbonar :formAsignar:btnCancelar ">
+                    Cargando.... Espere porfavor<br />
+                    <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
+
+                </p:blockUI>
             </ui:define>
 
 

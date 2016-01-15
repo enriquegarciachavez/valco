@@ -100,9 +100,8 @@
                             </f:facet>
 
                             <p:outputLabel for="descripcion" value="Ingresar Producto: " />
-                            <p:inputText id="descripcion" validatorMessage="El campo ingresar producto solo puede contener letras o se esta duplicando el nombre de un producto" validator="#{productoMainBean.validarDescripcion}" required="true" label="descripcion" value="#{productoMainBean.productoNuevo.descripcion}" >
-                                <f:validateRegex
-                                    pattern="^[A-Za-z\s]+$"/>
+                            <p:inputText id="descripcion"  validator="#{productoMainBean.validarDescripcion}" required="true" label="descripcion" value="#{productoMainBean.productoNuevo.descripcion}" >
+                                
                             </p:inputText>
                             <p:message for="descripcion" display="icon" />
 
@@ -189,9 +188,8 @@
                             </f:facet>
 
                             <p:outputLabel for="descripcion1" value="Ingresar Producto: " />
-                            <p:inputText id="descripcion1" validator="#{productoMainBean.validarModificarDescripcion}" required="true" validatorMessage="El campo ingresar producto solo puede contener letras o se esta duplicando el nombre de algún producto" label="descripcion1" value="#{productoMainBean.productoSeleccionado.descripcion}">
-                                <f:validateRegex
-                                    pattern="^[A-Za-z\s]+$"/>
+                            <p:inputText id="descripcion1" validator="#{productoMainBean.validarModificarDescripcion}" required="true" label="descripcion1" value="#{productoMainBean.productoSeleccionado.descripcion}">
+                                
                             </p:inputText>
                             <p:message for="descripcion1" display="icon" />
 

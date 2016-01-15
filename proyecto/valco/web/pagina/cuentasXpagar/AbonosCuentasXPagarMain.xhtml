@@ -17,6 +17,7 @@
                     <p:menubar>
                         
                         <p:menuitem 
+                            id="btnAbonar"
                             value="Abonar" 
                             icon="ui-icon-plusthick"                      
                             partialSubmit="true"
@@ -24,6 +25,7 @@
                             action="#{abonosCuentasXPagarMainBean.insertarAbono()}"/>
                             
                         <p:menuitem 
+                            id="btnCancelar"
                             value="Cancelar Abono" 
                             icon="ui-icon-circle-close"
                             oncomplete="PF('cancelar').show();;" 
@@ -185,7 +187,11 @@
                     </p:dialog>
                 </h:form>>
                 
-                
+                <p:blockUI block="formAbonar" trigger=":formAbonar:btnAbonar :formAbonar:btnCancelar ">
+                    Cargando.... Espere porfavor<br />
+                    <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
+
+                </p:blockUI>
             </ui:define>
 
             
