@@ -50,6 +50,7 @@
     <bean id="subfamiliasDAO" class="com.valco.dao.SubfamiliasDAO"/>
     <bean id="productosHasProveedoresDAO" class="com.valco.dao.ProductosHasProveedoresDAO"/>
     <bean id="cuentascontablesDAO" class="com.valco.dao.CuentasContablesDAO"/>
+    <bean id="polizasDAO" class="com.valco.dao.PolizasDAO"/>
     <bean id="AuthorizationManager"
           class="com.valco.filters.AuthorizationManagerDefaultImpl"/>
 </beans>

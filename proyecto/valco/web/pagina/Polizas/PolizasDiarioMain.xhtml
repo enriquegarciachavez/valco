@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../templates/Template1.xhtml">
+
+            <ui:define name="title">
+                Polizas Diario
+            </ui:define>
+
+            <ui:define name="content">
+                <h:form id="formBuscar">
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" />
+                    <h:panelGrid id="polizasGrid1" columns="6" cellpadding="5">
+                        
+
+                        <p:outputLabel for="fecha" value="Fecha:" />
+                        <p:calendar id="fecha" value="#{polizasMainBean.fecha}" required="true" />
+
+                        <p:outputLabel for="tipopoliza" value="Tipo de Poliza: "  />
+                        <p:selectOneMenu id="tipopoliza" value="#{polizasMainBean.tipoPoliza}" effect="fold" editable="true" required="true" >
+                            <f:selectItem itemLabel="Select One" itemValue="" />
+                            <f:selectItem itemLabel="DE DIARIO" itemValue="" />
+                            <f:selectItem itemLabel="DE INGRESOS" itemValue="" />
+                        </p:selectOneMenu>
+                        <p:message for="tipopoliza" display="icon" />
+
+                        <p:commandButton value="Buscar"  id="Buscar" icon="ui-icon-search" update=":formPolizas" action="#{polizasMainBean.buscar()}"/> 
+                        
+                    </h:panelGrid>
+
+                </h:form>
+
+                <h:form id="formPolizas" >
+                    <p:panel header="Crear Nueva Poliza" style="margin-bottom:20px" >
+                        <h:panelGrid id="polizasGrid" columns="2" cellpadding="5" >
+
+                            <p:outputLabel for="nocuenta" value="No. de Cuenta"  />
+                            <p:selectOneMenu id="nocuenta" required="true" value="#{polizasMainBean.conceptoNuevo.cuentaContable}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
+                                             effect="fade" var="nc" style="width:160px" filter="true" filterMatchMode="contains">
+                                <f:selectItem itemLabel="Seleccione Uno" itemValue="" />
+                                <f:selectItems value="#{polizasMainBean.cuentasContables}" var="poliza" itemLabel="#{poliza.noDeCuenta} | #{poliza.descripcion}" itemValue="#{poliza}" />
+
+                                <p:column style="width:10%">
+                                    <h:outputText value="#{nc.noDeCuenta}" />
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{nc.descripcion} " />
+                                </p:column>
+                            </p:selectOneMenu>
+
+                            <h:outputLabel value="DEBE : " for="debe"></h:outputLabel>
+                            <p:inputText id="debe" value="#{polizasMainBean.conceptoNuevo.debe}" required="false"/>
+
+                            <h:outputLabel value="HABER : " for="haber"></h:outputLabel>
+                            <p:inputText id="haber" value="#{polizasMainBean.conceptoNuevo.haber}" required="false"/>
+
+                            <p:commandButton id="btnAgregar" value="Agregar" update=":formPolizas:tablaConceptos" action="#{polizasMainBean.reinit}" >
+                                <p:collector value="#{polizasMainBean.conceptoNuevo}" addTo="#{polizasMainBean.polizaNueva.conpolizaNuevaceptos}" unique="false"/>
+                            </p:commandButton>
+                        </h:panelGrid>
+
+                        <p:outputPanel id="conceptos">
+                            <p:dataTable   value="#{polizasMainBean.polizaNueva.conceptos}" var="concepto" id="tablaConceptos">
+
+                                <p:column headerText="No. de Cuenta">
+                                    <h:outputText value="#{concepto.cuentaContable.noDeCuenta}" />
+                                </p:column>
+
+                                <p:column headerText="Cuenta">
+                                    <h:outputText value="#{concepto.cuentaContable.descripcion}" />
+                                </p:column>
+
+                                <p:column headerText="DEBE">
+                                    <h:outputText value="#{concepto.debe}" />
+                                </p:column>
+
+                                <p:column headerText="HABER">
+                                    <h:outputText value="#{concepto.haber}" />
+                                </p:column>
+
+                                <p:column headerText="Action">
+                                    <p:commandLink value="Remove" update=":formPolizas:conceptos" process=":formPolizas:conceptos" action="#{polizasMainBean.borrarConcepto(concepto)}">
+                                        <p:collector value="#{concepto}" removeFrom="#{polizasMainBean.polizaNueva.conceptos}" unique="true"/>
+                                    </p:commandLink>
+                                </p:column>
+
+                            </p:dataTable>
+                        </p:outputPanel>
+
+                    </p:panel>
+
+                </h:form>
+                <p:blockUI block="formPolizas" trigger=":formBuscar:Buscar">
+                    Cargando.... Espere porfavor<br />
+                    <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
+
+                </p:blockUI>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -20,6 +20,7 @@ public class Conceptos {
     CuentasContables cuentaContable;
 
     public Conceptos() {
+       
     }
     
     
