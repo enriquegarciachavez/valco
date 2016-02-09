@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="poliza_diario_main" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fecha" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT
+     CLIENTES.`CODIGO` AS CLIENTES_CODIGO,
+     CLIENTES.`RAZON_SOCIAL` AS CLIENTES_RAZON_SOCIAL,
+     CLIENTES.`APELLIDO_PATERNO` AS CLIENTES_APELLIDO_PATERNO,
+     CLIENTES.`APELLIDO_MATERNO` AS CLIENTES_APELLIDO_MATERNO,
+     CLIENTES.`NOMBRES` AS CLIENTES_NOMBRES,
+     CLIENTES.`ESTATUS` AS CLIENTES_ESTATUS,
+     CLIENTES.`CUENTA_BANCARIA` AS CLIENTES_CUENTA_BANCARIA,
+     CLIENTES.`BANCO` AS CLIENTES_BANCO,
+     NOTAS_DE_VENTA.`CODIGO` AS NOTAS_DE_VENTA_CODIGO,
+     NOTAS_DE_VENTA.`FOLIO` AS NOTAS_DE_VENTA_FOLIO,
+     NOTAS_DE_VENTA.`FECHA_DE_VENTA` AS NOTAS_DE_VENTA_FECHA_DE_VENTA,
+     NOTAS_DE_VENTA.`FLETE` AS NOTAS_DE_VENTA_FLETE,
+     NOTAS_DE_VENTA.`ESTATUS` AS NOTAS_DE_VENTA_ESTATUS,
+     NOTAS_DE_VENTA.`REPARTIDORES_CODIGO` AS NOTAS_DE_VENTA_REPARTIDORES_CODIGO,
+     NOTAS_DE_VENTA.`CLIENTES_CODIGO` AS NOTAS_DE_VENTA_CLIENTES_CODIGO,
+     NOTAS_DE_VENTA.`FACTURAS_CODIGO` AS NOTAS_DE_VENTA_FACTURAS_CODIGO,
+     NOTAS_DE_VENTA.`USUARIOS_CODIGO` AS NOTAS_DE_VENTA_USUARIOS_CODIGO,
+     FACTURAS.`CODIGO` AS FACTURAS_CODIGO,
+     date(FACTURAS.`FECHA`) AS FACTURAS_FECHA,
+     GROUP_CONCAT(FACTURAS.`FOLIO`SEPARATOR ', ') AS FACTURAS_FOLIO,
+     SUM(FACTURAS.`SUBTOTAL`) AS FACTURAS_SUBTOTAL,
+     SUM(FACTURAS.`IVA`) AS FACTURAS_IVA,
+     FACTURAS.`TOTAL` AS FACTURAS_TOTAL
+FROM
+     `CLIENTES` CLIENTES INNER JOIN `NOTAS_DE_VENTA` NOTAS_DE_VENTA ON CLIENTES.`CODIGO` = NOTAS_DE_VENTA.`CLIENTES_CODIGO`
+     INNER JOIN `FACTURAS` FACTURAS ON NOTAS_DE_VENTA.`CODIGO` = FACTURAS.`NOTAS_DE_VENTA_CODIGO`
+WHERE date(FACTURAS.`FECHA`) = $P{fecha}
+GROUP BY CLIENTES.`CODIGO`]]>
+	</queryString>
+	<field name="CLIENTES_CODIGO" class="java.lang.Integer"/>
+	<field name="CLIENTES_RAZON_SOCIAL" class="java.lang.String"/>
+	<field name="CLIENTES_APELLIDO_PATERNO" class="java.lang.String"/>
+	<field name="CLIENTES_APELLIDO_MATERNO" class="java.lang.String"/>
+	<field name="CLIENTES_NOMBRES" class="java.lang.String"/>
+	<field name="CLIENTES_ESTATUS" class="java.lang.String"/>
+	<field name="CLIENTES_CUENTA_BANCARIA" class="java.lang.String"/>
+	<field name="CLIENTES_BANCO" class="java.lang.String"/>
+	<field name="NOTAS_DE_VENTA_CODIGO" class="java.lang.Integer"/>
+	<field name="NOTAS_DE_VENTA_FOLIO" class="java.lang.Integer"/>
+	<field name="NOTAS_DE_VENTA_FECHA_DE_VENTA" class="java.sql.Date"/>
+	<field name="NOTAS_DE_VENTA_FLETE" class="java.lang.Integer"/>
+	<field name="NOTAS_DE_VENTA_ESTATUS" class="java.lang.String"/>
+	<field name="NOTAS_DE_VENTA_REPARTIDORES_CODIGO" class="java.lang.Integer"/>
+	<field name="NOTAS_DE_VENTA_CLIENTES_CODIGO" class="java.lang.Integer"/>
+	<field name="NOTAS_DE_VENTA_FACTURAS_CODIGO" class="java.lang.Integer"/>
+	<field name="NOTAS_DE_VENTA_USUARIOS_CODIGO" class="java.lang.Integer"/>
+	<field name="FACTURAS_CODIGO" class="java.lang.Integer"/>
+	<field name="FACTURAS_FECHA" class="java.sql.Date"/>
+	<field name="FACTURAS_FOLIO" class="java.lang.String"/>
+	<field name="FACTURAS_SUBTOTAL" class="java.math.BigDecimal"/>
+	<field name="FACTURAS_IVA" class="java.math.BigDecimal"/>
+	<field name="FACTURAS_TOTAL" class="java.math.BigDecimal"/>
+	<variable name="totalDebe" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{FACTURAS_SUBTOTAL}]]></variableExpression>
+	</variable>
+	<variable name="totalIva" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{FACTURAS_IVA}]]></variableExpression>
+	</variable>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="79"/>
+	</title>
+	<pageHeader>
+		<band height="35"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61">
+			<textField evaluationTime="Report">
+				<reportElement x="366" y="41" width="100" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA["\$"+$V{totalDebe}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="101" y="0" width="231" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CLIENTES_CUENTA_BANCARIA}+" - "+ $F{CLIENTES_RAZON_SOCIAL}+" ("+$F{FACTURAS_FOLIO}+")"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="307" y="0" width="100" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA["\$"+$F{FACTURAS_SUBTOTAL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="98">
+			<textField evaluationTime="Report">
+				<reportElement x="451" y="39" width="100" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA["\$"+$V{totalDebe}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="366" y="0" width="100" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA["\$"+$V{totalIva}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="451" y="78" width="100" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA["\$"+$V{totalIva}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54"/>
+	</pageFooter>
+	<summary>
+		<band height="42"/>
+	</summary>
+</jasperReport>

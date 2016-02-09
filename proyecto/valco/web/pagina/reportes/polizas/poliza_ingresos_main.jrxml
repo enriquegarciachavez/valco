@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="poliza_ingresos_main" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="182"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\apps\\valco\\valco\\proyecto\\valco\\web\\pagina\\reportes\\polizas\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecha" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT
+     POLIZAS.`CODIGO` AS POLIZAS_CODIGO,
+     POLIZAS.`FECHA` AS POLIZAS_FECHA,
+     POLIZAS.`TIPO_POLIZA` AS POLIZAS_TIPO_POLIZA,
+     POLIZAS.`ESTATUS` AS POLIZAS_ESTATUS
+FROM
+     `POLIZAS` POLIZAS]]>
+	</queryString>
+	<variable name="totalClientes" class="java.math.BigDecimal"/>
+	<variable name="totalHaber" class="java.math.BigDecimal" calculation="Sum"/>
+	<variable name="totalHaberes" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{totalHaber}+$V{totalClientes}]]></variableExpression>
+	</variable>
+	<background>
+		<band/>
+	</background>
+	<detail>
+		<band height="506">
+			<subreport>
+				<reportElement positionType="Float" x="0" y="58" width="572" height="31"/>
+				<subreportParameter name="FECHA">
+					<subreportParameterExpression><![CDATA[$P{fecha}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="SUMATORIA" toVariable="totalClientes"/>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "poliza_ingresos_clients_sub.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="0" y="40" width="572" height="18"/>
+				<subreportParameter name="fecha">
+					<subreportParameterExpression><![CDATA[$P{fecha}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="totalHaber" toVariable="totalHaber"/>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "poliza_ingresos_conceptos_sub.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="136">
+			<textField evaluationTime="Report">
+				<reportElement positionType="Float" x="456" y="0" width="100" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA["\$"+($V{totalClientes}+$V{totalHaber})]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="20"/>
+	</pageFooter>
+</jasperReport>

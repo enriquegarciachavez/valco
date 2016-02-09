@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="poliza_ingresos_conceptos_sub" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fecha" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT
+     POLIZAS.`CODIGO` AS POLIZAS_CODIGO,
+     POLIZAS.`FECHA` AS POLIZAS_FECHA,
+     POLIZAS.`TIPO_POLIZA` AS POLIZAS_TIPO_POLIZA,
+     POLIZAS.`ESTATUS` AS POLIZAS_ESTATUS,
+     CONCEPTOS.`CODIGO` AS CONCEPTOS_CODIGO,
+     if(CONCEPTOS.`DEBE` IS NULL,' ',CONCAT("$",CONCEPTOS.`DEBE`)) AS CONCEPTOS_DEBE,
+     if(CONCEPTOS.`HABER` IS NULL, ' ',CONCAT("$",CONCEPTOS.`HABER`)) AS CONCEPTOS_HABER,
+	CONCEPTOS.`HABER` as HABER_NUM,
+     CONCEPTOS.`POLIZAS_CODIGO` AS CONCEPTOS_POLIZAS_CODIGO,
+     CONCEPTOS.`CUENTAS_CONTABLES_CODIGO` AS CONCEPTOS_CUENTAS_CONTABLES_CODIGO,
+     CUENTAS_CONTABLES.`CODIGO` AS CUENTAS_CONTABLES_CODIGO,
+     CUENTAS_CONTABLES.`NO_DE_CUENTA` AS CUENTAS_CONTABLES_NO_DE_CUENTA,
+     CUENTAS_CONTABLES.`DESCRIPCION` AS CUENTAS_CONTABLES_DESCRIPCION,
+     CUENTAS_CONTABLES.`ES_BANCO` AS CUENTAS_CONTABLES_ES_BANCO,
+     CUENTAS_CONTABLES.`ESTATUS` AS CUENTAS_CONTABLES_ESTATUS
+FROM
+     `POLIZAS` POLIZAS INNER JOIN `CONCEPTOS` CONCEPTOS ON POLIZAS.`CODIGO` = CONCEPTOS.`POLIZAS_CODIGO`
+     INNER JOIN `CUENTAS_CONTABLES` CUENTAS_CONTABLES ON CONCEPTOS.`CUENTAS_CONTABLES_CODIGO` = CUENTAS_CONTABLES.`CODIGO`
+WHERE POLIZAS.`TIPO_POLIZA` = 'DE INGRESOS'
+AND POLIZAS.`FECHA` = $P{fecha}]]>
+	</queryString>
+	<field name="POLIZAS_CODIGO" class="java.lang.Integer"/>
+	<field name="POLIZAS_FECHA" class="java.sql.Date"/>
+	<field name="POLIZAS_TIPO_POLIZA" class="java.lang.String"/>
+	<field name="POLIZAS_ESTATUS" class="java.lang.String"/>
+	<field name="CONCEPTOS_CODIGO" class="java.lang.Integer"/>
+	<field name="CONCEPTOS_DEBE" class="java.lang.String"/>
+	<field name="CONCEPTOS_HABER" class="java.lang.String"/>
+	<field name="HABER_NUM" class="java.math.BigDecimal"/>
+	<field name="CONCEPTOS_POLIZAS_CODIGO" class="java.lang.Integer"/>
+	<field name="CONCEPTOS_CUENTAS_CONTABLES_CODIGO" class="java.lang.Integer"/>
+	<field name="CUENTAS_CONTABLES_CODIGO" class="java.lang.Integer"/>
+	<field name="CUENTAS_CONTABLES_NO_DE_CUENTA" class="java.lang.String"/>
+	<field name="CUENTAS_CONTABLES_DESCRIPCION" class="java.lang.String"/>
+	<field name="CUENTAS_CONTABLES_ES_BANCO" class="java.lang.Boolean"/>
+	<field name="CUENTAS_CONTABLES_ESTATUS" class="java.lang.String"/>
+	<variable name="totalHaber" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{HABER_NUM}]]></variableExpression>
+	</variable>
+	<background>
+		<band/>
+	</background>
+	<columnHeader>
+		<band height="20">
+			<staticText>
+				<reportElement x="95" y="0" width="100" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<text><![CDATA[1021 - BANCOS]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<textField>
+				<reportElement x="95" y="0" width="229" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CUENTAS_CONTABLES_NO_DE_CUENTA}+" - "+$F{CUENTAS_CONTABLES_DESCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="371" y="0" width="88" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CONCEPTOS_DEBE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="459" y="0" width="70" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CONCEPTOS_HABER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
