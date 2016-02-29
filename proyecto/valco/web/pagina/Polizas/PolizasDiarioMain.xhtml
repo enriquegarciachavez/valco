@@ -32,6 +32,7 @@
                         <p:message for="tipopoliza" display="icon" />
 
                         <p:commandButton value="Buscar"  id="Buscar" icon="ui-icon-search" update=":formPolizas" action="#{polizasMainBean.buscar()}"/> 
+                        <p:commandButton value="PDF"  id="Imprimir" icon="ui-icon-print" action="#{polizasMainBean.mostrarPdf()}"/>
                         
                     </h:panelGrid>
 

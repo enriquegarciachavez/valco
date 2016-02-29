@@ -17,6 +17,16 @@
                     <p:menubar>
 
                         <p:menuitem 
+                            value="Abarrotes"
+                            id="btnAbarrotes"
+                            icon="ui-icon-plusthick"                      
+                            partialSubmit="true"
+                            action= "#{ordenesCompraMainBean.obtenerProductosXOrdenAgrupados()}"
+                            oncomplete="PF('popupAbarrotes').show();;"
+                            update=":formEditar:tablaProductos"
+
+                            />
+                        <p:menuitem 
                             value="Editar"
                             id="btnEditar"
                             icon="ui-icon-plusthick"                      
@@ -86,7 +96,7 @@
                                         partialSubmit="true"
                                         oncomplete="PF('popupAgregar').show();;"
                                         update=":formAgregar"
-                                        
+
 
                                         />
                                     <p:menuitem 
@@ -282,7 +292,7 @@
                                 <p:column>
                                     <h:outputText value="#{c}" />
                                 </p:column>
-                               
+
                             </p:selectOneMenu>
 
                             <f:facet name="footer">
@@ -294,6 +304,116 @@
 
 
                     </p:dialog>
+                </h:form>
+
+
+                <h:form id="formAbarrotes">
+                    <p:dialog header="Capturar orden de compra para Abarrotes" widgetVar="popupAbarrotes" modal="true" position="top"
+                              id="popupAbarrotes" >
+                        <h:panelGrid id="modificarGrid"  columns="3" cellpadding="5">
+                        <p:messages id="messages" showDetail="true" autoUpdate="true" />
+
+
+                        <h:outputText value="Proveedor:"/>
+
+                        <p:selectOneMenu id="proveedoresAbarrotesLOV" required="true" value="#{ordenesCompraMainBean.proveedorAbarrotesSeleccionado}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
+                                         effect="fade" var="c" style="width:160px" filter="true" filterMatchMode="contains" >
+                            <f:selectItems value="#{ordenesCompraMainBean.proveedoresAbarrotes}" var="proveedorAbarrotes" itemLabel="#{proveedorAbarrotes}" itemValue="#{proveedorAbarrotes}" />
+
+                            <p:column style="width:10%">
+                                <h:outputText value="#{c.codigo}" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{c}" />
+                            </p:column>
+                            <p:ajax update="productosAbarrotesLOV tablaAbarrotes" listener="#{ordenesCompraMainBean.actualizarProductosAbarrotesXProveedor}" />
+                        </p:selectOneMenu>
+
+                        <p:selectOneMenu id="productosAbarrotesLOV" required="true" value="#{ordenesCompraMainBean.productoInventarioAbarrotesNuevo.productosHasProveedores}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
+                                         effect="fade" var="c" style="width:160px" filter="true" filterMatchMode="contains">
+                            <f:selectItems value="#{ordenesCompraMainBean.productosAbarrotes}" var="productoAbarrote" itemLabel="#{productoAbarrote}" itemValue="#{productoAbarrote}" />
+
+                            <p:column style="width:10%">
+                                <h:outputText value="#{c.codigo}" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{c}" />
+                            </p:column>
+
+                        </p:selectOneMenu>
+
+                        <h:outputText value="Cantidad:"/>
+                        <p:inputText value="#{ordenesCompraMainBean.productoInventarioAbarrotesNuevo.peso}" converterMessage="Debe ingresar una cantidad valida P.E. 10.00" required="true" >
+                            <f:convertNumber pattern="#,###,##0.00"/>
+                        </p:inputText>
+
+                        <h:outputText value="Precio:"/>
+                        <p:inputText value="#{ordenesCompraMainBean.productoInventarioAbarrotesNuevo.costo}"  />
+                        
+                        <p:outputLabel for="ubicacion" value="Ubicación:"  />
+                        <p:selectOneMenu 
+                            id="ubicacion" 
+                            required="true" 
+                            value="#{ordenesCompraMainBean.ubicacionSeleccionada}" 
+                            converter="omnifaces.SelectItemsConverter" 
+                            panelStyle="width:180px"
+                            effect="fade" 
+                            style="width:160px" 
+                            filter="true" 
+                            filterMatchMode="contains"
+                            var="c">
+
+                            <f:selectItems value="#{ordenesCompraMainBean.ubicaciones}" var="ubicacion" itemLabel="#{ubicacion.codigo} | #{ubicacion.oficina}"  itemValue="#{ubicacion}" />
+                            <p:column style="width:10%">
+                                <h:outputText value="#{c.codigo}" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{c.oficina}" />
+                            </p:column>
+                        </p:selectOneMenu>
+
+                        <p:commandButton id="btnAgregar" value="Agregar" update=":formAbarrotes" oncomplete="handleLoginRequest(xhr, status, args, 'popupAbarrotes' )" action="#{ordenesCompraMainBean.reInit}" >
+                            <p:collector value="#{ordenesCompraMainBean.productoInventarioAbarrotesNuevo}" addTo="#{ordenesCompraMainBean.productosInventarioAbarrotes}" unique="false"/>
+                        </p:commandButton>
+                        
+                        </h:panelGrid>
+
+
+                        <p:dataTable  id="tablaAbarrotes" editable="true" editMode="cell" var="producto" value="#{ordenesCompraMainBean.productosInventarioAbarrotes}"  rowKey="#{producto}">
+                            <f:facet name="header">
+                                Productos a ingresar
+                            </f:facet>
+                            <p:column headerText="Producto"  style="text-align:right">
+                                <h:outputText value="#{producto}"  />
+                            </p:column>
+
+                            <p:column headerText="Cantidad">
+
+                                <h:outputText value="#{producto.peso}" />
+
+                            </p:column>
+
+
+                            <p:column headerText="Precio"  style="text-align:right">
+                                <h:outputText value="#{producto.costo}" />
+                            </p:column>
+
+                            <p:column headerText="Action">
+                                <p:commandLink value="Remove" update="tablaAbarrotes" >
+                                    <p:collector value="#{producto}" removeFrom="#{ordenesCompraMainBean.productosInventarioAbarrotes}" unique="true"/>
+                                </p:commandLink>
+                            </p:column>
+
+                        </p:dataTable>
+                        
+                        <p:commandButton id="btnGuardar" value="Guardar" oncomplete="handleLoginRequest(xhr, status, args, 'popupAbarrotes' )" update=":form :formAbarrotes" action="#{ordenesCompraMainBean.guardarOrdenAbarrotes()}" />
+
+                    </p:dialog>
+                    <p:blockUI block="formAbarrotes" trigger="btnAgregar btnGuardar">
+                        Cargando.... Espere porfavor<br />
+                        <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
+
+                    </p:blockUI>
                 </h:form>
 
 

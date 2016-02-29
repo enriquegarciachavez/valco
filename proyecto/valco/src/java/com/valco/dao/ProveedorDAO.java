@@ -128,6 +128,31 @@ public class ProveedorDAO implements Serializable{
         }
     }
     
+    public List<Proveedores> getProveedoresAbarrotes() throws Exception{
+    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+          Transaction tx = null;
+          List<Proveedores> proveedores = new ArrayList<Proveedores>();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(Proveedores.class)
+                      .add(Restrictions.eq("abarrotes", true));
+              proveedores = (List<Proveedores>) q.list();
+              return proveedores;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los proveedores.");
+
+          } finally {
+              try {
+                  if (session.isOpen()) {
+                    session.close();
+                }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los proveedores.");
+              }
+        }
+    }
+    
     public Proveedores getProveedoresXRazonSocial(String razonSocial) throws Exception {
           Session session = HibernateUtil.getSessionFactory().openSession();
           Transaction tx = null;

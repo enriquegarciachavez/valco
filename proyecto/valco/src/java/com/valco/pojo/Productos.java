@@ -21,6 +21,8 @@ public class Productos  implements java.io.Serializable {
      private boolean incluyeVicera;
      private boolean generarSubproducto;
      private boolean aplicaInventarioFisico;
+     private Boolean iva;
+     private Boolean abarrotes;
      private String estatus;
      private Set<ProductosHasProveedores> productosHasProveedoreses = new HashSet<ProductosHasProveedores>(0);
      private Set<Productos> productosesForProductosCodigoHijo = new HashSet<Productos>(0);
@@ -150,7 +152,23 @@ public class Productos  implements java.io.Serializable {
         return descripcion; 
     }
 
+    public boolean isIva() {
+        return iva;
+    }
 
+    public void setIva(boolean iva) {
+        this.iva = iva;
+    }
+
+    public boolean isAbarrotes() {
+        return abarrotes;
+    }
+
+    public void setAbarrotes(boolean Abarrotes) {
+        this.abarrotes = Abarrotes;
+    }
+
+    
 }
 
 

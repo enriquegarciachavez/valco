@@ -7,17 +7,25 @@ package com.valco.beans;
 
 import com.valco.dao.OrdenesCompraDAO;
 import com.valco.dao.ProductoDAO;
+import com.valco.dao.ProveedorDAO;
+import com.valco.dao.UbicacionesDAO;
 import com.valco.pojo.OrdenesCompra;
+import com.valco.pojo.Productos;
 import com.valco.pojo.ProductosHasProveedores;
 import com.valco.pojo.ProductosInventario;
 import com.valco.pojo.ProductosInventarioAgrupados;
+import com.valco.pojo.Proveedores;
 import com.valco.pojo.Ubicaciones;
 import com.valco.utility.MsgUtility;
 import com.valco.utility.UsuariosUtility;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -34,6 +42,10 @@ import org.primefaces.event.FlowEvent;
 @ViewScoped
 public class OrdenesCompraMainBean {
 
+    @ManagedProperty(value = "#{proveedorDAO}")
+    private ProveedorDAO proveedorDAO;
+    @ManagedProperty(value = "#{ubicacionesDao}")
+    private UbicacionesDAO ubicacionesDao;
     private List<OrdenesCompra> ordenesCompra;
     private List<ProductosInventario> produuctosInventario;
     private List<ProductosInventarioAgrupados> produuctosInventarioAgrupados;
@@ -48,24 +60,38 @@ public class OrdenesCompraMainBean {
     ProductosInventario productoSeleccionado;
     private List<ProductosInventario> borrar= new ArrayList<>();
     ProductosInventario productoNuevo = new ProductosInventario();
+    private List<ProductosInventario> productosInventarioAbarrotes = new ArrayList<>();
+    private ProductosInventario productoInventarioAbarrotesNuevo = new ProductosInventario();
+    private ProductosInventario productoInventarioAbarrotesSeleccionado = new ProductosInventario();
+    private List<Proveedores> proveedoresAbarrotes = new ArrayList<>();
+    private List<ProductosHasProveedores> productosAbarrotes = new ArrayList<ProductosHasProveedores>();
+    private Proveedores proveedorAbarrotesSeleccionado = new Proveedores();
+    private Productos productoAbarroteSeleccionado = new Productos();
+    private List<Ubicaciones> ubicaciones = new ArrayList<>();
+    private Ubicaciones ubicacionSeleccionada = new Ubicaciones();
     
 
     /**
      * Creates a new instance of OrdenesCompraMainBean
      */
     public OrdenesCompraMainBean() {
-        try {
-            productoNuevo.setPeso(BigDecimal.ZERO);
-            this.ordenesCompra = ordenesCompraDao.getOrdenesCompra();
-        } catch (Exception ex) {
-            MsgUtility.showErrorMeage(ex.getMessage());
-        }
+        
     }
 
     @PostConstruct
-
     private void init() {
-
+        try {
+            productoNuevo.setPeso(BigDecimal.ZERO);
+            this.ubicaciones = ubicacionesDao.getUbicaciones();
+            this.ordenesCompra = ordenesCompraDao.getOrdenesCompra();
+            this.proveedoresAbarrotes = this.proveedorDAO.getProveedoresAbarrotes();
+            if(this.proveedoresAbarrotes != null && !this.proveedoresAbarrotes.isEmpty()){
+                this.proveedorAbarrotesSeleccionado = this.proveedoresAbarrotes.get(0);
+                this.productosAbarrotes = this.productoDao.getProductosAbarrotesXProveedor(proveedorAbarrotesSeleccionado);
+            }
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
     }
     
     public void agregarProductoNuevo(){
@@ -202,6 +228,61 @@ public class OrdenesCompraMainBean {
        return precio;
     }
     
+    public void actualizarProductosAbarrotesXProveedor(){
+        try {
+            this.productosAbarrotes = this.productoDao.getProductosAbarrotesXProveedor(proveedorAbarrotesSeleccionado);
+            this.productosInventarioAbarrotes.clear();
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+    }
+    
+    public void guardarOrdenAbarrotes(){
+        BigDecimal ivaOrden = new BigDecimal("0.00");
+        BigDecimal totalOrden = new BigDecimal("0.00");
+        OrdenesCompra ordenAbarrotesNueva = new OrdenesCompra();
+        Set<ProductosInventario> productosInventarioUnitarios = new HashSet<>();
+        for(ProductosInventario producto : productosInventarioAbarrotes){
+            if(producto.getProductosHasProveedores().getProductos().isIva()){
+                ivaOrden = ivaOrden.add(producto.getCosto().multiply(producto.getPeso()).multiply(new BigDecimal("0.16")).setScale(2, RoundingMode.HALF_EVEN));
+                totalOrden = totalOrden.add(producto.getCosto().multiply(producto.getPeso()).setScale(2,RoundingMode.HALF_EVEN));
+            }
+            for(int x = 0; x < producto.getPeso().intValue(); x++){
+                ProductosInventario productoUnitario = new ProductosInventario();
+                productoUnitario.setCosto(producto.getCosto());
+                productoUnitario.setProductosHasProveedores(producto.getProductosHasProveedores());
+                productoUnitario.setPeso(new BigDecimal("0.00"));
+                productoUnitario.setEstatus("ACTIVO");
+                productoUnitario.setPrecio(producto.getProductosHasProveedores().getProductos().getPrecioSugerido());
+                productoUnitario.setOrdenesCompra(ordenAbarrotesNueva);
+                productoUnitario.setUbicaciones(ubicacionSeleccionada);
+                productosInventarioUnitarios.add(productoUnitario);
+            }
+        }
+        ordenAbarrotesNueva.setFecha(new Date());
+        ordenAbarrotesNueva.setEstatus("ACTIVO");
+        ordenAbarrotesNueva.setUsuarios(UsuariosUtility.getUsuarioFirmado());
+        ordenAbarrotesNueva.setProveedores(proveedorAbarrotesSeleccionado);
+        ordenAbarrotesNueva.setProductosInventarios(productosInventarioUnitarios);
+        ordenAbarrotesNueva.setIva(ivaOrden);
+        ordenAbarrotesNueva.setTotal(totalOrden);
+        
+        try {
+            ordenesCompraDao.actualizarOrdenYProductos(new ArrayList<ProductosInventario>(productosInventarioUnitarios), null, ordenAbarrotesNueva);
+            ordenesCompra.add(ordenAbarrotesNueva);
+            ordenAbarrotesNueva = new OrdenesCompra();
+            productosInventarioAbarrotes.clear();
+            MsgUtility.showInfoMeage("La orden se capturó correctamente.");
+        } catch (Exception ex) {
+            Logger.getLogger(OrdenesCompraMainBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public String reInit(){
+        productoInventarioAbarrotesNuevo = new ProductosInventario();
+        return null;
+    }
+    
     public String getPrecioTotalFormateado(){
         return new DecimalFormat("###,###.##").format(getPrecioTotal().doubleValue());
     }
@@ -309,6 +390,95 @@ public class OrdenesCompraMainBean {
     public void setProductoNuevo(ProductosInventario productoNuevo) {
         this.productoNuevo = productoNuevo;
     }
+
+    public List<ProductosInventario> getProductosInventarioAbarrotes() {
+        return productosInventarioAbarrotes;
+    }
+
+    public void setProductosInventarioAbarrotes(List<ProductosInventario> productosInventarioAbarrotes) {
+        this.productosInventarioAbarrotes = productosInventarioAbarrotes;
+    }
+
+    public ProductosInventario getProductoInventarioAbarrotesNuevo() {
+        return productoInventarioAbarrotesNuevo;
+    }
+
+    public void setProductoInventarioAbarrotesNuevo(ProductosInventario productoInventarioAbarrotesNuevo) {
+        this.productoInventarioAbarrotesNuevo = productoInventarioAbarrotesNuevo;
+    }
+
+    public List<ProductosHasProveedores> getProductosAbarrotes() {
+        return productosAbarrotes;
+    }
+
+    public void setProductosAbarrotes(List<ProductosHasProveedores> productosAbarrotes) {
+        this.productosAbarrotes = productosAbarrotes;
+    }
+
+    public List<Proveedores> getProveedoresAbarrotes() {
+        return proveedoresAbarrotes;
+    }
+
+    public void setProveedoresAbarrotes(List<Proveedores> proveedoresAbarrotes) {
+        this.proveedoresAbarrotes = proveedoresAbarrotes;
+    }
+
+    public Proveedores getProveedorAbarrotesSeleccionado() {
+        return proveedorAbarrotesSeleccionado;
+    }
+
+    public void setProveedorAbarrotesSeleccionado(Proveedores proveedorAbarrotesSeleccionado) {
+        this.proveedorAbarrotesSeleccionado = proveedorAbarrotesSeleccionado;
+    }
+
+    public Productos getProductoAbarroteSeleccionado() {
+        return productoAbarroteSeleccionado;
+    }
+
+    public void setProductoAbarroteSeleccionado(Productos productoAbarroteSeleccionado) {
+        this.productoAbarroteSeleccionado = productoAbarroteSeleccionado;
+    }
+
+    public ProductosInventario getProductoInventarioAbarrotesSeleccionado() {
+        return productoInventarioAbarrotesSeleccionado;
+    }
+
+    public void setProductoInventarioAbarrotesSeleccionado(ProductosInventario productoInventarioAbarrotesSeleccionado) {
+        this.productoInventarioAbarrotesSeleccionado = productoInventarioAbarrotesSeleccionado;
+    }
+
+    public ProveedorDAO getProveedorDAO() {
+        return proveedorDAO;
+    }
+
+    public void setProveedorDAO(ProveedorDAO proveedorDAO) {
+        this.proveedorDAO = proveedorDAO;
+    }
+
+    public UbicacionesDAO getUbicacionesDao() {
+        return ubicacionesDao;
+    }
+
+    public void setUbicacionesDao(UbicacionesDAO ubicacionesDao) {
+        this.ubicacionesDao = ubicacionesDao;
+    }
+
+    public List<Ubicaciones> getUbicaciones() {
+        return ubicaciones;
+    }
+
+    public void setUbicaciones(List<Ubicaciones> ubicaciones) {
+        this.ubicaciones = ubicaciones;
+    }
+
+    public Ubicaciones getUbicacionSeleccionada() {
+        return ubicacionSeleccionada;
+    }
+
+    public void setUbicacionSeleccionada(Ubicaciones ubicacionSeleccionada) {
+        this.ubicacionSeleccionada = ubicacionSeleccionada;
+    }
+    
     
     
 

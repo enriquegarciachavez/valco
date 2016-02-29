@@ -11,6 +11,7 @@ import com.valco.pojo.Conceptos;
 import com.valco.pojo.CuentasContables;
 import com.valco.pojo.Polizas;
 import com.valco.utility.MsgUtility;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,6 +25,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.ws.rs.POST;
+import org.omnifaces.util.Faces;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
@@ -106,7 +108,6 @@ public class PolizasMainBean {
             polizaNueva.setTipoPoliza(tipoPoliza);
             polizasDAO.insertarPoliza(polizaNueva);
         }
-        RequestContext.getCurrentInstance().execute("bui.show();");
 
     }
 
@@ -120,6 +121,21 @@ public class PolizasMainBean {
         conceptoNuevo = new Conceptos();
 
         return null;
+    }
+    
+    
+    public void mostrarPdf(){
+        String tipoPoliza = "";
+        if(this.tipoPoliza.equals("DE INGRESOS")){
+            tipoPoliza = "poliza_ingresos_main.jrxml";
+        }else{
+            tipoPoliza = "poliza_diario_main.jrxml";
+        }
+        String url = "/valco/ReportesPdf?reporte="
+                + "//pagina//reportes//polizas//"
+                + tipoPoliza
+                + "&fechaDate="+fecha.toString();
+        RequestContext.getCurrentInstance().execute("window.open('"+url+"');");
     }
 
     public void createNew() {

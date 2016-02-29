@@ -16,8 +16,9 @@ public class ProductosInventario implements java.io.Serializable {
     private ProductosHasProveedores productosHasProveedores;
     private Tranferencias tranferencias;
     private Ubicaciones ubicaciones;
-    private BigDecimal peso;
-    private BigDecimal precio;
+    private BigDecimal peso = new BigDecimal("0.00");
+    private BigDecimal precio = new BigDecimal("0.00");
+    private BigDecimal costo = new BigDecimal("0.00");
     private String codigoBarras;
     private String estatus;
     private Repartidores repartidor;
@@ -200,6 +201,14 @@ public class ProductosInventario implements java.io.Serializable {
 
     public void setCantidadDevuelta(BigDecimal cantidadDevuelta) {
         this.cantidadDevuelta = cantidadDevuelta;
+    }
+
+    public BigDecimal getCosto() {
+        return costo;
+    }
+
+    public void setCosto(BigDecimal costo) {
+        this.costo = costo;
     }
     
 

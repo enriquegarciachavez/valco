@@ -25,6 +25,7 @@ public class Proveedores  implements java.io.Serializable {
      private int posicionPesoFinal;
      private int posicionCodigoInicial;
      private int posicionCodigoFinal;
+     private Boolean abarrotes;
      private String estatus;
      private Set<OrdenesCompra> ordenesCompras = new HashSet<OrdenesCompra>(0);
      private Set<Telefonos> telefonoses = new HashSet<Telefonos>(0);
@@ -198,7 +199,15 @@ public class Proveedores  implements java.io.Serializable {
         return razonSocial; 
     }
 
+    public boolean isAbarrotes() {
+        return abarrotes;
+    }
 
+    public void setAbarrotes(boolean abarrotes) {
+        this.abarrotes = abarrotes;
+    }
+
+    
 }
 
 

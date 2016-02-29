@@ -67,12 +67,6 @@ GROUP BY CLIENTES.`CODIGO`]]>
 	<background>
 		<band/>
 	</background>
-	<title>
-		<band height="79"/>
-	</title>
-	<pageHeader>
-		<band height="35"/>
-	</pageHeader>
 	<columnHeader>
 		<band height="61">
 			<textField evaluationTime="Report">
@@ -83,7 +77,7 @@ GROUP BY CLIENTES.`CODIGO`]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="125">
+		<band height="20">
 			<textField isStretchWithOverflow="true">
 				<reportElement x="101" y="0" width="231" height="20"/>
 				<textElement lineSpacing="Single"/>
@@ -115,10 +109,4 @@ GROUP BY CLIENTES.`CODIGO`]]>
 			</textField>
 		</band>
 	</columnFooter>
-	<pageFooter>
-		<band height="54"/>
-	</pageFooter>
-	<summary>
-		<band height="42"/>
-	</summary>
 </jasperReport>

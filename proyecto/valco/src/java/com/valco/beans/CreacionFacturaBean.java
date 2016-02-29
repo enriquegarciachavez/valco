@@ -14,6 +14,7 @@ import com.valco.pojo.Facturas;
 import com.valco.pojo.Impuestos;
 import com.valco.pojo.NotasDeVenta;
 import com.valco.utility.FacturasUtility;
+import com.valco.utility.Mail;
 import com.valco.utility.MsgUtility;
 import https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX;
 import java.io.IOException;
@@ -31,6 +32,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.mail.MessagingException;
 import javax.xml.parsers.ParserConfigurationException;
 import org.primefaces.model.DualListModel;
 import org.xml.sax.SAXException;
@@ -148,6 +150,12 @@ public class CreacionFacturaBean {
                     FacturasUtility.guardaPdf(factura.getCodigo(),factura.getNotasDeVenta().getClientes().getRfc()+"-"+factura.getCodigo()+".pdf" ,"C:/SAT/");
                     MsgUtility.showInfoMeage("Factura "+factura.getCodigo()+": PDF guardado correctamente.");
                 } catch (Exception ex) {
+                    MsgUtility.showErrorMeage(ex.getMessage());
+                }
+                try {
+                    Mail.Send("enrique.garcia.chavez@hotmail.com", nota.getClientes().getCorreoElectronico(), "Factura de valco", "Esta es una factura de valco","C:\\SAT\\"+factura.getNotasDeVenta().getClientes().getRfc()+"-"+factura.getCodigo());
+                    MsgUtility.showInfoMeage("Factura "+factura.getCodigo()+": Correo enviado correctamente.");
+                } catch (MessagingException ex) {
                     MsgUtility.showErrorMeage(ex.getMessage());
                 }
             }

@@ -32,6 +32,9 @@
         <property name="precio" type="big_decimal">
             <column name="PRECIO" precision="4" not-null="true" />
         </property>
+        <property name="costo" type="big_decimal">
+            <column name="COSTO" precision="4"  />
+        </property>
         <property name="codigoBarras" type="string">
             <column name="CODIGO_BARRAS" length="100" />
         </property>

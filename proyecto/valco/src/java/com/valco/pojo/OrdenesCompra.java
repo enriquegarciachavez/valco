@@ -19,6 +19,7 @@ public class OrdenesCompra  implements java.io.Serializable {
      private Date fecha;
      private String observaciones;
      private BigDecimal total;
+     private BigDecimal iva;
      private String estatus;
      private Set<CuentasXPagar> cuentasXPagars = new HashSet<CuentasXPagar>(0);
      private Set<ProductosInventario> productosInventarios = new HashSet<ProductosInventario>(0);
@@ -120,6 +121,14 @@ public class OrdenesCompra  implements java.io.Serializable {
 
     public void setCuentaXPagar(CuentasXPagar cuentaXPagar) {
         this.cuentaXPagar = cuentaXPagar;
+    }
+
+    public BigDecimal getIva() {
+        return iva;
+    }
+
+    public void setIva(BigDecimal iva) {
+        this.iva = iva;
     }
     
 

@@ -31,6 +31,12 @@
     <property name="aplicaInventarioFisico" type="boolean">
       <column name="APLICA_INVENTARIO_FISICO" not-null="true"/>
     </property>
+    <property name="iva" type="java.lang.Boolean">
+      <column name="IVA" not-null="false"/>
+    </property>
+    <property name="abarrotes" type="java.lang.Boolean">
+      <column name="ABARROTES" not-null="false"/>
+    </property>
     <property name="estatus" type="string">
       <column length="20" name="ESTATUS"/>
     </property>
