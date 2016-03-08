@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Factura" language="groovy" pageWidth="612" pageHeight="792" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.zoom" value="1.1269722013523664"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<import value="com.keepdynamic.barcode.generator.jasperreports.BarcodeFactory"/>
@@ -376,7 +376,11 @@
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<subDataset name="Table Dataset 1"/>
+	<subDataset name="Table Dataset 1">
+		<queryString language="SQL">
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
 	<subDataset name="Tabla1Dataset">
 		<parameter name="FacturaId" class="java.lang.Integer"/>
 		<queryString>
@@ -715,7 +719,7 @@ WHERE
 				<imageExpression class="java.lang.String"><![CDATA["C:\\valco\\Imagenes\\logo.jpg"]]></imageExpression>
 			</image>
 			<subreport>
-				<reportElement mode="Transparent" x="0" y="274" width="577" height="196" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement mode="Transparent" x="0" y="274" width="572" height="196" forecolor="#000000" backcolor="#FFFFFF"/>
 				<subreportParameter name="FacturaId">
 					<subreportParameterExpression><![CDATA[$F{FACTURAS_CODIGO}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -723,7 +727,7 @@ WHERE
 				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "Factura_subreport1.jasper"]]></subreportExpression>
 			</subreport>
 			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
-				<reportElement mode="Transparent" x="453" y="125" width="124" height="112"/>
+				<reportElement mode="Transparent" x="448" y="127" width="124" height="112"/>
 				<imageExpression class="java.lang.String"><![CDATA[com.google.zxing.client.j2se.MatrixToImageWriter.toBufferedImage(
      new com.google.zxing.qrcode.QRCodeWriter().encode("?re="+"DCV9612126N6"+"&rr="+$F{CLIENTES_RFC}+"&tt="+$F{FACTURAS_TOTAL}+"&UUID="+$F{FACTURAS_FOLIO_FISCAL},
          com.google.zxing.BarcodeFormat.QR_CODE, 300, 300))]]></imageExpression>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Factura_subreport1" language="groovy" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
-	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.zoom" value="1.53947435469212"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="FacturaId" class="java.lang.Integer"/>
@@ -30,7 +30,7 @@ WHERE CONCEPTOS_FACTURA.`FACTURAS_CODIGO` = $P{FacturaId}]]>
 		<band/>
 	</background>
 	<columnHeader>
-		<band height="13">
+		<band height="15">
 			<staticText>
 				<reportElement mode="Opaque" x="26" y="0" width="45" height="13" forecolor="#000000" backcolor="#F5D9B3"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
@@ -74,7 +74,7 @@ WHERE CONCEPTOS_FACTURA.`FACTURAS_CODIGO` = $P{FacturaId}]]>
 				<text><![CDATA[PARTE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="442" y="0" width="135" height="13" forecolor="#000000" backcolor="#F5D9B3"/>
+				<reportElement mode="Opaque" x="442" y="0" width="130" height="13" forecolor="#000000" backcolor="#F5D9B3"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
 					<font fontName="Gill Sans MT Condensed" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 				</textElement>
@@ -83,7 +83,7 @@ WHERE CONCEPTOS_FACTURA.`FACTURAS_CODIGO` = $P{FacturaId}]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="14">
+		<band height="15">
 			<textField>
 				<reportElement x="0" y="0" width="26" height="14"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
@@ -120,14 +120,14 @@ WHERE CONCEPTOS_FACTURA.`FACTURAS_CODIGO` = $P{FacturaId}]]>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{CONCEPTOS_FACTURA_UNIDAD}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="370" y="0" width="67" height="14" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement mode="Transparent" x="370" y="0" width="72" height="14" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single" markup="none">
 					<font fontName="Angsana New" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["\$"+$F{CONCEPTOS_FACTURA_PRECIO_UNITARIO}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="442" y="0" width="130" height="14" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement mode="Transparent" x="440" y="0" width="132" height="14" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single" markup="none">
 					<font fontName="Angsana New" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 				</textElement>
