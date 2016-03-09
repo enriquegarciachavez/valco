@@ -237,6 +237,7 @@ public class OrdenesCompraMainBean {
         }
     }
     
+      
     public void guardarOrdenAbarrotes(){
         BigDecimal ivaOrden = new BigDecimal("0.00");
         BigDecimal totalOrden = new BigDecimal("0.00");

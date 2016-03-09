@@ -1,0 +1,643 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="FacturaNuevo" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="550"/>
+	<style name="table" lineSpacing="Single">
+		<box>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#FF6347" lineSpacing="Single">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#FFC9BF" lineSpacing="Single">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1">
+		<queryString language="SQL">
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<parameter name="FacturaId" class="java.lang.Integer"/>
+	<parameter name="IsCopia" class="java.lang.Boolean"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\apps\\valco\\proyecto\\valco\\web\\pagina\\reportes\\ventasconfactura\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     CLIENTES.`RFC` AS CLIENTES_RFC,
+     FACTURAS.`CODIGO` AS FACTURAS_CODIGO,
+     FACTURAS.`LUGAR` AS FACTURAS_LUGAR,
+     FACTURAS.`FECHA` AS FACTURAS_FECHA,
+     FACTURAS.`FOLIO` AS FACTURAS_FOLIO,
+     FACTURAS.`FOLIO_FISCAL` AS FACTURAS_FOLIO_FISCAL,
+     FACTURAS.`FECHA_TIMBRADO` AS FACTURAS_FECHA_TIMBRADO,
+     FACTURAS.`NO_SERIE_CERT_SAT` AS FACTURAS_NO_SERIE_CERT_SAT,
+     FACTURAS.`OBSERVACIONES` AS FACTURAS_OBSERVACIONES,
+     FACTURAS.`ESTATUS` AS FACTURAS_ESTATUS,
+     FACTURAS.`XML` AS FACTURAS_XML,
+     FACTURAS.`FORMA_PAGO` AS FACTURAS_FORMA_PAGO,
+     FACTURAS.`NO_SEIE_CERT_EMISOR` AS FACTURAS_NO_SEIE_CERT_EMISOR,
+     FACTURAS.`METODO_PAGO` AS FACTURAS_METODO_PAGO,
+     FACTURAS.`MONEDA` AS FACTURAS_MONEDA,
+     FACTURAS.`NO_CLIENTE` AS FACTURAS_NO_CLIENTE,
+     FACTURAS.`BANCO` AS FACTURAS_BANCO,
+     FACTURAS.`SUBTOTAL` AS FACTURAS_SUBTOTAL,
+     FACTURAS.`IVA` AS FACTURAS_IVA,
+     FACTURAS.`TOTAL` AS FACTURAS_TOTAL,
+     FACTURAS.`IMPORTE_LETRA` AS FACTURAS_IMPORTE_LETRA,
+     FACTURAS.`SELLO_CDFI` AS FACTURAS_SELLO_CDFI,
+     FACTURAS.`SELLO_SAT` AS FACTURAS_SELLO_SAT,
+     FACTURAS.`CADENA_ORIGINAL` AS FACTURAS_CADENA_ORIGINAL,
+     FACTURAS.`CADENA_COMPROMISO` AS FACTURAS_CADENA_COMPROMISO,
+     FACTURAS.`CONDICION_PAGO` AS FACTURAS_CONDICION_PAGO,
+     FACTURAS.`NOTAS_DE_VENTA_CODIGO` AS FACTURAS_NOTAS_DE_VENTA_CODIGO,
+     CLIENTES.`RAZON_SOCIAL` AS CLIENTES_RAZON_SOCIAL,
+     CLIENTES.`APELLIDO_PATERNO` AS CLIENTES_APELLIDO_PATERNO,
+     CLIENTES.`APELLIDO_MATERNO` AS CLIENTES_APELLIDO_MATERNO,
+     CLIENTES.`NOMBRES` AS CLIENTES_NOMBRES,
+     CLIENTES.`CALLE` AS CLIENTES_CALLE,
+     CLIENTES.`NUMERO_EXTERIOR` AS CLIENTES_NUMERO_EXTERIOR,
+     CLIENTES.`COLONIA` AS CLIENTES_COLONIA,
+     CLIENTES.`CODIGO_POSTAL` AS CLIENTES_CODIGO_POSTAL,
+     CLIENTES.`CIUDAD` AS CLIENTES_CIUDAD,
+     CLIENTES.`ESTADO` AS CLIENTES_ESTADO,
+     CLIENTES.`PAIS` AS CLIENTES_PAIS,
+     CLIENTES.`CODIGO` AS CLIENTES_CODIGO
+FROM
+     `CLIENTES` CLIENTES INNER JOIN `NOTAS_DE_VENTA` NOTAS_DE_VENTA ON CLIENTES.`CODIGO` = NOTAS_DE_VENTA.`CLIENTES_CODIGO`
+     INNER JOIN `FACTURAS` FACTURAS ON NOTAS_DE_VENTA.`CODIGO` = FACTURAS.`NOTAS_DE_VENTA_CODIGO`
+WHERE
+     FACTURAS.`CODIGO` = $P{FacturaId}]]>
+	</queryString>
+	<field name="CLIENTES_RFC" class="java.lang.String"/>
+	<field name="FACTURAS_CODIGO" class="java.lang.Integer"/>
+	<field name="FACTURAS_LUGAR" class="java.lang.String"/>
+	<field name="FACTURAS_FECHA" class="java.sql.Timestamp"/>
+	<field name="FACTURAS_FOLIO" class="java.lang.Integer"/>
+	<field name="FACTURAS_FOLIO_FISCAL" class="java.lang.String"/>
+	<field name="FACTURAS_FECHA_TIMBRADO" class="java.sql.Timestamp"/>
+	<field name="FACTURAS_NO_SERIE_CERT_SAT" class="java.lang.String"/>
+	<field name="FACTURAS_OBSERVACIONES" class="java.lang.String"/>
+	<field name="FACTURAS_ESTATUS" class="java.lang.String"/>
+	<field name="FACTURAS_XML" class="java.lang.String"/>
+	<field name="FACTURAS_FORMA_PAGO" class="java.lang.String"/>
+	<field name="FACTURAS_NO_SEIE_CERT_EMISOR" class="java.lang.String"/>
+	<field name="FACTURAS_METODO_PAGO" class="java.lang.String"/>
+	<field name="FACTURAS_MONEDA" class="java.lang.String"/>
+	<field name="FACTURAS_NO_CLIENTE" class="java.lang.Integer"/>
+	<field name="FACTURAS_BANCO" class="java.lang.String"/>
+	<field name="FACTURAS_SUBTOTAL" class="java.math.BigDecimal"/>
+	<field name="FACTURAS_IVA" class="java.math.BigDecimal"/>
+	<field name="FACTURAS_TOTAL" class="java.math.BigDecimal"/>
+	<field name="FACTURAS_IMPORTE_LETRA" class="java.lang.String"/>
+	<field name="FACTURAS_SELLO_CDFI" class="java.lang.String"/>
+	<field name="FACTURAS_SELLO_SAT" class="java.lang.String"/>
+	<field name="FACTURAS_CADENA_ORIGINAL" class="java.lang.String"/>
+	<field name="FACTURAS_CADENA_COMPROMISO" class="java.lang.String"/>
+	<field name="FACTURAS_CONDICION_PAGO" class="java.lang.String"/>
+	<field name="FACTURAS_NOTAS_DE_VENTA_CODIGO" class="java.lang.Integer"/>
+	<field name="CLIENTES_RAZON_SOCIAL" class="java.lang.String"/>
+	<field name="CLIENTES_APELLIDO_PATERNO" class="java.lang.String"/>
+	<field name="CLIENTES_APELLIDO_MATERNO" class="java.lang.String"/>
+	<field name="CLIENTES_NOMBRES" class="java.lang.String"/>
+	<field name="CLIENTES_CALLE" class="java.lang.String"/>
+	<field name="CLIENTES_NUMERO_EXTERIOR" class="java.lang.Integer"/>
+	<field name="CLIENTES_COLONIA" class="java.lang.String"/>
+	<field name="CLIENTES_CODIGO_POSTAL" class="java.lang.Integer"/>
+	<field name="CLIENTES_CIUDAD" class="java.lang.String"/>
+	<field name="CLIENTES_ESTADO" class="java.lang.String"/>
+	<field name="CLIENTES_PAIS" class="java.lang.String"/>
+	<field name="CLIENTES_CODIGO" class="java.lang.Integer"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="695">
+			<rectangle>
+				<reportElement x="3" y="517" width="100" height="18" backcolor="#999999"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="450" y="13" width="122" height="10" backcolor="#E2E2E2"/>
+			</rectangle>
+			<image>
+				<reportElement x="4" y="3" width="115" height="75"/>
+				<imageExpression class="java.lang.String"><![CDATA["C:\\Valco\\Imagenes\\logo.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="146" y="4" width="270" height="15"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DISTRIBUIDORA DE CARNES VALCO S.A. DE C.V.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="177" y="18" width="208" height="15"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RFC  DCV9612126N6]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="177" y="33" width="208" height="15"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[CALLE PARRAL No. 246]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="165" y="48" width="234" height="15"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[COLONIA REVOLUCION C.P. 31110]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="165" y="63" width="234" height="15"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[CHIHUAHUA, CHIHUAHUA, MÉXICO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="575" width="128" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<text><![CDATA[Sello digital del CFDI:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="615" width="128" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<text><![CDATA[SELLO DEL SAT:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="655" width="297" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<text><![CDATA[CADENA ORIGINAL DEL COMPLEMENTO DE CERTIFICACIÓN DEL SAT:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="595" width="572" height="20"/>
+				<textElement lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_SELLO_CDFI}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="635" width="572" height="20"/>
+				<textElement lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_SELLO_SAT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="675" width="572" height="20"/>
+				<textElement lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["||1.0|"+$F{FACTURAS_FOLIO_FISCAL}+"|"+$F{FACTURAS_FECHA_TIMBRADO}+"|"+$F{FACTURAS_SELLO_CDFI}+"|"+$F{FACTURAS_NO_SEIE_CERT_EMISOR}+"||"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="450" y="13" width="122" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="5" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[" No. " +  $F{FACTURAS_CODIGO}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="450" y="3" width="122" height="10" backcolor="#999999"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="450" y="3" width="122" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Comprobante: Factura]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="450" y="23" width="122" height="10"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="450" y="23" width="122" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Folio Fiscal]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="450" y="34" width="122" height="10" backcolor="#E2E2E2"/>
+			</rectangle>
+			<textField>
+				<reportElement x="450" y="34" width="122" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_FOLIO_FISCAL}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="450" y="44" width="122" height="10"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="450" y="44" width="122" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha y Hora de Certificaión	]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="450" y="54" width="122" height="10" backcolor="#E2E2E2"/>
+			</rectangle>
+			<textField>
+				<reportElement x="450" y="54" width="122" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_FECHA_TIMBRADO}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="450" y="64" width="122" height="10"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="450" y="64" width="122" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No. de Serie del Certificado del SAT]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="450" y="74" width="122" height="10" backcolor="#E2E2E2"/>
+			</rectangle>
+			<textField>
+				<reportElement x="450" y="74" width="122" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_NO_SERIE_CERT_SAT}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="450" y="84" width="122" height="10"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="450" y="84" width="122" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No. de Serie del Certificado Emisor]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="450" y="94" width="122" height="10" backcolor="#E2E2E2"/>
+			</rectangle>
+			<textField>
+				<reportElement x="450" y="94" width="122" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_NO_SEIE_CERT_EMISOR}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="4" y="122" width="173" height="11" backcolor="#999999"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="4" y="122" width="173" height="11"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Este documento es una representación  impresa de un CFDI]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="4" y="132" width="173" height="11" backcolor="#E2E2E2"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="4" y="132" width="173" height="11"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Lugar y Fecha de Elaboración]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="4" y="142" width="173" height="11"/>
+			</rectangle>
+			<textField>
+				<reportElement x="4" y="142" width="173" height="11"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_LUGAR}  +  $F{FACTURAS_FECHA}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="4" y="165" width="432" height="20" backcolor="#999999"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="4" y="165" width="432" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single"/>
+				<text><![CDATA[Vendido A:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="4" y="185" width="432" height="54"/>
+			</rectangle>
+			<textField>
+				<reportElement x="4" y="185" width="432" height="15"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CLIENTES_RAZON_SOCIAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4" y="200" width="214" height="10"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CLIENTES_RFC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4" y="210" width="214" height="10"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CLIENTES_CALLE}+" " +  $F{CLIENTES_NUMERO_EXTERIOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4" y="229" width="214" height="10"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CLIENTES_CIUDAD}+" "  + $F{CLIENTES_ESTADO}+" " +  $F{CLIENTES_PAIS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4" y="220" width="214" height="9"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CLIENTES_COLONIA}+" " +  $F{CLIENTES_CODIGO_POSTAL}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="3" y="246" width="72" height="10" backcolor="#999999"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="75" y="246" width="172" height="10" backcolor="#999999"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="247" y="246" width="71" height="10" backcolor="#999999"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="318" y="246" width="55" height="10" backcolor="#999999"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="373" y="246" width="53" height="10" backcolor="#999999"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="426" y="246" width="123" height="10" backcolor="#999999"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="4" y="246" width="71" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[FECHA FACTURA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="74" y="246" width="173" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[METODO DE PAGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="247" y="246" width="71" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[MONEDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="318" y="246" width="55" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[NO. CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="373" y="246" width="53" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[BANCO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="426" y="246" width="123" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[CONDICIONES DE PAGO]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="3" y="256" width="72" height="12"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="75" y="256" width="172" height="12"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="247" y="256" width="71" height="12"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="318" y="256" width="55" height="12"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="373" y="256" width="53" height="12"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="426" y="256" width="123" height="12"/>
+			</rectangle>
+			<textField>
+				<reportElement x="4" y="256" width="70" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_FECHA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="75" y="256" width="172" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_METODO_PAGO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="247" y="256" width="71" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_MONEDA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="373" y="256" width="53" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_BANCO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="318" y="256" width="55" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CLIENTES_CODIGO}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="4" y="277" width="27" height="10" backcolor="#999999"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="31" y="277" width="50" height="10" backcolor="#999999"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="81" y="277" width="45" height="10" backcolor="#999999"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="126" y="277" width="239" height="10" backcolor="#999999"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="365" y="277" width="40" height="10" backcolor="#999999"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="405" y="277" width="66" height="10" backcolor="#999999"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="472" y="277" width="77" height="10" backcolor="#999999"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="4" y="287" width="27" height="201"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="31" y="287" width="50" height="201"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="81" y="287" width="45" height="201"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="126" y="287" width="239" height="201"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="126" y="404" width="239" height="84" forecolor="#CCCCCC">
+					<printWhenExpression><![CDATA[$P{IsCopia}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="66"/>
+				</textElement>
+				<text><![CDATA[COPIA]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="365" y="287" width="40" height="201"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="405" y="287" width="66" height="201"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="472" y="287" width="77" height="201"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="326" y="495" width="100" height="10" backcolor="#999999"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="326" y="505" width="100" height="11" backcolor="#E2E2E2"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="326" y="516" width="100" height="19" backcolor="#999999"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="426" y="505" width="123" height="11"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="426" y="517" width="123" height="18"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="103" y="517" width="223" height="18"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="3" y="517" width="100" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IMPORTE CON LETRA]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="4" y="277" width="545" height="211"/>
+				<subreportParameter name="FacturaId">
+					<subreportParameterExpression><![CDATA[$F{FACTURAS_CODIGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "FacturaNuevo_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="426" y="517" width="123" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_TOTAL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="326" y="516" width="100" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="326" y="506" width="100" height="9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IVA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="326" y="495" width="100" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SUBTOTAL]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="426" y="506" width="123" height="9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_IVA}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="426" y="495" width="123" height="10"/>
+			</rectangle>
+			<textField>
+				<reportElement x="426" y="496" width="123" height="9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_SUBTOTAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="103" y="516" width="223" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_IMPORTE_LETRA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="426" y="257" width="123" height="11"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_CONDICION_PAGO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>
