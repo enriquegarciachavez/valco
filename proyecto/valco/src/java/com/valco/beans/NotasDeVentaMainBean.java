@@ -124,7 +124,7 @@ import javax.faces.validator.ValidatorException;
             productosDisponibles.remove(producto);
         }
         try {
-            this.notaNueva.setEstatus("ASIGNADA");
+            this.notaNueva.setEstatus("VENDIDA");
             this.notasDeVentaDao.actualizarNotaDeVenta(notaNueva);
             MsgUtility.showInfoMeage("La nota se capturó correctamente.");
         } catch (Exception ex) {

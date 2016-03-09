@@ -14,6 +14,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -113,6 +114,33 @@ public class ParametrosGeneralesDAO {
               Criteria q = session.createCriteria(ParametrosGenerales.class);
               parametros = (List<ParametrosGenerales>) q.list();
               return parametros;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los Parametros Generales.");
+
+          } finally {
+              try {
+                  session.close();
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los Parametros Generales.");
+              }
+        }
+    }
+    
+    public String getParametroGeneralXClave(String clave) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+          Transaction tx = null;
+          ParametrosGenerales parametro = new ParametrosGenerales();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(ParametrosGenerales.class)
+                      .add(Restrictions.eq("clave", clave));
+              parametro = (ParametrosGenerales) q.uniqueResult();
+              if(parametro != null){
+                  return parametro.getValor();
+              }else{
+                  throw new Exception("Parametro "+clave+" no encontradó");
+              }
 
           } catch (HibernateException he) {
               throw new Exception("Ocurrió un error al consultar los Parametros Generales.");

@@ -9,6 +9,7 @@ import com.valco.pojo.Clientes;
 import com.valco.pojo.ConceptosFactura;
 import com.valco.pojo.Facturas;
 import com.valco.pojo.Impuestos;
+import com.valco.pojo.NotasDeVenta;
 import com.valco.pojo.ProductosInventario;
 import com.valco.servlets.ReportesXls;
 import java.io.BufferedWriter;
@@ -175,7 +176,7 @@ public class FacturasUtility {
                 + formaXmlConceptos(conceptosFactura)
                 + "</cfdi:Conceptos>\n"
                 + "<cfdi:Impuestos totalImpuestosTrasladados= \"" + getTotalImpuestos(impuestos) + "\">\n";
-        if(impuestos != null && !impuestos.isEmpty()){
+        if(impuestos != null && !impuestos.isEmpty() && getTotalImpuestos(impuestos).compareTo(BigDecimal.ZERO)!=0){
                 factura += "		<cfdi:Traslados>\n"
                 + formaXmlImpuestos(impuestos)
                 + "		</cfdi:Traslados>\n";
@@ -366,10 +367,16 @@ public class FacturasUtility {
         return conceptos;
     }
     
-    public static void calculaTotalImpuestos(Set<Impuestos> impuestos, BigDecimal subTotal){
-        for (Impuestos impuesto : impuestos) {
-            impuesto.setImporte(impuesto.getTasa().divide(new BigDecimal("100.00")).multiply(subTotal).setScale(2, RoundingMode.HALF_EVEN));
+    public static void calculaTotalImpuestos(Impuestos impuesto, NotasDeVenta nota){
+        BigDecimal totalIva = new BigDecimal("0.00");
+        for(ProductosInventario producto : nota.getProductosInventarios()){
+            if(producto.getProductosHasProveedores().getProductos().isIva()){
+                totalIva = totalIva.add(impuesto.getTasa().divide(new BigDecimal("100.00")).multiply(producto.getPeso().multiply(producto.getPrecio()))).setScale(2, RoundingMode.HALF_EVEN);
+            }
         }
+
+            impuesto.setImporte(totalIva);
+
     }
 
     public static BigDecimal getTotalImpuestos(Set<Impuestos> impuestos) {

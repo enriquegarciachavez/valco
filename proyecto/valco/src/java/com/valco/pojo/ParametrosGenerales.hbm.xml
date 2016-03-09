@@ -15,7 +15,7 @@
             <column name="CLAVE" length="6" not-null="true" />
         </property>
         <property name="valor" type="string">
-            <column name="VALOR" length="20" not-null="true" />
+            <column name="VALOR" length="200" not-null="true" />
         </property>
     </class>
 </hibernate-mapping>

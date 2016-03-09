@@ -141,7 +141,7 @@ public class ClienteMainBean {
         razon
                 = this.clienteDao.getClientesXRazonSocial(value.toString());
         if (razon != null) {
-            if (razon.getCodigo() != clienteSeleccionado.getCodigo()) {
+            if (!razon.getCodigo().equals(clienteSeleccionado.getCodigo())) {
                 throw new ValidatorException(new FacesMessage("La razón social que capturó ya existe"));
             }
         }

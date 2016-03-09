@@ -232,6 +232,10 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="matanzaTxt">
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="matanzaTxtActionPerformed"/>
+                    <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="matanzaTxtKeyTyped"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="almacenLOV">
                   <Properties>

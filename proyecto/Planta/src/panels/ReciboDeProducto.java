@@ -1,12 +1,10 @@
 package panels;
 
-import com.sun.media.sound.ModelOscillator;
 import dao.ProductoDAO;
 import dao.ProveedorDAO;
 import dao.UbicacionesDAO;
 import dao.UsuariosDAO;
 import java.awt.ComponentOrientation;
-import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
@@ -15,8 +13,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
@@ -196,6 +192,17 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Almacen y Número de Matanza"));
 
         jLabel1.setText("Nùmero de matanza:");
+
+        matanzaTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                matanzaTxtActionPerformed(evt);
+            }
+        });
+        matanzaTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                matanzaTxtKeyTyped(evt);
+            }
+        });
 
         almacenLOV.setModel(new DefaultComboBoxModel(getUbicacionesArray()));
 
@@ -528,22 +535,24 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         
 
         model.addRow(canal);
+        
+        BigDecimal precio = ((ProductosHasProveedores) productoLov.getSelectedItem()).getProductos().getPrecioSugerido();
+        Ubicaciones ubicacion = (Ubicaciones) almacenLOV.getSelectedItem();
+        ProductosHasProveedores productoProveedor = (ProductosHasProveedores) productoLov.getSelectedItem();
 
         canal1.setEstatus("ACTIVO");
-        canal1.setNumeroMatanza(new Integer (matanzaTxt.getText()));
         canal1.setPeso(new BigDecimal(pesoTxt1.getText()));
-        canal1.setPrecio(BigDecimal.ZERO);
-        canal1.setProductosHasProveedores((ProductosHasProveedores) productoLov.getSelectedItem());
-        canal1.setUbicaciones((Ubicaciones) almacenLOV.getSelectedItem());
+        canal1.setPrecio(precio);
+        canal1.setProductosHasProveedores(productoProveedor);
+        canal1.setUbicaciones(ubicacion);
 
         nuevosCanales.add(canal1);
 
         canal2.setEstatus("ACTIVO");
-        canal2.setNumeroMatanza(new Integer (matanzaTxt.getText()));
         canal2.setPeso(new BigDecimal(pesoTxt2.getText()));
-        canal2.setPrecio(BigDecimal.ZERO);
-        canal2.setProductosHasProveedores((ProductosHasProveedores) productoLov.getSelectedItem());
-        canal2.setUbicaciones((Ubicaciones) almacenLOV.getSelectedItem());
+        canal2.setPrecio(precio);
+        canal2.setProductosHasProveedores(productoProveedor);
+        canal2.setUbicaciones(ubicacion);
 
         nuevosCanales.add(canal2);
     }
@@ -555,15 +564,18 @@ public class ReciboDeProducto extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Debe capturar el peso.");
             return;
         }
+        if (productoLov.getSelectedItem() == null){
+            JOptionPane.showMessageDialog(null, "Debe seleccionar el producto a ingresar.");
+            return;
+        }
         Object[] canal = new Object[8];
         ProductosInventario canal1 = new ProductosInventario();
         ProductosInventario canal2 = new ProductosInventario();
         ProductosInventario canal3 = new ProductosInventario();
         ProductosInventario canal4 = new ProductosInventario();
-        if (tablaCanales.getRowCount() == 0) {
-
+        if (tablaCanales.getRowCount() == 0 && numeroCanalTxt.getText() != null && !numeroCanalTxt.getText().equals("")) {
             numeroCanal= new Integer(numeroCanalTxt.getText());
-        }else {
+        }else if(tablaCanales.getRowCount() != 0 ){
             numeroCanal = new Integer(tablaCanales.getValueAt(tablaCanales.getRowCount()-1, 0).toString())+1;
         }
             canal[0] = numeroCanal;
@@ -578,43 +590,43 @@ public class ReciboDeProducto extends javax.swing.JPanel {
 
         model.addRow(canal);
         
+        BigDecimal precio = ((ProductosHasProveedores) productoLov.getSelectedItem()).getProductos().getPrecioSugerido();
+        Ubicaciones ubicacion = (Ubicaciones) almacenLOV.getSelectedItem();
+        ProductosHasProveedores productoProveedor = (ProductosHasProveedores) productoLov.getSelectedItem();
+        
         canal1.setNumeroCanal(numeroCanal);
-        canal1.setNumeroMatanza(new Integer (matanzaTxt.getText()));
         canal1.setEstatus("ACTIVO");
         canal1.setPeso(new BigDecimal(pesoTxt1.getText()));
-        canal1.setPrecio(BigDecimal.ZERO);
-        canal1.setProductosHasProveedores((ProductosHasProveedores) productoLov.getSelectedItem());
-        canal1.setUbicaciones((Ubicaciones) almacenLOV.getSelectedItem());
+        canal1.setPrecio(precio);
+        canal1.setProductosHasProveedores(productoProveedor);
+        canal1.setUbicaciones(ubicacion);
 
         nuevosCanales.add(canal1);
         
         canal2.setNumeroCanal(numeroCanal);
-        canal2.setNumeroMatanza(new Integer (matanzaTxt.getText()));
         canal2.setEstatus("ACTIVO");
         canal2.setPeso(new BigDecimal(pesoTxt2.getText()));
-        canal2.setPrecio(BigDecimal.ZERO);
-        canal2.setProductosHasProveedores((ProductosHasProveedores) productoLov.getSelectedItem());
-        canal2.setUbicaciones((Ubicaciones) almacenLOV.getSelectedItem());
+        canal2.setPrecio(precio);
+        canal2.setProductosHasProveedores(productoProveedor);
+        canal2.setUbicaciones(ubicacion);
 
         nuevosCanales.add(canal2);
         
         canal3.setNumeroCanal(numeroCanal);
-        canal3.setNumeroMatanza(new Integer (matanzaTxt.getText()));
         canal3.setEstatus("ACTIVO");
         canal3.setPeso(new BigDecimal(pesoTxt3.getText()));
-        canal3.setPrecio(BigDecimal.ZERO);
-        canal3.setProductosHasProveedores((ProductosHasProveedores) productoLov.getSelectedItem());
-        canal3.setUbicaciones((Ubicaciones) almacenLOV.getSelectedItem());
+        canal3.setPrecio(precio);
+        canal3.setProductosHasProveedores(productoProveedor);
+        canal3.setUbicaciones(ubicacion);
 
         nuevosCanales.add(canal3);
         
         canal4.setNumeroCanal(numeroCanal);
-        canal4.setNumeroMatanza(new Integer (matanzaTxt.getText()));
         canal4.setEstatus("ACTIVO");
         canal4.setPeso(new BigDecimal(pesoTxt4.getText()));
-        canal4.setPrecio(BigDecimal.ZERO);
-        canal4.setProductosHasProveedores((ProductosHasProveedores) productoLov.getSelectedItem());
-        canal4.setUbicaciones((Ubicaciones) almacenLOV.getSelectedItem());
+        canal4.setPrecio(precio);
+        canal4.setProductosHasProveedores(productoProveedor);
+        canal4.setUbicaciones(ubicacion);
 
         nuevosCanales.add(canal4);
         
@@ -646,7 +658,6 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         model.addRow(canal);
         
         producto.setNumeroCanal(numeroCanal);
-        producto.setNumeroMatanza(new Integer (matanzaTxt.getText()));
         producto.setEstatus("ACTIVO");
         producto.setPeso(new BigDecimal(pesoTxt1.getText()));
         producto.setPrecio(BigDecimal.ZERO);
@@ -657,12 +668,19 @@ public class ReciboDeProducto extends javax.swing.JPanel {
     }
     private void finalizarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finalizarBtnActionPerformed
         OrdenesCompra orden = new OrdenesCompra();
+        
         orden.setEstatus("ACTIVO");
         orden.setFecha(new Date());
         orden.setProveedores((Proveedores) proveedorLOV.getSelectedItem());
         BigDecimal total = BigDecimal.ZERO;
         for (ProductosInventario producto : orden.getProductosInventarios()) {
             total = total.add(producto.getPrecio().multiply(producto.getPeso()));
+        }
+        if(matanzaTxt.getText() != null && !matanzaTxt.getText().equals("")){
+            Integer numMatanza = new Integer (matanzaTxt.getText());
+            for (ProductosInventario producto : orden.getProductosInventarios()) {
+                producto.setNumeroMatanza(numMatanza);
+            }
         }
         orden.setTotal(total);
         try {
@@ -802,6 +820,19 @@ public class ReciboDeProducto extends javax.swing.JPanel {
             productoAnterior = (ProductosHasProveedores) evt.getItem();
         }
     }//GEN-LAST:event_productoLovItemStateChanged
+
+    private void matanzaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matanzaTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_matanzaTxtActionPerformed
+
+    private void matanzaTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_matanzaTxtKeyTyped
+        char c = evt.getKeyChar();
+           if (!(Character.isDigit(c) ||
+              (c == KeyEvent.VK_BACK_SPACE) ||
+              (c == KeyEvent.VK_DELETE))) {
+                evt.consume();
+              }
+    }//GEN-LAST:event_matanzaTxtKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

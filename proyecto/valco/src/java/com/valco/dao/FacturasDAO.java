@@ -67,6 +67,33 @@ public class FacturasDAO implements Serializable {
             }
         }
     }
+    
+    public void insertarFactura(Facturas factura) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+                session.save(factura);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al crear la factura.");
+                }
+            }
+            throw new Exception("Ocurrió un error al crear la factura.");
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al crear las facturas.");
+            }
+        }
+    }
 
     public void insertarFacturasYActualizarNotas(List<NotasDeVenta> notas) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -102,19 +129,19 @@ public class FacturasDAO implements Serializable {
         }
     }
 
-    public void insertarFacturaYActualizarNota(NotasDeVenta nota) throws Exception {
+    public void insertarFacturaYActualizarNota(Facturas factura) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            session.update(nota);
-            session.save(nota.getFacturas());
-            for (ConceptosFactura concepto : nota.getFacturas().getConceptosFacturas()) {
-                concepto.setFacturas(nota.getFacturas());
+            session.saveOrUpdate(factura.getNotasDeVenta());
+            session.save(factura);
+            for (ConceptosFactura concepto : factura.getConceptosFacturas()) {
+                concepto.setFacturas(factura);
                 session.save(concepto);
             }
-            for (Impuestos impuesto : nota.getFacturas().getImpuestoses()) {
-                impuesto.setFacturas(nota.getFacturas());
+            for (Impuestos impuesto : factura.getImpuestoses()) {
+                impuesto.setFacturas(factura);
                 session.save(impuesto);
             }
             tx.commit();

@@ -8,6 +8,7 @@ package com.valco.dao;
 import com.valco.HibernateUtil;
 import com.valco.pojo.Clientes;
 import com.valco.pojo.NotasDeVenta;
+import com.valco.utility.ClientesUtility;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ import org.hibernate.criterion.Restrictions;
  * @author Enrique
  */
 public class ClienteDAO implements Serializable{
+    
 
     public void insertarCliente(Clientes cliente) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -190,6 +192,31 @@ public class ClienteDAO implements Serializable{
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(Clientes.class)
                       .add(Restrictions.eq("razonSocial", razonSocial));
+              cliente = (Clientes)q.uniqueResult();
+              return cliente;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los clientes.");
+
+          } finally {
+              try {
+                  if (session.isOpen()) {
+                    session.close();
+                }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los clientes.");
+              }
+        }
+    }
+    
+    public Clientes getPublicoEnGeneral() throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          Clientes cliente = new Clientes();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(Clientes.class)
+                      .add(Restrictions.eq("codigo", ClientesUtility.getCodigoPublicoEnGeneral()));
               cliente = (Clientes)q.uniqueResult();
               return cliente;
 

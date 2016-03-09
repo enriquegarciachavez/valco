@@ -14,6 +14,7 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import javax.swing.plaf.basic.BasicOptionPaneUI;
 import javax.swing.table.DefaultTableModel;
 import keydispatchers.BarCodeScannerKeyDispatcher;
 import mapping.OrdenesCompra;
@@ -48,6 +50,9 @@ public class ReciboProductoBC extends javax.swing.JPanel {
     KeyboardFocusManager manager;
     BarCodeScannerKeyDispatcher dispacher;
     public List<Component> exceptions = new ArrayList<>();
+    Object[] ultimoProducto = null;
+    ProductosInventario ultimoProductoInventario = null;
+    JOptionPane dialog = new JOptionPane();
 
     /**
      * Creates new form ReciboProducto
@@ -56,8 +61,54 @@ public class ReciboProductoBC extends javax.swing.JPanel {
         initComponents();
         manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         exceptions.add(proveedorTxt);
-        dispacher = new BarCodeScannerKeyDispatcher(codigoBarrasTxt, manager, exceptions);
+        exceptions.add(numeroCajasTxt);
+        dispacher = new BarCodeScannerKeyDispatcher(codigoBarrasTxt, manager, exceptions) {
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent e) {
+
+                if(e.getKeyCode() == KeyEvent.VK_F5){
+                    cajasDialog.show();
+                }
+                for (Component exception : exceptions) {
+                    if (exception.equals(e.getSource())) {
+                        manager.redispatchEvent(exception, e);
+                        return true;
+                    }
+                }
+                manager.redispatchEvent(codigoBarrasTxt, e);
+                return true;
+            }
+        };
         manager.addKeyEventDispatcher(dispacher);
+    }
+    
+    public void multiplicarUltimaCaja(){
+        String texto = numeroCajasTxt.getText();
+        int cajas = 0;
+        try{
+            cajas = Integer.parseInt(texto);
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(null, "Ingrese un número entero.");
+            return;
+        }
+        for(int x = 1; x < cajas; x++){
+            
+            ProductosInventario productoNuevo = new ProductosInventario();
+            productoNuevo.setPeso(ultimoProductoInventario.getPeso());
+            productoNuevo.setCodigoBarras(ultimoProductoInventario.getCodigoBarras());
+            productoNuevo.setProductosHasProveedores(ultimoProductoInventario.getProductosHasProveedores());
+            productoNuevo.setPrecio(ultimoProductoInventario.getPrecio());
+            productoNuevo.setUbicaciones(ultimoProductoInventario.getUbicaciones());
+            productoNuevo.setEstatus(ultimoProductoInventario.getEstatus());
+            nuevosProductos.add(productoNuevo);
+            
+            Object[] producto = new Object[5];
+            producto[0] = ultimoProducto[0];
+            producto[1] = ultimoProducto[1];
+            producto[2] = ultimoProducto[2];
+            producto[3] = ultimoProducto[3];            
+            model.addRow(producto);
+        }
     }
 
     /**
@@ -69,6 +120,9 @@ public class ReciboProductoBC extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        cajasDialog = new javax.swing.JDialog();
+        numeroCajasTxt = new javax.swing.JTextField();
+        recibirNumCajasBtn = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
@@ -85,6 +139,36 @@ public class ReciboProductoBC extends javax.swing.JPanel {
         jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaCanales = new javax.swing.JTable();
+
+        cajasDialog.setBounds(new java.awt.Rectangle(200, 200, 300, 300));
+
+        recibirNumCajasBtn.setText("Recibir cajas");
+        recibirNumCajasBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                recibirNumCajasBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout cajasDialogLayout = new javax.swing.GroupLayout(cajasDialog.getContentPane());
+        cajasDialog.getContentPane().setLayout(cajasDialogLayout);
+        cajasDialogLayout.setHorizontalGroup(
+            cajasDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cajasDialogLayout.createSequentialGroup()
+                .addGap(123, 123, 123)
+                .addGroup(cajasDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(recibirNumCajasBtn)
+                    .addComponent(numeroCajasTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(171, Short.MAX_VALUE))
+        );
+        cajasDialogLayout.setVerticalGroup(
+            cajasDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cajasDialogLayout.createSequentialGroup()
+                .addGap(106, 106, 106)
+                .addComponent(numeroCajasTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(47, 47, 47)
+                .addComponent(recibirNumCajasBtn)
+                .addContainerGap(104, Short.MAX_VALUE))
+        );
 
         setPreferredSize(new java.awt.Dimension(1558, 755));
         setRequestFocusEnabled(false);
@@ -299,6 +383,10 @@ public class ReciboProductoBC extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_codigoBarrasTxtKeyPressed
 
+    private void recibirNumCajasBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recibirNumCajasBtnActionPerformed
+        multiplicarUltimaCaja();
+    }//GEN-LAST:event_recibirNumCajasBtnActionPerformed
+
     private Object[] getProveedoresArray() {
         Object[] proveedores = null;
         try {
@@ -337,6 +425,7 @@ public class ReciboProductoBC extends javax.swing.JPanel {
             productoNuevo.setPrecio(productoHasProveedores.getPrecioSugerido());
             productoNuevo.setUbicaciones(UsuarioFirmado.getUsuarioFirmado().getUbicaciones());
             productoNuevo.setEstatus("ACTIVO");
+            ultimoProductoInventario = productoNuevo;
             nuevosProductos.add(productoNuevo);
 
             Object[] canal = new Object[5];
@@ -345,7 +434,8 @@ public class ReciboProductoBC extends javax.swing.JPanel {
             canal[1] = proveedorLOV.getSelectedItem().toString();
             canal[2] = productoHasProveedores.getProductos().getDescripcion();
             canal[3] = UsuarioFirmado.getUsuarioFirmado().getUbicaciones();
-
+            ultimoProducto = canal;
+            
             model.addRow(canal);
         }
     }
@@ -356,6 +446,7 @@ public class ReciboProductoBC extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton agregarBtn;
+    private javax.swing.JDialog cajasDialog;
     private javax.swing.JTextField codigoBarrasTxt;
     private javax.swing.JButton finalizarBtn;
     private javax.swing.JLabel jLabel1;
@@ -368,8 +459,10 @@ public class ReciboProductoBC extends javax.swing.JPanel {
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JButton limpiarBtn;
+    private javax.swing.JTextField numeroCajasTxt;
     private javax.swing.JComboBox proveedorLOV;
     private javax.swing.JTextField proveedorTxt;
+    private javax.swing.JButton recibirNumCajasBtn;
     private javax.swing.JTable tablaCanales;
     // End of variables declaration//GEN-END:variables
 }

@@ -60,7 +60,7 @@
             <column name="SUBTOTAL" precision="8" not-null="true" />
         </property>
         <property name="iva" type="big_decimal">
-            <column name="IVA" precision="3" not-null="true" />
+            <column name="IVA" precision="8" not-null="true" />
         </property>
         <property name="total" type="big_decimal">
             <column name="TOTAL" precision="8" not-null="true" />
