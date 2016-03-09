@@ -33,7 +33,6 @@ import java.security.Signature;
 import java.security.SignatureException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,26 +43,22 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.faces.context.FacesContext;
-import static javax.rmi.PortableRemoteObject.connect;
 import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.view.JasperViewer;
 import org.apache.commons.ssl.PKCS8Key;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -76,6 +71,12 @@ import sun.misc.BASE64Encoder;
  * @author Administrador
  */
 public class FacturasUtility {
+    private static final String[] UNIDADES = {"", "un ", "dos ", "tres ", "cuatro ", "cinco ", "seis ", "siete ", "ocho ", "nueve "};
+    private static final String[] DECENAS = {"diez ", "once ", "doce ", "trece ", "catorce ", "quince ", "dieciseis ",
+        "diecisiete ", "dieciocho ", "diecinueve", "veinte ", "treinta ", "cuarenta ",
+        "cincuenta ", "sesenta ", "setenta ", "ochenta ", "noventa "};
+    private static final String[] CENTENAS = {"", "ciento ", "doscientos ", "trecientos ", "cuatrocientos ", "quinientos ", "seiscientos ",
+        "setecientos ", "ochocientos ", "novecientos "};
 
     public static OutputStream getCadenaOriginal(String cadenaOriginalDir, String xml) throws Exception {
         InputStream content = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream(cadenaOriginalDir);
@@ -439,13 +440,14 @@ public class FacturasUtility {
             JasperReport subreporte = null;
             ServletContext servletContext = (ServletContext) FacesContext
                     .getCurrentInstance().getExternalContext().getContext();
-            String realPath = servletContext.getRealPath("//pagina//reportes//factura//Factura.jrxml");
+            String realPath = servletContext.getRealPath("//pagina//reportes//ventasconfactura//FacturaNuevo.jrxml");
             jasperReport = JasperCompileManager.compileReport(realPath);
 
             JasperPrint jasperPrint = null;
 
             Map mapa = new HashMap();
             mapa.put("FacturaId", facturaId);
+            mapa.put("SUBREPORT_DIR", "C://apps//valco//valco//proyecto//valco//web//pagina//reportes//ventasconfactura//");
             jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
 
             JasperExportManager.exportReportToPdfFile(jasperPrint, path + name);
@@ -453,5 +455,112 @@ public class FacturasUtility {
         } catch (Exception ex) {
             throw new Exception("Factura " + facturaId + ": Ocurrio un error al generar el PDF.");
         }
+    }
+    
+    public static String Convertir(String numero, boolean mayusculas) {
+        String literal = "";
+        String parte_decimal;    
+        //si el numero utiliza (.) en lugar de (,) -> se reemplaza
+        numero = numero.replace(".", ",");
+        //si el numero no tiene parte decimal, se le agrega ,00
+        if(numero.indexOf(",")==-1){
+            numero = numero + ",00";
+        }
+        //se valida formato de entrada -> 0,00 y 999 999 999,00
+        if (Pattern.matches("\\d{1,9},\\d{1,2}", numero)) {
+            //se divide el numero 0000000,00 -> entero y decimal
+            String Num[] = numero.split(",");            
+            //de da formato al numero decimal
+            parte_decimal = Num[1] + "/100 M.N.";
+            //se convierte el numero a literal
+            if (Integer.parseInt(Num[0]) == 0) {//si el valor es cero
+                literal = "cero ";
+            } else if (Integer.parseInt(Num[0]) > 999999) {//si es millon
+                literal = getMillones(Num[0]);
+            } else if (Integer.parseInt(Num[0]) > 999) {//si es miles
+                literal = getMiles(Num[0]);
+            } else if (Integer.parseInt(Num[0]) > 99) {//si es centena
+                literal = getCentenas(Num[0]);
+            } else if (Integer.parseInt(Num[0]) > 9) {//si es decena
+                literal = getDecenas(Num[0]);
+            } else {//sino unidades -> 9
+                literal = getUnidades(Num[0]);
+            }
+            //devuelve el resultado en mayusculas o minusculas
+            if (mayusculas) {
+                return (literal + parte_decimal).toUpperCase();
+            } else {
+                return (literal + parte_decimal);
+            }
+        } else {//error, no se puede convertir
+            return literal = null;
+        }
+    }
+
+    /* funciones para convertir los numeros a literales */
+
+    private static String getUnidades(String numero) {// 1 - 9
+        //si tuviera algun 0 antes se lo quita -> 09 = 9 o 009=9
+        String num = numero.substring(numero.length() - 1);
+        return UNIDADES[Integer.parseInt(num)];
+    }
+
+    private static String getDecenas(String num) {// 99                        
+        int n = Integer.parseInt(num);
+        if (n < 10) {//para casos como -> 01 - 09
+            return getUnidades(num);
+        } else if (n > 19) {//para 20...99
+            String u = getUnidades(num);
+            if (u.equals("")) { //para 20,30,40,50,60,70,80,90
+                return DECENAS[Integer.parseInt(num.substring(0, 1)) + 8];
+            } else {
+                return DECENAS[Integer.parseInt(num.substring(0, 1)) + 8] + "y " + u;
+            }
+        } else {//numeros entre 11 y 19
+            return DECENAS[n - 10];
+        }
+    }
+
+    private static String getCentenas(String num) {// 999 o 099
+        if( Integer.parseInt(num)>99 ){//es centena
+            if (Integer.parseInt(num) == 100) {//caso especial
+                return " cien ";
+            } else {
+                 return CENTENAS[Integer.parseInt(num.substring(0, 1))] + getDecenas(num.substring(1));
+            } 
+        }else{//por Ej. 099 
+            //se quita el 0 antes de convertir a decenas
+            return getDecenas(Integer.parseInt(num)+"");            
+        }        
+    }
+
+    private static String getMiles(String numero) {// 999 999
+        //obtiene las centenas
+        String c = numero.substring(numero.length() - 3);
+        //obtiene los miles
+        String m = numero.substring(0, numero.length() - 3);
+        String n="";
+        //se comprueba que miles tenga valor entero
+        if (Integer.parseInt(m) > 0) {
+            n = getCentenas(m);           
+            return n + "mil " + getCentenas(c);
+        } else {
+            return "" + getCentenas(c);
+        }
+
+    }
+
+    private static String getMillones(String numero) { //000 000 000        
+        //se obtiene los miles
+        String miles = numero.substring(numero.length() - 6);
+        //se obtiene los millones
+        String millon = numero.substring(0, numero.length() - 6);
+        String n = "";
+        if(millon.length()>1){
+            n = getCentenas(millon) + "millones ";
+        }else{
+            n = getUnidades(millon) + "millon ";
+        }
+        return n + getMiles(miles);        
     }
 }
