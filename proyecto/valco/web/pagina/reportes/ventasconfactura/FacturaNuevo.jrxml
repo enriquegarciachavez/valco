@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="FacturaNuevo" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="550"/>
+	<property name="ireport.y" value="549"/>
 	<style name="table" lineSpacing="Single">
 		<box>
 			<topPen lineWidth="1.0" lineColor="#000000"/>
@@ -129,7 +129,7 @@ WHERE
 	<title>
 		<band height="695">
 			<rectangle>
-				<reportElement x="3" y="517" width="100" height="18" backcolor="#999999"/>
+				<reportElement x="226" y="525" width="100" height="18" backcolor="#999999"/>
 			</rectangle>
 			<rectangle>
 				<reportElement x="450" y="13" width="122" height="10" backcolor="#E2E2E2"/>
@@ -174,29 +174,29 @@ WHERE
 				<text><![CDATA[CHIHUAHUA, CHIHUAHUA, MÉXICO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="575" width="128" height="20"/>
+				<reportElement x="0" y="595" width="128" height="14"/>
 				<textElement lineSpacing="Single"/>
 				<text><![CDATA[Sello digital del CFDI:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="615" width="128" height="20"/>
+				<reportElement x="-2" y="628" width="128" height="14"/>
 				<textElement lineSpacing="Single"/>
 				<text><![CDATA[SELLO DEL SAT:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="655" width="297" height="20"/>
+				<reportElement x="-2" y="661" width="297" height="14"/>
 				<textElement lineSpacing="Single"/>
 				<text><![CDATA[CADENA ORIGINAL DEL COMPLEMENTO DE CERTIFICACIÓN DEL SAT:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="595" width="572" height="20"/>
+				<reportElement x="0" y="609" width="572" height="20"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_SELLO_CDFI}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="635" width="572" height="20"/>
+				<reportElement x="0" y="642" width="572" height="20"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
@@ -337,199 +337,199 @@ WHERE
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_LUGAR}  +  $F{FACTURAS_FECHA}]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement x="4" y="165" width="432" height="20" backcolor="#999999"/>
+				<reportElement x="4" y="157" width="432" height="20" backcolor="#999999"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="4" y="165" width="432" height="20"/>
+				<reportElement x="4" y="157" width="432" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single"/>
 				<text><![CDATA[Vendido A:]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="4" y="185" width="432" height="54"/>
+				<reportElement x="4" y="177" width="432" height="54"/>
 			</rectangle>
 			<textField>
-				<reportElement x="4" y="185" width="432" height="15"/>
+				<reportElement x="4" y="177" width="432" height="15"/>
 				<textElement verticalAlignment="Middle" lineSpacing="Single">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{CLIENTES_RAZON_SOCIAL}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="4" y="200" width="214" height="10"/>
+				<reportElement x="4" y="192" width="214" height="10"/>
 				<textElement verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{CLIENTES_RFC}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="4" y="210" width="214" height="10"/>
+				<reportElement x="4" y="202" width="214" height="10"/>
 				<textElement verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{CLIENTES_CALLE}+" " +  $F{CLIENTES_NUMERO_EXTERIOR}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="4" y="229" width="214" height="10"/>
+				<reportElement x="4" y="222" width="214" height="10"/>
 				<textElement verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{CLIENTES_CIUDAD}+" "  + $F{CLIENTES_ESTADO}+" " +  $F{CLIENTES_PAIS}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="4" y="220" width="214" height="9"/>
+				<reportElement x="4" y="212" width="214" height="9"/>
 				<textElement verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{CLIENTES_COLONIA}+" " +  $F{CLIENTES_CODIGO_POSTAL}]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement x="3" y="246" width="72" height="10" backcolor="#999999"/>
+				<reportElement x="3" y="237" width="72" height="10" backcolor="#999999"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="75" y="246" width="172" height="10" backcolor="#999999"/>
+				<reportElement x="75" y="237" width="172" height="10" backcolor="#999999"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="247" y="246" width="71" height="10" backcolor="#999999"/>
+				<reportElement x="247" y="237" width="71" height="10" backcolor="#999999"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="318" y="246" width="55" height="10" backcolor="#999999"/>
+				<reportElement x="318" y="237" width="55" height="10" backcolor="#999999"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="373" y="246" width="53" height="10" backcolor="#999999"/>
+				<reportElement x="373" y="237" width="53" height="10" backcolor="#999999"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="426" y="246" width="123" height="10" backcolor="#999999"/>
+				<reportElement x="426" y="237" width="123" height="10" backcolor="#999999"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="4" y="246" width="71" height="10"/>
+				<reportElement x="4" y="237" width="71" height="10"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<text><![CDATA[FECHA FACTURA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="74" y="246" width="173" height="10"/>
+				<reportElement x="74" y="237" width="173" height="10"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<text><![CDATA[METODO DE PAGO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="247" y="246" width="71" height="10"/>
+				<reportElement x="247" y="237" width="71" height="10"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<text><![CDATA[MONEDA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="318" y="246" width="55" height="10"/>
+				<reportElement x="318" y="237" width="55" height="10"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<text><![CDATA[NO. CLIENTE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="373" y="246" width="53" height="10"/>
+				<reportElement x="373" y="237" width="53" height="10"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<text><![CDATA[BANCO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="426" y="246" width="123" height="10"/>
+				<reportElement x="426" y="237" width="123" height="10"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<text><![CDATA[CONDICIONES DE PAGO]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="3" y="256" width="72" height="12"/>
+				<reportElement x="3" y="247" width="72" height="12"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="75" y="256" width="172" height="12"/>
+				<reportElement x="75" y="247" width="172" height="12"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="247" y="256" width="71" height="12"/>
+				<reportElement x="247" y="247" width="71" height="12"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="318" y="256" width="55" height="12"/>
+				<reportElement x="318" y="247" width="55" height="12"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="373" y="256" width="53" height="12"/>
+				<reportElement x="373" y="247" width="53" height="12"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="426" y="256" width="123" height="12"/>
+				<reportElement x="426" y="247" width="123" height="12"/>
 			</rectangle>
 			<textField>
-				<reportElement x="4" y="256" width="70" height="12"/>
+				<reportElement x="4" y="247" width="70" height="12"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_FECHA}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="75" y="256" width="172" height="12"/>
+				<reportElement x="75" y="247" width="172" height="12"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_METODO_PAGO}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="247" y="256" width="71" height="12"/>
+				<reportElement x="247" y="247" width="71" height="12"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_MONEDA}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="373" y="256" width="53" height="12"/>
+				<reportElement x="373" y="247" width="53" height="12"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_BANCO}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="318" y="256" width="55" height="12"/>
+				<reportElement x="318" y="247" width="55" height="12"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{CLIENTES_CODIGO}]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement x="4" y="277" width="27" height="10" backcolor="#999999"/>
+				<reportElement x="4" y="267" width="27" height="10" backcolor="#999999"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="31" y="277" width="50" height="10" backcolor="#999999"/>
+				<reportElement x="31" y="267" width="50" height="10" backcolor="#999999"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="81" y="277" width="45" height="10" backcolor="#999999"/>
+				<reportElement x="81" y="267" width="45" height="10" backcolor="#999999"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="126" y="277" width="239" height="10" backcolor="#999999"/>
+				<reportElement x="126" y="267" width="239" height="10" backcolor="#999999"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="365" y="277" width="40" height="10" backcolor="#999999"/>
+				<reportElement x="365" y="267" width="40" height="10" backcolor="#999999"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="405" y="277" width="66" height="10" backcolor="#999999"/>
+				<reportElement x="405" y="267" width="66" height="10" backcolor="#999999"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="472" y="277" width="77" height="10" backcolor="#999999"/>
+				<reportElement x="472" y="267" width="77" height="10" backcolor="#999999"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="4" y="287" width="27" height="201"/>
+				<reportElement x="4" y="277" width="27" height="201"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="31" y="287" width="50" height="201"/>
+				<reportElement x="31" y="277" width="50" height="201"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="81" y="287" width="45" height="201"/>
+				<reportElement x="81" y="277" width="45" height="201"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="126" y="287" width="239" height="201"/>
+				<reportElement x="126" y="277" width="239" height="201"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="126" y="404" width="239" height="84" forecolor="#CCCCCC">
+				<reportElement x="126" y="394" width="239" height="84" forecolor="#CCCCCC">
 					<printWhenExpression><![CDATA[$P{IsCopia}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
@@ -538,41 +538,41 @@ WHERE
 				<text><![CDATA[COPIA]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="365" y="287" width="40" height="201"/>
+				<reportElement x="365" y="277" width="40" height="201"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="405" y="287" width="66" height="201"/>
+				<reportElement x="405" y="277" width="66" height="201"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="472" y="287" width="77" height="201"/>
+				<reportElement x="472" y="277" width="77" height="201"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="326" y="495" width="100" height="10" backcolor="#999999"/>
+				<reportElement x="326" y="485" width="100" height="10" backcolor="#999999"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="326" y="505" width="100" height="11" backcolor="#E2E2E2"/>
+				<reportElement x="326" y="495" width="100" height="11" backcolor="#E2E2E2"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="326" y="516" width="100" height="19" backcolor="#999999"/>
+				<reportElement x="326" y="506" width="100" height="19" backcolor="#999999"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="426" y="505" width="123" height="11"/>
+				<reportElement x="426" y="495" width="123" height="11"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="426" y="517" width="123" height="18"/>
+				<reportElement x="426" y="506" width="123" height="19"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="103" y="517" width="223" height="18"/>
+				<reportElement x="326" y="525" width="223" height="18"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="3" y="517" width="100" height="18"/>
+				<reportElement x="226" y="525" width="100" height="18"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[IMPORTE CON LETRA]]></text>
 			</staticText>
 			<subreport>
-				<reportElement x="4" y="277" width="545" height="211"/>
+				<reportElement x="4" y="267" width="545" height="211"/>
 				<subreportParameter name="FacturaId">
 					<subreportParameterExpression><![CDATA[$F{FACTURAS_CODIGO}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -580,64 +580,88 @@ WHERE
 				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "FacturaNuevo_subreport1.jasper"]]></subreportExpression>
 			</subreport>
 			<textField>
-				<reportElement x="426" y="517" width="123" height="18"/>
+				<reportElement x="426" y="506" width="123" height="19"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_TOTAL}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="326" y="516" width="100" height="19"/>
+				<reportElement x="326" y="506" width="100" height="19"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="7" isBold="true"/>
 				</textElement>
 				<text><![CDATA[TOTAL]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="326" y="506" width="100" height="9"/>
+				<reportElement x="326" y="496" width="100" height="9"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="7" isBold="true"/>
 				</textElement>
 				<text><![CDATA[IVA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="326" y="495" width="100" height="10"/>
+				<reportElement x="326" y="485" width="100" height="10"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="7" isBold="true"/>
 				</textElement>
 				<text><![CDATA[SUBTOTAL]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="426" y="506" width="123" height="9"/>
+				<reportElement x="426" y="496" width="123" height="9"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_IVA}]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement x="426" y="495" width="123" height="10"/>
+				<reportElement x="426" y="485" width="123" height="10"/>
 			</rectangle>
 			<textField>
-				<reportElement x="426" y="496" width="123" height="9"/>
+				<reportElement x="426" y="486" width="123" height="9"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_SUBTOTAL}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="103" y="516" width="223" height="19"/>
+				<reportElement x="326" y="524" width="223" height="19"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_IMPORTE_LETRA}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="426" y="257" width="123" height="11"/>
+				<reportElement x="426" y="248" width="123" height="11"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_CONDICION_PAGO}]]></textFieldExpression>
 			</textField>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement mode="Transparent" x="448" y="118" width="124" height="112"/>
+				<imageExpression class="java.lang.String"><![CDATA[com.google.zxing.client.j2se.MatrixToImageWriter.toBufferedImage(
+     new com.google.zxing.qrcode.QRCodeWriter().encode("?re="+"DCV9612126N6"+"&rr="+$F{CLIENTES_RFC}+"&tt="+$F{FACTURAS_TOTAL}+"&UUID="+$F{FACTURAS_FOLIO_FISCAL},
+         com.google.zxing.BarcodeFormat.QR_CODE, 300, 300))]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="1" y="546" width="404" height="47"/>
+				<textElement lineSpacing="Single" markup="html">
+					<font size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Expedido en"+" "+$F{FACTURAS_LUGAR}+" "+$F{FACTURAS_FECHA}+
+" <br>Debo y pagaré incondicionalmente a la orden de DISTRIBUIDORA DE CARNES VALCO S.A. DE C.V. en esta ciudad de CHIHUAHUA, el día ____________, la cantidad de "+"\$"+$F{FACTURAS_TOTAL}+" pesos importe de la mercancia recibida a mi entera satisfacción. El presente pagare causará intereses a razón de ____% mensual sobre la cantidad insoluta"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="426" y="574" width="120" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="436" y="575" width="100" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Acepto(amos)]]></text>
+			</staticText>
 		</band>
 	</title>
 </jasperReport>

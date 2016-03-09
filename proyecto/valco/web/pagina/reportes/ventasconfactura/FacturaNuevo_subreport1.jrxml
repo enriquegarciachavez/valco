@@ -33,101 +33,101 @@ WHERE CONCEPTOS_FACTURA.`FACTURAS_CODIGO` = $P{FacturaId}]]>
 		<band height="11">
 			<staticText>
 				<reportElement x="0" y="0" width="27" height="11"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-					<font fontName="Gill Sans MT Condensed" size="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
+					<font fontName="Angsana New" size="8"/>
 				</textElement>
 				<text><![CDATA[PARTE	]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="26" y="0" width="50" height="11"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-					<font fontName="Gill Sans MT Condensed" size="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
+					<font fontName="Angsana New" size="8"/>
 				</textElement>
 				<text><![CDATA[CANTIDAD]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="75" y="0" width="41" height="11"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-					<font fontName="Gill Sans MT Condensed" size="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
+					<font fontName="Angsana New" size="8"/>
 				</textElement>
 				<text><![CDATA[CLAVE]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="116" y="1" width="244" height="10"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-					<font fontName="Gill Sans MT Condensed" size="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
+					<font fontName="Angsana New" size="8"/>
 				</textElement>
 				<text><![CDATA[DESCRIPCION]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="360" y="0" width="39" height="11"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-					<font fontName="Gill Sans MT Condensed" size="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
+					<font fontName="Angsana New" size="8"/>
 				</textElement>
 				<text><![CDATA[UNIDAD]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="398" y="0" width="72" height="11"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-					<font fontName="Gill Sans MT Condensed" size="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
+					<font fontName="Angsana New" size="8"/>
 				</textElement>
 				<text><![CDATA[PRECIO UNITARIO]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="470" y="0" width="97" height="10"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-					<font fontName="Gill Sans MT Condensed" size="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
+					<font fontName="Angsana New" size="8"/>
 				</textElement>
 				<text><![CDATA[IMPORTE TOTAL]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="10">
+		<band height="14">
 			<textField>
-				<reportElement x="0" y="0" width="27" height="10"/>
+				<reportElement x="0" y="0" width="27" height="14"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font fontName="Angsana New" size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="75" y="0" width="41" height="10"/>
+				<reportElement x="75" y="0" width="41" height="14"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font fontName="Angsana New" size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{CONCEPTOS_FACTURA_CLAVE}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="116" y="-1" width="244" height="10"/>
+				<reportElement x="116" y="-1" width="244" height="14"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font fontName="Angsana New" size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{CONCEPTOS_FACTURA_DESCRIPCION}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="360" y="0" width="39" height="10"/>
+				<reportElement x="360" y="0" width="39" height="14"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font fontName="Angsana New" size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{CONCEPTOS_FACTURA_UNIDAD}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="470" y="0" width="97" height="10"/>
+				<reportElement x="470" y="0" width="97" height="14"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font fontName="Angsana New" size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["\$"+$F{CONCEPTOS_FACTURA_IMPORTE_TOTAL}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="26" y="0" width="50" height="10"/>
+				<reportElement x="26" y="0" width="50" height="14"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font fontName="Angsana New" size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{CONCEPTOS_FACTURA_CANTIDAD}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="399" y="0" width="71" height="10"/>
+				<reportElement x="399" y="0" width="71" height="14"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font fontName="Angsana New" size="6"/>
 				</textElement>

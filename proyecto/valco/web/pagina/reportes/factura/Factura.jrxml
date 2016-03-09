@@ -727,7 +727,7 @@ WHERE
 				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "Factura_subreport1.jasper"]]></subreportExpression>
 			</subreport>
 			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
-				<reportElement mode="Transparent" x="448" y="127" width="124" height="112"/>
+				<reportElement mode="Transparent" x="442" y="148" width="124" height="112"/>
 				<imageExpression class="java.lang.String"><![CDATA[com.google.zxing.client.j2se.MatrixToImageWriter.toBufferedImage(
      new com.google.zxing.qrcode.QRCodeWriter().encode("?re="+"DCV9612126N6"+"&rr="+$F{CLIENTES_RFC}+"&tt="+$F{FACTURAS_TOTAL}+"&UUID="+$F{FACTURAS_FOLIO_FISCAL},
          com.google.zxing.BarcodeFormat.QR_CODE, 300, 300))]]></imageExpression>
