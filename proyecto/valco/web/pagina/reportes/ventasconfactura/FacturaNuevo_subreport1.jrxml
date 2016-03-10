@@ -30,51 +30,51 @@ WHERE CONCEPTOS_FACTURA.`FACTURAS_CODIGO` = $P{FacturaId}]]>
 		<band/>
 	</background>
 	<columnHeader>
-		<band height="11">
+		<band height="14">
 			<staticText>
-				<reportElement x="0" y="0" width="27" height="11"/>
+				<reportElement x="0" y="0" width="27" height="13"/>
 				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
 					<font fontName="Angsana New" size="8"/>
 				</textElement>
 				<text><![CDATA[PARTE	]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="26" y="0" width="50" height="11"/>
+				<reportElement x="26" y="0" width="50" height="13"/>
 				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
 					<font fontName="Angsana New" size="8"/>
 				</textElement>
 				<text><![CDATA[CANTIDAD]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="75" y="0" width="41" height="11"/>
+				<reportElement x="75" y="0" width="41" height="13"/>
 				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
 					<font fontName="Angsana New" size="8"/>
 				</textElement>
 				<text><![CDATA[CLAVE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="116" y="1" width="244" height="10"/>
+				<reportElement x="116" y="1" width="244" height="12"/>
 				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
 					<font fontName="Angsana New" size="8"/>
 				</textElement>
 				<text><![CDATA[DESCRIPCION]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="360" y="0" width="39" height="11"/>
+				<reportElement x="360" y="0" width="39" height="13"/>
 				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
 					<font fontName="Angsana New" size="8"/>
 				</textElement>
 				<text><![CDATA[UNIDAD]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="398" y="0" width="72" height="11"/>
+				<reportElement x="398" y="0" width="72" height="14"/>
 				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
 					<font fontName="Angsana New" size="8"/>
 				</textElement>
 				<text><![CDATA[PRECIO UNITARIO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="470" y="0" width="97" height="10"/>
+				<reportElement x="470" y="0" width="97" height="13"/>
 				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
 					<font fontName="Angsana New" size="8"/>
 				</textElement>
