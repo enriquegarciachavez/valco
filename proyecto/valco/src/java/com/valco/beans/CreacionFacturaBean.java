@@ -146,6 +146,7 @@ public class CreacionFacturaBean {
         FacturasUtility.calculaTotalImpuestos(impuesto, nota);
         factura.setIva(impuesto.getImporte());
         factura.setTotal(factura.getSubtotal().add(FacturasUtility.getTotalImpuestos(impuestos)).setScale(2, RoundingMode.HALF_EVEN));
+        factura.setImporteLetra(FacturasUtility.Convertir(factura.getTotal().toString(), true));
         factura.setXml(metodoPago);
         factura.setLugar("CHIHUAHUA,CHIHUAHUA,MEXICO");
         factura.setMoneda("MXN");
@@ -237,6 +238,7 @@ public class CreacionFacturaBean {
                 FacturasUtility.calculaTotalImpuestos(impuesto, nota);
                 factura.setIva(impuesto.getImporte());
                 factura.setTotal(factura.getSubtotal().add(FacturasUtility.getTotalImpuestos(impuestos)).setScale(2, RoundingMode.HALF_EVEN));
+                factura.setImporteLetra(FacturasUtility.Convertir(factura.getTotal().toString(), true));
                 factura.setXml(metodoPago);
                 factura.setLugar("CHIHUAHUA,CHIHUAHUA,MEXICO");
                 factura.setMoneda("MXN");
