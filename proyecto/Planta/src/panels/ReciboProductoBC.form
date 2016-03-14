@@ -7,6 +7,7 @@
         <Property name="bounds" type="java.awt.Rectangle" editor="org.netbeans.beaninfo.editors.RectangleEditor">
           <Rectangle value="[200, 200, 300, 300]"/>
         </Property>
+        <Property name="modal" type="boolean" value="true"/>
       </Properties>
 
       <Layout>
@@ -36,6 +37,9 @@
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JTextField" name="numeroCajasTxt">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="numeroCajasTxtActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="recibirNumCajasBtn">
           <Properties>
@@ -224,6 +228,14 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="finalizarBtnActionPerformed"/>
                       </Events>
                     </Component>
+                    <Component class="javax.swing.JButton" name="eliminarBtn">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Eliminar selecci&#xf3;n"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="eliminarBtnActionPerformed"/>
+                      </Events>
+                    </Component>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="jPanel5">
@@ -252,7 +264,7 @@
                             </Property>
                           </Properties>
                           <AuxValues>
-                            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="       String[] columnNames = {&#xd;&#xa;        &quot;Peso&quot;,&#xd;&#xa;        &quot;Proveedor&quot;,&#xd;&#xa;        &quot;Producto&quot;,&#xd;&#xa;        &quot;Almacen&quot;};&#xd;&#xa;         model.setColumnIdentifiers(columnNames); &#xd;&#xa;"/>
+                            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="       String[] columnNames = {&#xd;&#xa;        &quot;Peso&quot;,&#xd;&#xa;        &quot;Proveedor&quot;,&#xd;&#xa;        &quot;Producto&quot;,&#xd;&#xa;        &quot;Almacen&quot;,&#xd;&#xa;       &quot;Codigo Barras&quot;};&#xd;&#xa;         model.setColumnIdentifiers(columnNames); &#xd;&#xa;"/>
                           </AuxValues>
                         </Component>
                       </SubComponents>

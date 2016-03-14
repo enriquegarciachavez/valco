@@ -1,6 +1,5 @@
 package panels;
 
-
 import security.DialogCallbackHandler;
 import creators.PanelCreator;
 import java.awt.GraphicsDevice;
@@ -43,7 +42,12 @@ public class MainFrame extends javax.swing.JFrame {
      * Creates new form MainFrame
      */
     public MainFrame() {
+        try{
+            JOptionPane.showMessageDialog(null, "inicio");
         initComponents();
+        }catch(Exception e){
+         JOptionPane.showMessageDialog(null, e);
+                }
     }
 
     /**
@@ -173,22 +177,24 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void addNewPanel(ActionEvent evt) {
         if (internalFrame != null) {
-            if(prueb instanceof AbrirProcesoPanel){
-                ((AbrirProcesoPanel)prueb).manager.removeKeyEventDispatcher(((AbrirProcesoPanel)prueb).dispacher);
-            }else if(prueb instanceof InventariosMain){
-                ((InventariosMain)prueb).manager.removeKeyEventDispatcher(((InventariosMain)prueb).dispacher);
-            }else if(prueb instanceof ReciboProductoBC){
-                ((ReciboProductoBC)prueb).manager.removeKeyEventDispatcher(((ReciboProductoBC)prueb).dispacher);
-            }else if(prueb instanceof EnviosPanel){
-                ((EnviosPanel)prueb).manager.removeKeyEventDispatcher(((EnviosPanel)prueb).dispacher);
-            }else if(prueb instanceof ReciboTransferenciasPanel){
-                ((ReciboTransferenciasPanel)prueb).manager.removeKeyEventDispatcher(((ReciboTransferenciasPanel)prueb).dispacher);
+            if (prueb instanceof AbrirProcesoPanel) {
+                ((AbrirProcesoPanel) prueb).manager.removeKeyEventDispatcher(((AbrirProcesoPanel) prueb).dispacher);
+            } else if (prueb instanceof InventariosMain) {
+                ((InventariosMain) prueb).manager.removeKeyEventDispatcher(((InventariosMain) prueb).dispacher);
+            } else if (prueb instanceof ReciboProductoBC) {
+                ((ReciboProductoBC) prueb).manager.removeKeyEventDispatcher(((ReciboProductoBC) prueb).dispacher);
+            } else if (prueb instanceof EnviosPanel) {
+                ((EnviosPanel) prueb).manager.removeKeyEventDispatcher(((EnviosPanel) prueb).dispacher);
+            } else if (prueb instanceof ReciboTransferenciasPanel) {
+                    //((ReciboTransferenciasPanel) prueb).manager.removeKeyEventDispatcher(((ReciboTransferenciasPanel) prueb).dispacher);
+                ((ReciboTransferenciasPanel) prueb).enviosPanel.manager.removeKeyEventDispatcher(((ReciboTransferenciasPanel) prueb).enviosPanel.dispacher);
+
             }
             mainPanel.remove(internalFrame);
         }
         internalFrame = new JInternalFrame();
         String sourceName = ((JMenuItem) evt.getSource()).getText();
-         prueb = PanelCreator.createPanel(sourceName, mainPanel);
+        prueb = PanelCreator.createPanel(sourceName, mainPanel);
         internalFrame.add(prueb);
         internalFrame.setBounds(0, 0, 200, 200);
         internalFrame.setResizable(true);
@@ -333,12 +339,12 @@ public class MainFrame extends javax.swing.JFrame {
                     System.exit(-1);
                 }
                 // Examinemos parte del trabajo basado en Principal:
-                lcFinal=lc;
+                lcFinal = lc;
                 Subject.doAsPrivileged(lcFinal.getSubject(), new PrivilegedAction() {
-                   
+
                     public MainFrame run() {
                         MainFrame mf = new MainFrame();
-                        HWLoginModule.validateAccess(lcFinal.getSubject(),mf.jMenuBar1.getComponents());
+                        HWLoginModule.validateAccess(lcFinal.getSubject(), mf.jMenuBar1.getComponents());
                         mf.setTitle(UsuarioFirmado.getUsuarioFirmado().getNombre());
                         mf.setVisible(true);
                         return mf;

@@ -83,6 +83,9 @@ public class ReciboProductoBC extends javax.swing.JPanel {
     }
     
     public void multiplicarUltimaCaja(){
+        if(ultimoProductoInventario == null){
+            JOptionPane.showMessageDialog(null, "No ha ingresado ningun producto");
+        }
         String texto = numeroCajasTxt.getText();
         int cajas = 0;
         try{
@@ -106,7 +109,8 @@ public class ReciboProductoBC extends javax.swing.JPanel {
             producto[0] = ultimoProducto[0];
             producto[1] = ultimoProducto[1];
             producto[2] = ultimoProducto[2];
-            producto[3] = ultimoProducto[3];            
+            producto[3] = ultimoProducto[3];
+            producto[4] = ultimoProducto[4];  
             model.addRow(producto);
         }
     }
@@ -136,11 +140,19 @@ public class ReciboProductoBC extends javax.swing.JPanel {
         agregarBtn = new javax.swing.JButton();
         limpiarBtn = new javax.swing.JButton();
         finalizarBtn = new javax.swing.JButton();
+        eliminarBtn = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaCanales = new javax.swing.JTable();
 
         cajasDialog.setBounds(new java.awt.Rectangle(200, 200, 300, 300));
+        cajasDialog.setModal(true);
+
+        numeroCajasTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                numeroCajasTxtActionPerformed(evt);
+            }
+        });
 
         recibirNumCajasBtn.setText("Recibir cajas");
         recibirNumCajasBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -279,6 +291,14 @@ public class ReciboProductoBC extends javax.swing.JPanel {
         });
         jPanel3.add(finalizarBtn);
 
+        eliminarBtn.setText("Eliminar selección");
+        eliminarBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarBtnActionPerformed(evt);
+            }
+        });
+        jPanel3.add(eliminarBtn);
+
         jSplitPane2.setLeftComponent(jPanel3);
 
         jPanel5.setLayout(new javax.swing.BoxLayout(jPanel5, javax.swing.BoxLayout.LINE_AXIS));
@@ -288,7 +308,8 @@ public class ReciboProductoBC extends javax.swing.JPanel {
             "Peso",
             "Proveedor",
             "Producto",
-            "Almacen"};
+            "Almacen",
+            "Codigo Barras"};
         model.setColumnIdentifiers(columnNames); 
         jScrollPane1.setViewportView(tablaCanales);
 
@@ -306,6 +327,7 @@ public class ReciboProductoBC extends javax.swing.JPanel {
     private void agregarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarBtnActionPerformed
         try {
             agregarProducto();
+            codigoBarrasTxt.setText("");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
@@ -377,6 +399,7 @@ public class ReciboProductoBC extends javax.swing.JPanel {
         if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
             try {
                 agregarProducto();
+                codigoBarrasTxt.setText("");
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage());
             }
@@ -386,6 +409,27 @@ public class ReciboProductoBC extends javax.swing.JPanel {
     private void recibirNumCajasBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recibirNumCajasBtnActionPerformed
         multiplicarUltimaCaja();
     }//GEN-LAST:event_recibirNumCajasBtnActionPerformed
+
+    private void eliminarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarBtnActionPerformed
+        String barCode = (String) model.getValueAt(tablaCanales.getSelectedRow(), 4);
+        model.removeRow(tablaCanales.getSelectedRow());
+        for(ProductosInventario producto : nuevosProductos){
+            if(producto.getCodigoBarras().equals(barCode)){
+                try{
+                nuevosProductos.remove(producto);
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                }
+                return;
+            }
+        }
+    }//GEN-LAST:event_eliminarBtnActionPerformed
+
+    private void numeroCajasTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numeroCajasTxtActionPerformed
+       multiplicarUltimaCaja();
+       numeroCajasTxt.setText("");
+       cajasDialog.dispose();
+    }//GEN-LAST:event_numeroCajasTxtActionPerformed
 
     private Object[] getProveedoresArray() {
         Object[] proveedores = null;
@@ -399,6 +443,9 @@ public class ReciboProductoBC extends javax.swing.JPanel {
     }
 
     public void agregarProducto() throws Exception {
+        if(codigoBarrasTxt.getText().length() < getProveedorSeleccionado().getPosicionCodigoFinal()){
+            return;
+        }
 
         ProductosHasProveedores productoHasProveedores = null;
 
@@ -434,6 +481,7 @@ public class ReciboProductoBC extends javax.swing.JPanel {
             canal[1] = proveedorLOV.getSelectedItem().toString();
             canal[2] = productoHasProveedores.getProductos().getDescripcion();
             canal[3] = UsuarioFirmado.getUsuarioFirmado().getUbicaciones();
+            canal[4] = codigoBarrasTxt.getText();
             ultimoProducto = canal;
             
             model.addRow(canal);
@@ -448,6 +496,7 @@ public class ReciboProductoBC extends javax.swing.JPanel {
     private javax.swing.JButton agregarBtn;
     private javax.swing.JDialog cajasDialog;
     private javax.swing.JTextField codigoBarrasTxt;
+    private javax.swing.JButton eliminarBtn;
     private javax.swing.JButton finalizarBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;

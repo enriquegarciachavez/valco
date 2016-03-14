@@ -209,6 +209,14 @@ public class ProductosInventario  implements java.io.Serializable {
         return descripcion;
     }
     public boolean equals(Object o){
+        if((this.getCodigo() == null || ((ProductosInventario)o).getCodigo() == null) &&
+                (this.getCodigoBarras() != null && ((ProductosInventario)o).getCodigoBarras() != null)){
+        if(this.getCodigoBarras().equals(((ProductosInventario)o).getCodigoBarras())){
+            return true;
+        }else{
+            return false;
+        }
+    }
          if (o == null|| !((ProductosInventario)o).getCodigo().equals(this.getCodigo())){
              return false;       
              

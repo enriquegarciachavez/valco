@@ -48,6 +48,11 @@ public class ReciboTransferenciasPanel extends javax.swing.JPanel {
         consultarTransferencias();
         pesajePanel.add(enviosPanel);
         jTabbedPane1.setEnabledAt(1, false);
+        /*manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        exceptions.add(enviosPanel.pesoManualLbl);
+        exceptions.add(enviosPanel.productoCodigoArea);
+        dispacher = new BarCodeScannerKeyDispatcher(enviosPanel.barCodeTxt, manager, exceptions);
+        manager.addKeyEventDispatcher(dispacher);*/
     }
 
     public void consultarTransferencias() {
@@ -130,11 +135,11 @@ public class ReciboTransferenciasPanel extends javax.swing.JPanel {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 393, Short.MAX_VALUE)
+            .addGap(0, 996, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 99, Short.MAX_VALUE)
         );
 
         jSplitPane1.setLeftComponent(jPanel4);

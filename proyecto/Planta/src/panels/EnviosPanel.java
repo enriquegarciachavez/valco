@@ -601,7 +601,7 @@ try {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox almacenLOV;
-    private javax.swing.JTextField barCodeTxt;
+    public javax.swing.JTextField barCodeTxt;
     private javax.swing.JButton enviarBtn;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -620,8 +620,8 @@ try {
     private javax.swing.JSplitPane jSplitPane3;
     private javax.swing.JLabel pesoBasculaLbl;
     private javax.swing.JCheckBox pesoManualChk;
-    private javax.swing.JTextField pesoManualLbl;
-    private javax.swing.JTextArea productoCodigoArea;
+    public javax.swing.JTextField pesoManualLbl;
+    public javax.swing.JTextArea productoCodigoArea;
     private javax.swing.JComboBox productosLov;
     private javax.swing.JButton quitarBtn;
     private javax.swing.JTable tablaCanales;

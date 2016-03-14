@@ -333,6 +333,11 @@ public class EtiquetadoPanel extends CoustomPanel {
 
         reimprimirEtiquetaBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         reimprimirEtiquetaBtn.setText("<html><center>Reimprimir<br>Etiqueta<html>");
+        reimprimirEtiquetaBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reimprimirEtiquetaBtnActionPerformed(evt);
+            }
+        });
 
         imprimirEtiquetaBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         imprimirEtiquetaBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Print-48.png"))); // NOI18N
@@ -1117,6 +1122,18 @@ public class EtiquetadoPanel extends CoustomPanel {
         addNewPanel(evt);
         
     }//GEN-LAST:event_agregarPesoInicialBtnActionPerformed
+
+    private void reimprimirEtiquetaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reimprimirEtiquetaBtnActionPerformed
+        int[] selectedRows = tablaProductos.getSelectedRows();
+        List<ProductosInventario> productosSeleccionados = new ArrayList<>();
+        if (selectedRows.length > 0) {
+            for (int i = selectedRows.length - 1; i >= 0; i--) {
+                ProductosInventario productoSeleccionado = (ProductosInventario) model.getValueAt(selectedRows[i], 0);
+                this.imprimirCodigo(productoSeleccionado);
+            }
+            
+        } 
+    }//GEN-LAST:event_reimprimirEtiquetaBtnActionPerformed
 
     private void addNewPanel(ActionEvent evt){
         if(internalFrame != null)
