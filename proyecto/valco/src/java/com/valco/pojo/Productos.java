@@ -21,8 +21,8 @@ public class Productos  implements java.io.Serializable {
      private boolean incluyeVicera;
      private boolean generarSubproducto;
      private boolean aplicaInventarioFisico;
-     private Boolean iva;
-     private Boolean abarrotes;
+     private boolean iva;
+     private boolean abarrotes;
      private String estatus;
      private Set<ProductosHasProveedores> productosHasProveedoreses = new HashSet<ProductosHasProveedores>(0);
      private Set<Productos> productosesForProductosCodigoHijo = new HashSet<Productos>(0);

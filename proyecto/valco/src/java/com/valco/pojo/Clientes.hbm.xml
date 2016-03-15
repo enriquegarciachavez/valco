@@ -6,7 +6,7 @@
     <class name="com.valco.pojo.Clientes" table="CLIENTES" catalog="valco" optimistic-lock="version">
         <id name="codigo" type="java.lang.Integer">
             <column name="CODIGO" />
-            <generator class="identity" />
+            
         </id>
         <property name="razonSocial" type="string">
             <column name="RAZON_SOCIAL" length="200" not-null="true" unique="true" />

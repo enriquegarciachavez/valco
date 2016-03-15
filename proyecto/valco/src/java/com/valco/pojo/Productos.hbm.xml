@@ -5,7 +5,7 @@
   <class catalog="valco" name="com.valco.pojo.Productos" table="PRODUCTOS" >
     <id name="codigo" type="java.lang.Integer">
       <column name="CODIGO"/>
-      <generator class="identity"/>
+      
     </id>
     <many-to-one class="com.valco.pojo.Subfamilias" fetch="select" name="subfamilias" >
       <column name="SUBFAMILIAS_CODIGO" not-null="true"/>

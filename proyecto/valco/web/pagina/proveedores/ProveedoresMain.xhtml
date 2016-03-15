@@ -49,6 +49,10 @@
                         <f:facet name="header">
                             Proveedores
                         </f:facet>
+
+                        <p:column headerText="Codigo" filterMatchMode="contains" filterBy="#{proveedor.codigo}">
+                            <h:outputText value="#{proveedor.codigo}" />
+                        </p:column>
                         <p:column headerText="Razón Social" filterMatchMode="contains" filterBy="#{proveedor.razonSocial}">
                             <h:outputText value="#{proveedor.razonSocial}" />
                         </p:column>
@@ -66,7 +70,7 @@
                         </p:column>
 
                     </p:dataTable>
-                    
+
                 </h:form>
 
 
@@ -82,6 +86,11 @@
                             <f:facet name="header">
                                 <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
                             </f:facet>
+
+
+                            <p:outputLabel for="codigo" value="Codigo" />
+                            <p:inputText id="codigo" binding="#{proveedoresMainBean.codigo}" required="true" label="codigo" value="#{proveedoresMainBean.proveedorNuevo.codigo}"/>
+                            <p:message for="codigo" display="icon" />
 
                             <p:outputLabel for="razon" value="Razón Social: " />
                             <p:inputText id="razon" validator="#{proveedoresMainBean.validarRazonSocial}" required="true" label="razon" value="#{proveedoresMainBean.proveedorNuevo.razonSocial}" />
@@ -143,6 +152,10 @@
                             <p:outputLabel for="posicioncodigoinicial" value="Posicion codigo inicial" />
                             <p:inputText id="posicioncodigoinicial" binding="#{proveedoresMainBean.posicionCodigoInicial}" required="true" label="posicioncodigoinicial" value="#{proveedoresMainBean.proveedorNuevo.posicionCodigoInicial}"/>
                             <p:message for="posicioncodigoinicial" display="icon" />
+                            
+                            <h:outputText value="Abarrote: " />
+                            <p:selectBooleanCheckbox value="#{proveedoresMainBean.proveedorNuevo.abarrotes}" binding="#{proveedoresMainBean.abarrotes}" id="abarrote"/>
+                            <p:message for="abarrote" display="icon"/>
 
                             <f:facet name="footer">
 
@@ -169,6 +182,10 @@
                             <f:facet name="header">
                                 <p:messages id="msgsmodificar" style="font-size: 12px; text-align: left;"/>
                             </f:facet>
+                            
+                            <p:outputLabel for="codigo2" value="Codigo" />
+                            <p:inputText id="codigo2" required="true" label="codigo2" value="#{proveedoresMainBean.proveedorSeleccionado.codigo}" disabled="true"/>
+                            <p:message for="codigo2" display="icon" />
 
                             <p:outputLabel for="razon2" value="Razón Social: " />
                             <p:inputText id="razon2" validator="#{proveedoresMainBean.validarModificarRazonSocial}" required="true" label="razon" value="#{proveedoresMainBean.proveedorSeleccionado.razonSocial}" />
@@ -238,6 +255,10 @@
                             <p:outputLabel for="posicioncodigoinicial2" value="Posicion codigo inicial" />
                             <p:inputText id="posicioncodigoinicial2" required="true" label="posicioncodigoinicial" value="#{proveedoresMainBean.proveedorSeleccionado.posicionCodigoInicial}"/>
                             <p:message for="posicioncodigoinicial2" display="icon" />
+                            
+                            <h:outputText value="Abarrotes: " />
+                            <p:selectBooleanCheckbox id="abarrotes" value="#{proveedoresMainBean.proveedorSeleccionado.abarrotes}" />
+                            <p:message for="abarrotes" display="icon" />
 
                             <f:facet name="footer">
                                 <p:commandButton value="Guardar" id="guardar" oncomplete="handleLoginRequest(xhr, status, args, 'popupmodificar' )" update="modificarGrid :form:singleDT" action="#{proveedoresMainBean.actualizarProveedor()}"/>

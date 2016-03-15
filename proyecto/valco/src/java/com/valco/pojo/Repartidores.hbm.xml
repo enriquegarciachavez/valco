@@ -6,7 +6,7 @@
     <class name="com.valco.pojo.Repartidores" table="REPARTIDORES" catalog="valco" optimistic-lock="version">
         <id name="codigo" type="java.lang.Integer">
             <column name="CODIGO" />
-            <generator class="identity" />
+             
         </id>
         <property name="apellidoPaterno" type="string">
             <column name="APELLIDO_PATERNO" length="100" not-null="true" />

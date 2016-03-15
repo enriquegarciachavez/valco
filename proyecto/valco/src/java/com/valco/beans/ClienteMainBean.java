@@ -41,6 +41,7 @@ public class ClienteMainBean {
     Clientes clienteSeleccionado;
     Clientes clienteNuevo;
     DataModel modeloClientes;
+    UIInput codigo;
     UIInput razonSocial;
     UIInput apellidoPaterno;
     UIInput apellidoMaterno;
@@ -149,6 +150,7 @@ public class ClienteMainBean {
     }
 
     public void limpiarIngresarForm() {
+        codigo.setValue("");
         apellidoPaterno.setValue(null);
         apellidoMaterno.setValue(null);
         nombres.setValue(null);
@@ -372,6 +374,14 @@ public class ClienteMainBean {
 
     public void setClienteNuevo(Clientes clienteNuevo) {
         this.clienteNuevo = clienteNuevo;
+    }
+
+    public UIInput getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(UIInput codigo) {
+        this.codigo = codigo;
     }
 
    

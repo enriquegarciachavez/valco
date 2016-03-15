@@ -55,6 +55,9 @@ public class ProductoMainBean {
     Productos productoSeleccionado;
     DataModel modeloProducto;
     UIInput descripcion;
+    UIInput codigo;
+    UISelectBoolean abarrotes;
+    UISelectBoolean iva;
     UISelectBoolean incluyeViscera;
     UISelectBoolean generarSubproducto;
     UISelectBoolean aplicaInventarioFisico;
@@ -252,6 +255,34 @@ public class ProductoMainBean {
     public void setAplicaInventarioFisico(UISelectBoolean aplicaInventarioFisico) {
         this.aplicaInventarioFisico = aplicaInventarioFisico;
     }
+
+    public UIInput getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(UIInput codigo) {
+        this.codigo = codigo;
+    }
+
+    public UISelectBoolean getAbarrotes() {
+        return abarrotes;
+    }
+
+    public void setAbarrotes(UISelectBoolean abarrotes) {
+        this.abarrotes = abarrotes;
+    }
+
+    public UISelectBoolean getIva() {
+        return iva;
+    }
+
+    public void setIva(UISelectBoolean iva) {
+        this.iva = iva;
+    }
+    
+    
+    
+    
     
     public void actualizarProducto() {
         try {
@@ -288,6 +319,8 @@ public class ProductoMainBean {
         incluyeViscera.setValue(false);
         generarSubproducto.setValue(false);
         aplicaInventarioFisico.setValue(false);
+        iva.setValue(false);
+        abarrotes.setValue(false);
     }
     
     

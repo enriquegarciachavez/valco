@@ -40,6 +40,7 @@ public class RepartidoresMainBean {
     UIInput apellidoPaterno;
     UIInput apellidoMaterno;
     UIInput nombres;
+    UIInput codigo;
     
 
     /**
@@ -58,6 +59,16 @@ public class RepartidoresMainBean {
            return modeloRepartidores;
         }
     }
+
+    public UIInput getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(UIInput codigo) {
+        this.codigo = codigo;
+    }
+    
+    
 
     public void setModeloRepartidores(DataModel modeloRepartidores) {
         this.modeloRepartidores = modeloRepartidores;
@@ -165,6 +176,7 @@ public class RepartidoresMainBean {
         apellidoPaterno.setValue(null);
         apellidoMaterno.setValue(null);
         nombres.setValue(null);
+        codigo.setValue("");
        
         }
 }

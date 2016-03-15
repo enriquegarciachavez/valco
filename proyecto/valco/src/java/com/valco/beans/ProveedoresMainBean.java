@@ -20,6 +20,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
+import javax.faces.component.UISelectBoolean;
 import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
@@ -39,6 +40,7 @@ public class ProveedoresMainBean implements Serializable {
     Proveedores proveedorSeleccionado;
     Proveedores proveedorNuevo;
     DataModel modeloProveedores;
+    UIInput codigo;
     UIInput razonSocial;
     UIInput apellidoPaterno;
     UIInput apellidoMaterno;
@@ -52,6 +54,7 @@ public class ProveedoresMainBean implements Serializable {
     UIInput posicionPesoFinal;
     UIInput posicionCodigoInicial;
     UIInput posicionCodigoFinal;
+    UISelectBoolean abarrotes;
 
     /**
      * Creates a new instance of ProveedoresMainBean
@@ -60,6 +63,7 @@ public class ProveedoresMainBean implements Serializable {
     }
 
     public void limpiarIngresarForm() {
+        codigo.setValue("");
         apellidoPaterno.setValue(null);
         apellidoMaterno.setValue(null);
         nombres.setValue(null);
@@ -72,6 +76,7 @@ public class ProveedoresMainBean implements Serializable {
         posicionCodigoFinal.setValue(null);
         posicionPesoInicial.setValue(null);
         posicionPesoFinal.setValue(null);
+        abarrotes.setValue(false);
 
     }
 
@@ -149,6 +154,16 @@ public class ProveedoresMainBean implements Serializable {
             }
         }
     }
+
+    public UIInput getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(UIInput codigo) {
+        this.codigo = codigo;
+    }
+    
+    
 
     public ProveedorDAO getProveedorDAO() {
         return proveedorDAO;
@@ -299,5 +314,15 @@ public class ProveedoresMainBean implements Serializable {
     public void setPosicionCodigoFinal(UIInput posicionCodigoFinal) {
         this.posicionCodigoFinal = posicionCodigoFinal;
     }
+
+    public UISelectBoolean getAbarrotes() {
+        return abarrotes;
+    }
+
+    public void setAbarrotes(UISelectBoolean abarrotes) {
+        this.abarrotes = abarrotes;
+    }
+    
+    
 
 }

@@ -55,6 +55,9 @@
                         <f:facet name="header">
                             Clientes
                         </f:facet>
+                        <p:column headerText="Codigo" filterMatchMode="contains" filterBy="#{cliente.codigo}">
+                            <h:outputText value="#{cliente.codigo}" />
+                        </p:column>
                         <p:column headerText="Razón Social" filterMatchMode="contains" filterBy="#{cliente.razonSocial}">
                             <h:outputText value="#{cliente.razonSocial}" />
                         </p:column>
@@ -84,6 +87,10 @@
                             <f:facet name="header">
                                 <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
                             </f:facet>
+                            
+                            <p:outputLabel for="codigo" value="Codigo" />
+                            <p:inputText id="codigo" binding="#{clienteMainBean.codigo}" required="true" label="codigo" value="#{clienteMainBean.clienteNuevo.codigo}"/>
+                            <p:message for="codigo" display="icon" />
 
                             <p:outputLabel for="razon" value="Razón Social: " />
                             <p:inputText id="razon" validator="#{clienteMainBean.validarRazonSocial}" required="true" label="razon" value="#{clienteMainBean.clienteNuevo.razonSocial}" />
@@ -201,6 +208,10 @@
                             <f:facet name="header">
                                 <p:messages id="msgsmodificar" style="font-size: 12px; text-align: left;"/>
                             </f:facet>
+                            
+                            <p:outputLabel for="codigo2" value="Codigo" />
+                            <p:inputText id="codigo2" required="true" label="codigo" value="#{clienteMainBean.clienteSeleccionado.codigo}" disabled="true"/>
+                            <p:message for="codigo2" display="icon" />
 
                             <p:outputLabel for="razon2" value="Razón Social: " />
                             <p:inputText id="razon2" validator="#{clienteMainBean.validarModificarRazonSocial}" required="true" label="razon" value="#{clienteMainBean.clienteSeleccionado.razonSocial}" />
