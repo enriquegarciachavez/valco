@@ -50,7 +50,7 @@ public class ReportesXls extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
         } catch (ClassNotFoundException ex) {
@@ -64,48 +64,48 @@ public class ReportesXls extends HttpServlet {
                 OutputStream output = response.getOutputStream();
                 ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();) {
             /* TODO output your page here. You may use following sample code. */
-    
+
         //Connecting to the MySQL database
+            //Loading Jasper Report File from Local file system
+            String jrxmlFile = request.getParameter("reporte");//"C:/SAT/facturas/Factura.jrxml";
+            String realPath = request.getSession().getServletContext().getRealPath(jrxmlFile);
+            File reporte = new File(realPath);
+            InputStream input = new FileInputStream(new File(realPath));
+            Map mapa = new HashMap();
+            Enumeration<String> parametros = request.getParameterNames();
+            while (parametros.hasMoreElements()) {
+                String parametro = parametros.nextElement();
+                if (parametro.contains("Int")) {
+                    mapa.put(parametro.split("Int")[0], new Integer(request.getParameter(parametro)));
+                } else if (parametro.contains("Date")) {
+                    mapa.put(parametro.split("Date")[0], new Date(request.getParameter(parametro)));
+                }
 
-        
-
-        //Loading Jasper Report File from Local file system
-        String jrxmlFile = request.getParameter("reporte");//"C:/SAT/facturas/Factura.jrxml";
-        String realPath = request.getSession().getServletContext().getRealPath(jrxmlFile);
-        InputStream input = new FileInputStream(new File(realPath));
-        Map mapa = new HashMap();
-        Enumeration<String> parametros = request.getParameterNames();
-        while (parametros.hasMoreElements()) {
-            String parametro = parametros.nextElement();
-            if (parametro.contains("Int")) {
-                mapa.put(parametro.split("Int")[0], new Integer(request.getParameter(parametro)));
-            } else if (parametro.contains("Date")) {
-                mapa.put(parametro.split("Date")[0], new Date(request.getParameter(parametro)));
             }
-        
-        }
-        mapa.put("SUBREPORT_DIR", realPath);
-        
-        JasperReport jasperReport = JasperCompileManager.compileReport(input);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
+            String absolutePath = reporte.getAbsolutePath();
+            String filePath = absolutePath.
+                    substring(0, absolutePath.lastIndexOf(File.separator));
+            mapa.put("SUBREPORT_DIR", filePath + "\\");
 
-        
-        JRXlsExporter exporterXLS = new JRXlsExporter();
+            JasperReport jasperReport = JasperCompileManager.compileReport(input);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
 
-        exporterXLS.setParameter(JRXlsExporterParameter.JASPER_PRINT, jasperPrint);
-        exporterXLS.setParameter(JRXlsExporterParameter.OUTPUT_STREAM, arrayOutputStream);
-        exporterXLS.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
-        exporterXLS.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE, Boolean.TRUE);
-        exporterXLS.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);
-        exporterXLS.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
-        exporterXLS.exportReport();
+            JRXlsExporter exporterXLS = new JRXlsExporter();
 
-        response.setHeader("Content-disposition", "attachment; filename=Listado.xls");
-        response.setContentType("application/vnd.ms-excel");
-        response.setContentLength(arrayOutputStream.toByteArray().length);
-        output.write(arrayOutputStream.toByteArray());
-        output.flush();
-        output.close();
+            exporterXLS.setParameter(JRXlsExporterParameter.JASPER_PRINT, jasperPrint);
+            exporterXLS.setParameter(JRXlsExporterParameter.OUTPUT_STREAM, arrayOutputStream);
+            exporterXLS.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
+            exporterXLS.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE, Boolean.TRUE);
+            exporterXLS.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);
+            exporterXLS.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
+            exporterXLS.exportReport();
+
+            response.setHeader("Content-disposition", "attachment; filename=Listado.xls");
+            response.setContentType("application/vnd.ms-excel");
+            response.setContentLength(arrayOutputStream.toByteArray().length);
+            output.write(arrayOutputStream.toByteArray());
+            output.flush();
+            output.close();
         } catch (SQLException ex) {
             Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
         } catch (JRException ex) {
