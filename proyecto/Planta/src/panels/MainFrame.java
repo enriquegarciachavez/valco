@@ -43,7 +43,6 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         try{
-            JOptionPane.showMessageDialog(null, "inicio");
         initComponents();
         }catch(Exception e){
          JOptionPane.showMessageDialog(null, e);

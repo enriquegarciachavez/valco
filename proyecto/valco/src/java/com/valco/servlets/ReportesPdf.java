@@ -5,6 +5,7 @@
  */
 package com.valco.servlets;
 
+import com.valco.utility.ParametrosGeneralesUtility;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -47,7 +48,7 @@ public class ReportesPdf extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, Exception {
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
         } catch (ClassNotFoundException ex) {
@@ -57,7 +58,9 @@ public class ReportesPdf extends HttpServlet {
         } catch (IllegalAccessException ex) {
             Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
         }
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/valco", "admin3ZheGrA", "1VtHQW5M-3g-");
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://"+ParametrosGeneralesUtility.getValor("DB001")
+                + ":"+ParametrosGeneralesUtility.getValor("DB002")+"/"+ParametrosGeneralesUtility.getValor("DB003"), 
+                ParametrosGeneralesUtility.getValor("DB004"), ParametrosGeneralesUtility.getValor("DB005"));
                 OutputStream output = response.getOutputStream();) {
             /* TODO output your page here. You may use following sample code. */
 
@@ -106,7 +109,11 @@ public class ReportesPdf extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(ReportesPdf.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -120,7 +127,11 @@ public class ReportesPdf extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(ReportesPdf.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

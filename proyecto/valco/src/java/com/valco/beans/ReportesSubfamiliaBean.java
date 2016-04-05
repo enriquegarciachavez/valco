@@ -33,8 +33,8 @@ public class ReportesSubfamiliaBean {
     public void mostrarXls(){
         try {
             Faces.redirect("/valco/ReportesXls?reporte=%s&fechaInicialDate=%s&fechaFinalDate=%s", 
-                    "//pagina//reportes//VentasXFamilias//Abarrotes.jrxml"
-                   + fechaInicial.toString(),
+                    "//pagina//reportes//VentasXFamilias//Abarrotes.jrxml",
+                    fechaInicial.toString(),
                     fechaFinal.toString());
         } catch (IOException ex) {
             Logger.getLogger(ReporteFacturasXCobrarBean.class.getName()).log(Level.SEVERE, null, ex);

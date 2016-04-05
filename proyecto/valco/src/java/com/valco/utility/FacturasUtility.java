@@ -71,6 +71,7 @@ import sun.misc.BASE64Encoder;
  * @author Administrador
  */
 public class FacturasUtility {
+
     private static final String[] UNIDADES = {"", "un ", "dos ", "tres ", "cuatro ", "cinco ", "seis ", "siete ", "ocho ", "nueve "};
     private static final String[] DECENAS = {"diez ", "once ", "doce ", "trece ", "catorce ", "quince ", "dieciseis ",
         "diecisiete ", "dieciocho ", "diecinueve", "veinte ", "treinta ", "cuarenta ",
@@ -177,12 +178,12 @@ public class FacturasUtility {
                 + formaXmlConceptos(conceptosFactura)
                 + "</cfdi:Conceptos>\n"
                 + "<cfdi:Impuestos totalImpuestosTrasladados= \"" + getTotalImpuestos(impuestos) + "\">\n";
-        if(impuestos != null && !impuestos.isEmpty() && getTotalImpuestos(impuestos).compareTo(BigDecimal.ZERO)!=0){
-                factura += "		<cfdi:Traslados>\n"
-                + formaXmlImpuestos(impuestos)
-                + "		</cfdi:Traslados>\n";
+        if (impuestos != null && !impuestos.isEmpty() && getTotalImpuestos(impuestos).compareTo(BigDecimal.ZERO) != 0) {
+            factura += "		<cfdi:Traslados>\n"
+                    + formaXmlImpuestos(impuestos)
+                    + "		</cfdi:Traslados>\n";
         }
-                factura += "</cfdi:Impuestos>\n"
+        factura += "</cfdi:Impuestos>\n"
                 + "</cfdi:Comprobante>";
         return factura;
     }
@@ -224,21 +225,21 @@ public class FacturasUtility {
             throw new Exception("Ocurrió un error al formar el XML de la factura");
         }
         OutputStream cadenaOriginal = null;
-       
+
         try {
-            
-            cadenaOriginal = getCadenaOriginal("//resources//xslt//cadenaoriginal_3_2.xslt", new String(xml.getBytes("Windows-1252")));
+
+            cadenaOriginal = getCadenaOriginal(ParametrosGeneralesUtility.getValor("FA005"), new String(xml.getBytes("Windows-1252")));
         } catch (UnsupportedEncodingException ex) {
             throw new Exception("Ocurrió un error al obtener la cadena original");
         }
         String cadena = cadenaOriginal.toString();
-        cadena= cadena.replace("\n", "").replace("\r", "");
+        cadena = cadena.replace("\n", "").replace("\r", "");
         factura.setCadenaOriginal(cadena);
         byte[] bytesKey = null;
         java.security.PrivateKey pk = null;
         try {
-            bytesKey = getBytesPrivateKey("C:/SAT/aaa010101aaa__csd_01.key");
-            pk = getPrivateKey(bytesKey, "12345678a");
+            bytesKey = getBytesPrivateKey(ParametrosGeneralesUtility.getValor("FA003"));
+            pk = getPrivateKey(bytesKey, ParametrosGeneralesUtility.getValor("FA004"));
         } catch (GeneralSecurityException ex) {
             throw new Exception(ex);
         }
@@ -258,19 +259,34 @@ public class FacturasUtility {
 
     public static String facturar(Facturas factura, Integer facturaId) throws Exception {
         String facturaXml = null;
+        String result = null;
+        Boolean debug = false;
+        try{
+            debug = new Boolean(ParametrosGeneralesUtility.getValor("FA006"));
+        }catch(Exception e){
+            debug = false;
+        }
         try {
             facturaXml = getFacturaConSello(factura);
         } catch (Exception ex) {
-            throw new Exception("Factura " + facturaId + ": "+ex.getMessage());
+            throw new Exception("Factura " + facturaId + ": " + ex.getMessage());
         }
-        java.lang.String psTipoDocumento = "factura";
+        java.lang.String psTipoDocumento = ParametrosGeneralesUtility.getValor("FA007");
         int pnIdEstructura = 0;
-        java.lang.String sNombre = "WSDL_PAX";
-        java.lang.String sContraseña = "wqfCr8O3xLfEhMOHw4nEjMSrxJnvv7bvvr4cVcKuKkBEM++/ke+/gCPvv4nvvrfvvaDvvb/vvqTvvoA=";
-        java.lang.String sVersion = "3.2";
-        https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX service = new https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX();
-        https.test_paxfacturacion_com_mx._453.WcfRecepcionASMXSoap port = service.getWcfRecepcionASMXSoap();
-        String result = port.fnEnviarXML(facturaXml, psTipoDocumento, pnIdEstructura, sNombre, sContraseña, sVersion);
+        java.lang.String sNombre = ParametrosGeneralesUtility.getValor("FA008");
+        java.lang.String sContraseña = ParametrosGeneralesUtility.getValor("FA009");
+        java.lang.String sVersion = ParametrosGeneralesUtility.getValor("FA010");
+        if(debug){
+            https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX service = new https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX();
+            https.test_paxfacturacion_com_mx._453.WcfRecepcionASMXSoap port = service.getWcfRecepcionASMXSoap();
+            result = port.fnEnviarXML(facturaXml, psTipoDocumento, pnIdEstructura, sNombre, sContraseña, sVersion);
+        }else{
+            https.www_paxfacturacion_com_mx._453.WcfRecepcionASMX service = new https.www_paxfacturacion_com_mx._453.WcfRecepcionASMX();
+            https.www_paxfacturacion_com_mx._453.WcfRecepcionASMXSoap port = service.getWcfRecepcionASMXSoap();
+            // TODO process result here
+            result = port.fnEnviarXML(facturaXml, psTipoDocumento, pnIdEstructura, sNombre, sContraseña, sVersion);
+        }
+
 
         if (result.startsWith("301")) {
             throw new Exception("El xml se encuentra mal formado.");
@@ -367,16 +383,16 @@ public class FacturasUtility {
         }
         return conceptos;
     }
-    
-    public static void calculaTotalImpuestos(Impuestos impuesto, NotasDeVenta nota){
+
+    public static void calculaTotalImpuestos(Impuestos impuesto, NotasDeVenta nota) {
         BigDecimal totalIva = new BigDecimal("0.00");
-        for(ProductosInventario producto : nota.getProductosInventarios()){
-            if(producto.getProductosHasProveedores().getProductos().isIva()){
+        for (ProductosInventario producto : nota.getProductosInventarios()) {
+            if (producto.getProductosHasProveedores().getProductos().isIva()) {
                 totalIva = totalIva.add(impuesto.getTasa().divide(new BigDecimal("100.00")).multiply(producto.getPeso().multiply(producto.getPrecio()))).setScale(2, RoundingMode.HALF_EVEN);
             }
         }
 
-            impuesto.setImporte(totalIva);
+        impuesto.setImporte(totalIva);
 
     }
 
@@ -436,18 +452,15 @@ public class FacturasUtility {
             Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
         }
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/valco", "admin3ZheGrA", "1VtHQW5M-3g-");) {
+            String reportsDir = ParametrosGeneralesUtility.getValor("RE001");
             JasperReport jasperReport = null;
-            JasperReport subreporte = null;
-            ServletContext servletContext = (ServletContext) FacesContext
-                    .getCurrentInstance().getExternalContext().getContext();
-            String realPath = servletContext.getRealPath("//pagina//reportes//ventasconfactura//FacturaNuevo.jrxml");
-            jasperReport = JasperCompileManager.compileReport(realPath);
+            jasperReport = JasperCompileManager.compileReport(reportsDir + "ventasconfactura//FacturaNuevo.jrxml");
 
             JasperPrint jasperPrint = null;
 
             Map mapa = new HashMap();
             mapa.put("FacturaId", facturaId);
-            mapa.put("SUBREPORT_DIR", "C://apps//valco//valco//proyecto//valco//web//pagina//reportes//ventasconfactura//");
+            mapa.put("SUBREPORT_DIR", reportsDir + "ventasconfactura//");
             jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
 
             JasperExportManager.exportReportToPdfFile(jasperPrint, path + name);
@@ -456,20 +469,20 @@ public class FacturasUtility {
             throw new Exception("Factura " + facturaId + ": Ocurrio un error al generar el PDF.");
         }
     }
-    
+
     public static String Convertir(String numero, boolean mayusculas) {
         String literal = "";
-        String parte_decimal;    
+        String parte_decimal;
         //si el numero utiliza (.) en lugar de (,) -> se reemplaza
         numero = numero.replace(".", ",");
         //si el numero no tiene parte decimal, se le agrega ,00
-        if(numero.indexOf(",")==-1){
+        if (numero.indexOf(",") == -1) {
             numero = numero + ",00";
         }
         //se valida formato de entrada -> 0,00 y 999 999 999,00
         if (Pattern.matches("\\d{1,9},\\d{1,2}", numero)) {
             //se divide el numero 0000000,00 -> entero y decimal
-            String Num[] = numero.split(",");            
+            String Num[] = numero.split(",");
             //de da formato al numero decimal
             parte_decimal = Num[1] + "/100 M.N.";
             //se convierte el numero a literal
@@ -498,7 +511,6 @@ public class FacturasUtility {
     }
 
     /* funciones para convertir los numeros a literales */
-
     private static String getUnidades(String numero) {// 1 - 9
         //si tuviera algun 0 antes se lo quita -> 09 = 9 o 009=9
         String num = numero.substring(numero.length() - 1);
@@ -522,16 +534,16 @@ public class FacturasUtility {
     }
 
     private static String getCentenas(String num) {// 999 o 099
-        if( Integer.parseInt(num)>99 ){//es centena
+        if (Integer.parseInt(num) > 99) {//es centena
             if (Integer.parseInt(num) == 100) {//caso especial
                 return " cien ";
             } else {
-                 return CENTENAS[Integer.parseInt(num.substring(0, 1))] + getDecenas(num.substring(1));
-            } 
-        }else{//por Ej. 099 
+                return CENTENAS[Integer.parseInt(num.substring(0, 1))] + getDecenas(num.substring(1));
+            }
+        } else {//por Ej. 099 
             //se quita el 0 antes de convertir a decenas
-            return getDecenas(Integer.parseInt(num)+"");            
-        }        
+            return getDecenas(Integer.parseInt(num) + "");
+        }
     }
 
     private static String getMiles(String numero) {// 999 999
@@ -539,10 +551,10 @@ public class FacturasUtility {
         String c = numero.substring(numero.length() - 3);
         //obtiene los miles
         String m = numero.substring(0, numero.length() - 3);
-        String n="";
+        String n = "";
         //se comprueba que miles tenga valor entero
         if (Integer.parseInt(m) > 0) {
-            n = getCentenas(m);           
+            n = getCentenas(m);
             return n + "mil " + getCentenas(c);
         } else {
             return "" + getCentenas(c);
@@ -556,11 +568,11 @@ public class FacturasUtility {
         //se obtiene los millones
         String millon = numero.substring(0, numero.length() - 6);
         String n = "";
-        if(millon.length()>1){
+        if (millon.length() > 1) {
             n = getCentenas(millon) + "millones ";
-        }else{
+        } else {
             n = getUnidades(millon) + "millon ";
         }
-        return n + getMiles(miles);        
+        return n + getMiles(miles);
     }
 }

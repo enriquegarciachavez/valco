@@ -72,6 +72,7 @@ public class ReportesXls extends HttpServlet {
         //Loading Jasper Report File from Local file system
         String jrxmlFile = request.getParameter("reporte");//"C:/SAT/facturas/Factura.jrxml";
         String realPath = request.getSession().getServletContext().getRealPath(jrxmlFile);
+        File reporte = new File(realPath);
         InputStream input = new FileInputStream(new File(realPath));
         Map mapa = new HashMap();
         Enumeration<String> parametros = request.getParameterNames();
@@ -84,7 +85,10 @@ public class ReportesXls extends HttpServlet {
             }
         
         }
-        mapa.put("SUBREPORT_DIR", realPath);
+        String absolutePath = reporte.getAbsolutePath();
+            String filePath = absolutePath.
+                    substring(0, absolutePath.lastIndexOf(File.separator));
+            mapa.put("SUBREPORT_DIR", filePath + "\\");
         
         JasperReport jasperReport = JasperCompileManager.compileReport(input);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
