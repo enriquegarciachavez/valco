@@ -61,8 +61,6 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
-import org.ini4j.Ini;
-import org.ini4j.Profile;
 import pesable.PesableBarCodeable;
 import table.custom.EtiquetadoTableCellRendered;
 import table.custom.NoEditableTableModel;
@@ -1157,7 +1155,7 @@ public class EtiquetadoPanel extends PesableBarCodeable {
             Map mapa = new HashMap();
 
             mapa.put("procesoCodigo", ((Procesos) (this.procesosLov.getSelectedItem())).getCodigo());
-            mapa.put("SUBREPORT_DIR", "C:\\apps\\valco\\proyecto\\Planta\\src\\Reportes\\");
+            mapa.put("SUBREPORT_DIR", reportDir+"/planta/");
 
             JasperReport jasperReport = JasperCompileManager.compileReport(input);
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
