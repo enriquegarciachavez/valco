@@ -5,13 +5,12 @@
  */
 package com.valco.servlets;
 
-import com.valco.utility.ParametrosGeneralesUtility;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -19,6 +18,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -58,9 +58,36 @@ public class ReportesPdf extends HttpServlet {
         } catch (IllegalAccessException ex) {
             Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
         }
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://"+ParametrosGeneralesUtility.getValor("DB001")
-                + ":"+ParametrosGeneralesUtility.getValor("DB002")+"/"+ParametrosGeneralesUtility.getValor("DB003"), 
-                ParametrosGeneralesUtility.getValor("DB004"), ParametrosGeneralesUtility.getValor("DB005"));
+        Properties prop = new Properties();
+        String propFileName = "C:\\valco_installation\\conf\\valco.properties";
+
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(propFileName);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ReportesPdf.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        if (inputStream != null) {
+            try {
+                prop.load(inputStream);
+            } catch (IOException ex) {
+                Logger.getLogger(ReportesPdf.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            try {
+                throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(ReportesPdf.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        String server = prop.getProperty("server");
+        String port = prop.getProperty("port");
+        String dbname = prop.getProperty("dbname");
+        String user = prop.getProperty("user");
+        String password = prop.getProperty("password");
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://"+server+":"+port+"/"+dbname, user, password);
                 OutputStream output = response.getOutputStream();) {
             /* TODO output your page here. You may use following sample code. */
 

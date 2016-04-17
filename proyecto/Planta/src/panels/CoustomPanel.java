@@ -12,7 +12,7 @@ import javax.swing.JDesktopPane;
  * @author Karla
  */
 public class CoustomPanel extends javax.swing.JPanel {
-    JDesktopPane mainPanel;
+    public JDesktopPane mainPanel;
 
     /**
      * Creates new form CoustomPanel

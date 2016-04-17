@@ -27,6 +27,7 @@ public class ProductosInventario  implements java.io.Serializable {
      private Integer procesosCodigoPadre;
      private Integer procesosCodigoHijo;
      private Date fechaCaducidad;
+     private Date fechaCreacion;
      private Integer numeroMatanza;
      private Integer consecutivoProceso;
      private Integer numeroCanal;
@@ -197,6 +198,14 @@ public class ProductosInventario  implements java.io.Serializable {
             mermaTotal = mermaTotal.add(merma.getPeso());
         }
         return mermaTotal;
+    }
+
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
     }
     
 

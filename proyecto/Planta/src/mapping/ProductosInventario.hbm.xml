@@ -47,6 +47,9 @@
         <property name="fechaCaducidad" type="timestamp">
             <column name="FECHA_CADUCIDAD" length="19" />
         </property>
+        <property name="fechaCreacion" type="timestamp">
+            <column name="FECHA_CREACION" length="19" />
+        </property>
         <property name="numeroMatanza" type="java.lang.Integer">
             <column name="NUMERO_MATANZA" />
         </property>

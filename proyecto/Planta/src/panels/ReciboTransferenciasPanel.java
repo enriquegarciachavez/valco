@@ -48,11 +48,6 @@ public class ReciboTransferenciasPanel extends javax.swing.JPanel {
         consultarTransferencias();
         pesajePanel.add(enviosPanel);
         jTabbedPane1.setEnabledAt(1, false);
-        /*manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-        exceptions.add(enviosPanel.pesoManualLbl);
-        exceptions.add(enviosPanel.productoCodigoArea);
-        dispacher = new BarCodeScannerKeyDispatcher(enviosPanel.barCodeTxt, manager, exceptions);
-        manager.addKeyEventDispatcher(dispacher);*/
     }
 
     public void consultarTransferencias() {

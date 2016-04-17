@@ -17,6 +17,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import static java.lang.Thread.sleep;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
@@ -30,6 +31,12 @@ public class PesoThread implements Runnable {
     private JLabel pesoLbl;
     private InputStream in;
     private OutputStream out;
+    private volatile boolean shutdown;
+    SerialPort serialPort;
+
+    public void shutdown() {
+        shutdown = true;
+    }
 
     public PesoThread() throws Exception {
         CommPortIdentifier portIdentifier = null;
@@ -57,11 +64,11 @@ public class PesoThread implements Runnable {
             csvReader.close();
         } else {
             cadenaPedir = "P";
-                puerto = "COM1";
-                baudios = "9600";
-                parity = "0";
-                data = "8";
-                stop = "1";
+            puerto = "COM1";
+            baudios = "9600";
+            parity = "0";
+            data = "8";
+            stop = "1";
         }
 
         try {
@@ -80,7 +87,7 @@ public class PesoThread implements Runnable {
             }
 
             if (commPort instanceof SerialPort) {
-                SerialPort serialPort = (SerialPort) commPort;
+                serialPort = (SerialPort) commPort;
                 try {
                     serialPort.setSerialPortParams(new Integer(baudios), new Integer(data), new Integer(stop), new Integer(parity));
                 } catch (UnsupportedCommOperationException ex) {
@@ -101,15 +108,27 @@ public class PesoThread implements Runnable {
         int len = -1;
         try {
             out.write('P');
-            while ((len = this.in.read(buffer)) > -1) {
-                System.out.print(new String(buffer, 0, len));
-                this.pesoLbl.setText(new String(buffer, 0, len));
+            sleep(1000);
+            while ((!shutdown) && ((len = this.in.read(buffer)) > -1)) {
+
+                System.out.println(new String(buffer, 0, len));
+                String peso = new String(buffer, 0, len);
+                if (peso.length() > 4) {
+                    this.pesoLbl.setText(peso.substring(0, peso.length() - 4));
+                }
+                out.write('P');
+                if (shutdown) {
+                    break;
+                }
+                sleep(1000);
             }
         } catch (IOException ex) {
             Logger.getLogger(PesoThread.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(PesoThread.class.getName()).log(Level.SEVERE, null, ex);
         }
+        serialPort.close();
 
-        System.out.print(new String(buffer, 0, len) + "\n");
     }
 
     public JLabel getPesoLbl() {

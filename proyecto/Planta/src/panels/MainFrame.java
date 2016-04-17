@@ -1,5 +1,6 @@
 package panels;
 
+import barcode.BarCodable;
 import security.DialogCallbackHandler;
 import creators.PanelCreator;
 import java.awt.GraphicsDevice;
@@ -8,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import static java.lang.Thread.sleep;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
@@ -15,12 +17,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.security.Principal;
 import java.security.PrivilegedAction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.security.auth.*;
 import javax.security.auth.login.AccountExpiredException;
 import javax.security.auth.login.CredentialExpiredException;
 import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
+import pesable.Pesable;
 import security.HWLoginModule;
 import utilities.UsuarioFirmado;
 
@@ -176,19 +181,17 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void addNewPanel(ActionEvent evt) {
         if (internalFrame != null) {
-            if (prueb instanceof AbrirProcesoPanel) {
-                ((AbrirProcesoPanel) prueb).manager.removeKeyEventDispatcher(((AbrirProcesoPanel) prueb).dispacher);
-            } else if (prueb instanceof InventariosMain) {
-                ((InventariosMain) prueb).manager.removeKeyEventDispatcher(((InventariosMain) prueb).dispacher);
-            } else if (prueb instanceof ReciboProductoBC) {
-                ((ReciboProductoBC) prueb).manager.removeKeyEventDispatcher(((ReciboProductoBC) prueb).dispacher);
-            } else if (prueb instanceof EnviosPanel) {
-                ((EnviosPanel) prueb).manager.removeKeyEventDispatcher(((EnviosPanel) prueb).dispacher);
-            } else if (prueb instanceof ReciboTransferenciasPanel) {
-                    //((ReciboTransferenciasPanel) prueb).manager.removeKeyEventDispatcher(((ReciboTransferenciasPanel) prueb).dispacher);
-                ((ReciboTransferenciasPanel) prueb).enviosPanel.manager.removeKeyEventDispatcher(((ReciboTransferenciasPanel) prueb).enviosPanel.dispacher);
-
+            if(prueb instanceof BarCodable){
+                ((BarCodable)prueb).removeKeyEvent();
             }
+            if(prueb instanceof Pesable){
+                ((Pesable)prueb).finalizeThread();
+            }
+            if (prueb instanceof ReciboTransferenciasPanel) {
+                ((ReciboTransferenciasPanel) prueb).enviosPanel.finalizeThread();
+                ((ReciboTransferenciasPanel) prueb).enviosPanel.removeKeyEvent();
+
+            } 
             mainPanel.remove(internalFrame);
         }
         internalFrame = new JInternalFrame();

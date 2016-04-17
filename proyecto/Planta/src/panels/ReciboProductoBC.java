@@ -5,6 +5,7 @@
  */
 package panels;
 
+import barcode.BarCodableImpl;
 import dao.ProductoDAO;
 import dao.ProveedorDAO;
 import dao.UbicacionesDAO;
@@ -39,7 +40,7 @@ import utilities.UsuarioFirmado;
  *
  * @author Administrador
  */
-public class ReciboProductoBC extends javax.swing.JPanel {
+public class ReciboProductoBC extends BarCodableImpl {
 
     private UsuariosDAO usuariosDao = new UsuariosDAO();
     ProductoDAO productoDAO = new ProductoDAO();
@@ -47,8 +48,6 @@ public class ReciboProductoBC extends javax.swing.JPanel {
     UbicacionesDAO ubicacionesDAO = new UbicacionesDAO();
     DefaultTableModel model = new NoEditableTableModel();
     List<ProductosInventario> nuevosProductos = new ArrayList<ProductosInventario>();
-    KeyboardFocusManager manager;
-    BarCodeScannerKeyDispatcher dispacher;
     public List<Component> exceptions = new ArrayList<>();
     Object[] ultimoProducto = null;
     ProductosInventario ultimoProductoInventario = null;
@@ -59,10 +58,10 @@ public class ReciboProductoBC extends javax.swing.JPanel {
      */
     public ReciboProductoBC() {
         initComponents();
-        manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        setManager(KeyboardFocusManager.getCurrentKeyboardFocusManager());
         exceptions.add(proveedorTxt);
         exceptions.add(numeroCajasTxt);
-        dispacher = new BarCodeScannerKeyDispatcher(codigoBarrasTxt, manager, exceptions) {
+        setDispacher(new BarCodeScannerKeyDispatcher(codigoBarrasTxt, getManager(), exceptions) {
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
 
@@ -71,15 +70,15 @@ public class ReciboProductoBC extends javax.swing.JPanel {
                 }
                 for (Component exception : exceptions) {
                     if (exception.equals(e.getSource())) {
-                        manager.redispatchEvent(exception, e);
+                        getManager().redispatchEvent(exception, e);
                         return true;
                     }
                 }
-                manager.redispatchEvent(codigoBarrasTxt, e);
+                getManager().redispatchEvent(codigoBarrasTxt, e);
                 return true;
             }
-        };
-        manager.addKeyEventDispatcher(dispacher);
+        });
+        getManager().addKeyEventDispatcher(getDispacher());
     }
     
     public void multiplicarUltimaCaja(){

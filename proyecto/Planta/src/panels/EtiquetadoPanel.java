@@ -12,6 +12,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -23,6 +24,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.print.Doc;
@@ -59,9 +61,13 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
+import org.ini4j.Ini;
+import org.ini4j.Profile;
+import pesable.PesableBarCodeable;
 import table.custom.EtiquetadoTableCellRendered;
 import table.custom.NoEditableTableModel;
 import threads.PesoThread;
+import utilities.ParametrosGeneralesUtility;
 import utilities.UsuarioFirmado;
 
 /*
@@ -73,22 +79,22 @@ import utilities.UsuarioFirmado;
  *
  * @author Administrador
  */
-public class EtiquetadoPanel extends CoustomPanel {
+public class EtiquetadoPanel extends PesableBarCodeable {
 
-    String path = "src/Reportes/Lote_Final.jrxml";
+    String path;
+    String reportDir;
     ProcesosDAO procesosDAO = new ProcesosDAO();
     ProductoDAO productoDAO = new ProductoDAO();
     DefaultTableModel model = new NoEditableTableModel();
     String formato = "##.##";
     JInternalFrame internalFrame;
-    OrdenesCompraDAO ordenesDAO = new OrdenesCompraDAO ();
+    OrdenesCompraDAO ordenesDAO = new OrdenesCompraDAO();
     Action action = new AbstractAction("doSomething") {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("triggered the action");
         }
-     
 
     };
 
@@ -96,7 +102,12 @@ public class EtiquetadoPanel extends CoustomPanel {
      * Creates new form EtiquetadoPanel
      */
     public EtiquetadoPanel(JDesktopPane mainPanel) {
-        this.mainPanel= mainPanel;
+        try {
+            this.reportDir = ParametrosGeneralesUtility.getValor("RE001");
+        } catch (Exception ex) {
+            this.reportDir = "C:/valco_installation/reportes/";
+        }
+        this.mainPanel = mainPanel;
         initComponents();
         action.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control S"));
         tablaProductos.setDefaultRenderer(Object.class, new EtiquetadoTableCellRendered());
@@ -106,9 +117,9 @@ public class EtiquetadoPanel extends CoustomPanel {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
-        PesoThread pesoThread = null;
+
         try {
-            pesoThread = new PesoThread();
+            setPesoThread(new PesoThread());
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Ocurrio un error al leer el peso de la bascula", "Error", ERROR_MESSAGE);
             pesoManualChk.setSelected(true);
@@ -117,16 +128,8 @@ public class EtiquetadoPanel extends CoustomPanel {
             pesoManualLbl.setEnabled(true);
             return;
         }
-        KeyboardFocusManager.getCurrentKeyboardFocusManager()
-                .addKeyEventDispatcher(new KeyEventDispatcher() {
-                    @Override
-                    public boolean dispatchKeyEvent(KeyEvent e) {
-                        System.out.println("Got key event!");
-                        return false;
-                    }
-                });
-        pesoThread.setPesoLbl(pesoBasculaLbl);
-        Thread thread = new Thread(pesoThread);
+        getPesoThread().setPesoLbl(pesoBasculaLbl);
+        Thread thread = new Thread(getPesoThread());
         thread.start();
 
     }
@@ -919,27 +922,27 @@ public class EtiquetadoPanel extends CoustomPanel {
 
     private void productoCodigoAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyReleased
         char c = evt.getKeyChar();
-        
-            if (!productoCodigoArea.getText().equals("")) {
-                ProductosHasProveedores productoProveedor = new ProductosHasProveedores();
-                Productos producto = new Productos();
-                try {
-                    producto = productoDAO.getProductosXDescripcionOCodigo(productoCodigoArea.getText());
-                } catch (Exception ex) {
-                    Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                productoProveedor.setProductos(producto);
-                Proveedores prov = new Proveedores();
-                prov.setCodigo(1);
-                productoProveedor.setProveedores(prov);
-                productosLov.setSelectedItem(productoProveedor);
-                productosLov.repaint();
+
+        if (!productoCodigoArea.getText().equals("")) {
+            ProductosHasProveedores productoProveedor = new ProductosHasProveedores();
+            Productos producto = new Productos();
+            try {
+                producto = productoDAO.getProductosXDescripcionOCodigo(productoCodigoArea.getText());
+            } catch (Exception ex) {
+                Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
-        
+            productoProveedor.setProductos(producto);
+            Proveedores prov = new Proveedores();
+            prov.setCodigo(1);
+            productoProveedor.setProveedores(prov);
+            productosLov.setSelectedItem(productoProveedor);
+            productosLov.repaint();
+        }
+
     }//GEN-LAST:event_productoCodigoAreaKeyReleased
 
     private void productoCodigoAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyTyped
-     
+
     }//GEN-LAST:event_productoCodigoAreaKeyTyped
 
     private void pesoManualChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoManualChkActionPerformed
@@ -987,6 +990,7 @@ public class EtiquetadoPanel extends CoustomPanel {
         productoInventario.setEstatus("ACTIVO");
         productoInventario.setConsecutivoProceso(new Integer(consecutivoLbl.getText()));
         productoInventario.setCodigoBarras(getCodigoBarras());
+        productoInventario.setFechaCreacion(new Date());
         try {
             productoDAO.insertarProducto(productoInventario);
             this.imprimirCodigo(productoInventario);
@@ -1045,12 +1049,41 @@ public class EtiquetadoPanel extends CoustomPanel {
         } catch (IllegalAccessException ex) {
             Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/valco", "admin3ZheGrA", "1VtHQW5M-3g-");) {
+        Properties prop = new Properties();
+        String propFileName = "C:\\valco_installation\\conf\\valco.properties";
+
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(propFileName);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        if (inputStream != null) {
+            try {
+                prop.load(inputStream);
+            } catch (IOException ex) {
+                Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            try {
+                throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        String server = prop.getProperty("server");
+        String port = prop.getProperty("port");
+        String dbname = prop.getProperty("dbname");
+        String user = prop.getProperty("user");
+        String password = prop.getProperty("password");
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://"+server+":"+port+"/"+dbname, user, password);) {
             /* TODO output your page here. You may use following sample code. */
 
             //Connecting to the MySQL database
             //Loading Jasper Report File from Local file system
-            String realPath = "src/Reportes/Lote_Final.jrxml";
+            String realPath = this.reportDir + "planta/Lote_Final.jrxml";
             InputStream input = new FileInputStream(new File(realPath));
             Map mapa = new HashMap();
 
@@ -1071,9 +1104,9 @@ public class EtiquetadoPanel extends CoustomPanel {
     private void reporteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reporteBtnActionPerformed
         // TODO add your handling code here:
         if (detalladoRadio.isSelected()) {
-            path = "src/Reportes/LoteDetallado.jrxml";
+            path = reportDir + "planta/LoteDetallado.jrxml";
         } else {
-            path = "src/Reportes/Lote_final.jrxml";
+            path = reportDir + "planta/Lote_Final.jrxml";
         }
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -1084,7 +1117,37 @@ public class EtiquetadoPanel extends CoustomPanel {
         } catch (IllegalAccessException ex) {
             Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/valco", "admin3ZheGrA", "1VtHQW5M-3g-");) {
+
+        Properties prop = new Properties();
+        String propFileName = "C:\\valco_installation\\conf\\valco.properties";
+
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(propFileName);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        if (inputStream != null) {
+            try {
+                prop.load(inputStream);
+            } catch (IOException ex) {
+                Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            try {
+                throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        String server = prop.getProperty("server");
+        String port = prop.getProperty("port");
+        String dbname = prop.getProperty("dbname");
+        String user = prop.getProperty("user");
+        String password = prop.getProperty("password");
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://"+server+":"+port+"/"+dbname, user, password);) {
             /* TODO output your page here. You may use following sample code. */
 
             //Connecting to the MySQL database
@@ -1094,6 +1157,7 @@ public class EtiquetadoPanel extends CoustomPanel {
             Map mapa = new HashMap();
 
             mapa.put("procesoCodigo", ((Procesos) (this.procesosLov.getSelectedItem())).getCodigo());
+            mapa.put("SUBREPORT_DIR", "C:\\apps\\valco\\proyecto\\Planta\\src\\Reportes\\");
 
             JasperReport jasperReport = JasperCompileManager.compileReport(input);
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
@@ -1109,18 +1173,18 @@ public class EtiquetadoPanel extends CoustomPanel {
 
     private void detalladoRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detalladoRadioActionPerformed
         // TODO add your handling code here:
-        String path = "src/Reportes/LoteDetallado.jrxml";
+        String path = reportDir + "planta/LoteDetallado.jrxml";
     }//GEN-LAST:event_detalladoRadioActionPerformed
 
     private void condensadoRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_condensadoRadioActionPerformed
         // TODO add your handling code here:
-        String path = "src/Reportes/Lote_Final.jrxml";
+        String path = reportDir + "planta/Lote_Final.jrxml";
     }//GEN-LAST:event_condensadoRadioActionPerformed
 
     private void agregarPesoInicialBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarPesoInicialBtnActionPerformed
         // TODO add your handling code here:
         addNewPanel(evt);
-        
+
     }//GEN-LAST:event_agregarPesoInicialBtnActionPerformed
 
     private void reimprimirEtiquetaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reimprimirEtiquetaBtnActionPerformed
@@ -1131,13 +1195,14 @@ public class EtiquetadoPanel extends CoustomPanel {
                 ProductosInventario productoSeleccionado = (ProductosInventario) model.getValueAt(selectedRows[i], 0);
                 this.imprimirCodigo(productoSeleccionado);
             }
-            
-        } 
+
+        }
     }//GEN-LAST:event_reimprimirEtiquetaBtnActionPerformed
 
-    private void addNewPanel(ActionEvent evt){
-        if(internalFrame != null)
-        this.mainPanel.remove(internalFrame);
+    private void addNewPanel(ActionEvent evt) {
+        if (internalFrame != null) {
+            this.mainPanel.remove(internalFrame);
+        }
         internalFrame = new JInternalFrame("Modificación de peso Inicial", true, true, true);
         JPanel prueb = new AbrirProcesoPanel((Procesos) procesosLov.getSelectedItem());
         internalFrame.add(prueb);
@@ -1147,6 +1212,7 @@ public class EtiquetadoPanel extends CoustomPanel {
         internalFrame.show();
         internalFrame.repaint();
     }
+
     private String swapChars(String str, int lIdx, int rIdx) {
         StringBuilder sb = new StringBuilder(str);
         char l = sb.charAt(lIdx), r = sb.charAt(rIdx);
@@ -1189,8 +1255,9 @@ public class EtiquetadoPanel extends CoustomPanel {
             JOptionPane.showMessageDialog(null, ex);
         }
     }
-    private String getCodigoBarras(){
-       return this.procesosLov.getSelectedItem()
+
+    private String getCodigoBarras() {
+        return this.procesosLov.getSelectedItem()
                 + new SimpleDateFormat("yyddMM").format(new Date())
                 + ((ProductosHasProveedores) this.productosLov.getSelectedItem()).getProductos().getCodigo()
                 + (pesoManualChk.isSelected() ? pesoManualLbl.getText().replaceAll("\\.", "") : pesoBasculaLbl.getText().replaceAll("\\.", ""))
@@ -1202,9 +1269,9 @@ public class EtiquetadoPanel extends CoustomPanel {
         PrintService printService = PrintServiceLookup.lookupDefaultPrintService();
 
         String zplCommand = "^XA"
-                + "^FO230,50^ARN,16,9^FD "+ this.productosLov.getSelectedItem()+"^FS"
-                + "^FO300,100^ARN,16,9^FD "+ producto.getPeso()+" KG^BY1,3.0^FS"
-                + "^FO230,180^BCN, 80, Y, N, N^FD"+producto.getCodigoBarras()+"^FS "
+                + "^FO230,50^ARN,16,9^FD " + this.productosLov.getSelectedItem() + "^FS"
+                + "^FO300,100^ARN,16,9^FD " + producto.getPeso() + " KG^BY1,3.0^FS"
+                + "^FO230,180^BCN, 80, Y, N, N^FD" + producto.getCodigoBarras() + "^FS "
                 + "^XZ";
 
 // convertimos el comando a bytes  

@@ -1,6 +1,7 @@
 package panels;
 
 
+import barcode.BarCodableImpl;
 import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
 import dao.ProcesosDAO;
 import dao.ProductoDAO;
@@ -37,19 +38,19 @@ import mapping.Procesos;
  *
  * @author Karla
  */
-public class AbrirProcesoPanel extends javax.swing.JPanel {
+public class AbrirProcesoPanel extends BarCodableImpl {
     ProductoDAO productoDAO = new ProductoDAO();
     ProcesosDAO procesosDAO = new ProcesosDAO();
     DefaultListModel lmDisponibles =new DefaultListModel();
     DefaultListModel lmSeleccionados =new DefaultListModel();
-    KeyboardFocusManager manager;
+    
     boolean modoEdicion = false;
     Set<ProductosInventario> toRemove = new HashSet<>();
     Set<ProductosInventario> toAdd = new HashSet<>();
     List<ProductosInventario> source = new ArrayList<>();
     List<ProductosInventario> destination = new ArrayList<>();
     Procesos procesoEdicion;
-    BarCodeScannerKeyDispatcher dispacher;
+    
     public List<Component> exceptions = new ArrayList<>();
     
     /**
@@ -62,10 +63,10 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", ERROR_MESSAGE);
         }
         initComponents();
-        manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        setManager(KeyboardFocusManager.getCurrentKeyboardFocusManager());
         exceptions.add(observacionesTxt);
-        dispacher= new BarCodeScannerKeyDispatcher(barCodeTxt, manager, exceptions);
-        manager.addKeyEventDispatcher(dispacher);
+        setDispacher(new BarCodeScannerKeyDispatcher(barCodeTxt, getManager(), exceptions));
+        getManager().addKeyEventDispatcher(getDispacher());
         
         
     }
@@ -79,10 +80,10 @@ public class AbrirProcesoPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", ERROR_MESSAGE);
         }
         initComponents();
-        manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        setManager(KeyboardFocusManager.getCurrentKeyboardFocusManager());
         exceptions.add(observacionesTxt);
-        dispacher= new BarCodeScannerKeyDispatcher(barCodeTxt, manager, exceptions);
-        manager.addKeyEventDispatcher(dispacher);
+        setDispacher(new BarCodeScannerKeyDispatcher(barCodeTxt, getManager(), exceptions));
+        getManager().addKeyEventDispatcher(getDispacher());
         modoEdicion= true;
        
     }

@@ -33,6 +33,7 @@ import mapping.ProductosInventario;
 import mapping.Proveedores;
 import mapping.Tranferencias;
 import mapping.Ubicaciones;
+import pesable.PesableBarCodeable;
 import table.custom.NoEditableTableModel;
 import threads.PesoThread;
 import utilities.UsuarioFirmado;
@@ -41,14 +42,12 @@ import utilities.UsuarioFirmado;
  *
  * @author Karla
  */
-public class EnviosPanel extends javax.swing.JPanel {
+public class EnviosPanel extends PesableBarCodeable {
 
     ProductoDAO productoDAO = new ProductoDAO();
     UbicacionesDAO ubicacionesDAO = new UbicacionesDAO();
     DefaultTableModel model = new NoEditableTableModel();
     List<ProductosInventario> productosList = new ArrayList<ProductosInventario>();
-    KeyboardFocusManager manager;
-    BarCodeScannerKeyDispatcher dispacher;
     public List<Component> exceptions = new ArrayList<>();
     private TransferenciasDAO transferenciasDao = new TransferenciasDAO();
     private String modoOperacion;
@@ -57,14 +56,13 @@ public class EnviosPanel extends javax.swing.JPanel {
     public EnviosPanel(String modoOperacion) {
         this.modoOperacion = modoOperacion;
         initComponents();
-        manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        setManager(KeyboardFocusManager.getCurrentKeyboardFocusManager());
         exceptions.add(pesoManualLbl);
         exceptions.add(productoCodigoArea);
-        dispacher = new BarCodeScannerKeyDispatcher(barCodeTxt, manager, exceptions);
-        manager.addKeyEventDispatcher(dispacher);
-        PesoThread pesoThread = null;
+        setDispacher(new BarCodeScannerKeyDispatcher(barCodeTxt, getManager(), exceptions));
+        getManager().addKeyEventDispatcher(getDispacher());
         try {
-            pesoThread = new PesoThread();
+            setPesoThread(new PesoThread());
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Ocurrio un error al leer el peso de la bascula", "Error", ERROR_MESSAGE);
             pesoManualChk.setSelected(true);
@@ -73,22 +71,21 @@ public class EnviosPanel extends javax.swing.JPanel {
             pesoManualLbl.setEnabled(true);
             return;
         }
-        pesoThread.setPesoLbl(pesoBasculaLbl);
-        Thread thread = new Thread(pesoThread);
+        getPesoThread().setPesoLbl(pesoBasculaLbl);
+        Thread thread = new Thread(getPesoThread());
         thread.start();
     }
 
     public EnviosPanel() {
         modoOperacion = "ENVIO";
         initComponents();
-        manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        setManager(KeyboardFocusManager.getCurrentKeyboardFocusManager());
         exceptions.add(pesoManualLbl);
         exceptions.add(productoCodigoArea);
-        dispacher = new BarCodeScannerKeyDispatcher(barCodeTxt, manager, exceptions);
-        manager.addKeyEventDispatcher(dispacher);
-        PesoThread pesoThread = null;
+        setDispacher(new BarCodeScannerKeyDispatcher(barCodeTxt, getManager(), exceptions));
+        getManager().addKeyEventDispatcher(getDispacher());
         try {
-            pesoThread = new PesoThread();
+            setPesoThread(new PesoThread());
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Ocurrio un error al leer el peso de la bascula", "Error", ERROR_MESSAGE);
             pesoManualChk.setSelected(true);
@@ -97,8 +94,8 @@ public class EnviosPanel extends javax.swing.JPanel {
             pesoManualLbl.setEnabled(true);
             return;
         }
-        pesoThread.setPesoLbl(pesoBasculaLbl);
-        Thread thread = new Thread(pesoThread);
+        getPesoThread().setPesoLbl(pesoBasculaLbl);
+        Thread thread = new Thread(getPesoThread());
         thread.start();
     }
 
