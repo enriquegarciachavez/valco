@@ -113,13 +113,16 @@ public class ParametrosGeneralesDAO {
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(ParametrosGenerales.class);
               parametros = (List<ParametrosGenerales>) q.list();
+              tx.commit();
               return parametros;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los Parametros Generales.");
 
           } finally {
               try {
+                  if(session.isOpen())
                   session.close();
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los Parametros Generales.");
@@ -137,8 +140,10 @@ public class ParametrosGeneralesDAO {
                       .add(Restrictions.eq("clave", clave));
               parametro = (ParametrosGenerales) q.uniqueResult();
               if(parametro != null){
+                  tx.commit();
                   return parametro.getValor();
               }else{
+                  tx.commit();
                   throw new Exception("Parametro "+clave+" no encontradó");
               }
 

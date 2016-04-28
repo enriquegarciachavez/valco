@@ -119,9 +119,11 @@ public class AbonosCuentasXPagarDAO {
               tx = session.beginTransaction();
               Query q = session.createQuery("FROM AbonosCuentasXPagar");
               abonos = (List<AbonosCuentasXPagar>) q.list();
+              tx.commit();
               return abonos;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los clientes.");
 
           } finally {
@@ -142,9 +144,11 @@ public class AbonosCuentasXPagarDAO {
               tx = session.beginTransaction();
               Query q = session.createQuery("FROM OrdenesCompra");
               ordenes = (List<OrdenesCompra>) q.list();
+              tx.commit();
               return ordenes;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar las OrdenesCompra.");
 
           } finally {
@@ -189,9 +193,11 @@ public class AbonosCuentasXPagarDAO {
                     Hibernate.initialize(orden.getCuentaXPagar().getAbonosCuentasXPagars());
                   }
               }
+              tx.commit();
               return ordenes;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los abonos.");
 
           } finally {

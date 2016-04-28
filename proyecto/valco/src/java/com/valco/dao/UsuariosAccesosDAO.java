@@ -175,8 +175,10 @@ public class UsuariosAccesosDAO {
             tx = session.beginTransaction();
             Criteria cr = session.createCriteria(UsuariosAccesos.class);
             List<UsuariosAccesos> usuariosAccesos = (List<UsuariosAccesos>) cr.list();
+            tx.commit();
             return usuariosAccesos;
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar el acceso.");
         } finally {
             try {
@@ -192,15 +194,19 @@ public class UsuariosAccesosDAO {
 
     public List<UsuariosAccesos> getUsuariosAccesos(String usuario, Accesos acceso) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();;
+        Transaction tx = null;
         try {
+            tx = session.beginTransaction();
             Criteria cr = session.createCriteria(UsuariosAccesos.class, "usuariosAccesos");
             cr.createAlias("usuariosAccesos.usuarios", "usuarios");
             cr.createAlias("usuariosAccesos.accesos", "accesos");
             cr.add(Restrictions.eq("usuarios.correo", usuario));
             cr.add(Restrictions.eq("accesos.nombre", acceso.getNombre()));       
             List<UsuariosAccesos> usuariosAccesos = (List<UsuariosAccesos>) cr.list();
+            tx.commit();
             return usuariosAccesos;
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar el acceso.");
         }
     }
@@ -216,8 +222,10 @@ public class UsuariosAccesosDAO {
             cr.add(Restrictions.eq("usuarios.correo", correo));
             cr.add(Restrictions.eq("accesos.url", url));            
             List<UsuariosAccesos> listusuariosAccesos = (List<UsuariosAccesos>) cr.list();
+            tx.commit();
             return listusuariosAccesos;
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar el acceso.");
         } finally {
             try {

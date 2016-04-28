@@ -105,14 +105,18 @@ public class FamiliasDAO {
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(Familias.class);
               familias = (List<Familias>) q.list();
+              tx.commit();
               return familias;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar las familias.");
 
           } finally {
               try {
+                  if(session.isOpen()){
                   session.close();
+                  }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar las familias.");
               }

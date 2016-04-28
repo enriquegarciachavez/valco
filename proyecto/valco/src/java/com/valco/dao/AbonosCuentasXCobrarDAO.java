@@ -94,6 +94,7 @@ public class AbonosCuentasXCobrarDAO {
                 try {
                     tx.rollback();
                 } catch (HibernateException he) {
+                    
                     throw new Exception("Ocurrió un error al borrar el abono.");
                 }
             }
@@ -117,9 +118,11 @@ public class AbonosCuentasXCobrarDAO {
               tx = session.beginTransaction();
               Query q = session.createQuery("FROM AbonosCuentasXCobrar");
               abonos = (List<AbonosCuentasXCobrar>) q.list();
+              tx.commit();
               return abonos;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los clientes.");
 
           } finally {
@@ -139,9 +142,11 @@ public class AbonosCuentasXCobrarDAO {
               tx = session.beginTransaction();
               Query q = session.createQuery("FROM NotasDeVenta");
               notas = (List<NotasDeVenta>) q.list();
+              tx.commit();
               return notas;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los clientes.");
 
           } finally {
@@ -162,6 +167,7 @@ public class AbonosCuentasXCobrarDAO {
           try {
               tx = session.beginTransaction();
               Criteria criteria = session.createCriteria(NotasDeVenta.class);
+              tx = session.beginTransaction();
               if(fechaInicial != null && fechaFinal != null){
                   criteria.add(Restrictions.between("fechaDeVenta",fechaInicial,fechaFinal));
               }else if(fechaInicial != null){
@@ -186,9 +192,11 @@ public class AbonosCuentasXCobrarDAO {
                     Hibernate.initialize(nota.getCuentaXCobrar().getAbonosCuentasXCobrars());
                   }
               }
+              tx.commit();
               return notas;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los abonos.");
 
           } finally {

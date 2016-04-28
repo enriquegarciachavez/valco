@@ -114,13 +114,16 @@ public class ClienteDAO implements Serializable{
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(Clientes.class);
               clientes = (List<Clientes>) q.list();
+              tx.commit();
               return clientes;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los clientes.");
 
           } finally {
               try {
+                  if(session.isOpen()   )
                   session.close();
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los clientes.");
@@ -142,9 +145,11 @@ public class ClienteDAO implements Serializable{
                       Hibernate.initialize(nota.getCuentaXCobrar());
                   }
               }
+              tx.commit();
               return clientes;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los clientes.");
 
           } finally {
@@ -170,9 +175,11 @@ public class ClienteDAO implements Serializable{
                       Hibernate.initialize(nota.getCuentasXCobrars());
                   }
               }
+              tx.commit();
               return clientes;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los clientes.");
 
           } finally {
@@ -193,9 +200,11 @@ public class ClienteDAO implements Serializable{
               Criteria q = session.createCriteria(Clientes.class)
                       .add(Restrictions.eq("razonSocial", razonSocial));
               cliente = (Clientes)q.uniqueResult();
+              tx.commit();
               return cliente;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los clientes.");
 
           } finally {
@@ -218,9 +227,11 @@ public class ClienteDAO implements Serializable{
               Criteria q = session.createCriteria(Clientes.class)
                       .add(Restrictions.eq("codigo", ClientesUtility.getCodigoPublicoEnGeneral()));
               cliente = (Clientes)q.uniqueResult();
+              tx.commit();
               return cliente;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los clientes.");
 
           } finally {
@@ -243,9 +254,11 @@ public class ClienteDAO implements Serializable{
               Criteria q = session.createCriteria(Clientes.class)
                       .add(Restrictions.eq("notasDeVentas", nota));
               cliente = (Clientes)q.uniqueResult();
+              tx.commit();
               return cliente;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los clientes.");
 
           } finally {

@@ -137,9 +137,11 @@ public class TransferenciasDAO {
                 Hibernate.initialize(transferencia.getUbicacionesBySalida());
                 Hibernate.initialize(transferencia.getUbicacionesByDestino());
             }
+            tx.commit();
             return transferencias;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar las transferencias.");
 
         } finally {
@@ -174,9 +176,11 @@ public class TransferenciasDAO {
             Hibernate.initialize(transferencia.getMermas());
             Hibernate.initialize(transferencia.getUbicacionesBySalida());
             Hibernate.initialize(transferencia.getUbicacionesByDestino());
+            tx.commit();
             return transferencia;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar las transferencias.");
 
         } finally {

@@ -26,6 +26,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -185,6 +186,7 @@ public class ProductoDAO {
                       .setFetchMode("tipoProducto", FetchMode.JOIN);
               q.setFetchMode("unidadesDeMedida", FetchMode.JOIN);
               productos = (List<Productos>) q.list();
+              tx.commit();
             return productos;
 
         } catch (HibernateException he) {
@@ -210,6 +212,7 @@ public class ProductoDAO {
               Criteria q = session.createCriteria(Productos.class)
                       .add(Restrictions.eq("descripcion", descripcion));
               producto = (Productos)q.uniqueResult();
+              tx.commit();
               return producto;
 
           } catch (HibernateException he) {
@@ -246,6 +249,7 @@ public class ProductoDAO {
                       
                       
               producto = (Productos)q.uniqueResult();
+              tx.commit();
               return producto;
 
           } catch (HibernateException he) {
@@ -279,6 +283,7 @@ public class ProductoDAO {
               Hibernate.initialize(producto.getProductosHasProveedores().getProductos());
               Hibernate.initialize(producto.getUbicaciones());
               Hibernate.initialize(producto.getProductosHasProveedores().getProveedores());
+              tx.commit();
               return producto;
 
           } catch (HibernateException he) {
@@ -308,6 +313,7 @@ public class ProductoDAO {
                 Hibernate.initialize(producto.getTranferencias());
                 Hibernate.initialize(producto.getTranferencias().getUbicacionesByDestino());
               }
+              tx.commit();
               return producto;
 
           } catch (HibernateException he) {
@@ -325,9 +331,10 @@ public class ProductoDAO {
     }
     
     public List<ProductosInventario> getCanalesDisponibles() throws Exception {
-          Session session = HibernateUtil.getSessionFactory().openSession();
-          Transaction tx = null;
+          System.out.println("SESIOOOOOOOOOOOON");
+        StatelessSession session = HibernateUtil.getSessionFactory().openStatelessSession();
           List<ProductosInventario> productos = new ArrayList<ProductosInventario>();
+          Transaction tx = null;
           try {
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(ProductosInventario.class).add(Restrictions.eq("estatus","ACTIVO"));
@@ -338,6 +345,7 @@ public class ProductoDAO {
                 Hibernate.initialize(producto.getProductosHasProveedores());
                 Hibernate.initialize(producto.getProductosHasProveedores().getProductos());
               }
+              tx.commit();
               return productos;
 
           } catch (HibernateException he) {
@@ -345,9 +353,9 @@ public class ProductoDAO {
 
           } finally {
               try {
-                  if(session.isOpen()){
+                  //if(session.isOpen()){
                     session.close();
-                  }
+                  //}
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los productos.");
               }
@@ -365,6 +373,7 @@ public class ProductoDAO {
                       .add(Restrictions.eq("codigoProveedor", codigo));
               producto = (ProductosHasProveedores)q.uniqueResult();
               Hibernate.initialize(producto.getProductos());
+              tx.commit();
               return producto;
 
           } catch (HibernateException he) {
@@ -394,6 +403,7 @@ public class ProductoDAO {
                   Hibernate.initialize(producto.getProductos());
                   Hibernate.initialize(producto.getProveedores());
               }
+              tx.commit();
               return productos;
 
           } catch (HibernateException he) {
@@ -429,6 +439,7 @@ public class ProductoDAO {
                   Hibernate.initialize(producto.getProductos());
                   Hibernate.initialize(producto.getProveedores());
               }
+              tx.commit();
               return productos;
 
           } catch (HibernateException he) {
@@ -455,6 +466,7 @@ public class ProductoDAO {
                       .add(Restrictions.eq("proveedores", proveedor));
               q.createCriteria("productos").add(Restrictions.eq("codigo", productoCodigo));
               productos = (ProductosHasProveedores)q.uniqueResult();
+              tx.commit();
               return productos;
 
           } catch (HibernateException he) {
@@ -510,11 +522,11 @@ public class ProductoDAO {
     }
 
     public void insertarProducto(ProductosInventario producto) throws Exception{
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        StatelessSession session = HibernateUtil.getSessionFactory().openStatelessSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            session.save(producto);
+            session.insert(producto);
             tx.commit();
         } catch (Exception e) {
             if (tx != null) {
@@ -527,9 +539,7 @@ public class ProductoDAO {
             throw new Exception("Ocurrió un error al registrar el producto.");
         } finally {
             try {
-                if (session.isOpen()) {
                     session.close();
-                }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al registrar el producto.");
             }
@@ -540,6 +550,7 @@ public class ProductoDAO {
     public ProductosInventario getProductoPesado(String peso, Productos producto,DefaultTableModel model) throws Exception{
         Session session = HibernateUtil.getSessionFactory().openSession();
           Transaction tx = null;
+          tx = session.beginTransaction();
           ProductosInventario productoInventario = new ProductosInventario();
           String hql = "From ProductosInventario PI "
                   + "inner join PI.productosHasProveedores as PHP"
@@ -567,9 +578,11 @@ public class ProductoDAO {
               Hibernate.initialize(productoInventario.getProductosHasProveedores().getProductos());
               Hibernate.initialize(productoInventario.getUbicaciones());
               Hibernate.initialize(productoInventario.getProductosHasProveedores().getProveedores());
+              tx.commit();
               return productoInventario;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los productos.");
 
           } finally {
@@ -587,6 +600,7 @@ public class ProductoDAO {
     public ProductosInventario getProductoPesado(String peso, Productos producto,Tranferencias transferencia) throws Exception{
         Session session = HibernateUtil.getSessionFactory().openSession();
           Transaction tx = null;
+          tx = session.beginTransaction();
           ProductosInventario productoInventario = new ProductosInventario();
           String hql = "From Tranferencias TR "
                   + "inner join TR.productosInventarios PI "
@@ -607,9 +621,11 @@ public class ProductoDAO {
               Hibernate.initialize(productoInventario.getProductosHasProveedores().getProductos());
               Hibernate.initialize(productoInventario.getUbicaciones());
               Hibernate.initialize(productoInventario.getProductosHasProveedores().getProveedores());
+              tx.commit();
               return productoInventario;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los productos.");
 
           } finally {

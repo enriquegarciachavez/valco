@@ -106,13 +106,16 @@ public class RepartidoresDAO {
               tx = session.beginTransaction();
               Query q = session.createQuery("FROM Repartidores");
               repartidores = (List<Repartidores>) q.list();
+              tx.commit();
               return repartidores;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los repartidores.");
 
           } finally {
               try {
+                  if(session.isOpen())
                   session.close();
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los repartidores.");

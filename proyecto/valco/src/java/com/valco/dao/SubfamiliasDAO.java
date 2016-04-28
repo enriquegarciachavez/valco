@@ -108,13 +108,16 @@ public class SubfamiliasDAO {
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(Subfamilias.class);
               subfamilias = (List<Subfamilias>) q.list();
+              tx.commit();
               return subfamilias;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar las subfamilias.");
 
           } finally {
               try {
+                  if(session.isOpen())
                   session.close();
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar las subfamilias.");
@@ -132,6 +135,7 @@ public class SubfamiliasDAO {
                       .add(Restrictions.eq("familias", familia));
               
               subfamilias = (List<Subfamilias>) q.list();
+              tx.commit();
               return subfamilias;
 
           } catch (HibernateException he) {

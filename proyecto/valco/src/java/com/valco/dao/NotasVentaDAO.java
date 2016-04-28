@@ -293,9 +293,11 @@ public class NotasVentaDAO {
                     .setFetchMode("clientes", FetchMode.JOIN)
                     .add(Restrictions.eq("estatus", "ASIGNADA"));
             notas = (List<NotasDeVenta>) q.list();
+            tx.commit();
             return notas;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar los clientes.");
 
         } finally {
@@ -319,9 +321,11 @@ public class NotasVentaDAO {
                     .add(Restrictions.ge("folio", folioInicial))
                     .add(Restrictions.le("folio", folioFinal));
             notas = (List<NotasDeVenta>) q.list();
+            tx.commit();
             return notas;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar los clientes.");
 
         } finally {
@@ -346,9 +350,11 @@ public class NotasVentaDAO {
             q.setFetchMode("productosInventarios", FetchMode.SELECT);
 
             notas = (List<NotasDeVenta>) q.list();
+            tx.commit();
             return notas;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar los clientes.");
 
         } finally {
@@ -373,9 +379,11 @@ public class NotasVentaDAO {
                     .setFetchMode("productosInventarios", FetchMode.JOIN)
                     .add(Restrictions.eq("folio", folio));
             nota = (NotasDeVenta) q.uniqueResult();
+            tx.commit();
             return nota;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar los clientes.");
 
         } finally {
@@ -406,9 +414,11 @@ public class NotasVentaDAO {
                 }
                 Hibernate.initialize(nota.getProductosInventarios());
             }
+            tx.commit();
             return notas;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar los clientes.");
 
         } finally {
@@ -440,9 +450,11 @@ public class NotasVentaDAO {
                 }
                 Hibernate.initialize(nota.getProductosInventarios());
             }
+            tx.commit();
             return notas;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar los clientes.");
 
         } finally {
@@ -473,9 +485,11 @@ public class NotasVentaDAO {
                 }
                 Hibernate.initialize(nota.getProductosInventarios());
             }
+            tx.commit();
             return notas;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar los clientes.");
 
         } finally {
@@ -498,9 +512,11 @@ public class NotasVentaDAO {
             Criteria q = session.createCriteria(AbonosCuentasXCobrar.class)
                     .add(Restrictions.eq("cuentasXCobrar", cuenta));
             abonos = (List<AbonosCuentasXCobrar>) q.list();
+            tx.commit();
             return abonos;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar los abonos.");
 
         } finally {
@@ -523,9 +539,11 @@ public class NotasVentaDAO {
             Criteria q = session.createCriteria(ProductosInventario.class)
                     .add(Restrictions.eq("estatus", "ACTIVO"));
             producto = (List<ProductosInventario>) q.list();
+            tx.commit();
             return producto;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar los clientes.");
 
         } finally {
@@ -548,9 +566,11 @@ public class NotasVentaDAO {
             Criteria q = session.createCriteria(ProductosInventario.class)
                     .add(Restrictions.eq("notasDeVenta", nota));
             producto = (List<ProductosInventario>) q.list();
+            tx.commit();
             return producto;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar los clientes.");
 
         } finally {
@@ -591,9 +611,11 @@ public class NotasVentaDAO {
                     Hibernate.initialize(cuenta);
                 }
             }
+            tx.commit();
             return notas;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar las notas.");
 
         } finally {

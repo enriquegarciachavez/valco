@@ -111,6 +111,7 @@ public class ProcesosDAO {
                               new Date()));
             q.setProjection(Projections.rowCount());
             Long procesosDelDia =  (Long) q.uniqueResult();
+            tx.commit();
             return letras[procesosDelDia.intValue()];
 
         } catch (HibernateException he) {
@@ -137,6 +138,7 @@ public class ProcesosDAO {
             Criteria q = session.createCriteria(Procesos.class)
                       .add(Restrictions.eq("estatus", "ACTIVO"));
               procesos = (List<Procesos>) q.list();
+              tx.commit();
             return procesos;
 
         } catch (HibernateException he) {
@@ -161,6 +163,7 @@ public class ProcesosDAO {
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(Procesos.class);
               procesos = (List<Procesos>) q.list();
+              tx.commit();
             return procesos;
 
         } catch (HibernateException he) {
@@ -190,6 +193,7 @@ public class ProcesosDAO {
                   consecutivo = (Integer) q.uniqueResult();
                   consecutivo++;
               }
+              tx.commit();
             return consecutivo;
 
         } catch (HibernateException he) {
@@ -219,6 +223,7 @@ public class ProcesosDAO {
                   Hibernate.initialize(producto.getProductosHasProveedores());
                   Hibernate.initialize(producto.getProductosHasProveedores().getProductos());
               }
+              tx.commit();
             return productos;
 
         } catch (Exception e) {
@@ -254,6 +259,7 @@ public class ProcesosDAO {
                   Hibernate.initialize(producto.getProductosHasProveedores());
                   Hibernate.initialize(producto.getProductosHasProveedores().getProductos());
               }
+              tx.commit();
             return productos;
 
         } catch (Exception e) {
@@ -316,6 +322,7 @@ public class ProcesosDAO {
               for(ProductosInventario producto: productos){
                   total = total.add(producto.getPeso());
               }
+              tx.commit();
             return total;
 
         } catch (Exception e) {
@@ -354,6 +361,7 @@ public class ProcesosDAO {
               for(ProductosInventario producto: productos){
                   total = total.add(producto.getPeso());
               }
+              tx.commit();
             return total;
 
         } catch (Exception e) {
@@ -392,6 +400,7 @@ public class ProcesosDAO {
               for(ProductosInventario producto: productos){
                   total = total.add(producto.getPeso());
               }
+              tx.commit();
             return total;
 
         } catch (Exception e) {
@@ -430,6 +439,7 @@ public class ProcesosDAO {
               for(ProductosInventario producto: productos){
                   total = total.add(producto.getPeso());
               }
+              tx.commit();
             return total;
 
         } catch (Exception e) {

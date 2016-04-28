@@ -111,6 +111,7 @@ public class ParametrosGeneralesDAO {
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(ParametrosGenerales.class);
               parametros = (List<ParametrosGenerales>) q.list();
+              tx.commit();
               return parametros;
 
           } catch (HibernateException he) {
@@ -134,6 +135,7 @@ public class ParametrosGeneralesDAO {
               Criteria q = session.createCriteria(ParametrosGenerales.class)
                       .add(Restrictions.eq("clave", clave));
               parametro = (ParametrosGenerales) q.uniqueResult();
+              tx.commit();
               if(parametro != null){
                   return parametro.getValor();
               }else{

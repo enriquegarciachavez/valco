@@ -121,9 +121,11 @@ public class OrdenesCompraDAO {
             for (OrdenesCompra orden : ordenesCompra) {
                 Hibernate.initialize(orden.getProveedores());
             }
+            tx.commit();
             return ordenesCompra;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar la Orden de Compra.");
 
         } finally {
@@ -146,9 +148,11 @@ public class OrdenesCompraDAO {
             Criteria q = session.createCriteria(ProductosInventario.class)
                     .add(Restrictions.eq("ordenesCompra", ordenCompra));
             productoInventario = (List<ProductosInventario>) q.list();
+            tx.commit();
             return productoInventario;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar los Productos de la Orden.");
 
         } finally {
@@ -182,9 +186,11 @@ public class OrdenesCompraDAO {
             for (ProductosInventarioAgrupados productoAgrupado : productoInventario) {
                 productoAgrupado.setProductos(this.getProductosInventarioXOrdenYProducto(ordenCompra, productoAgrupado.getProducto()));
             }
+            tx.commit();
             return productoInventario;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar los Productos de la Orden.");
 
         } finally {
@@ -209,9 +215,11 @@ public class OrdenesCompraDAO {
                     .add(Restrictions.eq("productosHasProveedores", producto));
 
             productoInventario = (List<ProductosInventario>) q.list();
+            tx.commit();
             return productoInventario;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar los Productos de la Orden.");
 
         }

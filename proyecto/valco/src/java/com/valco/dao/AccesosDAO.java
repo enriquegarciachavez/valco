@@ -118,8 +118,10 @@ public class AccesosDAO {
             tx = session.beginTransaction();
             Criteria cr = session.createCriteria(Accesos.class);
             List<Accesos> accesos = (List<Accesos>) cr.list();
+            tx.commit();
             return accesos;
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar el acceso.");
         } finally {
             try {
@@ -134,14 +136,27 @@ public class AccesosDAO {
 
     public List<Accesos> getAccesos(String nombre) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();;
+        Transaction tx = null;
         try {
+            tx = session.beginTransaction();
             Criteria cr = session.createCriteria(Accesos.class);
             cr.add(Expression.eq("nombre", nombre));
             List<Accesos> accesos = (List<Accesos>) cr.list();
+            tx.commit();
             return accesos;
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar el acceso.");
         }
+        finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar el acceso.");
+            }
+        }   
     }
 
     public List getAccesosGroupByCategorias() throws Exception {
@@ -154,8 +169,10 @@ public class AccesosDAO {
                     .add(Projections.groupProperty("categoria"))
             );
             List categorias = cr.list();
+            tx.commit();
             return categorias;
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar el acceso.");
         } finally {
             try {
@@ -176,8 +193,10 @@ public class AccesosDAO {
             Criteria cr = session.createCriteria(Accesos.class);
             cr.add(Expression.eq("categoria", categoria));
             List<Accesos> usuarios = (List<Accesos>) cr.list();
+            tx.commit();
             return usuarios;
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar el acceso.");
         } finally {
             try {
@@ -207,8 +226,10 @@ public class AccesosDAO {
             cr.createAlias("usuariosAccesos.accesos", "accesos");
             cr.add(Restrictions.eq("usuarios.correo", correo));
             List<UsuariosAccesos> listAccesos = (List) cr.list();
+            tx.commit();
             return listAccesos;
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar el acceso.");
         } finally {
             try {
@@ -232,8 +253,10 @@ public class AccesosDAO {
             cr.add(Restrictions.eq("usuarios.correo", correo));
             cr.add(Restrictions.eq("accesos.categoria", categoria));
             List<UsuariosAccesos> listAccesos = (List) cr.list();
+            tx.commit();
             return listAccesos;
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar el acceso.");
         } finally {
             try {
