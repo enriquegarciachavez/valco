@@ -112,9 +112,11 @@ public class ProveedorDAO implements Serializable{
               tx = session.beginTransaction();
               Query q = session.createQuery("FROM Proveedores");
               proveedores = (List<Proveedores>) q.list();
+              tx.commit();
               return proveedores;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los proveedores.");
 
           } finally {
@@ -137,9 +139,11 @@ public class ProveedorDAO implements Serializable{
               Criteria q = session.createCriteria(Proveedores.class)
                       .add(Restrictions.eq("abarrotes", true));
               proveedores = (List<Proveedores>) q.list();
+              tx.commit();
               return proveedores;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los proveedores.");
 
           } finally {
@@ -162,9 +166,12 @@ public class ProveedorDAO implements Serializable{
               Criteria q = session.createCriteria(Proveedores.class)
                       .add(Restrictions.eq("razonSocial", razonSocial));
               proveedor = (Proveedores)q.uniqueResult();
+              tx.commit();
               return proveedor;
 
           } catch (HibernateException he) {
+              tx.commit();
+              
               throw new Exception("Ocurrió un error al consultar los proveedores.");
 
           } finally {
@@ -197,9 +204,11 @@ public class ProveedorDAO implements Serializable{
                   }
 
               }
+              tx.commit();
               return proveedores;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los proveedores.");
 
           } finally {
@@ -227,9 +236,11 @@ public class ProveedorDAO implements Serializable{
                       Hibernate.initialize(orden.getCuentasXPagars());
                   }
               }
+              tx.commit();
               return proveedores;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los proveedores.");
 
           } finally {

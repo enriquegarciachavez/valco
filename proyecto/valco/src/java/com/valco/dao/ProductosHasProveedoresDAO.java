@@ -106,13 +106,16 @@ public class ProductosHasProveedoresDAO {
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(ProductosHasProveedores.class);
               productosHasProveedores = (List<ProductosHasProveedores>) q.list();
+              tx.commit();
               return productosHasProveedores;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los Productos Has Proveedores.");
 
           } finally {
               try {
+                  if(session.isOpen())
                   session.close();
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los Productos Has Proveedores.");

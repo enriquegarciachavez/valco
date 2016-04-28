@@ -111,6 +111,7 @@ public class OrdenesCompraDAO {
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(OrdenesCompra.class);
               ordenesCompra = (List<OrdenesCompra>) q.list();
+              tx.commit();
               return ordenesCompra;
 
           } catch (HibernateException he) {
@@ -136,6 +137,7 @@ public class OrdenesCompraDAO {
               Criteria q = session.createCriteria(OrdenesCompra.class)
                       .add(Restrictions.eq("ordenesCompra", ordenCompra));
               productoInventario = (List<ProductosInventario>) q.list();
+              tx.commit();
               return productoInventario;
 
           } catch (HibernateException he) {
@@ -164,6 +166,7 @@ public class OrdenesCompraDAO {
                       .add(Projections.groupProperty("productosHasProveedores"))
                         .add(Projections.sum("peso")));
               productoInventario = (List<ProductosInventario>) q.list();
+              tx.commit();
               return productoInventario;
 
           } catch (HibernateException he) {

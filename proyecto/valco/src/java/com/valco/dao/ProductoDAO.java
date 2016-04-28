@@ -1,5 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+     * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -154,9 +154,11 @@ public class ProductoDAO {
                   Hibernate.initialize(producto.getSubfamilias());
                   Hibernate.initialize(producto.getSubfamilias().getFamilias());
               }
+              tx.commit();
             return productos;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar los producto.");
 
         } finally {
@@ -179,9 +181,11 @@ public class ProductoDAO {
               Criteria q = session.createCriteria(Productos.class)
                       .add(Restrictions.eq("descripcion", descripcion));
               producto = (Productos)q.uniqueResult();
+              tx.commit();
               return producto;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los productos.");
 
           } finally {
@@ -204,9 +208,11 @@ public class ProductoDAO {
               Criteria q = session.createCriteria(ProductosInventario.class)
                       .add(Restrictions.eq("codigoBarras", codigo));
               producto = (ProductosInventario)q.uniqueResult();
+              tx.commit();
               return producto;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los productos.");
 
           } finally {
@@ -233,9 +239,11 @@ public class ProductoDAO {
                 Hibernate.initialize(producto.getTranferencias());
                 Hibernate.initialize(producto.getTranferencias().getUbicacionesByDestino());
               }
+              tx.commit();
               return producto;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los productos.");
 
           } finally {
@@ -259,6 +267,7 @@ public class ProductoDAO {
                       .add(Restrictions.eq("proveedores", proveedor))
                       .add(Restrictions.eq("codigoProveedor", codigo));
               producto = (ProductosHasProveedores)q.uniqueResult();
+              tx.commit();
               return producto;
 
           } catch (HibernateException he) {
@@ -325,9 +334,11 @@ public class ProductoDAO {
                   Hibernate.initialize(producto.getProductos());
                   Hibernate.initialize(producto.getProveedores());
               }
+              tx.commit();
               return productos;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los productos.");
 
           } finally {
@@ -356,9 +367,11 @@ public class ProductoDAO {
                   Hibernate.initialize(producto.getProductos());
                   Hibernate.initialize(producto.getProveedores());
               }
+              tx.commit();
               return productos;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los productos.");
 
           } finally {

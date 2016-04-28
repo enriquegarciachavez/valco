@@ -108,9 +108,11 @@ public class TipoProductoDAO {
               tx = session.beginTransaction();
               Query q = session.createQuery("FROM TipoProducto");
               tipoproducto = (List<TipoProducto>) q.list();
+              tx.commit();
               return tipoproducto;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los producto.");
 
           } finally {
@@ -133,9 +135,11 @@ public class TipoProductoDAO {
               Criteria q = session.createCriteria(TipoProducto.class)
                       .add(Restrictions.eq("descripcion", tipoProducto));
               tipoproducto = (TipoProducto)q.uniqueResult();
+              tx.commit();
               return tipoproducto;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los tipo productos.");
 
           } finally {

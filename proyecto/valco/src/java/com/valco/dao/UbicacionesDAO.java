@@ -108,9 +108,11 @@ public class UbicacionesDAO {
               tx = session.beginTransaction();
               Query q = session.createQuery("FROM Ubicaciones");
               ubicaciones = (List<Ubicaciones>) q.list();
+              tx.commit();
               return ubicaciones;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar la ubicacion.");
 
           } finally {
@@ -133,9 +135,11 @@ public class UbicacionesDAO {
               Criteria q = session.createCriteria(Ubicaciones.class)
                       .add(Restrictions.eq("oficina", oficina));
               ubicacion = (Ubicaciones)q.uniqueResult();
+              tx.commit();
               return ubicacion;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar la ubicacion.");
 
           } finally {

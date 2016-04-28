@@ -110,17 +110,19 @@ public class ProveedorDAO implements Serializable {
 
     public List<Proveedores> getProveedores() throws Exception {
         Session session = null;
+        Transaction tx = null;
         try {
-            session = HibernateUtil.getSessionFactory().getCurrentSession();
-            Transaction tx = null;
+            session = HibernateUtil.getSessionFactory().getCurrentSession();            
             List<Proveedores> proveedores = new ArrayList<Proveedores>();
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(Proveedores.class);
             q.addOrder(Order.asc("razonSocial"));
             proveedores = (List<Proveedores>) q.list();
+            tx.commit();
             return proveedores;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar los proveedores.");
 
         } finally {
@@ -143,9 +145,11 @@ public class ProveedorDAO implements Serializable {
             Criteria q = session.createCriteria(Proveedores.class)
                     .add(Restrictions.eq("razonSocial", razonSocial));
             proveedor = (Proveedores) q.uniqueResult();
+            tx.commit();
             return proveedor;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar los proveedores.");
 
         } finally {
@@ -175,9 +179,11 @@ public class ProveedorDAO implements Serializable {
             
 
             proveedor = (Proveedores) q.uniqueResult();
+            tx.commit();
             return proveedor;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar los proveedores.");
 
         }
@@ -202,9 +208,11 @@ public class ProveedorDAO implements Serializable {
                 }
 
             }
+            tx.commit();
             return proveedores;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar los proveedores.");
 
         } finally {

@@ -124,9 +124,11 @@ public class UsuariosDAO {
             Criteria cr = session.createCriteria(Usuarios.class);
 
             usuarios = (List<Usuarios>) cr.list();
+            tx.commit();
             return usuarios;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar el usuario.");
 
         } finally {
@@ -152,9 +154,11 @@ public class UsuariosDAO {
               if(usuario != null ){
               Hibernate.initialize(usuario.getUbicaciones());
               }
+              tx.commit();
               return usuario;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los clientes.");
 
           } finally {
@@ -170,12 +174,16 @@ public class UsuariosDAO {
      
         public List<Usuarios> getUsuarios(String correo) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();;
+        Transaction tx = null;
         try {
+            tx = session.beginTransaction();
             Criteria cr = session.createCriteria(Usuarios.class);
             cr.add(Expression.eq("correo", correo));
             List<Usuarios> usuarios = (List<Usuarios>) cr.list();
+            tx.commit();
             return usuarios;
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar el usuario.");
         } 
     }

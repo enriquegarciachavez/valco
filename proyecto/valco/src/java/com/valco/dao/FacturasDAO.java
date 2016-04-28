@@ -264,6 +264,7 @@ public class FacturasDAO implements Serializable {
                     Hibernate.initialize(nota.getCuentaXCobrar());
                 }
             }
+            tx.commit();
             return clientes;
 
         } catch (HibernateException he) {
@@ -293,10 +294,11 @@ public class FacturasDAO implements Serializable {
                 //q.createAlias("notasDeVenta", "nota").add(Restrictions.eqProperty("codigo", noNota.toString()));
             }
             facturas = (List<Facturas>) q.list();
-
+            tx.commit();
             return facturas;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar las facturas.");
 
         } finally {
@@ -347,10 +349,11 @@ public class FacturasDAO implements Serializable {
                     Hibernate.initialize(producto);
                 }
             }
-
+            tx.commit();
             return notasDeVenta;
 
         } catch (HibernateException he) {
+            tx.commit();
             throw new Exception("Ocurrió un error al consultar las Notas de venta.");
 
         } finally {
@@ -382,6 +385,7 @@ public class FacturasDAO implements Serializable {
                 try {
                     tx.rollback();
                 } catch (HibernateException he) {
+                    tx.commit();
                     throw new Exception("Ocurrió un error al registrar el cliente.");
                 }
             }
@@ -392,6 +396,7 @@ public class FacturasDAO implements Serializable {
                 session.close();
                 }
             } catch (HibernateException he) {
+                
                 throw new Exception("Ocurrió un error al registrar el cliente.");
             }
         }

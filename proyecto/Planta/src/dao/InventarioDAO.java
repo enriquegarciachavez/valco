@@ -144,6 +144,7 @@ public class InventarioDAO {
                   Hibernate.initialize(inv.getUsuariosByUsuariosFin());
                   Hibernate.initialize(inv.getProductosDelInventarios());
               }
+              tx.commit();
               return inventario;
 
           } catch (HibernateException he) {
@@ -245,6 +246,7 @@ public class InventarioDAO {
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(Inventarios.class);
               productoInventario = (List<ProductosDelInventario>) q.list();
+              tx.commit();
               return productoInventario;
 
           } catch (HibernateException he) {
@@ -271,6 +273,7 @@ public class InventarioDAO {
               for(ProductosDelInventario producto: productoInventario){
                   Hibernate.initialize(producto.getProductos());
               }
+              tx.commit();
               return productoInventario;
 
           } catch (HibernateException he) {

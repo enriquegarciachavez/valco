@@ -108,9 +108,11 @@ public class UnidadesDeMedidaDAO {
               tx = session.beginTransaction();
               Query q = session.createQuery("FROM UnidadesDeMedida");
               unidadesdemedida = (List<UnidadesDeMedida>) q.list();
+              tx.commit();
               return unidadesdemedida;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar Las unidades de medida.");
 
           } finally {
@@ -132,9 +134,11 @@ public class UnidadesDeMedidaDAO {
               Criteria q = session.createCriteria(UnidadesDeMedida.class)
                       .add(Restrictions.eq("descripcion", descripcion));
               descrip = (UnidadesDeMedida)q.uniqueResult();
+              tx.commit();
               return descrip;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los clientes.");
 
           } finally {
@@ -157,9 +161,11 @@ public class UnidadesDeMedidaDAO {
               Criteria q = session.createCriteria(UnidadesDeMedida.class)
                       .add(Restrictions.eq("abreviacion", abreviacion));
               abrevia = (UnidadesDeMedida)q.uniqueResult();
+              tx.commit();
               return abrevia;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar los clientes.");
 
           } finally {

@@ -110,9 +110,11 @@ public class CuentasContablesDAO implements Serializable{
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(CuentasContables.class);
               cuentas = (List<CuentasContables>) q.list();
+              tx.commit();
               return cuentas;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar las cuentas.");
 
           } finally {

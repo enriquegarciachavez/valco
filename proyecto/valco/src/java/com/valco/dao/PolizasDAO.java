@@ -166,9 +166,11 @@ public class PolizasDAO {
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(Polizas.class);
               polizas = (List<Polizas>) q.list();
+              tx.commit();
               return polizas;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar las polizas.");
 
           } finally {
@@ -193,9 +195,11 @@ public class PolizasDAO {
               if(polizas!= null){
                   Hibernate.initialize(polizas.getConceptos());
               }
+              tx.commit();
               return polizas;
 
           } catch (HibernateException he) {
+              tx.commit();
               throw new Exception("Ocurrió un error al consultar las polizas.");
 
           } finally {
