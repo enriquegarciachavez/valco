@@ -16,6 +16,7 @@ public class PesableImpl implements Pesable{
     
     @Override
     public void finalizeThread() {
+        if(pesoThread != null)
         pesoThread.shutdown();
     }
 

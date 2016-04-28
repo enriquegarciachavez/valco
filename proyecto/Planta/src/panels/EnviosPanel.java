@@ -532,7 +532,7 @@ try {
             }
         } else {
             try {
-                productoNuevo = productoDAO.getProductoPesado(peso, ((ProductosHasProveedores) productosLov.getSelectedItem()).getProductos(), model);
+                productoNuevo = productoDAO.getProductoPesadoActivo(peso, ((ProductosHasProveedores) productosLov.getSelectedItem()).getProductos(), model);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage());
             }

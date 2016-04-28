@@ -39,6 +39,7 @@ public class PesoThread implements Runnable {
     }
 
     public PesoThread() throws Exception {
+        sleep(700);
         CommPortIdentifier portIdentifier = null;
         String cadenaPedir = null;
         String puerto = null;
@@ -108,7 +109,7 @@ public class PesoThread implements Runnable {
         int len = -1;
         try {
             out.write('P');
-            sleep(1000);
+            sleep(500);
             while ((!shutdown) && ((len = this.in.read(buffer)) > -1)) {
 
                 System.out.println(new String(buffer, 0, len));
@@ -120,7 +121,7 @@ public class PesoThread implements Runnable {
                 if (shutdown) {
                     break;
                 }
-                sleep(1000);
+                sleep(500);
             }
         } catch (IOException ex) {
             Logger.getLogger(PesoThread.class.getName()).log(Level.SEVERE, null, ex);

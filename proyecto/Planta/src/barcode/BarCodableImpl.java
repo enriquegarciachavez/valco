@@ -18,6 +18,7 @@ public class BarCodableImpl extends CoustomPanel implements BarCodable{
     private KeyboardFocusManager manager;
     @Override
     public void removeKeyEvent() {
+        if(manager != null)
         manager.removeKeyEventDispatcher(dispacher);
     }
 

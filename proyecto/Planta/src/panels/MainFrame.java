@@ -25,6 +25,7 @@ import javax.security.auth.login.CredentialExpiredException;
 import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
+import javax.swing.BoxLayout;
 import pesable.Pesable;
 import security.HWLoginModule;
 import utilities.UsuarioFirmado;
@@ -40,7 +41,7 @@ import utilities.UsuarioFirmado;
  */
 public class MainFrame extends javax.swing.JFrame {
 
-    JInternalFrame internalFrame;
+    JPanel internalFrame;
     JPanel prueb;
 
     /**
@@ -74,6 +75,8 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
 
@@ -81,23 +84,14 @@ public class MainFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setMinimumSize(new java.awt.Dimension(1100, 800));
         addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 formKeyTyped(evt);
             }
         });
 
-        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
-        mainPanel.setLayout(mainPanelLayout);
-        mainPanelLayout.setHorizontalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1394, Short.MAX_VALUE)
-        );
-        mainPanelLayout.setVerticalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 654, Short.MAX_VALUE)
-        );
-
+        mainPanel.setLayout(new javax.swing.BoxLayout(mainPanel, javax.swing.BoxLayout.LINE_AXIS));
         getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
 
         jMenu1.setText("File");
@@ -159,6 +153,22 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem7);
 
+        jMenuItem8.setText("Asignar producto a repartidor");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem8);
+
+        jMenuItem9.setText("Producto no vendido");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem9);
+
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Ayuda");
@@ -194,16 +204,18 @@ public class MainFrame extends javax.swing.JFrame {
             } 
             mainPanel.remove(internalFrame);
         }
-        internalFrame = new JInternalFrame();
+        internalFrame = new JPanel();
+        internalFrame.setLayout(new BoxLayout(internalFrame, BoxLayout.PAGE_AXIS));
         String sourceName = ((JMenuItem) evt.getSource()).getText();
         prueb = PanelCreator.createPanel(sourceName, mainPanel);
         internalFrame.add(prueb);
-        internalFrame.setBounds(0, 0, 200, 200);
-        internalFrame.setResizable(true);
+        //internalFrame.setBounds(0, 0, 200, 200);
+        //internalFrame.setResizable(true);
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         gd.getDefaultConfiguration().getBounds().getWidth();
-        internalFrame.setSize(gd.getDefaultConfiguration().getBounds().getSize());
+        //internalFrame.setSize(gd.getDefaultConfiguration().getBounds().getSize());
+        internalFrame.setBounds(0, 0,gd.getDefaultConfiguration().getBounds().getSize().width , gd.getDefaultConfiguration().getBounds().getSize().height-80);
         mainPanel.add(internalFrame);
         internalFrame.show();
         internalFrame.setVisible(true);
@@ -246,6 +258,14 @@ public class MainFrame extends javax.swing.JFrame {
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
         addNewPanel(evt);
     }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        addNewPanel(evt);
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        addNewPanel(evt);
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -369,6 +389,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JDesktopPane mainPanel;
     private javax.swing.JMenuItem reciboCanales;
     // End of variables declaration//GEN-END:variables

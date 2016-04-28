@@ -10,6 +10,7 @@ import javax.swing.JDesktopPane;
 import panels.EtiquetadoPanel;
 import javax.swing.JPanel;
 import panels.AbrirProcesoPanel;
+import panels.AsignacionProductoRepartidor;
 import panels.ConfigBascula;
 import panels.EnviosPanel;
 import panels.InventariosMain;
@@ -43,6 +44,10 @@ public class PanelCreator {
             return new EnviosPanel();
         }else if("Recibo de transferencias".equals(panelName)){
             return new ReciboTransferenciasPanel();
+        }else if("Asignar producto a repartidor".equals(panelName)){
+            return new AsignacionProductoRepartidor();
+        }else if("Producto no vendido".equals(panelName)){
+            return new AsignacionProductoRepartidor("ENTRADA");
         }
         return null;
     } 

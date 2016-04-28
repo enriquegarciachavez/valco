@@ -18,6 +18,7 @@ public class PesableBarCodeable extends BarCodableImpl implements Pesable{
     
     @Override
     public void finalizeThread() {
+        if(pesoThread != null)
         pesoThread.shutdown();
     }
 

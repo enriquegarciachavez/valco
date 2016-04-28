@@ -295,6 +295,78 @@ public class ProductoDAO {
         }
     }
     
+    public ProductosInventario getProductosXCodigoBarrasActivos(String codigo,Integer[] codigos) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          ProductosInventario producto = new ProductosInventario();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(ProductosInventario.class)
+                      .add(Restrictions.eq("codigoBarras", codigo))
+                      .add(Restrictions.eq("estatus", "ACTIVO"));
+              if(codigos != null && codigos.length > 0){
+                  q.add(Restrictions.not(Restrictions.in("codigo", codigos)));
+              }
+              q.setMaxResults(1);
+              if(q.uniqueResult() == null){
+                  throw new Exception("No se encontró el producto buscado.");
+              }
+              producto = (ProductosInventario)q.uniqueResult();
+              Hibernate.initialize(producto.getProductosHasProveedores().getProductos());
+              Hibernate.initialize(producto.getUbicaciones());
+              Hibernate.initialize(producto.getProductosHasProveedores().getProveedores());
+              return producto;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los productos.");
+
+          } finally {
+              try {
+                  if(session.isOpen()){
+                    session.close();
+                  }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los productos.");
+              }
+        }
+    }
+    
+    public ProductosInventario getProductosXCodigoBarrasTransito(String codigo,Integer[] codigos) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          ProductosInventario producto = new ProductosInventario();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(ProductosInventario.class)
+                      .add(Restrictions.eq("codigoBarras", codigo))
+                      .add(Restrictions.eq("estatus", "EN TRANSITO"));
+              if(codigos != null && codigos.length > 0){
+                  q.add(Restrictions.not(Restrictions.in("codigo", codigos)));
+              }
+              q.setMaxResults(1);
+              if(q.uniqueResult() == null){
+                  throw new Exception("No se encontró el producto buscado.");
+              }
+              producto = (ProductosInventario)q.uniqueResult();
+              Hibernate.initialize(producto.getProductosHasProveedores().getProductos());
+              Hibernate.initialize(producto.getUbicaciones());
+              Hibernate.initialize(producto.getProductosHasProveedores().getProveedores());
+              return producto;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los productos.");
+
+          } finally {
+              try {
+                  if(session.isOpen()){
+                    session.close();
+                  }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los productos.");
+              }
+        }
+    }
+    
     public ProductosInventario getProductosXCodigoBarrastransferencia(String codigo) throws Exception {
           Session session = HibernateUtil.getSessionFactory().openSession();
           Transaction tx = null;
@@ -325,19 +397,23 @@ public class ProductoDAO {
     }
     
     public List<ProductosInventario> getCanalesDisponibles() throws Exception {
-          Session session = HibernateUtil.getSessionFactory().openSession();
+          Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+          //session.clear();
           Transaction tx = null;
           List<ProductosInventario> productos = new ArrayList<ProductosInventario>();
           try {
               tx = session.beginTransaction();
+              //session.clear();
               Criteria q = session.createCriteria(ProductosInventario.class).add(Restrictions.eq("estatus","ACTIVO"));
               Criteria y = q.createCriteria("productosHasProveedores");
               Criteria x = y.createCriteria("productos").add(Restrictions.eq("generarSubproducto",true));
+              //Query x = session.createQuery("FROM ProductosInventario");
               productos = (List<ProductosInventario>)x.list();
               for(ProductosInventario producto : productos){
                 Hibernate.initialize(producto.getProductosHasProveedores());
                 Hibernate.initialize(producto.getProductosHasProveedores().getProductos());
               }
+              tx.commit();
               return productos;
 
           } catch (HibernateException he) {
@@ -537,7 +613,7 @@ public class ProductoDAO {
     
     }
     
-    public ProductosInventario getProductoPesado(String peso, Productos producto,DefaultTableModel model) throws Exception{
+    public ProductosInventario getProductoPesadoActivo(String peso, Productos producto,DefaultTableModel model) throws Exception{
         Session session = HibernateUtil.getSessionFactory().openSession();
           Transaction tx = null;
           ProductosInventario productoInventario = new ProductosInventario();
@@ -549,7 +625,7 @@ public class ProductoDAO {
           if(model.getRowCount()>0){
               hql += " AND PI.codigo not in (";
               for(int row = 0; row < model.getRowCount(); row++){
-                  hql += ((ProductosInventario)model.getValueAt(row, 2)).getCodigo();
+                  hql += ((ProductosInventario)model.getValueAt(row, 0)).getCodigo();
                   if(model.getRowCount()-1 != row){
                       hql += ",";
                   }
@@ -583,6 +659,51 @@ public class ProductoDAO {
         }
     }
     
+    public ProductosInventario getProductoPesadoTransito(String peso, Productos producto,DefaultTableModel model) throws Exception{
+        Session session = HibernateUtil.getSessionFactory().openSession();
+          Transaction tx = null;
+          ProductosInventario productoInventario = new ProductosInventario();
+          String hql = "From ProductosInventario PI "
+                  + "inner join PI.productosHasProveedores as PHP"
+                  + " inner join PHP.productos as P "
+                  + "where PI.estatus = \"EN TRANSITO\" and  P.codigo ="+producto.getCodigo()
+                  + " and PI.peso >= "+peso;
+          if(model.getRowCount()>0){
+              hql += " AND PI.codigo not in (";
+              for(int row = 0; row < model.getRowCount(); row++){
+                  hql += ((ProductosInventario)model.getValueAt(row, 0)).getCodigo();
+                  if(model.getRowCount()-1 != row){
+                      hql += ",";
+                  }
+              }
+              hql += ")";
+          }
+              hql += " order by abs(peso - "+peso+")";
+          try {
+              Query query = session.createQuery(hql);
+              query.setMaxResults(1);
+              if(query.uniqueResult() == null){
+                  throw new Exception("No se encontró el producto buscado en el inventario.");
+              }
+              productoInventario = (ProductosInventario) ((Object[])query.uniqueResult())[0];
+              Hibernate.initialize(productoInventario.getProductosHasProveedores().getProductos());
+              Hibernate.initialize(productoInventario.getUbicaciones());
+              Hibernate.initialize(productoInventario.getProductosHasProveedores().getProveedores());
+              return productoInventario;
+
+          } catch (HibernateException he) {
+              throw new Exception("Ocurrió un error al consultar los productos.");
+
+          } finally {
+              try {
+                  if(session.isOpen()){
+                    session.close();
+                  }
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los productos.");
+              }
+        }
+    }
     
     public ProductosInventario getProductoPesado(String peso, Productos producto,Tranferencias transferencia) throws Exception{
         Session session = HibernateUtil.getSessionFactory().openSession();
