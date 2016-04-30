@@ -58,6 +58,7 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         this.modoOperacion = "SALIDA";
         setManager(KeyboardFocusManager.getCurrentKeyboardFocusManager());
         exceptions.add(pesoManualLbl);
+        exceptions.add(repartidorTxt);
         exceptions.add(productoCodigoArea);
         setDispacher(new BarCodeScannerKeyDispatcher(barCodeTxt, getManager(), exceptions));
         getManager().addKeyEventDispatcher(getDispacher());
@@ -82,6 +83,7 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         jLabel2.setVisible(false);
         repartidorTxt.setVisible(false);
         repartidoresLov.setVisible(false);
+        PanelRepartidor.setVisible(false);
         setManager(KeyboardFocusManager.getCurrentKeyboardFocusManager());
         exceptions.add(pesoManualLbl);
         exceptions.add(productoCodigoArea);
@@ -114,6 +116,10 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         Pesaje = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanel4 = new javax.swing.JPanel();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jPanel1 = new javax.swing.JPanel();
+        eliminarCajaBtn = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tablaProductos1 = new javax.swing.JTable();
         String[] columnNames = {
@@ -125,22 +131,25 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         modelProductos.setColumnIdentifiers(columnNames);
         jScrollPane2 = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        productoCodigoArea = new javax.swing.JTextArea();
+        PanelRepartidor = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        repartidoresLov = new javax.swing.JComboBox();
+        repartidorTxt = new javax.swing.JTextField();
+        PanelCodigoBarras = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        barCodeTxt = new javax.swing.JTextField();
+        PanelPeso = new javax.swing.JPanel();
         pesoBasculaLbl = new javax.swing.JLabel();
-        pesoManualChk = new javax.swing.JCheckBox();
-        productosLov = new javax.swing.JComboBox();
         pesoManualLbl = new javax.swing.JTextField();
+        pesoManualChk = new javax.swing.JCheckBox();
         jLabel9 = new javax.swing.JLabel();
         productoLbl = new javax.swing.JLabel();
+        productosLov = new javax.swing.JComboBox();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        productoCodigoArea = new javax.swing.JTextArea();
         imprimirEtiquetaBtn = new javax.swing.JButton();
         imprimirEtiquetaBtn.setMnemonic(KeyEvent.VK_ENTER);
-        eliminarCajaBtn = new javax.swing.JButton();
-        etiquetaInventario = new javax.swing.JLabel();
-        barCodeTxt = new javax.swing.JTextField();
-        repartidorTxt = new javax.swing.JTextField();
-        repartidoresLov = new javax.swing.JComboBox();
-        jLabel2 = new javax.swing.JLabel();
+        PanelFinalizar = new javax.swing.JPanel();
         finalizarBtn = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(200, 455));
@@ -155,6 +164,41 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         jPanel4.setPreferredSize(new java.awt.Dimension(922, 425));
         jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));
 
+        jSplitPane1.setDividerLocation(55);
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        eliminarCajaBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        eliminarCajaBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/button_cancel-48.png"))); // NOI18N
+        eliminarCajaBtn.setText("Eliminar");
+        eliminarCajaBtn.setToolTipText("");
+        eliminarCajaBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarCajaBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(300, 300, 300)
+                .addComponent(eliminarCajaBtn)
+                .addContainerGap(471, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(eliminarCajaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jSplitPane1.setTopComponent(jPanel1);
+
+        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
+
+        tablaProductos1.getTableHeader().add(eliminarCajaBtn);
         tablaProductos1.setModel(modelProductos);
         tablaProductos1.getColumnModel().getColumn(1).setMaxWidth(60);
         tablaProductos1.getColumnModel().getColumn(2).setMaxWidth(200);
@@ -168,7 +212,11 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         });
         jScrollPane4.setViewportView(tablaProductos1);
 
-        jPanel4.add(jScrollPane4);
+        jPanel2.add(jScrollPane4);
+
+        jSplitPane1.setRightComponent(jPanel2);
+
+        jPanel4.add(jSplitPane1);
 
         jSplitPane2.setRightComponent(jPanel4);
 
@@ -177,78 +225,50 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         jPanel3.setMinimumSize(new java.awt.Dimension(629, 653));
         jPanel3.setPreferredSize(new java.awt.Dimension(629, 653));
 
-        jScrollPane3.setHorizontalScrollBar(null);
+        PanelRepartidor.setBorder(javax.swing.BorderFactory.createTitledBorder("Selecione el Repartidor"));
 
-        productoCodigoArea.setColumns(20);
-        productoCodigoArea.setRows(5);
-        productoCodigoArea.addKeyListener(new java.awt.event.KeyAdapter() {
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel2.setText("Repartidor:");
+
+        repartidoresLov.setModel(new DefaultComboBoxModel(getRepartidoes()));
+
+        repartidorTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                productoCodigoAreaKeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                productoCodigoAreaKeyTyped(evt);
-            }
-        });
-        jScrollPane3.setViewportView(productoCodigoArea);
-
-        pesoBasculaLbl.setBackground(new java.awt.Color(0, 0, 0));
-        pesoBasculaLbl.setFont(new java.awt.Font("Tahoma", 0, 48)); // NOI18N
-        pesoBasculaLbl.setForeground(new java.awt.Color(0, 255, 0));
-        pesoBasculaLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        pesoBasculaLbl.setText("XXX.XX");
-        pesoBasculaLbl.setOpaque(true);
-
-        pesoManualChk.setText("Pesaje Manual");
-        pesoManualChk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pesoManualChkActionPerformed(evt);
+                repartidorTxtKeyReleased(evt);
             }
         });
 
-        productosLov.setModel(new DefaultComboBoxModel(getProducts()));
-        productosLov.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                productosLovActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout PanelRepartidorLayout = new javax.swing.GroupLayout(PanelRepartidor);
+        PanelRepartidor.setLayout(PanelRepartidorLayout);
+        PanelRepartidorLayout.setHorizontalGroup(
+            PanelRepartidorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelRepartidorLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(repartidorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(repartidoresLov, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(22, Short.MAX_VALUE))
+        );
+        PanelRepartidorLayout.setVerticalGroup(
+            PanelRepartidorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelRepartidorLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(PanelRepartidorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(repartidoresLov, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(PanelRepartidorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(repartidorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-        pesoManualLbl.setBackground(new java.awt.Color(0, 0, 0));
-        pesoManualLbl.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        pesoManualLbl.setForeground(new java.awt.Color(0, 204, 51));
-        pesoManualLbl.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        pesoManualLbl.addKeyListener(new NumericKeyListener());
-        pesoManualLbl.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pesoManualLblActionPerformed(evt);
-            }
-        });
+        PanelCodigoBarras.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(""), "Ingrese el Codigo de Barras"));
+        PanelCodigoBarras.setMinimumSize(new java.awt.Dimension(610, 78));
+        PanelCodigoBarras.setName(""); // NOI18N
+        PanelCodigoBarras.setPreferredSize(new java.awt.Dimension(584, 78));
 
-        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel9.setText("Producto:");
-
-        productoLbl.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        productoLbl.setText(productosLov.getSelectedItem().toString());
-
-        imprimirEtiquetaBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        imprimirEtiquetaBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Print-48.png"))); // NOI18N
-        imprimirEtiquetaBtn.setText("Agregar");
-        imprimirEtiquetaBtn.setToolTipText("");
-        imprimirEtiquetaBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                imprimirEtiquetaBtnActionPerformed(evt);
-            }
-        });
-
-        eliminarCajaBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        eliminarCajaBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/button_cancel-48.png"))); // NOI18N
-        eliminarCajaBtn.setText("Eliminar");
-        eliminarCajaBtn.setToolTipText("");
-        eliminarCajaBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                eliminarCajaBtnActionPerformed(evt);
-            }
-        });
+        jLabel3.setText("Codigo de Barras");
 
         barCodeTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -264,16 +284,146 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
             }
         });
 
-        repartidorTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                repartidorTxtKeyReleased(evt);
+        javax.swing.GroupLayout PanelCodigoBarrasLayout = new javax.swing.GroupLayout(PanelCodigoBarras);
+        PanelCodigoBarras.setLayout(PanelCodigoBarrasLayout);
+        PanelCodigoBarrasLayout.setHorizontalGroup(
+            PanelCodigoBarrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelCodigoBarrasLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(barCodeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        PanelCodigoBarrasLayout.setVerticalGroup(
+            PanelCodigoBarrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelCodigoBarrasLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(PanelCodigoBarrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(barCodeTxt))
+                .addContainerGap(27, Short.MAX_VALUE))
+        );
+
+        PanelPeso.setBorder(javax.swing.BorderFactory.createTitledBorder("Ó Seleccione y pese un producto"));
+        PanelPeso.setPreferredSize(new java.awt.Dimension(584, 343));
+
+        pesoBasculaLbl.setBackground(new java.awt.Color(0, 0, 0));
+        pesoBasculaLbl.setFont(new java.awt.Font("Tahoma", 0, 48)); // NOI18N
+        pesoBasculaLbl.setForeground(new java.awt.Color(0, 255, 0));
+        pesoBasculaLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        pesoBasculaLbl.setText("XXX.XX");
+        pesoBasculaLbl.setOpaque(true);
+
+        pesoManualLbl.setBackground(new java.awt.Color(0, 0, 0));
+        pesoManualLbl.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        pesoManualLbl.setForeground(new java.awt.Color(0, 204, 51));
+        pesoManualLbl.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        pesoManualLbl.addKeyListener(new NumericKeyListener());
+        pesoManualLbl.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pesoManualLblActionPerformed(evt);
             }
         });
 
-        repartidoresLov.setModel(new DefaultComboBoxModel(getRepartidoes()));
+        pesoManualChk.setText("Pesaje Manual");
+        pesoManualChk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pesoManualChkActionPerformed(evt);
+            }
+        });
 
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("Repartidor:");
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel9.setText("Producto:");
+
+        productoLbl.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+
+        productosLov.setModel(new DefaultComboBoxModel(getProducts()));
+        productosLov.getSelectedItem().toString();
+        productosLov.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                productosLovActionPerformed(evt);
+            }
+        });
+
+        jScrollPane3.setHorizontalScrollBar(null);
+
+        productoCodigoArea.setColumns(20);
+        productoCodigoArea.setRows(5);
+        productoCodigoArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                productoCodigoAreaKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                productoCodigoAreaKeyTyped(evt);
+            }
+        });
+        jScrollPane3.setViewportView(productoCodigoArea);
+
+        imprimirEtiquetaBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        imprimirEtiquetaBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Print-48.png"))); // NOI18N
+        imprimirEtiquetaBtn.setText("Agregar");
+        imprimirEtiquetaBtn.setToolTipText("");
+        imprimirEtiquetaBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                imprimirEtiquetaBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout PanelPesoLayout = new javax.swing.GroupLayout(PanelPeso);
+        PanelPeso.setLayout(PanelPesoLayout);
+        PanelPesoLayout.setHorizontalGroup(
+            PanelPesoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelPesoLayout.createSequentialGroup()
+                .addGroup(PanelPesoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelPesoLayout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(pesoBasculaLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addGroup(PanelPesoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(productosLov, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(imprimirEtiquetaBtn))
+                    .addGroup(PanelPesoLayout.createSequentialGroup()
+                        .addComponent(pesoManualLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(PanelPesoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(pesoManualChk)
+                            .addGroup(PanelPesoLayout.createSequentialGroup()
+                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(productoLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap())
+        );
+        PanelPesoLayout.setVerticalGroup(
+            PanelPesoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelPesoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(PanelPesoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelPesoLayout.createSequentialGroup()
+                        .addComponent(imprimirEtiquetaBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(pesoManualChk)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(PanelPesoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(productoLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(165, 165, 165))
+                    .addGroup(PanelPesoLayout.createSequentialGroup()
+                        .addGroup(PanelPesoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(PanelPesoLayout.createSequentialGroup()
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(productosLov))
+                            .addComponent(pesoBasculaLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(pesoManualLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(172, 172, 172))))
+        );
+
+        PanelFinalizar.setBorder(javax.swing.BorderFactory.createTitledBorder("Finalizar"));
 
         finalizarBtn.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         finalizarBtn.setText("Finalizar");
@@ -283,6 +433,23 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
             }
         });
 
+        javax.swing.GroupLayout PanelFinalizarLayout = new javax.swing.GroupLayout(PanelFinalizar);
+        PanelFinalizar.setLayout(PanelFinalizarLayout);
+        PanelFinalizarLayout.setHorizontalGroup(
+            PanelFinalizarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelFinalizarLayout.createSequentialGroup()
+                .addGap(230, 230, 230)
+                .addComponent(finalizarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        PanelFinalizarLayout.setVerticalGroup(
+            PanelFinalizarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelFinalizarLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(finalizarBtn)
+                .addContainerGap(41, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -291,83 +458,26 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(pesoManualLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(pesoManualChk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(pesoBasculaLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(productosLov, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(productoLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(PanelCodigoBarras, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+                            .addComponent(PanelRepartidor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(PanelPeso, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+                    .addComponent(PanelFinalizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(barCodeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(etiquetaInventario, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(67, 67, 67))
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(repartidorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(repartidoresLov, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(66, 66, 66)
-                        .addComponent(imprimirEtiquetaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(27, 27, 27)
-                        .addComponent(eliminarCajaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(120, 120, 120)
-                        .addComponent(finalizarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(77, 77, 77)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(etiquetaInventario, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(barCodeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(pesoBasculaLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(22, 22, 22)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(pesoManualLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(28, 28, 28)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(productoLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(pesoManualChk)))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(productosLov, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(35, 35, 35)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(repartidorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(repartidoresLov, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(imprimirEtiquetaBtn)
-                    .addComponent(eliminarCajaBtn))
-                .addGap(37, 37, 37)
-                .addComponent(finalizarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(103, Short.MAX_VALUE))
+                .addGap(5, 5, 5)
+                .addComponent(PanelRepartidor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(PanelCodigoBarras, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(PanelPeso, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(PanelFinalizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jScrollPane2.setViewportView(jPanel3);
@@ -383,46 +493,6 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         // TODO add your handling code here:
     }//GEN-LAST:event_tablaProductos1MousePressed
 
-    private void productoCodigoAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyReleased
-        char c = evt.getKeyChar();
-
-        if (!productoCodigoArea.getText().equals("")) {
-            ProductosHasProveedores productoProveedor = new ProductosHasProveedores();
-            Productos producto = new Productos();
-            try {
-                producto = productoDAO.getProductosXDescripcionOCodigo(productoCodigoArea.getText());
-            } catch (Exception ex) {
-                Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            productoProveedor.setProductos(producto);
-            Proveedores prov = new Proveedores();
-            prov.setCodigo(1);
-            productoProveedor.setProveedores(prov);
-            productosLov.setSelectedItem(productoProveedor);
-            productosLov.repaint();
-        }
-    }//GEN-LAST:event_productoCodigoAreaKeyReleased
-
-    private void productoCodigoAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyTyped
-
-    }//GEN-LAST:event_productoCodigoAreaKeyTyped
-
-    private void pesoManualChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoManualChkActionPerformed
-        AbstractButton abstractButton = (AbstractButton) evt.getSource();
-        boolean selected = abstractButton.getModel().isSelected();
-        if (selected) {
-            this.pesoBasculaLbl.setEnabled(false);
-            this.pesoManualLbl.setEnabled(true);
-        } else {
-            this.pesoBasculaLbl.setEnabled(true);
-            this.pesoManualLbl.setEnabled(false);
-        }
-    }//GEN-LAST:event_pesoManualChkActionPerformed
-
-    private void productosLovActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productosLovActionPerformed
-        productoLbl.setText(productosLov.getSelectedItem().toString());
-    }//GEN-LAST:event_productosLovActionPerformed
-
     private boolean isProductoRepetido(DefaultTableModel model, ProductosInventario producto) {
         for (int count = 0; count < model.getRowCount(); count++) {
             if (producto.equals((ProductosInventario) model.getValueAt(count, 0))) {
@@ -432,12 +502,6 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         return false;
 
     }
-
-    private void imprimirEtiquetaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imprimirEtiquetaBtnActionPerformed
-        agregarProductoDeBascula();
-
-
-    }//GEN-LAST:event_imprimirEtiquetaBtnActionPerformed
 
     public void agregarProductoDeBascula() {
         ProductosInventario productoNuevo = new ProductosInventario();
@@ -468,26 +532,6 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         productos.add(productoNuevo);
         setTableModel();
     }
-
-    private void eliminarCajaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarCajaBtnActionPerformed
-        int[] selectedRows = tablaProductos1.getSelectedRows();
-        List<ProductosInventario> productosSeleccionados = new ArrayList<>();
-        if (selectedRows.length > 0) {
-            for (int i = selectedRows.length - 1; i >= 0; i--) {
-                ProductosInventario productoSeleccionado = (ProductosInventario) modelProductos.getValueAt(selectedRows[i], 0);
-                productos.remove(productoSeleccionado);
-            }
-            try {
-                //inventarioDao.actualizarProductosInventario(productosSeleccionados);
-                //JOptionPane.showMessageDialog(null, "Las cajas se cancelaron correctamente");
-                setTableModel();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, ex, "Error", ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "No hay ningúna caja seleccionada.");
-        }
-    }//GEN-LAST:event_eliminarCajaBtnActionPerformed
 
     private void barCodeTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barCodeTxtActionPerformed
         // TODO add your handling code here:
@@ -557,6 +601,70 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
             JOptionPane.showMessageDialog(null, ex);
         }
     }//GEN-LAST:event_finalizarBtnActionPerformed
+
+    private void imprimirEtiquetaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imprimirEtiquetaBtnActionPerformed
+        agregarProductoDeBascula();
+    }//GEN-LAST:event_imprimirEtiquetaBtnActionPerformed
+
+    private void eliminarCajaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarCajaBtnActionPerformed
+        int[] selectedRows = tablaProductos1.getSelectedRows();
+        List<ProductosInventario> productosSeleccionados = new ArrayList<>();
+        if (selectedRows.length > 0) {
+            for (int i = selectedRows.length - 1; i >= 0; i--) {
+                ProductosInventario productoSeleccionado = (ProductosInventario) modelProductos.getValueAt(selectedRows[i], 0);
+                productos.remove(productoSeleccionado);
+            }
+            try {
+                //inventarioDao.actualizarProductosInventario(productosSeleccionados);
+                //JOptionPane.showMessageDialog(null, "Las cajas se cancelaron correctamente");
+                setTableModel();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex, "Error", ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No hay ningúna caja seleccionada.");
+        }
+    }//GEN-LAST:event_eliminarCajaBtnActionPerformed
+
+    private void productoCodigoAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyTyped
+
+    }//GEN-LAST:event_productoCodigoAreaKeyTyped
+
+    private void productoCodigoAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyReleased
+        char c = evt.getKeyChar();
+
+        if (!productoCodigoArea.getText().equals("")) {
+            ProductosHasProveedores productoProveedor = new ProductosHasProveedores();
+            Productos producto = new Productos();
+            try {
+                producto = productoDAO.getProductosXDescripcionOCodigo(productoCodigoArea.getText());
+            } catch (Exception ex) {
+                Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            productoProveedor.setProductos(producto);
+            Proveedores prov = new Proveedores();
+            prov.setCodigo(1);
+            productoProveedor.setProveedores(prov);
+            productosLov.setSelectedItem(productoProveedor);
+            productosLov.repaint();
+        }
+    }//GEN-LAST:event_productoCodigoAreaKeyReleased
+
+    private void productosLovActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productosLovActionPerformed
+        productoLbl.setText(productosLov.getSelectedItem().toString());
+    }//GEN-LAST:event_productosLovActionPerformed
+
+    private void pesoManualChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoManualChkActionPerformed
+        AbstractButton abstractButton = (AbstractButton) evt.getSource();
+        boolean selected = abstractButton.getModel().isSelected();
+        if (selected) {
+            this.pesoBasculaLbl.setEnabled(false);
+            this.pesoManualLbl.setEnabled(true);
+        } else {
+            this.pesoBasculaLbl.setEnabled(true);
+            this.pesoManualLbl.setEnabled(false);
+        }
+    }//GEN-LAST:event_pesoManualChkActionPerformed
 
     private void pesoManualLblActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoManualLblActionPerformed
         agregarProductoDeBascula();
@@ -650,19 +758,26 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel PanelCodigoBarras;
+    private javax.swing.JPanel PanelFinalizar;
+    private javax.swing.JPanel PanelPeso;
+    private javax.swing.JPanel PanelRepartidor;
     private javax.swing.JPanel Pesaje;
     private javax.swing.JTextField barCodeTxt;
     private javax.swing.JButton eliminarCajaBtn;
-    private javax.swing.JLabel etiquetaInventario;
     private javax.swing.JButton finalizarBtn;
-    public javax.swing.JButton imprimirEtiquetaBtn;
+    private javax.swing.JButton imprimirEtiquetaBtn;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JLabel pesoBasculaLbl;
     private javax.swing.JCheckBox pesoManualChk;

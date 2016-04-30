@@ -7,6 +7,7 @@ package com.valco.beans;
 
 import com.valco.dao.ClienteDAO;
 import com.valco.dao.NotasVentaDAO;
+import com.valco.dao.ProductoDAO;
 import com.valco.pojo.Clientes;
 import com.valco.pojo.NotasDeVenta;
 import com.valco.pojo.ProductosInventario;
@@ -40,6 +41,8 @@ import javax.faces.validator.ValidatorException;
     @ManagedBean
     @ViewScoped
     public class NotasDeVentaMainBean {
+    @ManagedProperty(value="#{productoDao}")
+    private ProductoDAO productoDao;
     @ManagedProperty(value="#{notadeVentaDao}")
     private NotasVentaDAO notasDeVentaDao;
     @ManagedProperty(value="#{clienteDao}")
@@ -202,17 +205,28 @@ import javax.faces.validator.ValidatorException;
     }
     
     public void validaProductosSeleccionadosAlta(FacesContext context, UIComponent component, Object value) throws ValidatorException{
-        if(productosSeleccionados == null ||
-                productosSeleccionados.isEmpty()){         
+        if(false && (productosSeleccionados == null ||
+                productosSeleccionados.isEmpty())){         
             throw new ValidatorException(MsgUtility.getWarnMessage("Debe seleccionar porlomenos un producto."));
         }
     }
     
     public void validaProductosSeleccionadosModificacion(FacesContext context, UIComponent component, Object value) throws ValidatorException{
-        if(notaSeleccionada.getProductosInventariosList() == null ||
+        if(false && notaSeleccionada.getProductosInventariosList() == null ||
                 notaSeleccionada.getProductosInventariosList().isEmpty()){         
             throw new ValidatorException(MsgUtility.getWarnMessage("Debe seleccionar porlomenos un producto."));
         }
+    }
+    
+    public String cargaProductosEnTransito(){
+        try {
+            System.out.println("HHHHHHHHHHHHHHOOOOOOOOOOOOOLLLLLLLLLLLAAAAAAAAAAAAAAAAa");
+            this.productosDisponibles= productoDao.getProductosEnTransito(notaNueva.getRepartidores());
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+        return null;
+        
     }
         
     public List<ProductosInventario> getProductosDisponibles() {
@@ -326,6 +340,18 @@ import javax.faces.validator.ValidatorException;
     public void setFecha(UIInput fecha) {
         this.fecha = fecha;
     }
+
+    public ProductoDAO getProductoDao() {
+        return productoDao;
+    }
+
+    public void setProductoDao(ProductoDAO productoDao) {
+        this.productoDao = productoDao;
+    }
+    
+    
+    
+    
     
 
 

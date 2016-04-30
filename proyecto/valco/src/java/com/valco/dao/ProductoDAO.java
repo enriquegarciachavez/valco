@@ -12,6 +12,7 @@ import com.valco.pojo.Productos;
 import com.valco.pojo.ProductosHasProveedores;
 import com.valco.pojo.ProductosInventario;
 import com.valco.pojo.Proveedores;
+import com.valco.pojo.Repartidores;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -382,6 +383,36 @@ public class ProductoDAO {
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los productos.");
               }
+        }
+    }
+    
+    public List<ProductosInventario> getProductosEnTransito(Repartidores repartidor) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        List<ProductosInventario> productos = new ArrayList<ProductosInventario>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(ProductosInventario.class)
+                      .add(Restrictions.eq("repartidor", repartidor))
+                    .add(Restrictions.eq("estatus", "EN TRANSITO"));
+             
+              productos = (List<ProductosInventario>) q.list();
+             
+              tx.commit();
+            return productos;
+
+        } catch (HibernateException he) {
+            tx.commit();
+            throw new Exception("Ocurrió un error al consultar los producto.");
+
+        } finally {
+            try {
+                if(session.isOpen()){
+                    session.close();
+                  }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar los producto.");
+            }
         }
     }
 

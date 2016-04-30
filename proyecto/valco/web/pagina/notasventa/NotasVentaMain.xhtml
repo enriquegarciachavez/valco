@@ -169,16 +169,26 @@
                                 </p:row>
                             </p:columnGroup>
                             <f:facet name="footer">
-                                <p:commandButton value="Seleccionar productos" onclick="PF('productosPopUp').show();" />
+                                <p:commandButton 
+                                    value="Seleccionar productos" 
+                                    update=":formProductos:productosPopUp" 
+                                    
+                                    action="#{notasDeVentaMainBean.cargaProductosEnTransito()}" 
+                                    oncomplete="PF('productosPopUp').show();" />
+                                
                             </f:facet>
                         </p:dataTable>
                     </f:facet>
                 </h:panelGrid>
+                <p:commandButton
+                                    value="kllksdf"
+                                    action="#{notasDeVentaMainBean.cargaProductosEnTransito()}"
+                                    partialSubmit="true"/>
             </p:dialog>
         </h:form> 
            
         <!-- Tabla de productos disponibles --> 
-        <h:form>
+        <h:form id="formProductos">
             <p:dialog id="productosPopUp" widgetVar="productosPopUp" modal="true" height="400px" width="700">
                 <p:commandButton value="Seleccionar" id="btnSeleccionar" oncomplete="handleLoginRequest(xhr, status, args, 'productosPopUp' )" process="productosPopUp" update=":form1:grid1"/>
                 <p:sticky target="btnSeleccionar" />
