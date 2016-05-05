@@ -9,15 +9,26 @@
 
         <ui:composition template="../templates/Template1.xhtml">
 
+            <ui:define name="title">
+                Notas de venta
+            </ui:define>
+            
     <ui:define name="content">
         <h:form id="tableForm">
             <p:messages id="messages" showDetail="true" autoUpdate="true" />
             <p:menubar>
                 <p:menuitem 
-                    value="Capturar" 
+                    value="Capturar Nota de repartidor" 
                     icon="ui-icon-plusthick"
                     oncomplete="PF('dlg2').show();" 
                     action="#{notasDeVentaMainBean.resetNotaNueva}"
+                    update=":form1:grid1"
+                    partialSubmit="true"/>
+                <p:menuitem 
+                    value="Capturar Nota local" 
+                    icon="ui-icon-plusthick"
+                    oncomplete="PF('dlg2').show();" 
+                    action="#{notasDeVentaMainBean.prepareNotaLocal()}"
                     update=":form1:grid1"
                     partialSubmit="true"/>
                 <p:menuitem 
@@ -45,7 +56,7 @@
             <p:dataTable 
                 id="singleDT" 
                 var="nota" 
-                value="#{notasDeVentaMainBean.modeloNotas}" 
+                value="#{notasDeVentaMainBean.notasDeVenta}" 
                 selectionMode="single" selection="#{notasDeVentaMainBean.notaSeleccionada}" 
                 rowKey="#{nota.codigo}">
                 <f:facet name="header">
@@ -76,22 +87,30 @@
         <h:form id="form1">
             <p:dialog header="Ingresar nota vedida" resizable="false" modal="true"  closeOnEscape="false" widgetVar="dlg2" 
                       width="1000" position="top" height="500"   id="dlg2">
+                <p:messages id="messages" showDetail="true" autoUpdate="true" />
 
                 <h:panelGrid   columns="4" cellpadding="5" id="grid1">
                     <f:facet name="header">
                         <p:messages id="msgs" showDetail="true" style="font-size: 12px; text-align: left;"/>
                     </f:facet>
                     <f:facet name="header">
-                        <p:commandButton value="Guardar"  id="guardar1" update="grid1 :tableForm:singleDT" oncomplete="handleLoginRequest(xhr, status, args, 'dlg2' )"  action="#{notasDeVentaMainBean.ingresarNotaVendida()}"/>
+                        <p:commandButton 
+                            value="Guardar"  
+                            id="guardar1" 
+                            update="grid1 :tableForm:singleDT" 
+                            oncomplete="handleLoginRequest(xhr, status, args, 'dlg2' )"  
+                            action="#{notasDeVentaMainBean.ingresarNotaVendida}"
+                            />
 
                     </f:facet>
                     <p:outputLabel for="folio" value="Folio: " />
                     <p:inputText id="folio" required="true" label="folio" 
                                  value="#{notasDeVentaMainBean.notaNueva.folio}"
                                  validator="#{notasDeVentaMainBean.validaEstatusActivo}"
-                                 binding="#{notasDeVentaMainBean.nota}"
+                                
+                                 
                                  >
-                        <p:ajax event="change" update="repartidorOut" listener="#{notasDeVentaMainBean.consultaXFolio}" />
+                        <p:ajax event="change" update="repartidorOut" listener="#{notasDeVentaMainBean.consultaXFolio()}"/>
                     </p:inputText>
 
                     <p:outputLabel   value="Repartidor: " />
@@ -99,7 +118,7 @@
 
                     <p:outputLabel for="fecha"   value="fecha: " />
                     <p:calendar required="true" id="fecha" value="#{notasDeVentaMainBean.notaNueva.fechaDeVenta}" 
-                                binding="#{notasDeVentaMainBean.fecha}"/>
+                                />
 
                     <p:outputLabel for="cliente" value="Cliente:"  />
                     <p:selectOneMenu id="cliente" required="true" value="#{notasDeVentaMainBean.notaNueva.clientes}" converter="omnifaces.SelectItemsConverter" panelStyle="width:180px"
@@ -118,7 +137,7 @@
                     <p:inputText 
                         value="#{notasDeVentaMainBean.notaNueva.flete}"
                         validator="#{notasDeVentaMainBean.validaProductosSeleccionadosAlta}"
-                        binding="#{notasDeVentaMainBean.flete}"/>
+                        />
 
                     <f:facet name="footer">
                         <p:dataTable 
@@ -135,31 +154,21 @@
 
                             </p:column>
                             <p:column headerText="peso">
-                                <p:cellEditor>
-                                    <f:facet name="output">
-                                        <h:outputText value="#{producto.peso}" />
-                                    </f:facet>
-                                    <f:facet name="input">
-                                        <p:inputMask id="pesoInput" value="#{producto.peso}" mask="999.99">
+                                        <p:inputText value="#{producto.peso}" >
                                             <p:ajax event="change" update="productosSeleccionados"/>
-                                        </p:inputMask>
-                                    </f:facet>
-                                </p:cellEditor>
+                                        </p:inputText>
+                                    
                             </p:column>
                             <p:column headerText="precio unitario">
-                                <p:cellEditor>
-                                    <f:facet name="output">
-                                        <h:outputText value="#{producto.precio}" />
-                                    </f:facet>
-                                    <f:facet name="input">
-                                        <p:inputMask id="precioInput" value="#{producto.precio}" mask="999.99">
-                                            <p:ajax event="change" update="productosSeleccionados"/>
-                                        </p:inputMask>
-                                    </f:facet>
-                                </p:cellEditor>
+                                        <p:inputText value="#{producto.precio}" >
+                                             <p:ajax event="change" update="productosSeleccionados"/>
+                                        </p:inputText>
+
                             </p:column>
                             <p:column headerText="precio">
-                                <p:outputLabel value="#{producto.precio * producto.peso}"/>
+                                <p:outputLabel value="#{producto.precio * producto.peso}" >
+                                    <f:convertNumber pattern="#0.00" locale="es_MX"/>
+                                </p:outputLabel>
                             </p:column>
                             <p:columnGroup type="footer">
                                 <p:row>
@@ -173,17 +182,13 @@
                                     value="Seleccionar productos" 
                                     update=":formProductos:productosPopUp" 
                                     
-                                    action="#{notasDeVentaMainBean.cargaProductosEnTransito()}" 
+                                    action="#{notasDeVentaMainBean.cargaProductosDeNota()}" 
                                     oncomplete="PF('productosPopUp').show();" />
                                 
                             </f:facet>
                         </p:dataTable>
                     </f:facet>
                 </h:panelGrid>
-                <p:commandButton
-                                    value="kllksdf"
-                                    action="#{notasDeVentaMainBean.cargaProductosEnTransito()}"
-                                    partialSubmit="true"/>
             </p:dialog>
         </h:form> 
            
@@ -288,16 +293,10 @@
                                 </p:cellEditor>
                             </p:column>
                             <p:column headerText="precio unitario">
-                                <p:cellEditor>
-                                    <f:facet name="output">
-                                        <h:outputText value="#{producto.precio}" />
-                                    </f:facet>
-                                    <f:facet name="input">
-                                        <p:inputMask id="precioInputModificar" value="#{producto.precio}" mask="999.99">
+                                <p:inputText value="#{producto.precio}" >
                                             <p:ajax event="change" update="productosSeleccionadosModificar"/>
-                                        </p:inputMask>
-                                    </f:facet>
-                                </p:cellEditor>
+                                        </p:inputText>
+                                    
                             </p:column>
                             <p:column headerText="precio">
                                 <p:outputLabel value="#{producto.precio * producto.peso}"/>
@@ -351,7 +350,7 @@
                             <h:outputText value="¿Esta seguro que desea cancelar la nota?" /> 
 
                             <f:facet name="footer">
-                                <p:commandButton value="Si" id="si" partialSubmit="true" ajax="false" action="#{notasDeVentaMainBean.cancelarNotaVendida()}"/>
+                                <p:commandButton update=":tableForm:singleDT" value="Si" id="si" partialSubmit="true" ajax="false" action="#{notasDeVentaMainBean.cancelarNotaVendida()}"/>
                                 <p:commandButton value="No" id="no"  ajax="false" />
                             </f:facet>
                         </h:panelGrid>

@@ -164,6 +164,37 @@ public class FacturasDAO implements Serializable {
             }
         }
     }
+    
+    public void ActualizarFacturaYNotas(Facturas factura) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.update(factura);
+            for (NotasDeVenta nota : factura.getNotasDeVentas()) {
+                session.update(nota);
+            }
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Factura " + this.getConsecutivo() + ": Ocurrió un error al crear la factura.");
+                }
+            }
+            throw new Exception("Factura " + this.getConsecutivo() + ":Ocurrió un error al crear la factura.");
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Factura " + this.getConsecutivo() + ":Ocurrió un error al crear las facturas.");
+            }
+        }
+    }
 
     public void actualizarFacturas(List<Facturas> facturas) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -303,6 +334,40 @@ public class FacturasDAO implements Serializable {
 
         } finally {
             try {
+                if(session.isOpen())
+                session.close();
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar las facturas.");
+            }
+        }
+    }
+    
+    public List<Facturas> getFacturasActivas(Integer noFactura, Integer noNota) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        List<Facturas> facturas = new ArrayList<Facturas>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(Facturas.class);
+            if (noFactura != null) {
+                q.add(Restrictions.eq("codigo", noFactura));
+            }
+            if (noNota != null) {
+                q.createCriteria("notasDeVenta").add(Restrictions.eq("folio", noNota));
+                //q.createAlias("notasDeVenta", "nota").add(Restrictions.eqProperty("codigo", noNota.toString()));
+            }
+            q.add(Restrictions.eq("estatus", "ACTIVO"));
+            facturas = (List<Facturas>) q.list();
+            tx.commit();
+            return facturas;
+
+        } catch (HibernateException he) {
+            tx.commit();
+            throw new Exception("Ocurrió un error al consultar las facturas.");
+
+        } finally {
+            try {
+                if(session.isOpen())
                 session.close();
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al consultar las facturas.");

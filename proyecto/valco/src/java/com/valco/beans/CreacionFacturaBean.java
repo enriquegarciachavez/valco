@@ -180,7 +180,7 @@ public class CreacionFacturaBean {
             nota.setRepartidores(repartidoresDao.getRepartidores().get(0));
             nota.setUsuarios(UsuariosUtility.getUsuarioFirmado());
             facturasDao.insertarFacturaYActualizarNota(factura);
-            notasDeVentaDao.actualizarNotasDeVenta(notasDeVenta.getTarget());
+            notasDeVentaDao.actualizarNotasDeVentaEstatusFacturada(notasDeVenta.getTarget());
             MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": Guardada correctamente en el sistema.");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
@@ -203,6 +203,7 @@ public class CreacionFacturaBean {
         } catch (MessagingException ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
+        notasDeVenta.getTarget().clear();
 
     }
 
@@ -246,6 +247,7 @@ public class CreacionFacturaBean {
                 factura.setNoSeieCertEmisor("20001000000100005867");
                 factura.setFolio(1);
                 nota.setFacturas(factura);
+                nota.setEstatus("FACTURADA");
                 factura.setNotasDeVenta(nota);
                 factura.setConceptosFacturas(FacturasUtility.convierteProductosAConceptos(nota.getProductosInventarios().iterator()));
                 String correoCopia = "info.valco.sistemas@hotmail.com";
@@ -294,6 +296,7 @@ public class CreacionFacturaBean {
                 }
             }
         }
+        notasDeVenta.getTarget().clear();
 
     }
 

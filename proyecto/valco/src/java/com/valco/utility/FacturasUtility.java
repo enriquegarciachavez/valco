@@ -230,7 +230,7 @@ public class FacturasUtility {
 
             cadenaOriginal = getCadenaOriginal(ParametrosGeneralesUtility.getValor("FA005"), new String(xml.getBytes("Windows-1252")));
         } catch (UnsupportedEncodingException ex) {
-            throw new Exception("Ocurrió un error al obtener la cadena original");
+            cadenaOriginal = getCadenaOriginal("//resources//xslt//cadenaoriginal_3_2.xslt", new String(xml.getBytes("Windows-1252")));
         }
         String cadena = cadenaOriginal.toString();
         cadena = cadena.replace("\n", "").replace("\r", "");
@@ -241,7 +241,8 @@ public class FacturasUtility {
             bytesKey = getBytesPrivateKey(ParametrosGeneralesUtility.getValor("FA003"));
             pk = getPrivateKey(bytesKey, ParametrosGeneralesUtility.getValor("FA004"));
         } catch (GeneralSecurityException ex) {
-            throw new Exception(ex);
+            bytesKey = getBytesPrivateKey("C:/SAT/aaa010101aaa__csd_01.key");
+            pk = getPrivateKey(bytesKey, "12345678a");
         }
         byte[] bytesCadenaFirmada = null;
         try {

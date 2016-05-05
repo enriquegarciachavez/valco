@@ -55,9 +55,9 @@ import javax.faces.validator.ValidatorException;
     private UIInput flete;
     private UIInput nota;
     private UIInput fecha;
+    private String tipoNota;
 
-    
-    DataModel modeloNotas;
+
     private List<ProductosInventario> productosModificacion;
 
     public NotasDeVentaMainBean() {
@@ -66,10 +66,10 @@ import javax.faces.validator.ValidatorException;
     }
     
     @PostConstruct
-    public void init(){
+    private void init(){
         try {
             this.clientes = clienteDao.getClientes();
-            this.productosDisponibles = notasDeVentaDao.getProductosDisponibles();
+            notasDeVenta = notasDeVentaDao.getNotasDeVentaVendidas();
         } catch (Exception ex) {
             Logger.getLogger(NotasDeVentaMainBean.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -78,49 +78,85 @@ import javax.faces.validator.ValidatorException;
     public String resetNotaNueva(){
         notaNueva = new NotasDeVenta();
         productosSeleccionados = new ArrayList<ProductosInventario>();
-        flete.setValue(null);
-        fecha.setValue(null);
-        nota.setValue(null);
+        tipoNota = "REPARTIDOR";
         return null;
     }
     
-    public DataModel getModeloNotas() throws Exception {
-        notasDeVenta = notasDeVentaDao.getNotasDeVenta();
-        modeloNotas = new ListDataModel(notasDeVenta);
-        return modeloNotas;
+    public void prepareNotaLocal(){
+        notaNueva = new NotasDeVenta();
+        productosSeleccionados = new ArrayList<ProductosInventario>();
+        tipoNota = "LOCAL";
     }
     
-    public void consultaXFolio() throws Exception{
+    public String consultaXFolio() throws Exception{
 	NotasDeVenta aux = new NotasDeVenta();
         aux = 
                 this.notasDeVentaDao.getNotaDeVentaXFolio(notaNueva.getFolio());
         if(aux == null){
-            throw new ValidatorException(new FacesMessage("La nota de venta no ha sido suministrada a ningún repartidor")); 
-        }else{
+            MsgUtility.showErrorMeage("No existe el folio suministrado");
+        }else if(aux.getEstatus() == null){
+            MsgUtility.showErrorMeage("La nota buscada tiene un problema.");
+
+        }else if(aux.getEstatus().equals("La nota de venta no ha sido asignada a un repartidor")){
+
+            MsgUtility.showErrorMeage("La nota de venta ya fue vendida.");
+        }else if(aux.getEstatus().equals("CANCELADA")){
+
+            MsgUtility.showErrorMeage("La nota de venta está cancelada");
+        }else if(aux.getEstatus().equals("FACTURADA")){
+
+            MsgUtility.showErrorMeage("La nota de venta ya fue facturada");
+        }else if(aux.getEstatus().equals("VENDIDA")){
+
+            MsgUtility.showErrorMeage("La nota de venta ya fue vendida.");
+        }else if(aux.getEstatus().equals("ASIGNADA")){
             this.notaNueva = aux;
         }
+        return null;
     }
     
     public void validaEstatusActivo(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+
         NotasDeVenta aux = new NotasDeVenta();
         aux = 
                 this.notasDeVentaDao.getNotaDeVentaXFolio((int)value);
         if(aux == null){
             throw new ValidatorException(new FacesMessage("La nota de venta no ha sido suministrada a ningún repartidor")); 
+        }else if(aux.getEstatus() == null){
+            throw new ValidatorException(new FacesMessage("La nota de venta no ha sido suministrada a ningún repartidor"));
+
+        }else if(aux.getEstatus().equals("La nota de venta no ha sido asignada a un repartidor")){
+
+            throw new ValidatorException(new FacesMessage("La nota de venta no ha sido suministrada a ningún repartidor"));
+        }else if(aux.getEstatus().equals("CANCELADA")){
+
+            throw new ValidatorException(new FacesMessage("La nota de venta no ha sido suministrada a ningún repartidor"));
+        }else if(aux.getEstatus().equals("FACTURADA")){
+
+            throw new ValidatorException(new FacesMessage("La nota de venta no ha sido suministrada a ningún repartidor"));
+        }else if(aux.getEstatus().equals("VENDIDA")){
+
+            throw new ValidatorException(new FacesMessage("La nota de venta no ha sido suministrada a ningún repartidor"));
         }else{
             this.notaNueva = aux;
-            if(notaNueva == null || notaNueva.getEstatus() == null || !notaNueva.getEstatus().equals("ACTIVO")){
-            throw new ValidatorException(new FacesMessage("La nota de venta no no se encuentra activa")); 
+            if(notaNueva == null || notaNueva.getEstatus() == null || !notaNueva.getEstatus().equals("ASIGNADA")){
+            throw new ValidatorException(new FacesMessage("La nota de venta no se encuentra activa")); 
         }
         }
     }
-    public String ingresarNotaVendida() throws Exception{
+    public String ingresarNotaVendida(){
+        if(notaNueva == null || notaNueva.getEstatus() == null || !notaNueva.getEstatus().equals("ASIGNADA")){
+           //throw new ValidatorException(new FacesMessage("La nota de venta no ha sido suministrada a ningún repartidor"));
+                MsgUtility.showErrorMeage("La nota qe intenta utilizar no es valida");
+                return null ;
+            }
         if(productosSeleccionados == null ||
                 productosSeleccionados.isEmpty()){
             
             MsgUtility.showWarnMeage("Debe eleccionar porlomenos un producto.");
             return null;
         }
+        
         for(ProductosInventario producto: productosSeleccionados){
             producto.setNotasDeVenta(notaNueva);
             notaNueva.getProductosInventarios().add(producto);
@@ -129,6 +165,7 @@ import javax.faces.validator.ValidatorException;
         try {
             this.notaNueva.setEstatus("VENDIDA");
             this.notasDeVentaDao.actualizarNotaDeVenta(notaNueva);
+            this.notasDeVenta.add(notaNueva);
             MsgUtility.showInfoMeage("La nota se capturó correctamente.");
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null,
@@ -150,6 +187,7 @@ import javax.faces.validator.ValidatorException;
         }
         for(ProductosInventario producto: notaSeleccionada.getProductosInventariosList()){
             producto.setNotasDeVenta(notaSeleccionada);
+            notaSeleccionada.getProductosInventarios().remove(producto);
         }
         try {
             this.notasDeVentaDao.actualizarNotaDeVentaVendida(notaSeleccionada);
@@ -166,7 +204,7 @@ import javax.faces.validator.ValidatorException;
         if(productos != null && !productos.isEmpty()){
             for(ProductosInventario producto : productos){
                 if(producto.getPeso() != null && producto.getPrecio() != null){
-                    total = total.add(producto.getPeso().multiply(producto.getPrecio()));
+                    total = total.add(producto.getPeso().multiply(producto.getPrecio()).setScale(2, RoundingMode.HALF_EVEN));
                 }else{
                     MsgUtility.showWarnMeage("Presione enter después de capturar un precio o un peso, de lo contrario el total podía no mostrarse bien");
                 }
@@ -198,6 +236,7 @@ import javax.faces.validator.ValidatorException;
         }
         try {
             notasDeVentaDao.cancelarNotaVendida(notaSeleccionada);
+            notasDeVenta.remove(notaSeleccionada);
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage("Ocurriò un error al cancelar la nota"));
@@ -218,10 +257,17 @@ import javax.faces.validator.ValidatorException;
         }
     }
     
-    public String cargaProductosEnTransito(){
+    public String cargaProductosDeNota(){
         try {
-            System.out.println("HHHHHHHHHHHHHHOOOOOOOOOOOOOLLLLLLLLLLLAAAAAAAAAAAAAAAAa");
-            this.productosDisponibles= productoDao.getProductosEnTransito(notaNueva.getRepartidores());
+            if(notaNueva == null || notaNueva.getEstatus() == null || !notaNueva.getEstatus().equals("ASIGNADA")){
+                MsgUtility.showErrorMeage("La nota qe intenta utilizar no es valida");
+                return null;
+            }
+            if("REPARTIDOR".equals(tipoNota)){
+                this.productosDisponibles= productoDao.getProductosEnTransito(notaNueva.getRepartidores());
+            }else{
+                this.productosDisponibles = notasDeVentaDao.getProductosDisponibles();
+            }
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
@@ -296,10 +342,6 @@ import javax.faces.validator.ValidatorException;
     public void setNotaSeleccionada(NotasDeVenta notaSeleccionada) {
         this.notaSeleccionada = notaSeleccionada;
     }
-
-    public void setModeloNotas(DataModel modeloNotas) {
-        this.modeloNotas = modeloNotas;
-    }
     
     public List<ProductosInventario> getProductosModificacion() {
         return productosModificacion;
@@ -347,6 +389,14 @@ import javax.faces.validator.ValidatorException;
 
     public void setProductoDao(ProductoDAO productoDao) {
         this.productoDao = productoDao;
+    }
+
+    public String getTipoNota() {
+        return tipoNota;
+    }
+
+    public void setTipoNota(String tipoNota) {
+        this.tipoNota = tipoNota;
     }
     
     

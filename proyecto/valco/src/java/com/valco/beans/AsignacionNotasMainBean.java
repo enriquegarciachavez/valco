@@ -102,7 +102,7 @@ public class AsignacionNotasMainBean {
             
             
             NotasDeVenta notaNueva = new NotasDeVenta();
-            notaNueva.setEstatus("ACTIVO");
+            notaNueva.setEstatus("ASIGNADA");
             notaNueva.setFolio(x);
             notaNueva.setRepartidores(repartidor);
             notaNueva.setUsuarios(UsuariosUtility.getUsuarioFirmado());

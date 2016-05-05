@@ -316,6 +316,18 @@ public class Facturas  implements java.io.Serializable {
         this.impuestoses = impuestoses;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o != null) {
+            if ((o instanceof Facturas) && (((Facturas) o).getCodigo().equals(this.getCodigo()))) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 
 }
 

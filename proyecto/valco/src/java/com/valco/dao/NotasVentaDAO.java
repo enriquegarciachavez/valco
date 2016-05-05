@@ -128,7 +128,7 @@ public class NotasVentaDAO {
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            nota.setEstatus("ACTIVO");
+            nota.setEstatus("ASIGNADA");
             nota.setClientes(null);
             nota.setFechaDeVenta(null);
             nota.setFlete(null);
@@ -224,6 +224,36 @@ public class NotasVentaDAO {
             }
         }
     }
+    
+    public void actualizarNotasDeVentaEstatusFacturada(List<NotasDeVenta> notas) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            for (NotasDeVenta nota : notas) {
+                nota.setEstatus("FACTURADA");
+                session.update(nota);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al modificar el cliente.");
+                }
+            }
+            throw new Exception("Ocurrió un error al modificar el cliente.");
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al modificar el cliente.");
+            }
+        }
+    }
 
     public void borrarNotaDeVenta(NotasDeVenta nota) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -281,7 +311,7 @@ public class NotasVentaDAO {
         }
     }
 
-    public List<NotasDeVenta> getNotasDeVenta() throws Exception {
+    public List<NotasDeVenta> getNotasDeVentaAsignadas() throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
         List<NotasDeVenta> notas = new ArrayList<NotasDeVenta>();
@@ -368,6 +398,35 @@ public class NotasVentaDAO {
         }
     }
 
+    public NotasDeVenta getNotaDeVentaXFolioAsignada(int folio) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        NotasDeVenta nota = new NotasDeVenta();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(NotasDeVenta.class)
+                    .add(Restrictions.eq("folio", folio))
+                    .add(Restrictions.eq("estatus", "ASIGNADA"));
+            nota = (NotasDeVenta) q.uniqueResult();
+            Hibernate.initialize(nota.getRepartidores());
+            tx.commit();
+            return nota;
+
+        } catch (HibernateException he) {
+            tx.commit();
+            throw new Exception("Ocurrió un error al consultar los clientes.");
+
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar los clientes.");
+            }
+        }
+    }
+    
     public NotasDeVenta getNotaDeVentaXFolio(int folio) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
@@ -375,10 +434,9 @@ public class NotasVentaDAO {
         try {
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(NotasDeVenta.class)
-                    .setFetchMode("repartidores", FetchMode.JOIN)
-                    .setFetchMode("productosInventarios", FetchMode.JOIN)
                     .add(Restrictions.eq("folio", folio));
             nota = (NotasDeVenta) q.uniqueResult();
+            Hibernate.initialize(nota.getRepartidores());
             tx.commit();
             return nota;
 
@@ -439,15 +497,11 @@ public class NotasVentaDAO {
         try {
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(NotasDeVenta.class)
-                    .setFetchMode("cuentasXCobrars", FetchMode.JOIN)
                     .add(Restrictions.eq("clientes", cliente))
                     .add(Restrictions.eq("estatus", "VENDIDA"));
             notas = (List<NotasDeVenta>) q.list();
             for (NotasDeVenta nota : notas) {
-                for (CuentasXCobrar cuenta : nota.getCuentasXCobrars()) {
-                    Hibernate.initialize(cuenta);
-
-                }
+                
                 Hibernate.initialize(nota.getProductosInventarios());
             }
             tx.commit();

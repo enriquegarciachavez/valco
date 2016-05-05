@@ -152,7 +152,7 @@ public class ProductosInventario implements java.io.Serializable {
     @Override
     public boolean equals(Object o) {
         if (o != null) {
-            if ((o instanceof ProductosInventario) && (((ProductosInventario) o).getCodigo() == this.getCodigo())) {
+            if ((o instanceof ProductosInventario) && (((ProductosInventario) o).getCodigo().equals(this.getCodigo()))) {
                 return true;
             } else {
                 return false;
@@ -211,5 +211,5 @@ public class ProductosInventario implements java.io.Serializable {
         this.costo = costo;
     }
     
-
+    
 }

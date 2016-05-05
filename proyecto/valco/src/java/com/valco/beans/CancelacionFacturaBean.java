@@ -6,6 +6,7 @@
 package com.valco.beans;
 
 import com.valco.dao.FacturasDAO;
+import com.valco.dao.NotasVentaDAO;
 import com.valco.pojo.Devoluciones;
 import com.valco.pojo.Facturas;
 import com.valco.pojo.NotasCredito;
@@ -36,7 +37,8 @@ public List<Facturas> facturasDisponibles;
 public Facturas facturaSeleccionada;
 @ManagedProperty(value="#{facturasDao}")
 private FacturasDAO facturasDao;
-
+@ManagedProperty(value = "#{notadeVentaDao}")
+    private NotasVentaDAO notasDeVentaDao;
 private List<NotasDeVenta> notasDeVenta;
 private NotasDeVenta notaSeleccionada;
 private NotasCredito notaNueva = new NotasCredito();
@@ -53,7 +55,6 @@ private ProductosInventario productoSeleccionado;
     public void consultarNotasDeVentaXFactura(){
     try {
         this.notasDeVenta = this.facturasDao.getNotasXFactura(facturaSeleccionada);
-        System.out.println("HOA");
     } catch (Exception ex) {
         MsgUtility.showErrorMeage(ex.getMessage());
     }
@@ -63,7 +64,7 @@ private ProductosInventario productoSeleccionado;
     
     public void buscar() {
         try {
-            this.facturasDisponibles = this.facturasDao.getFacturas(noFactura, noNota);
+            this.facturasDisponibles = this.facturasDao.getFacturasActivas(noFactura, noNota);
 
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
@@ -71,10 +72,15 @@ private ProductosInventario productoSeleccionado;
     }
     
     public void cancelar() {
-        this.facturaSeleccionada.setEstatus("CANCELADA");
-        MsgUtility.showInfoMeage("La factura se canceló correctamente.");
+        
         try {
-            this.facturasDao.actualizarFactura(facturaSeleccionada);
+            this.facturaSeleccionada.setEstatus("CANCELADA");
+            for(NotasDeVenta nota : facturaSeleccionada.getNotasDeVentas()){
+                nota.setEstatus("VENDIDA");
+            }
+            this.facturasDao.ActualizarFacturaYNotas(facturaSeleccionada);
+            this.facturasDisponibles.remove(facturaSeleccionada);
+            MsgUtility.showInfoMeage("La factura se canceló correctamente.");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
@@ -191,6 +197,14 @@ private ProductosInventario productoSeleccionado;
 
     public void setNotaSeleccionada(NotasDeVenta notaSeleccionada) {
         this.notaSeleccionada = notaSeleccionada;
+    }
+
+    public NotasVentaDAO getNotasDeVentaDao() {
+        return notasDeVentaDao;
+    }
+
+    public void setNotasDeVentaDao(NotasVentaDAO notasDeVentaDao) {
+        this.notasDeVentaDao = notasDeVentaDao;
     }
     
     
