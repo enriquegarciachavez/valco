@@ -14,6 +14,7 @@ import com.valco.pojo.AbonosCuentasXPagar;
 import com.valco.pojo.CuentasXCobrar;
 import com.valco.pojo.CuentasXPagar;
 import com.valco.pojo.NotasDeVenta;
+import com.valco.pojo.NotasDeVentaView;
 import com.valco.utility.MsgUtility;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,37 +41,112 @@ import org.primefaces.event.SelectEvent;
 @ManagedBean
 @ViewScoped
 public class AbonosCuentasXCobrarMainBean {
+
     private Date date1;
     @ManagedProperty(value = "#{abonoscuentascobrarDAO}")
-        private AbonosCuentasXCobrarDAO abonoscuentascobrarDAO;
-    
+    private AbonosCuentasXCobrarDAO abonoscuentascobrarDAO;
+
     @ManagedProperty(value = "#{clienteDao}")
-            private ClienteDAO clienteDao;
-    @ManagedProperty(value="#{notadeVentaDao}")
-            private NotasVentaDAO notasDeVentaDao;
+    private ClienteDAO clienteDao;
+    @ManagedProperty(value = "#{notadeVentaDao}")
+    private NotasVentaDAO notasDeVentaDao;
     List<Clientes> clientes;
-    List<NotasDeVenta> nota;
+    List<NotasDeVentaView> notas;
     List<AbonosCuentasXCobrar> abonos;
     AbonosCuentasXCobrar abonoNuevo;
     AbonosCuentasXCobrar abonoSeleccionado;
     CuentasXCobrar cuentaSeleccionado;
     CuentasXCobrar cuentaNuevo;
     Clientes clienteSelecionado;
-    NotasDeVenta notaSeleccionado;
-    DataModel modeloAbono;
-    DataModel modeloNotas;
-    UIInput importe;
+    NotasDeVentaView notaSeleccionado;
+
     Date fecha;
-    
-    
-    
-    
 
     /**
      * Creates a new instance of CuentasXCobrarMainBean
      */
     public AbonosCuentasXCobrarMainBean() {
-       
+
+    }
+
+    @PostConstruct
+    public void init() {
+        try {
+            notas = new ArrayList<>();
+            this.date1 = new Date();
+            this.abonoSeleccionado = new AbonosCuentasXCobrar();
+            this.clientes = clienteDao.getClientesConAdeudo();
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+    }
+    
+    public void obtenerNotas (){
+        
+        try {
+            this.notas  = notasDeVentaDao.getNotasDeVentaViewXCliente(clienteSelecionado);
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+        
+    }
+    
+    public void obtenerAbonos(){
+        try {
+            if(notaSeleccionado == null){
+                throw new Exception("Debe seleccionar una nota para cancelar abonos");
+            }
+            this.abonos = this.abonoscuentascobrarDAO.getAbonosXCuentasXCobrar(notaSeleccionado.getCuentaXCobrar());
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+    }
+
+    public void insertarAbono() {
+        try {
+            if (notaSeleccionado == null) {
+                throw new Exception("Debe Seleccionar una nota para realizar el abono");
+            }
+            abonoSeleccionado.setEstatus("ACTIVO");
+            abonoSeleccionado.setCuentasXCobrar(notaSeleccionado.getCuentaXCobrar());
+            abonoscuentascobrarDAO.insertarAbono(abonoSeleccionado);
+            notaSeleccionado.setImporteAbonado(notaSeleccionado.getImporteAbonado().add(abonoSeleccionado.getImporte()));
+            notaSeleccionado.setSaldoPendiente(notaSeleccionado.getImporte().subtract(notaSeleccionado.getImporteAbonado()));
+
+            MsgUtility.showInfoMeage("Se realizó el abono correctamente.");
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+    }
+
+    public void actualizarAbono() {
+        try {
+            if (notaSeleccionado == null) {
+                throw new Exception("Debe Seleccionar una nota para Cancelar el abono");
+            }else if(abonoSeleccionado == null){
+                throw new Exception("Debe Seleccionar un abono para Cancelar");
+            }
+            abonoSeleccionado.setEstatus("CANCELADO");
+            abonoscuentascobrarDAO.actualizarAbono(abonoSeleccionado);
+            notaSeleccionado.setImporteAbonado(notaSeleccionado.getImporteAbonado().subtract(abonoSeleccionado.getImporte()));
+            notaSeleccionado.setSaldoPendiente(notaSeleccionado.getImporte().subtract(notaSeleccionado.getImporteAbonado()));
+            MsgUtility.showInfoMeage("Se canceló el abono correctamente.");
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+    }
+
+    public void onDateSelect(SelectEvent event) {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Date Selected", format.format(event.getObject())));
+    }
+
+    public void click() {
+        RequestContext requestContext = RequestContext.getCurrentInstance();
+
+        requestContext.update("form:display");
+        requestContext.execute("PF('dlg').show()");
     }
 
     public CuentasXCobrar getCuentaSeleccionado() {
@@ -89,59 +165,12 @@ public class AbonosCuentasXCobrarMainBean {
         this.cuentaNuevo = cuentaNuevo;
     }
     
-    
-
-    public NotasDeVenta getNotaSeleccionado() {
-        return notaSeleccionado;
-    }
-
-    public void setNotaSeleccionado(NotasDeVenta notaSeleccionado) {
-        this.notaSeleccionado = notaSeleccionado;
-    }
-    
-    
-
-    public DataModel getModeloNotas() throws Exception {
-        if(clienteSelecionado != null){
-        nota.addAll(clienteSelecionado.getNotasDeVentas());
-        modeloNotas = new ListDataModel(nota);
-        }
-        return modeloNotas;
-    }
-
-    public void setModeloNotas(DataModel modeloNotas) {
-        this.modeloNotas = modeloNotas;
-    }
-    
-    
-
     public NotasVentaDAO getNotasDeVentaDao() {
         return notasDeVentaDao;
     }
 
     public void setNotasDeVentaDao(NotasVentaDAO notasDeVentaDao) {
         this.notasDeVentaDao = notasDeVentaDao;
-    }
-
-    public List<NotasDeVenta> getNota() {
-        return nota;
-    }
-
-    public void setNota(List<NotasDeVenta> nota) {
-        this.nota = nota;
-    }
-    
-    public void onDateSelect(SelectEvent event) {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Date Selected", format.format(event.getObject())));
-    }
-     
-    public void click() {
-        RequestContext requestContext = RequestContext.getCurrentInstance();
-         
-        requestContext.update("form:display");
-        requestContext.execute("PF('dlg').show()");
     }
 
     public Date getDate1() {
@@ -167,7 +196,7 @@ public class AbonosCuentasXCobrarMainBean {
     public void setAbonoscuentascobrarDAO(AbonosCuentasXCobrarDAO abonoscuentascobrarDAO) {
         this.abonoscuentascobrarDAO = abonoscuentascobrarDAO;
     }
-   
+
     public ClienteDAO getClienteDao() {
         return clienteDao;
     }
@@ -183,8 +212,6 @@ public class AbonosCuentasXCobrarMainBean {
     public void setClientes(List<Clientes> clientes) {
         this.clientes = clientes;
     }
-
-    
 
     public List<AbonosCuentasXCobrar> getAbonos() {
         return abonos;
@@ -210,24 +237,6 @@ public class AbonosCuentasXCobrarMainBean {
         this.abonoSeleccionado = abonoSeleccionado;
     }
 
-    public DataModel getModeloAbono() throws Exception {
-        abonos = abonoscuentascobrarDAO.getAbonosCuentasXCobrar();
-        modeloAbono = new ListDataModel(abonos);
-        return modeloAbono;
-    }
-
-    public void setModeloAbono(DataModel modeloAbono) {
-        this.modeloAbono = modeloAbono;
-    }
-
-    public UIInput getImporte() {
-        return importe;
-    }
-
-    public void setImporte(UIInput importe) {
-        this.importe = importe;
-    }
-
     public Date getFecha() {
         return fecha;
     }
@@ -236,50 +245,21 @@ public class AbonosCuentasXCobrarMainBean {
         this.fecha = fecha;
     }
 
-      
-    
-    
-    @PostConstruct
-    public void init(){
-        try {
-            nota = new ArrayList<>();
-            this.date1 = new Date();
-            this.abonoSeleccionado = new AbonosCuentasXCobrar();
-            this.clientes = clienteDao.getClientesConAdeudo();
-        } catch (Exception ex) {
-            MsgUtility.showErrorMeage(ex.getMessage());
-        }
+    public List<NotasDeVentaView> getNotas() {
+        return notas;
     }
-    
-    public void insertarAbono() {
-        try {
-            
-            abonoSeleccionado.setEstatus("ACTIVO");
-            abonoSeleccionado.setCuentasXCobrar(notaSeleccionado.getCuentaXCobrar());
-            abonoscuentascobrarDAO.insertarAbono(abonoSeleccionado);
-                      
-            MsgUtility.showInfoMeage("Se realizó el abono correctamente.");
-        } catch (Exception ex) {
-            MsgUtility.showErrorMeage(ex.getMessage());
-        }
-    }
-    
-    public void actualizarAbono() {
-        try {
-            abonoSeleccionado.setEstatus("CANCELADO");
-            abonoscuentascobrarDAO.actualizarAbono(abonoSeleccionado);
-           MsgUtility.showInfoMeage("Se canceló el abono correctamente.");
-        } catch (Exception ex) {
-            MsgUtility.showErrorMeage(ex.getMessage());
-        }
 
+    public void setNotas(List<NotasDeVentaView> notas) {
+        this.notas = notas;
     }
-    
-   
-    
-    
-    
-    
+
+    public NotasDeVentaView getNotaSeleccionado() {
+        return notaSeleccionado;
+    }
+
+    public void setNotaSeleccionado(NotasDeVentaView notaSeleccionado) {
+        this.notaSeleccionado = notaSeleccionado;
+    }
     
     
 }

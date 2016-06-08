@@ -51,14 +51,15 @@
                                          panelStyle="width:180px"
                                          effect="fade"  
                                          style="width:160px" 
-                                         required="true">
+                                         required="true"
+                                         >
 
                             <f:selectItem itemLabel="Selecciona uno" itemValue="" />
                             <f:selectItems value="#{abonosCuentasXPagarMainBean.proveedor}" 
                                            var="proveedor" 
                                            itemLabel="#{proveedor.codigo} | #{proveedor.nombres} #{proveedor.apellidoPaterno} " 
                                            itemValue="#{proveedor}" /> 
-                            <p:ajax event="change" 
+                            <p:ajax event="change" listener="#{abonosCuentasXPagarMainBean.obtenerOrdenes()}" 
                                     update=":formAbonar:tablaAbno"  />             
 
                         </p:selectOneMenu>
@@ -86,7 +87,7 @@
 
                     <p:dataTable id="tablaAbno" 
                                  var="orden" 
-                                 value="#{abonosCuentasXPagarMainBean.proveedorSelecionado.ordenesCompras}"
+                                 value="#{abonosCuentasXPagarMainBean.ordenes}"
                                  selectionMode="single" 
                                  selection="#{abonosCuentasXPagarMainBean.ordenSeleccionado}"
                                  rowKey="#{orden.codigo}"
@@ -112,16 +113,18 @@
                             <h:outputText value="#{orden.codigo}" />
                         </p:column>
                         
-                        <p:column headerText="Importe" sortBy="#{orden.cuentaXPagar.importe}" >
-                            <h:outputText value="#{orden.cuentaXPagar.importe}" />
+                        <p:column headerText="Importe" sortBy="#{orden.total}" >
+                            <h:outputText value="#{orden.total}" />
                         </p:column>
-
-                        <p:column headerText="Importe Abonado " sortBy="#{orden.cuentaXPagar.importeAbonado}" >
-                            <h:outputText value="#{orden.cuentaXPagar.importeAbonado}" />
+                        
+                        <p:column headerText="Importe Abonado " sortBy="#{orden.totalAbonado}" >
+                            <h:outputText value="#{orden.importeAbonado}" />
                         </p:column>
-                        <p:column headerText="Saldo a la fecha " sortBy="#{orden.cuentaXPagar.importe}">
-                            <h:outputText value="#{orden.cuentaXPagar.importe - orden.cuentaXPagar.importeAbonado}" />
+                        <p:column headerText="Saldo a la fecha " sortBy="#{orden.saldoPendiente}">
+                            <h:outputText value="#{orden.saldoPendiente}" />
                         </p:column>
+                        
+                        
                         
                     </p:dataTable>
                     
@@ -141,7 +144,7 @@
                             value="Cancelar Abono" 
                             partialSubmit="true" 
                             icon="ui-icon-plusthick" 
-                            update=":formpop:tablapop"
+                            update=":formpop:tablapop :formAbonar:tablaAbno"
                             action="#{abonosCuentasXPagarMainBean.actualizarAbono()}"
                             ></p:commandButton>
                             

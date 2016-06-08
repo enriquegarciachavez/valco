@@ -20,7 +20,6 @@ public class CuentasXCobrar  implements java.io.Serializable {
      private String observaciones;
      private String estatus;
      private Set<AbonosCuentasXCobrar> abonosCuentasXCobrars = new HashSet<AbonosCuentasXCobrar>(0);
-     private Double importeAbonado;
 
     public CuentasXCobrar() {
     }
@@ -90,25 +89,6 @@ public class CuentasXCobrar  implements java.io.Serializable {
         this.abonosCuentasXCobrars = abonosCuentasXCobrars;
     }
 
-    public Double getImporteAbonado() {
-        importeAbonado=0.0;
-        for (AbonosCuentasXCobrar abono : abonosCuentasXCobrars) {
-            
-           if (abono.getEstatus().equals("ACTIVO")){
-              importeAbonado+=abono.getImporte().doubleValue();        
-            
-            }
-                
-            
-            
-        }
-        return importeAbonado;
-    }
-    
-
-    public void setImporteAbonado(Double importeAbonado) {
-        this.importeAbonado = importeAbonado;
-    }
     
     
 

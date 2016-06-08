@@ -147,8 +147,7 @@ public class AccesosDAO {
         } catch (HibernateException he) {
             tx.commit();
             throw new Exception("Ocurrió un error al consultar el acceso.");
-        }
-        finally {
+        } finally {
             try {
                 if (session.isOpen()) {
                     session.close();
@@ -156,7 +155,7 @@ public class AccesosDAO {
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al consultar el acceso.");
             }
-        }   
+        }
     }
 
     public List getAccesosGroupByCategorias() throws Exception {
@@ -242,6 +241,41 @@ public class AccesosDAO {
         }
     }
 
+    public boolean isUsuarioPermitir(String correo, String acceso) throws Exception {
+
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            Criteria cr = session.createCriteria(UsuariosAccesos.class, "usuariosAccesos");
+            cr.createAlias("usuariosAccesos.usuarios", "usuarios");
+            cr.createAlias("usuariosAccesos.accesos", "accesos");
+            cr.add(Restrictions.eq("usuarios.correo", correo));
+            cr.add(Restrictions.eq("accesos.nombre", acceso));
+            cr.setMaxResults(1);
+            if (cr.uniqueResult() != null) {
+                tx.commit();
+                return true;
+
+            } else {
+                tx.commit();
+                return false;
+            }
+
+        } catch (HibernateException he) {
+            tx.commit();
+            throw new Exception("Ocurrió un error al consultar el acceso.");
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar el acceso.");
+            }
+        }
+    }
+
     public List<UsuariosAccesos> getAccesosByCorreoCategoria(String correo, String categoria) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
@@ -268,7 +302,5 @@ public class AccesosDAO {
             }
         }
     }
-    
-    
 
 }

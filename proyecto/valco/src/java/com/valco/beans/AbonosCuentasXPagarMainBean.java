@@ -11,6 +11,7 @@ import com.valco.dao.ProveedorDAO;
 import com.valco.pojo.AbonosCuentasXPagar;
 import com.valco.pojo.CuentasXPagar;
 import com.valco.pojo.OrdenesCompra;
+import com.valco.pojo.OrdenesCompraView;
 import com.valco.pojo.Proveedores;
 import com.valco.utility.MsgUtility;
 import java.text.SimpleDateFormat;
@@ -48,7 +49,7 @@ public class AbonosCuentasXPagarMainBean {
     
     List<AbonosCuentasXPagar> abonos;
     List<Proveedores> proveedor;
-    List<OrdenesCompra> orden;
+    List<OrdenesCompraView> ordenes;
     AbonosCuentasXPagar abonoNuevo;
     AbonosCuentasXPagar abonoSeleccionado;
     Proveedores proveedorNuevo;
@@ -57,13 +58,65 @@ public class AbonosCuentasXPagarMainBean {
     CuentasXPagar cuentaSeleccionado;
     OrdenesCompra ordenNuevo;
     OrdenesCompra ordenSeleccionado;
-    UIInput importe;
+    
     Date fecha;
      /**
      * Creates a new instance of AbonosCuentasXPagarMainBean
      */
     public AbonosCuentasXPagarMainBean() {
        
+    }
+    
+    @PostConstruct
+    public void init(){
+        try {
+            this.date = new Date();
+            this.abonoSeleccionado = new AbonosCuentasXPagar();
+            this.proveedor = proveedorDAO.getOdenesProveedores();
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+    }
+    
+    public void obtenerOrdenes(){
+        try {
+            this.ordenes= abonoscuentaspagarDAO.getOrdenesComprasViewXProveedor(proveedorSelecionado.getCodigo());
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+        
+    }
+    
+    public void insertarAbono() {
+        try {
+            if (ordenSeleccionado == null){
+                throw new Exception("Debe Seleccionar una orden para realizar el Abono");
+            }
+            abonoSeleccionado.setEstatus("ACTIVO");
+            abonoSeleccionado.setCuentasXPagar(ordenSeleccionado.getCuentaXPagar());
+            abonoscuentaspagarDAO.insertarAbono(abonoSeleccionado);
+            ordenSeleccionado.getCuentaXPagar().getAbonosCuentasXPagars().add(abonoSeleccionado);
+            MsgUtility.showInfoMeage("El abono se insertó con éxito");
+           
+            
+        } catch (Exception ex) {
+          MsgUtility.showErrorMeage(ex.getMessage());  
+        }  
+}
+    
+    public void actualizarAbono() {
+        try {
+            if (ordenSeleccionado == null){
+                throw new Exception("Debe Seleccionar una orden para cancelar el Abono");
+            }
+            abonoSeleccionado.setEstatus("CANCELADO");
+            abonoscuentaspagarDAO.actualizarAbono(abonoSeleccionado);
+            MsgUtility.showInfoMeage("El abono se canceló con éxito");
+            
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+
     }
     public void onDateSelect(SelectEvent event) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -85,16 +138,19 @@ public class AbonosCuentasXPagarMainBean {
     public void setDate(Date date) {
         this.date = date;
     }
+
+    public List<OrdenesCompraView> getOrdenes() {
+        return ordenes;
+    }
+
+    public void setOrdenes(List<OrdenesCompraView> ordenes) {
+        this.ordenes = ordenes;
+    }
+
+
     
 
-    public List<OrdenesCompra> getOrden() {
-        return orden;
-    }
-
-    public void setOrden(List<OrdenesCompra> orden) {
-        this.orden = orden;
-    }
-
+    
     public OrdenesCompra getOrdenNuevo() {
         return ordenNuevo;
     }
@@ -193,13 +249,7 @@ public class AbonosCuentasXPagarMainBean {
         this.proveedorSelecionado = proveedorSelecionado;
     }
 
-    public UIInput getImporte() {
-        return importe;
-    }
 
-    public void setImporte(UIInput importe) {
-        this.importe = importe;
-    }
 
     public Date getFecha() {
         return fecha;
@@ -219,40 +269,5 @@ public class AbonosCuentasXPagarMainBean {
     
     
     
-    @PostConstruct
-    public void init(){
-        try {
-            this.date = new Date();
-            this.abonoSeleccionado = new AbonosCuentasXPagar();
-            this.proveedor = proveedorDAO.getOdenesProveedores();
-        } catch (Exception ex) {
-            MsgUtility.showErrorMeage(ex.getMessage());
-        }
-    }
     
-    public void insertarAbono() {
-        try {
-            
-            abonoSeleccionado.setEstatus("ACTIVO");
-            abonoSeleccionado.setCuentasXPagar(ordenSeleccionado.getCuentaXPagar());
-            abonoscuentaspagarDAO.insertarAbono(abonoSeleccionado);
-            MsgUtility.showInfoMeage("El abono se insertó con éxito");
-           
-            
-        } catch (Exception ex) {
-          MsgUtility.showErrorMeage(ex.getMessage());  
-        }  
-}
-    
-    public void actualizarAbono() {
-        try {
-            abonoSeleccionado.setEstatus("CANCELADO");
-            abonoscuentaspagarDAO.actualizarAbono(abonoSeleccionado);
-            MsgUtility.showInfoMeage("El abono se canceló con éxito");
-            
-        } catch (Exception ex) {
-            MsgUtility.showErrorMeage(ex.getMessage());
-        }
-
-    }
 }

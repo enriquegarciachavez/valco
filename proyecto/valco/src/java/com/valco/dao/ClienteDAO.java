@@ -169,12 +169,6 @@ public class ClienteDAO implements Serializable{
               tx = session.beginTransaction();
               Query q = session.createQuery("FROM Clientes");
               clientes = (List<Clientes>) q.list();
-              for(Clientes cliente : clientes){
-                  for(NotasDeVenta nota : cliente.getNotasDeVentas()){
-                      Hibernate.initialize(nota);
-                      Hibernate.initialize(nota.getCuentasXCobrars());
-                  }
-              }
               tx.commit();
               return clientes;
 
@@ -184,6 +178,7 @@ public class ClienteDAO implements Serializable{
 
           } finally {
               try {
+                  if((session.isOpen()))
                   session.close();
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los clientes.");

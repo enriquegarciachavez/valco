@@ -22,6 +22,7 @@ public class ProductosInventario  implements java.io.Serializable {
      private Ubicaciones ubicaciones;
      private BigDecimal peso;
      private BigDecimal precio;
+     private BigDecimal costo;
      private String codigoBarras;
      private String estatus;
      private Integer procesosCodigoPadre;
@@ -184,6 +185,14 @@ public class ProductosInventario  implements java.io.Serializable {
         this.numeroCanal = numeroCanal;
     }
 
+    public BigDecimal getCosto() {
+        return costo;
+    }
+
+    public void setCosto(BigDecimal costo) {
+        this.costo = costo;
+    }
+    
     public Set<Mermas> getMermas() {
         return mermas;
     }
@@ -191,6 +200,7 @@ public class ProductosInventario  implements java.io.Serializable {
     public void setMermas(Set<Mermas> mermas) {
         this.mermas = mermas;
     }
+    
     
     public BigDecimal getMermaTotal(){
         BigDecimal mermaTotal = new BigDecimal("0.00");
@@ -233,6 +243,7 @@ public class ProductosInventario  implements java.io.Serializable {
              return true;
          }
      }
+    
 
 }
 

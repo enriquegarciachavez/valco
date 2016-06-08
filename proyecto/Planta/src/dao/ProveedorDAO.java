@@ -8,7 +8,10 @@ package dao;
 import Hibernate.HibernateUtil;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import mapping.OrdenesCompra;
 import mapping.Proveedores;
 import org.apache.commons.lang.StringUtils;
@@ -19,6 +22,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -112,7 +116,7 @@ public class ProveedorDAO implements Serializable {
         Session session = null;
         Transaction tx = null;
         try {
-            session = HibernateUtil.getSessionFactory().getCurrentSession();            
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
             List<Proveedores> proveedores = new ArrayList<Proveedores>();
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(Proveedores.class);
@@ -120,6 +124,39 @@ public class ProveedorDAO implements Serializable {
             proveedores = (List<Proveedores>) q.list();
             tx.commit();
             return proveedores;
+
+        } catch (HibernateException he) {
+            tx.commit();
+            throw new Exception("Ocurrió un error al consultar los proveedores.");
+
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar los proveedores.");
+            }
+        }
+    }
+
+    public List<Proveedores> getProveedoresKilo() throws Exception {
+        Session session = null;
+        Transaction tx = null;
+        try {
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            List<Proveedores> proveedores = new ArrayList<Proveedores>();
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(Proveedores.class);
+            Criteria x = q.createCriteria("productosHasProveedoreses");
+            Criteria y = x.createCriteria("productos");
+            Criteria z = y.createCriteria("unidadesDeMedida").add(Restrictions.eq("abreviacion", "KG"));
+
+            q.addOrder(Order.asc("razonSocial"));
+            proveedores = (List<Proveedores>) q.list();
+            Set<Proveedores> proveedoresSet = new LinkedHashSet<>(proveedores);
+            tx.commit();
+            return new ArrayList<>(proveedoresSet);
 
         } catch (HibernateException he) {
             tx.commit();
@@ -170,14 +207,42 @@ public class ProveedorDAO implements Serializable {
         try {
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(Proveedores.class);
-            
+
             if (StringUtils.isNumeric(criterio)) {
-                q.add(Restrictions.eq("codigo",new Integer(criterio)));
+                q.add(Restrictions.eq("codigo", new Integer(criterio)));
             } else {
                 q.add(Restrictions.eq("razonSocial", criterio));
             }
-            
 
+            proveedor = (Proveedores) q.uniqueResult();
+            tx.commit();
+            return proveedor;
+
+        } catch (HibernateException he) {
+            tx.commit();
+            throw new Exception("Ocurrió un error al consultar los proveedores.");
+
+        }
+    }
+
+    public Proveedores getProveedoresXCodigoKilo(String criterio) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        Proveedores proveedor = new Proveedores();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(Proveedores.class);
+            Criteria x = q.createCriteria("productosHasProveedoreses");
+            Criteria y = x.createCriteria("productos");
+            Criteria z = y.createCriteria("unidadesDeMedida").add(Restrictions.eq("abreviacion", "KG"));
+
+            if (StringUtils.isNumeric(criterio)) {
+                q.add(Restrictions.eq("codigo", new Integer(criterio)));
+            } else {
+                q.add(Restrictions.eq("razonSocial", criterio));
+            }
+
+            q.setMaxResults(1);
             proveedor = (Proveedores) q.uniqueResult();
             tx.commit();
             return proveedor;

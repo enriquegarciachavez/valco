@@ -10,7 +10,6 @@ import com.valco.pojo.OrdenesCompra;
 import com.valco.pojo.ProductosHasProveedores;
 import com.valco.pojo.ProductosInventario;
 import com.valco.pojo.ProductosInventarioAgrupados;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Criteria;
@@ -82,6 +81,8 @@ public class OrdenesCompraDAO {
             }
         }
     }
+    
+    
 
     public void borrarOrdenesCompra(OrdenesCompra ordenesCompra) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -206,7 +207,7 @@ public class OrdenesCompraDAO {
 
     public List<ProductosInventario> getProductosInventarioXOrdenYProducto(OrdenesCompra ordenCompra, ProductosHasProveedores producto) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction tx = null;
+        
         List<ProductosInventario> productoInventario = new ArrayList<ProductosInventario>();
         try {
             //tx = session.beginTransaction();
@@ -215,11 +216,11 @@ public class OrdenesCompraDAO {
                     .add(Restrictions.eq("productosHasProveedores", producto));
 
             productoInventario = (List<ProductosInventario>) q.list();
-            tx.commit();
+            
             return productoInventario;
 
         } catch (HibernateException he) {
-            tx.commit();
+            
             throw new Exception("Ocurrió un error al consultar los Productos de la Orden.");
 
         }
@@ -244,6 +245,8 @@ public class OrdenesCompraDAO {
                     session.delete(producto);
                 }
             }
+            
+            session.update(orden.getCuentaXPagar());
             tx.commit();
         } catch (Exception e) {
             if (tx != null) {

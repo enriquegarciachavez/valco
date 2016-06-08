@@ -9,9 +9,11 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -908,11 +910,7 @@ public class EtiquetadoPanel extends PesableBarCodeable {
     private void procesosLovActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_procesosLovActionPerformed
         procesoLbl.setText(procesosLov.getSelectedItem().toString());
         procesoLbl1.setText(procesosLov.getSelectedItem().toString());
-        try {
-            consecutivoLbl.setText(procesosDAO.getConsecutivo(((Procesos) procesosLov.getSelectedItem()).getCodigo()).toString());
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex);
-        }
+
         this.setTableModel();
         this.actualizarValores();
         this.reporteFinalBtn.setEnabled(!((Procesos) this.procesosLov.getSelectedItem()).getEstatus().equals("ACTIVO"));
@@ -1005,8 +1003,11 @@ public class EtiquetadoPanel extends PesableBarCodeable {
         if (selectedRows.length > 0) {
             for (int i = selectedRows.length - 1; i >= 0; i--) {
                 ProductosInventario productoSeleccionado = (ProductosInventario) model.getValueAt(selectedRows[i], 0);
-                productoSeleccionado.setEstatus("CANCELADO");
-                productosSeleccionados.add(productoSeleccionado);
+                if (productoSeleccionado.getEstatus().equals("ACTIVO")) {
+                    productoSeleccionado.setEstatus("CANCELADO");
+                    productosSeleccionados.add(productoSeleccionado);
+                }
+
             }
             try {
                 productoDAO.actualizarProductosInventario(productosSeleccionados);
@@ -1076,7 +1077,7 @@ public class EtiquetadoPanel extends PesableBarCodeable {
         String dbname = prop.getProperty("dbname");
         String user = prop.getProperty("user");
         String password = prop.getProperty("password");
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://"+server+":"+port+"/"+dbname, user, password);) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + dbname, user, password);) {
             /* TODO output your page here. You may use following sample code. */
 
             //Connecting to the MySQL database
@@ -1145,7 +1146,7 @@ public class EtiquetadoPanel extends PesableBarCodeable {
         String dbname = prop.getProperty("dbname");
         String user = prop.getProperty("user");
         String password = prop.getProperty("password");
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://"+server+":"+port+"/"+dbname, user, password);) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + dbname, user, password);) {
             /* TODO output your page here. You may use following sample code. */
 
             //Connecting to the MySQL database
@@ -1155,7 +1156,7 @@ public class EtiquetadoPanel extends PesableBarCodeable {
             Map mapa = new HashMap();
 
             mapa.put("procesoCodigo", ((Procesos) (this.procesosLov.getSelectedItem())).getCodigo());
-            mapa.put("SUBREPORT_DIR", reportDir+"/planta/");
+            mapa.put("SUBREPORT_DIR", reportDir + "/planta/");
 
             JasperReport jasperReport = JasperCompileManager.compileReport(input);
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
@@ -1264,16 +1265,35 @@ public class EtiquetadoPanel extends PesableBarCodeable {
 
     private void imprimirCodigo(ProductosInventario producto) {
         // aca obtenemos la printer default  
-        PrintService printService = PrintServiceLookup.lookupDefaultPrintService();
 
-        String zplCommand = "^XA"
+        String label = "";
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\valco\\CodigoBarras.txt"))){
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = br.readLine();
+            }
+            label = sb.toString();
+            br.close();
+        } catch (IOException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        PrintService printService = PrintServiceLookup.lookupDefaultPrintService();
+        label = label.replace("PRODUCTO", this.productosLov.getSelectedItem().toString());
+        label = label.replace("PESO", producto.getPeso().toString());
+        label = label.replace("CODIGO_BARRAS", producto.getCodigoBarras());
+        
+       /* String zplCommand = "^XA"
                 + "^FO230,50^ARN,16,9^FD " + this.productosLov.getSelectedItem() + "^FS"
                 + "^FO300,100^ARN,16,9^FD " + producto.getPeso() + " KG^BY1,3.0^FS"
                 + "^FO230,180^BCN, 80, Y, N, N^FD" + producto.getCodigoBarras() + "^FS "
-                + "^XZ";
+                + "^XZ";*/
 
 // convertimos el comando a bytes  
-        byte[] by = zplCommand.getBytes();
+        byte[] by = label.getBytes();
         DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
         Doc doc = new SimpleDoc(by, flavor, null);
 

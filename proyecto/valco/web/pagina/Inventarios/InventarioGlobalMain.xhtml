@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../templates/Template1.xhtml">
+
+            <ui:define name="title">
+                Inventario Global
+            </ui:define>
+
+            <ui:define name="content">
+
+
+                <p:dataTable id="tablaInventarioGlobal" 
+                             var="inventario" 
+                             value="#{inventarioMainBean.inventariosGlobales}"
+                             selectionMode="single"                                 
+                             rowKey="#{inventario.productoCodigo}"
+                             style="margin-bottom:40px"
+                             >
+
+                    <f:facet name="header">
+                        Inventarios
+                    </f:facet>
+                    <p:column style="width:16px">
+                        <p:rowToggler />
+                    </p:column>
+
+                    <p:column  filterMatchMode="contains" filterBy="#{inventario.descripcion}" >
+                        <f:facet name="header">
+                            <h:outputText value="Producto" />   
+                        </f:facet>
+                        <h:outputText value="#{inventario.descripcion}" />
+                    </p:column>
+
+                    <p:column headerText="Numero de Cajas" filterMatchMode="contains" filterBy="#{inventario.numeroCajas}" >
+                        <h:outputText value="#{inventario.numeroCajas}" />
+                    </p:column>
+
+                    <p:column headerText="Total Kg" filterMatchMode="contains"  filterBy="#{inventario.pesoTotal   }">
+                        <h:outputText value="#{inventario.pesoTotal}" />
+                    </p:column>
+
+                    <p:column headerText="Valor Total " filterMatchMode="contains" filterBy="#{inventario.precioTotal}" >
+                        <h:outputText value="#{inventario.precioTotal}" />
+                    </p:column>
+
+                    <p:rowExpansion>
+                        <p:dataTable id="tablaInventarioDetallado" 
+                                     var="inventarioDetallado" 
+                                     value="#{inventario.inventariosDetallados}"
+                                     selectionMode="single" 
+                                     rowKey="#{inventarioDetallado.productoCodigoDetallado}"
+                                     style="margin-bottom:40px"
+                                     >
+
+                            <p:column >
+                                <f:facet name="header">
+                                    <h:outputText value="Producto" />   
+                                </f:facet>
+                                <h:outputText value="#{inventarioDetallado.descripcion}" />
+                            </p:column>
+
+                            <p:column headerText="Codigo de Barras" >
+                                <h:outputText value="#{inventarioDetallado.codigoBarras}" />
+                            </p:column>
+
+                            <p:column headerText="Peso Kg" >
+                                <h:outputText value="#{inventarioDetallado.peso}" />
+                            </p:column>
+
+                            <p:column headerText="Precio Unitario " >
+                                <h:outputText value="#{inventarioDetallado.precioUnitario}" />
+                            </p:column>
+                            <p:column headerText="Precio Total" >
+                                <h:outputText value="#{inventarioDetallado.precioTotal}" />
+                            </p:column>
+
+                        </p:dataTable>
+                    </p:rowExpansion>
+                </p:dataTable>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

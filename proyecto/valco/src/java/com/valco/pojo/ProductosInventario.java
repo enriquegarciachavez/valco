@@ -112,9 +112,7 @@ public class ProductosInventario implements java.io.Serializable {
     }
 
     public BigDecimal getPeso() {
-        BigDecimal peso = new BigDecimal("0.00");
-        RoundingMode RM = RoundingMode.HALF_EVEN;
-        peso = peso.add(this.peso.setScale(2, RM));
+        
         return peso;
     }
 
@@ -123,9 +121,7 @@ public class ProductosInventario implements java.io.Serializable {
     }
 
     public BigDecimal getPrecio() {
-        BigDecimal precio = new BigDecimal("0.00");
-        RoundingMode RM = RoundingMode.HALF_EVEN;
-        precio = precio.add(this.precio.setScale(2, RM));
+        
         return precio;
     }
 

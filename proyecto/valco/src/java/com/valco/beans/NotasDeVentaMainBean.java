@@ -10,6 +10,7 @@ import com.valco.dao.NotasVentaDAO;
 import com.valco.dao.ProductoDAO;
 import com.valco.pojo.Clientes;
 import com.valco.pojo.NotasDeVenta;
+import com.valco.pojo.NotasDeVentaView;
 import com.valco.pojo.ProductosInventario;
 import com.valco.utility.MsgUtility;
 import java.math.BigDecimal;
@@ -47,8 +48,8 @@ import javax.faces.validator.ValidatorException;
     private NotasVentaDAO notasDeVentaDao;
     @ManagedProperty(value="#{clienteDao}")
     private ClienteDAO clienteDao;
-    private List<NotasDeVenta> notasDeVenta;
-    private NotasDeVenta notaSeleccionada;
+    private List<NotasDeVentaView> notasDeVenta;
+    private NotasDeVentaView notaSeleccionada;
     private NotasDeVenta notaNueva;
     private List<ProductosInventario> productosDisponibles;
     private List<ProductosInventario> productosDisponiblesModificacion;
@@ -69,7 +70,7 @@ import javax.faces.validator.ValidatorException;
     private void init(){
         try {
             this.clientes = clienteDao.getClientes();
-            notasDeVenta = notasDeVentaDao.getNotasDeVentaVendidas();
+            notasDeVenta = notasDeVentaDao.getNotasDeVentaVendidasView();
         } catch (Exception ex) {
             Logger.getLogger(NotasDeVentaMainBean.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -165,7 +166,8 @@ import javax.faces.validator.ValidatorException;
         try {
             this.notaNueva.setEstatus("VENDIDA");
             this.notasDeVentaDao.actualizarNotaDeVenta(notaNueva);
-            this.notasDeVenta.add(notaNueva);
+            //this.notasDeVenta.add(notaNueva);
+            this.notasDeVenta= notasDeVentaDao.getNotasDeVentaVendidasView();
             MsgUtility.showInfoMeage("La nota se capturó correctamente.");
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null,
@@ -175,22 +177,24 @@ import javax.faces.validator.ValidatorException;
     }
     
     public void modificarNota(){
-        if(notaSeleccionada.getProductosInventariosList() == null ||
-                notaSeleccionada.getProductosInventariosList().isEmpty()){
+        if(notaSeleccionada.getNota().getProductosInventariosList() == null ||
+                notaSeleccionada.getNota().getProductosInventariosList().isEmpty()){
             flete.setValid(false);
             MsgUtility.showWarnMeage("Debe eleccionar porlomenos un producto.");
             FacesContext.getCurrentInstance().validationFailed();
             return;
         }
-        for(ProductosInventario producto: notaSeleccionada.getProductosInventarios()){
+        for(ProductosInventario producto: notaSeleccionada.getNota().getProductosInventarios()){
             producto.setNotasDeVenta(null);
         }
-        for(ProductosInventario producto: notaSeleccionada.getProductosInventariosList()){
-            producto.setNotasDeVenta(notaSeleccionada);
-            notaSeleccionada.getProductosInventarios().remove(producto);
+        for(ProductosInventario producto: notaSeleccionada.getNota().getProductosInventariosList()){
+            producto.setNotasDeVenta(notaSeleccionada.getNota());
+            notaSeleccionada.getNota().getProductosInventarios().remove(producto);
         }
         try {
-            this.notasDeVentaDao.actualizarNotaDeVentaVendida(notaSeleccionada);
+            this.notaSeleccionada.getCuentaXCobrar().setImporte(getTotalSeleccionado(notaSeleccionada.getNota().getProductosInventariosList()));
+            this.notasDeVentaDao.actualizarNotaDeVentaVendida(notaSeleccionada.getNota(), notaSeleccionada.getCuentaXCobrar());
+            MsgUtility.showInfoMeage("La Nota se actualizo correctamente");
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage("Ocurriò un error al guardar la nota de venta"));
@@ -223,19 +227,19 @@ import javax.faces.validator.ValidatorException;
     }
     
     public String obtenerProductosModificacio() throws Exception{
-        notaSeleccionada.setProductosInventariosList(notasDeVentaDao.getProductosXNota(notaSeleccionada));
+        notaSeleccionada.getNota().setProductosInventariosList(notasDeVentaDao.getProductosXNota(notaSeleccionada.getNota()));
         productosDisponiblesModificacion = notasDeVentaDao.getProductosDisponibles();
-        productosDisponiblesModificacion.addAll(0,notaSeleccionada.getProductosInventariosList());
+        productosDisponiblesModificacion.addAll(0,notaSeleccionada.getNota().getProductosInventariosList());
         return null;
     }
     
     public void cancelarNotaVendida(){
-        if(notaSeleccionada == null || notaSeleccionada.getCodigo() ==null){
+        if(notaSeleccionada.getNota() == null || notaSeleccionada.getNota().getCodigo() ==null){
             MsgUtility.showWarnMeage("Debe seleccionar una nota.");
             return;
         }
         try {
-            notasDeVentaDao.cancelarNotaVendida(notaSeleccionada);
+            notasDeVentaDao.cancelarNotaVendida(notaSeleccionada.getNota());
             notasDeVenta.remove(notaSeleccionada);
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null,
@@ -251,8 +255,8 @@ import javax.faces.validator.ValidatorException;
     }
     
     public void validaProductosSeleccionadosModificacion(FacesContext context, UIComponent component, Object value) throws ValidatorException{
-        if(false && notaSeleccionada.getProductosInventariosList() == null ||
-                notaSeleccionada.getProductosInventariosList().isEmpty()){         
+        if(false && notaSeleccionada.getNota().getProductosInventariosList() == null ||
+                notaSeleccionada.getNota().getProductosInventariosList().isEmpty()){         
             throw new ValidatorException(MsgUtility.getWarnMessage("Debe seleccionar porlomenos un producto."));
         }
     }
@@ -327,21 +331,23 @@ import javax.faces.validator.ValidatorException;
         this.notasDeVentaDao = notasDeVentaDao;
     }
 
-    public List<NotasDeVenta> getNotasDeVenta() {
+    public List<NotasDeVentaView> getNotasDeVenta() {
         return notasDeVenta;
     }
 
-    public void setNotasDeVenta(List<NotasDeVenta> notasDeVenta) {
+    public void setNotasDeVenta(List<NotasDeVentaView> notasDeVenta) {
         this.notasDeVenta = notasDeVenta;
     }
 
-    public NotasDeVenta getNotaSeleccionada() {
+    public NotasDeVentaView getNotaSeleccionada() {
         return notaSeleccionada;
     }
 
-    public void setNotaSeleccionada(NotasDeVenta notaSeleccionada) {
+    public void setNotaSeleccionada(NotasDeVentaView notaSeleccionada) {
         this.notaSeleccionada = notaSeleccionada;
     }
+
+    
     
     public List<ProductosInventario> getProductosModificacion() {
         return productosModificacion;

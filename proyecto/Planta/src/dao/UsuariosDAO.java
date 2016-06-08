@@ -114,10 +114,13 @@ public class UsuariosDAO {
         List<Usuarios> usuarios = new ArrayList<Usuarios>();
         try {
             tx = session.beginTransaction();
-            Criteria q = session.createCriteria(Usuarios.class)
-                    .setFetchMode("ubicaciones", FetchMode.JOIN);
+            Criteria q = session.createCriteria(Usuarios.class);
+                    
 
             usuarios = (List<Usuarios>) q.list();
+            for(Usuarios usuario: usuarios){
+                Hibernate.initialize(usuario.getUbicaciones());
+            }
             tx.commit();
             return usuarios;
 

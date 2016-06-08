@@ -36,21 +36,15 @@
 
                             />
 
+                        
                         <p:menuitem 
-                            value="Modificar"  
-                            id="btnModificar"
-                            icon="ui-icon-pencil"
-                            partialSubmit="true"
-                            oncomplete="PF('popupProductos').show();;"
-                            update=":formEditar:tablaProductos"
-                            action="#{ordenesCompraMainBean.obtenerProductosXOrdenAgrupados()}"
-                            />
-                        <p:menuitem 
-                            value="Borrar"
+                            value="Cancelar"
                             id="btnBorrar"
                             icon="ui-icon-circle-close"
                             partialSubmit="true"
                             process="singleDT" 
+                            oncomplete="PF('popupcancelar').show();;"
+                            rendered="#{ordenesCompraMainBean.botonCancelarVisible()}"
 
 
                             /> 
@@ -72,9 +66,12 @@
                         <p:column headerText="Proveedor">
                             <h:outputText value="#{orden.proveedores.razonSocial}" />
                         </p:column>
+                        <p:column headerText="Estatus">
+                            <h:outputText value="#{orden.estatus}" />
+                        </p:column>
 
                     </p:dataTable>
-                    <p:blockUI block="form" trigger="btnEditar btnModificar btnBorrar">
+                    <p:blockUI block="form" trigger="btnEditar  btnBorrar">
                         Cargando.... Espere porfavor<br />
                         <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
 
@@ -82,6 +79,7 @@
                 </h:form>
                 <h:form id="formEditar">
 
+                    <!--Editar Productos-->
                     <p:dialog header="Editar Productos" widgetVar="popupEditar" modal="true" position="top"
                               id="popupEditar">
                         <p:wizard widgetVar="wiz" flowListener="#{ordenesCompraMainBean.onFlowProcess}">
@@ -184,14 +182,14 @@
                                     </p:column>
 
 
-                                    <p:column headerText="Precio" style="text-align:right">
-                                        <h:outputText value="#{producto.precio}"  />
+                                    <p:column headerText="Costo" style="text-align:right">
+                                        <h:outputText value="#{producto.costo}"  />
 
                                     </p:column>
                                 </p:dataTable>
                             </p:tab>
 
-                            <p:tab id="modificarPrecio" title="Modificar Precio">
+                            <p:tab id="modificarPrecio" title="Modificar Costo">
                                 <p:dataTable id="tablaEditar2" editable="true" editMode="cell" var="producto" value="#{ordenesCompraMainBean.produuctosInventarioAgrupadosModificados}" selectionMode="single" selection="#{ordenesCompraMainBean.productoSeleccionadoAgrupado}" rowKey="#{producto}">
                                     <f:facet name="header">
                                         Captura de pesos
@@ -207,8 +205,8 @@
                                     </p:column>
 
 
-                                    <p:column headerText="Precio" style="text-align:right">
-                                        <p:inputText value="#{producto.precio}"  />
+                                    <p:column headerText="Costo" style="text-align:right">
+                                        <p:inputText value="#{producto.costo}"  />
                                     </p:column>
 
                                 </p:dataTable>
@@ -232,8 +230,8 @@
                                     </p:column>
 
 
-                                    <p:column headerText="Precio"  style="text-align:right">
-                                        <h:outputText value="#{producto.precio}" />
+                                    <p:column headerText="Costo"  style="text-align:right">
+                                        <h:outputText value="#{producto.costo}" />
                                     </p:column>
 
                                     <p:columnGroup type="footer">
@@ -420,8 +418,23 @@
                     </p:dialog>
 
                 </h:form>
+                
+                
+                <h:form id="formCancelar">
+                    <p:dialog header="Borrar Orden" widgetVar="popupcancelar" modal="true" id="popupcancelar">
 
-                <p:blockUI block="form" trigger=":form:btnAbarrotes :form:btnEditar :form:btnModificar :formAbarrotes:btnAgregar :formAbarrotes:btnGuardar">
+                        <h:panelGrid   columns="4" cellpadding="5">
+                            <h:outputText value="¿Está segúro que desea cancelar la orden?" /> 
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Si" id="si" partialSubmit="true" ajax="false" action="#{ordenesCompraMainBean.cancelarOrden()}"/>
+                                <p:commandButton value="No" id="no"  ajax="false" />
+                            </f:facet>
+                        </h:panelGrid>
+                    </p:dialog>
+                </h:form>
+
+                <p:blockUI block="form" trigger=":form:btnAbarrotes :form:btnEditar :formAbarrotes:btnAgregar :formAbarrotes:btnGuardar">
                     Cargando.... Espere porfavor<br />
                     <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
 

@@ -29,11 +29,16 @@
                           value="Cancelar Abono" 
                             icon="ui-icon-circle-close"
                             oncomplete="PF('cancelar').show();;" 
-                            partialSubmit="true"
+                            
                             update=":formpop:popcancelar"
-                            process="tabla"
+                            action="#{abonosCuentasXCobrarMainBean.obtenerAbonos()}"
+                            process="@this,tabla"
+                            
+                            
                            /> 
+                        
                     </p:menubar>
+                    
 
                     <h:panelGrid id="ingresarGrid"  
                                  columns="10"
@@ -55,7 +60,7 @@
                                            var="clientes" 
                                            itemLabel="#{clientes.codigo} | #{clientes.nombres} #{clientes.apellidoPaterno} " 
                                            itemValue="#{clientes}" /> 
-                            <p:ajax event="change" 
+                            <p:ajax event="change" listener="#{abonosCuentasXCobrarMainBean.obtenerNotas()}"
                                     update="tabla"  />             
 
                         </p:selectOneMenu>
@@ -91,7 +96,7 @@
 
                     <p:dataTable id="tabla" 
                                  var="nota" 
-                                 value="#{abonosCuentasXCobrarMainBean.clienteSelecionado.notasDeVentas}"
+                                 value="#{abonosCuentasXCobrarMainBean.notas}"
                                  selectionMode="single" 
                                  selection="#{abonosCuentasXCobrarMainBean.notaSeleccionado}"
                                  rowKey="#{nota.codigo}"
@@ -101,6 +106,18 @@
 
                         <f:facet name="header">
                             Cuentas por Cobrar
+                            <p:commandButton 
+                            id="btnCancelar2"
+                          value="Cancelar Abono" 
+                            icon="ui-icon-circle-close"
+                            oncomplete="PF('cancelar').show();;" 
+                            partialSubmit="true"
+                            update=":formpop:popcancelar"
+                            actionListener="#{abonosCuentasXCobrarMainBean.obtenerAbonos()}"
+                            process="@parent"
+                            immediate="true"
+                            
+                           />
                         </f:facet>
 
                         <p:column  sortBy="#{nota.fechaDeVenta}" >
@@ -115,14 +132,14 @@
                         </p:column>
                         
                         <p:column headerText="Importe" >
-                            <h:outputText value="#{nota.cuentaXCobrar.importe}" />
+                            <h:outputText value="#{nota.importe}" />
                         </p:column>
 
                         <p:column headerText="Importe Abonado " >
-                            <h:outputText value="#{nota.cuentaXCobrar.importeAbonado}" />
+                            <h:outputText value="#{nota.importeAbonado}" />
                         </p:column>
                         <p:column headerText="Saldo a la fecha " >
-                            <h:outputText value="#{nota.cuentaXCobrar.importe - nota.cuentaXCobrar.importeAbonado}" />
+                            <h:outputText value="#{nota.saldoPendiente}" />
                         </p:column>
 
 
@@ -148,7 +165,7 @@
                             value="Cancelar Abono" 
                             partialSubmit="true" 
                             icon="ui-icon-plusthick" 
-                            update=":formpop:tablapop"
+                            update=":formpop:tablapop :formAsignar:tabla"
                             action="#{abonosCuentasXCobrarMainBean.actualizarAbono()}"
                             ></p:commandButton>
                             
@@ -158,7 +175,7 @@
                         
                         <p:dataTable id="tablapop" 
                                  var="abonos" 
-                                 value="#{abonosCuentasXCobrarMainBean.notaSeleccionado.cuentaXCobrar.abonosCuentasXCobrars}"
+                                 value="#{abonosCuentasXCobrarMainBean.abonos}"
                                  selectionMode="single" 
                                  selection="#{abonosCuentasXCobrarMainBean.abonoSeleccionado}"
                                  rowKey="#{abonos.codigo}"

@@ -20,6 +20,7 @@ public class ProductosInventarioAgrupados {
     ProductosHasProveedores producto;
     ProductosHasProveedores productoModificado;
     BigDecimal precio;
+    BigDecimal costo;
     BigDecimal precioModificado;
     List<ProductosInventario> productos;
 
@@ -30,6 +31,16 @@ public class ProductosInventarioAgrupados {
     public void setPeso(BigDecimal peso) {
         this.peso = peso;
     }
+
+    public BigDecimal getCosto() {
+        return costo;
+    }
+
+    public void setCosto(BigDecimal costo) {
+        this.costo = costo;
+    }
+    
+    
 
     public ProductosHasProveedores getProducto() {
         return producto;

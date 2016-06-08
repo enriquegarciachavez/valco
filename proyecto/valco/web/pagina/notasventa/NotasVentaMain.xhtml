@@ -72,10 +72,10 @@
                     <p:outputLabel value="#{nota.estatus}" />
                 </p:column>
                 <p:column headerText="Repartidor">
-                    <p:outputLabel value="#{nota.repartidores.nombres} #{nota.repartidores.apellidoPaterno}" />
+                    <p:outputLabel value="#{nota.repartidor}" />
                 </p:column>
                 <p:column headerText="Cliente">
-                    <p:outputLabel value="#{nota.clientes.nombres} #{nota.clientes.apellidoPaterno}" />
+                    <p:outputLabel value="#{nota.cliente}" />
                 </p:column>
                 <f:facet name="footer">
                 </f:facet>
@@ -238,10 +238,10 @@
                 
 
                     <p:outputLabel   value="Repartidor: " />
-                    <p:outputLabel id="repartidorOutModificar"  value="#{notasDeVentaMainBean.notaSeleccionada.repartidores.nombres} #{notasDeVentaMainBean.notaSeleccionada.repartidores.apellidoPaterno}" />
+                    <p:outputLabel id="repartidorOutModificar"  value="#{notasDeVentaMainBean.notaSeleccionada.repartidor}" />
 
                     <p:outputLabel for="fechaModificar"   value="fecha: " />
-                    <p:calendar required="true" id="fechaModificar" value="#{notasDeVentaMainBean.notaSeleccionada.fechaDeVenta}" />
+                    <p:calendar required="true" id="fechaModificar" value="#{notasDeVentaMainBean.notaSeleccionada.nota.fechaDeVenta}" />
 
                     <p:outputLabel for="clienteModificar" value="Cliente:"  />
                     <p:selectOneMenu 
@@ -254,7 +254,7 @@
                         style="width:160px" 
                         filter="true" 
                         filterMatchMode="contains"
-                        value="#{notasDeVentaMainBean.notaSeleccionada.clientes}">
+                        value="#{notasDeVentaMainBean.notaSeleccionada.nota.clientes}">
                         <f:selectItems value="#{notasDeVentaMainBean.clientes}" var="cliente" itemLabel="#{cliente.codigo} | #{cliente.nombres} #{cliente.apellidoPaterno}" itemValue="#{cliente}" />
 
                         <p:column style="width:10%">
@@ -267,11 +267,11 @@
 
                     <p:outputLabel   value="Flete: " />
                     <p:inputText 
-                        value="#{notasDeVentaMainBean.notaSeleccionada.flete}" 
+                        value="#{notasDeVentaMainBean.notaSeleccionada.nota.flete}" 
                         validator="#{notasDeVentaMainBean.validaProductosSeleccionadosModificacion}"/>
 
                     <f:facet name="footer">
-                        <p:dataTable id="productosSeleccionadosModificar" editable="true" editMode="cell" var="producto" value="#{notasDeVentaMainBean.notaSeleccionada.productosInventariosList}">
+                        <p:dataTable id="productosSeleccionadosModificar" editable="true" editMode="cell" var="producto" value="#{notasDeVentaMainBean.notaSeleccionada.nota.productosInventariosList}">
                             <f:facet name="header">
                                 Productos seleccionados
                             </f:facet>
@@ -304,7 +304,7 @@
                             <p:columnGroup type="footer">
                                 <p:row>
                                     <p:column colspan="3" style="text-align:right" footerText="Total:"/>
-                                    <p:column id="total" footerText="#{notasDeVentaMainBean.getTotalSeleccionado(notasDeVentaMainBean.notaSeleccionada.productosInventariosList)}">
+                                    <p:column id="total" footerText="#{notasDeVentaMainBean.getTotalSeleccionado(notasDeVentaMainBean.notaSeleccionada.nota.productosInventariosList)}">
                                     </p:column>
                                 </p:row>
                             </p:columnGroup>
@@ -326,7 +326,7 @@
             <p:dialog id="productosPopUpModificar" widgetVar="productosPopUpModificar" modal="true" height="400px" width="700">
                 <p:commandButton value="Seleccionar" id="btnSeleccionar" oncomplete="handleLoginRequest(xhr, status, args, 'productosPopUpModificar' )" process="productosPopUpModificar" update=":formModificar:gridModificar"/>
                 <p:sticky target="btnSeleccionar" />
-                <p:dataTable id="productosDisponibles" var="producto" value="#{notasDeVentaMainBean.productosDisponiblesModificacion}" selection="#{notasDeVentaMainBean.notaSeleccionada.productosInventariosList}"  rowKey="#{producto.codigo}">
+                <p:dataTable id="productosDisponibles" var="producto" value="#{notasDeVentaMainBean.productosDisponiblesModificacion}" selection="#{notasDeVentaMainBean.notaSeleccionada.nota.productosInventariosList}"  rowKey="#{producto.codigo}">
                     <f:facet name="header">
                         Productos disponibles
                     </f:facet>

@@ -5,6 +5,7 @@
  */
 package com.valco.beans;
 
+import com.valco.dao.AccesosDAO;
 import com.valco.dao.OrdenesCompraDAO;
 import com.valco.dao.ProductoDAO;
 import com.valco.dao.ProveedorDAO;
@@ -46,6 +47,8 @@ public class OrdenesCompraMainBean {
     private ProveedorDAO proveedorDAO;
     @ManagedProperty(value = "#{ubicacionesDao}")
     private UbicacionesDAO ubicacionesDao;
+    @ManagedProperty(value = "#{accesosDAO}")
+    private AccesosDAO accesosDAO;
     private List<OrdenesCompra> ordenesCompra;
     private List<ProductosInventario> produuctosInventario;
     private List<ProductosInventarioAgrupados> produuctosInventarioAgrupados;
@@ -105,6 +108,16 @@ public class OrdenesCompraMainBean {
         
     }
     
+    public boolean botonCancelarVisible(){
+        boolean visible = false;
+        try {
+            visible = accesosDAO.isUsuarioPermitir(UsuariosUtility.getUsuarioFirmado().getCorreo(), "Cancelar Ordenes");
+        } catch (Exception ex) {
+            return false;
+        }
+        return visible;
+    }
+    
     public void borrarProducto(){
         this.borrar.add(productoSeleccionado);
         this.produuctosInventario.remove(productoSeleccionado);
@@ -123,6 +136,30 @@ public class OrdenesCompraMainBean {
             
         }
 
+        
+    }
+    
+    public void cancelarOrden(){
+        
+            try {
+                if (this.ordenSeleccionado== null){
+                throw new Exception("Debe seleccionar una orden para Cancelar");
+                
+                }
+                ordenSeleccionado.setEstatus("CANCELADO");
+                ordenSeleccionado.getCuentaXPagar().setEstatus("CANCELADO");
+                for(ProductosInventario producto : ordenSeleccionado.getProductosInventarios()){
+                    producto.setEstatus("CANCELADO");
+                    
+                }
+                List<ProductosInventario> productos= new ArrayList<>(ordenSeleccionado.getProductosInventarios());
+                ordenesCompraDao.actualizarOrdenYProductos(productos, null, ordenSeleccionado);
+                MsgUtility.showInfoMeage("La orden, sus productos y la cuenta se cancelo correctamente");
+            } catch (Exception ex) {
+                MsgUtility.showErrorMeage(ex.getMessage());
+            
+            
+        }
     }
 
     public void guardarPrecio() {
@@ -131,7 +168,7 @@ public class OrdenesCompraMainBean {
             for (ProductosInventarioAgrupados agrupado : this.produuctosInventarioAgrupadosModificados) {
                 for (ProductosInventario producto : agrupado.getProductos()) {
 
-                    producto.setPrecio(agrupado.getPrecio());
+                    producto.setCosto(agrupado.getCosto());
                     producto.setProductosHasProveedores(agrupado.getProducto());
 
                 }
@@ -139,6 +176,7 @@ public class OrdenesCompraMainBean {
             }
             
             this.ordenSeleccionado.setTotal(getPrecioTotal());
+            ordenSeleccionado.getCuentaXPagar().setImporte(ordenSeleccionado.getTotal());
             this.ordenesCompraDao.actualizarOrdenYProductos(this.produuctosInventario, this.borrar, ordenSeleccionado);
             produuctosInventarioAgrupados.clear();
             produuctosInventarioAgrupados.addAll(produuctosInventarioAgrupadosModificados);
@@ -183,8 +221,8 @@ public class OrdenesCompraMainBean {
             for (ProductosInventario producto : produuctosInventario){
                 ProductosInventarioAgrupados productoAgrupado = new ProductosInventarioAgrupados();
                 productoAgrupado.setPeso(producto.getPeso());
-                productoAgrupado.setPrecio(producto.getPrecio());
-                productoAgrupado.setPrecioModificado(producto.getPrecio());
+                productoAgrupado.setCosto(producto.getCosto());
+                productoAgrupado.setPrecioModificado(producto.getCosto());
                 productoAgrupado.setProducto(producto.getProductosHasProveedores());
                 productoAgrupado.setProductoModificado(producto.getProductosHasProveedores());
                 productoAgrupado.setProductos(new ArrayList<ProductosInventario>());
@@ -223,7 +261,7 @@ public class OrdenesCompraMainBean {
         BigDecimal precio = new BigDecimal("0.00");
          precio= precio.setScale(2, BigDecimal.ROUND_HALF_UP);
        for(ProductosInventarioAgrupados producto : this.produuctosInventarioAgrupadosModificados){
-           precio= precio.add(producto.getPeso().multiply(producto.getPrecio()).setScale(2, BigDecimal.ROUND_HALF_UP));
+           precio= precio.add(producto.getPeso().multiply(producto.getCosto()).setScale(2, BigDecimal.ROUND_HALF_UP));
        }
        return precio;
     }
@@ -255,6 +293,7 @@ public class OrdenesCompraMainBean {
                 productoUnitario.setPeso(new BigDecimal("0.00"));
                 productoUnitario.setEstatus("ACTIVO");
                 productoUnitario.setPrecio(producto.getProductosHasProveedores().getProductos().getPrecioSugerido());
+                //productoUnitario.setCosto(producto.getProductosHasProveedores().getPrecioSugerido());
                 productoUnitario.setOrdenesCompra(ordenAbarrotesNueva);
                 productoUnitario.setUbicaciones(ubicacionSeleccionada);
                 productosInventarioUnitarios.add(productoUnitario);
@@ -269,6 +308,7 @@ public class OrdenesCompraMainBean {
         ordenAbarrotesNueva.setTotal(totalOrden);
         
         try {
+            ordenAbarrotesNueva.getCuentaXPagar().setImporte(ordenAbarrotesNueva.getTotal());
             ordenesCompraDao.actualizarOrdenYProductos(new ArrayList<ProductosInventario>(productosInventarioUnitarios), null, ordenAbarrotesNueva);
             ordenesCompra.add(ordenAbarrotesNueva);
             ordenAbarrotesNueva = new OrdenesCompra();
@@ -479,6 +519,16 @@ public class OrdenesCompraMainBean {
     public void setUbicacionSeleccionada(Ubicaciones ubicacionSeleccionada) {
         this.ubicacionSeleccionada = ubicacionSeleccionada;
     }
+
+    public AccesosDAO getAccesosDAO() {
+        return accesosDAO;
+    }
+
+    public void setAccesosDAO(AccesosDAO accesosDAO) {
+        this.accesosDAO = accesosDAO;
+    }
+    
+    
     
     
     

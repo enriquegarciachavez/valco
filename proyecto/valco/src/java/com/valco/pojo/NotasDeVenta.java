@@ -148,7 +148,12 @@ public class NotasDeVenta  implements java.io.Serializable {
 
     public CuentasXCobrar getCuentaXCobrar() {
         for(CuentasXCobrar cuenta : cuentasXCobrars){
-            this.cuentaXCobrar = cuenta;
+            if("ACTIVO".equals(cuenta.getEstatus())){
+                this.cuentaXCobrar = cuenta;
+                break;
+            }
+            
+            
         }
         return this.cuentaXCobrar;
     }

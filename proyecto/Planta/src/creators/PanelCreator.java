@@ -17,6 +17,7 @@ import panels.InventariosMain;
 import panels.ReciboDeProducto;
 import panels.ReciboProductoBC;
 import panels.ReciboTransferenciasPanel;
+import panels.VentasPanel;
 
 /**
  *
@@ -48,6 +49,8 @@ public class PanelCreator {
             return new AsignacionProductoRepartidor();
         }else if("Producto no vendido".equals(panelName)){
             return new AsignacionProductoRepartidor("ENTRADA");
+        }else if("Venta".equals(panelName)){
+            return new VentasPanel();
         }
         return null;
     } 

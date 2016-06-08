@@ -193,17 +193,7 @@ public class ProveedorDAO implements Serializable{
               tx = session.beginTransaction();
               Query q = session.createQuery("FROM Proveedores");
               proveedores = (List<Proveedores>) q.list();
-              for (Proveedores proveedor : proveedores) {
-
-                  for (OrdenesCompra orden : proveedor.getOrdenesCompras()) {
-
-                      Hibernate.initialize(orden);
-
-                      Hibernate.initialize(orden.getCuentasXPagars());
-
-                  }
-
-              }
+              
               tx.commit();
               return proveedores;
 

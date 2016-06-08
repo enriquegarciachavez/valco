@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.valco.pojo.InventarioDetallado" table="INVENTARIO_DETALLADO" >
+        <id name="productoCodigoDetallado" type="java.lang.Integer">
+            <column name="PRODUCTO_CODIGO_DETALLADO" />
+            <generator class="identity" />
+        </id>
+        <property name="inventarioGlobalCodigo" type="java.lang.Integer" update="false">
+            <column name="INVENTARIO_GLOBAL_CODIGO" />
+        </property> 
+        <property name="descripcion" type="string">
+            <column name="DESCRIPCION" length="45" />
+        </property> 
+        <property name="peso" type="big_decimal">
+            <column name="PESO" precision="4" not-null="true" />
+        </property>
+        <property name="precioUnitario" type="big_decimal">
+            <column name="PRECIO_UNITARIO" precision="4" not-null="true" />
+        </property>
+        <property name="precioTotal" type="big_decimal">
+            <column name="PRECIO_TOTAL" precision="4" not-null="true" />
+        </property>        
+        <property name="codigoBarras" type="string">
+            <column name="CODIGO_BARRAS" length="100" />
+        </property>
+        <property name="estatus" type="string">
+            <column name="ESTATUS" length="20" />
+        </property>
+        
+        
+    </class>
+</hibernate-mapping>

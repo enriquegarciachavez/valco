@@ -246,6 +246,21 @@ public class Clientes  implements java.io.Serializable {
         this.notasDeVentas = notasDeVentas;
     }
 
+    public String toString() {
+        return this.getApellidoPaterno()+" "+(null == this.getApellidoMaterno() ? "" : this.getApellidoMaterno())+" "+this.getNombres();
+    }
+
+    public boolean equals(Object o) {
+        if (o != null) {
+            if (((o instanceof Clientes) && (((Clientes) o).getCodigo().equals(this.getCodigo())))) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 
 
 

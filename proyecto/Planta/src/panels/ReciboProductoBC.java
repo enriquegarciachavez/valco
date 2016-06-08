@@ -342,8 +342,8 @@ public class ReciboProductoBC extends BarCodableImpl {
         orden.setFecha(new Date());
         orden.setProveedores((Proveedores) proveedorLOV.getSelectedItem());
         BigDecimal total = BigDecimal.ZERO;
-        for (ProductosInventario producto : orden.getProductosInventarios()) {
-            total = total.add(producto.getPrecio().multiply(producto.getPeso()));
+        for (ProductosInventario producto : nuevosProductos) {
+            total = total.add(producto.getCosto().multiply(producto.getPeso()));
         }
         orden.setTotal(total);
         try {
@@ -442,11 +442,20 @@ public class ReciboProductoBC extends BarCodableImpl {
     }
 
     public void agregarProducto() throws Exception {
+        int barCodeSize = 0;
+        
         if(codigoBarrasTxt.getText().length() < getProveedorSeleccionado().getPosicionCodigoFinal()){
             return;
         }
 
         ProductosHasProveedores productoHasProveedores = null;
+        barCodeSize= codigoBarrasTxt.getText().length();
+        if(barCodeSize< getProveedorSeleccionado().getPosicionCodigoInicial() || 
+                barCodeSize< getProveedorSeleccionado().getPosicionCodigoFinal() ||
+                barCodeSize < getProveedorSeleccionado().getPosicionPesoInicial() ||
+                barCodeSize< getProveedorSeleccionado().getPosicionPesoFinal()){
+            return;
+        }
 
         String codigoProducto
                 = codigoBarrasTxt.getText().substring(getProveedorSeleccionado().getPosicionCodigoInicial(),
@@ -468,7 +477,8 @@ public class ReciboProductoBC extends BarCodableImpl {
             productoNuevo.setPeso(new BigDecimal(peso));
             productoNuevo.setCodigoBarras(codigoBarrasTxt.getText());
             productoNuevo.setProductosHasProveedores(productoHasProveedores);
-            productoNuevo.setPrecio(productoHasProveedores.getPrecioSugerido());
+            productoNuevo.setCosto(productoHasProveedores.getPrecioSugerido());
+            productoNuevo.setPrecio(productoHasProveedores.getProductos().getPrecioSugerido());
             productoNuevo.setUbicaciones(UsuarioFirmado.getUsuarioFirmado().getUbicaciones());
             productoNuevo.setEstatus("ACTIVO");
             ultimoProductoInventario = productoNuevo;

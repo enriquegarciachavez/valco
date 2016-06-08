@@ -24,6 +24,7 @@ public class OrdenesCompra  implements java.io.Serializable {
      private Set<CuentasXPagar> cuentasXPagars = new HashSet<CuentasXPagar>(0);
      private Set<ProductosInventario> productosInventarios = new HashSet<ProductosInventario>(0);
      private CuentasXPagar cuentaXPagar;
+     private BigDecimal totalAbonado;
 
     public OrdenesCompra() {
     }
@@ -129,6 +130,14 @@ public class OrdenesCompra  implements java.io.Serializable {
 
     public void setIva(BigDecimal iva) {
         this.iva = iva;
+    }
+
+    public BigDecimal getTotalAbonado() {
+        return totalAbonado;
+    }
+
+    public void setTotalAbonado(BigDecimal totalAbonado) {
+        this.totalAbonado = totalAbonado;
     }
     
 

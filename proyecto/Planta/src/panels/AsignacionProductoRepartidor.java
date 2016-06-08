@@ -672,6 +672,7 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
 
     public void limpiar() {
         modelProductos.setRowCount(0);
+        productos.clear();
     }
 
     private Object[] getProducts() {

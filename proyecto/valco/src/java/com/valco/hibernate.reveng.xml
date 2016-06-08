@@ -24,9 +24,11 @@
   <table-filter match-name="REPARTIDORES"/>
   <table-filter match-name="TIPO_PRODUCTO"/>
   <table-filter match-name="ORDENES_COMPRA"/>
+  <table-filter match-name="ORDENES_COMPRA_VIEW"/>
   <table-filter match-name="USUARIOS"/>
   <table-filter match-name="CUENTAS_X_COBRAR"/>
   <table-filter match-name="NOTAS_DE_VENTA"/>
+  <table-filter match-name="NOTAS_DE_VENTA_VIEW"/>
   <table-filter match-name="PARAMETROS_GENERALES"/>
   <table-filter match-name="IMPUESTOS"/>
   <table-filter match-name="GRUPOS"/>
@@ -39,4 +41,6 @@
   <table-filter match-name="PRODUCTOS"/>
   <table-filter match-name="POLIZAS"/>
   <table-filter match-name="CONCEPTOS"/>
+  <table-filter match-name="INVENTARIO_GLOBAL"/>
+  <table-filter match-name="INVENTARIO_DETALLADO"/>
 </hibernate-reverse-engineering>

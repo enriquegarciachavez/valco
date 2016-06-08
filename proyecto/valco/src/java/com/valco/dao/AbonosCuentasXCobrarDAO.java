@@ -8,6 +8,7 @@ package com.valco.dao;
 import com.valco.HibernateUtil;
 import com.valco.pojo.AbonosCuentasXCobrar;
 import com.valco.pojo.Clientes;
+import com.valco.pojo.CuentasXCobrar;
 import com.valco.pojo.NotasDeVenta;
 import java.util.ArrayList;
 import java.util.Date;
@@ -127,6 +128,7 @@ public class AbonosCuentasXCobrarDAO {
 
           } finally {
               try {
+                  if(session.isOpen())
                   session.close();
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los clientes.");
@@ -151,6 +153,7 @@ public class AbonosCuentasXCobrarDAO {
 
           } finally {
               try {
+                  if(session.isOpen())
                   session.close();
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los clientes.");
@@ -167,7 +170,7 @@ public class AbonosCuentasXCobrarDAO {
           try {
               tx = session.beginTransaction();
               Criteria criteria = session.createCriteria(NotasDeVenta.class);
-              tx = session.beginTransaction();
+              
               if(fechaInicial != null && fechaFinal != null){
                   criteria.add(Restrictions.between("fechaDeVenta",fechaInicial,fechaFinal));
               }else if(fechaInicial != null){
@@ -206,6 +209,33 @@ public class AbonosCuentasXCobrarDAO {
                   }
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los abonos.");
+              }
+        }
+    }
+    
+    public List<AbonosCuentasXCobrar> getAbonosXCuentasXCobrar(CuentasXCobrar cuenta) throws Exception {
+          Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+          Transaction tx = null;
+          List<AbonosCuentasXCobrar> abonos = new ArrayList<AbonosCuentasXCobrar>();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(AbonosCuentasXCobrar.class)
+                      .add(Restrictions.eq("cuentasXCobrar", cuenta));
+              abonos = (List<AbonosCuentasXCobrar>) q.list();
+              
+              tx.commit();
+              return abonos;
+
+          } catch (HibernateException he) {
+              tx.commit();
+              throw new Exception("Ocurrió un error al consultar los clientes.");
+
+          } finally {
+              try {
+                  if(session.isOpen())
+                  session.close();
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los clientes.");
               }
         }
     }

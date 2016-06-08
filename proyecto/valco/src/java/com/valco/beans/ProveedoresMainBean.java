@@ -143,6 +143,15 @@ public class ProveedoresMainBean implements Serializable {
         }
 
     }
+    
+    public void validarPesoFinal(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+        int pesoFinal = (int) value;
+        if (pesoFinal < (int)posicionPesoInicial.getValue() ){
+            throw new ValidatorException(new FacesMessage("La Posición final del peso debe ser mayor a la posición inicial"));
+            
+        }
+
+    }
 
     public void validarModificarRazonSocial(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
         Proveedores razon = null;

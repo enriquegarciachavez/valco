@@ -9,8 +9,8 @@
     <property name="hibernate.connection.password">1VtHQW5M-3g-</property>
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.current_session_context_class">thread</property>
-    <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
     <property name="hibernate.enable_lazy_load_no_trans">true</property>
+    <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
     <mapping resource="com/valco/pojo/TipoProducto.hbm.xml"/>
     <mapping resource="com/valco/pojo/CuentasContables.hbm.xml"/>
     <mapping resource="com/valco/pojo/NotasDeVenta.hbm.xml"/>
@@ -46,5 +46,9 @@
     <mapping resource="com/valco/pojo/Subfamilias.hbm.xml"/>
     <mapping resource="com/valco/pojo/Polizas.hbm.xml"/>
     <mapping resource="com/valco/pojo/Conceptos.hbm.xml"/>
+    <mapping resource="com/valco/pojo/OrdenesCompraView.hbm.xml"/>
+    <mapping resource="com/valco/pojo/NotasDeVentaView.hbm.xml"/>
+    <mapping resource="com/valco/pojo/InventarioGlobal.hbm.xml"/>
+    <mapping resource="com/valco/pojo/InventarioDetallado.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

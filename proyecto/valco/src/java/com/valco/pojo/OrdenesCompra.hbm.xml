@@ -29,13 +29,13 @@
         <property name="estatus" type="string">
             <column name="ESTATUS" length="20" not-null="true" />
         </property>
-        <set name="cuentasXPagars" table="CUENTAS_X_PAGAR" inverse="true"  fetch="select">
+        <set name="cuentasXPagars" table="CUENTAS_X_PAGAR" inverse="true" lazy="true" fetch="subselect">
             <key>
                 <column name="ORDENES_COMPRA_CODIGO" not-null="true" unique="true" />
             </key>
             <one-to-many class="com.valco.pojo.CuentasXPagar" />
         </set>
-        <set name="productosInventarios" table="PRODUCTOS_INVENTARIO" inverse="true"  fetch="select">
+        <set name="productosInventarios" table="PRODUCTOS_INVENTARIO" lazy="true" fetch="select">
             <key>
                 <column name="ORDENES_COMPRA_CODIGO" not-null="true" />
             </key>

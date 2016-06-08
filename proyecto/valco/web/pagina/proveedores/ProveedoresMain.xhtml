@@ -142,16 +142,20 @@
                             <p:message for="posicionpesoinicial" display="icon" />
 
                             <p:outputLabel for="posicionpesofinal" value="Posicion peso final" />
-                            <p:inputText id="posicionpesofinal" binding="#{proveedoresMainBean.posicionPesoFinal}" required="true" label="posicionpesofinal" value="#{proveedoresMainBean.proveedorNuevo.posicionPesoFinal}"/>
+                            <p:inputText id="posicionpesofinal" binding="#{proveedoresMainBean.posicionPesoFinal}" required="true" label="posicionpesofinal" value="#{proveedoresMainBean.proveedorNuevo.posicionPesoFinal}"
+                                         validator="#{proveedoresMainBean.validarPesoFinal}"/>
+                            
                             <p:message for="posicionpesofinal" display="icon" />
+                            
+                            <p:outputLabel for="posicioncodigoinicial" value="Posicion codigo inicial" />
+                            <p:inputText id="posicioncodigoinicial" binding="#{proveedoresMainBean.posicionCodigoInicial}" required="true" label="posicioncodigoinicial" value="#{proveedoresMainBean.proveedorNuevo.posicionCodigoInicial}"/>
+                            <p:message for="posicioncodigoinicial" display="icon" />
 
                             <p:outputLabel for="posicioncodigofinal" value="Posicion codigo final" />
                             <p:inputText id="posicioncodigofinal" binding="#{proveedoresMainBean.posicionCodigoFinal}" required="true" label="posicioncodigofinal" value="#{proveedoresMainBean.proveedorNuevo.posicionCodigoFinal}"/>
                             <p:message for="posicioncodigofinal" display="icon" />
 
-                            <p:outputLabel for="posicioncodigoinicial" value="Posicion codigo inicial" />
-                            <p:inputText id="posicioncodigoinicial" binding="#{proveedoresMainBean.posicionCodigoInicial}" required="true" label="posicioncodigoinicial" value="#{proveedoresMainBean.proveedorNuevo.posicionCodigoInicial}"/>
-                            <p:message for="posicioncodigoinicial" display="icon" />
+                            
                             
                             <h:outputText value="Abarrote: " />
                             <p:selectBooleanCheckbox value="#{proveedoresMainBean.proveedorNuevo.abarrotes}" binding="#{proveedoresMainBean.abarrotes}" id="abarrote"/>
@@ -247,14 +251,16 @@
                             <p:outputLabel for="posicionpesofinal2" value="Posicion peso final" />
                             <p:inputText id="posicionpesofinal2" required="true" label="posicionpesofinal" value="#{proveedoresMainBean.proveedorSeleccionado.posicionPesoFinal}"/>
                             <p:message for="posicionpesofinal2" display="icon" />
+                            
+                            <p:outputLabel for="posicioncodigoinicial2" value="Posicion codigo inicial" />
+                            <p:inputText id="posicioncodigoinicial2" required="true" label="posicioncodigoinicial" value="#{proveedoresMainBean.proveedorSeleccionado.posicionCodigoInicial}"/>
+                            <p:message for="posicioncodigoinicial2" display="icon" />
 
                             <p:outputLabel for="posicioncodigofinal2" value="Posicion codigo final" />
                             <p:inputText id="posicioncodigofinal2" required="true" label="posicioncodigofinal" value="#{proveedoresMainBean.proveedorSeleccionado.posicionCodigoFinal}"/>
                             <p:message for="posicioncodigofinal2" display="icon" />
 
-                            <p:outputLabel for="posicioncodigoinicial2" value="Posicion codigo inicial" />
-                            <p:inputText id="posicioncodigoinicial2" required="true" label="posicioncodigoinicial" value="#{proveedoresMainBean.proveedorSeleccionado.posicionCodigoInicial}"/>
-                            <p:message for="posicioncodigoinicial2" display="icon" />
+                            
                             
                             <h:outputText value="Abarrotes: " />
                             <p:selectBooleanCheckbox id="abarrotes" value="#{proveedoresMainBean.proveedorSeleccionado.abarrotes}" />

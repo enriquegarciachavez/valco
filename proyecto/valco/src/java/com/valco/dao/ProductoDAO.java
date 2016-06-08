@@ -7,6 +7,7 @@ package com.valco.dao;
 
 import com.valco.HibernateUtil;
 import com.valco.pojo.CuentasXPagar;
+import com.valco.pojo.InventarioGlobal;
 import com.valco.pojo.OrdenesCompra;
 import com.valco.pojo.Productos;
 import com.valco.pojo.ProductosHasProveedores;
@@ -147,13 +148,15 @@ public class ProductoDAO {
         List<Productos> productos = new ArrayList<Productos>();
         try {
             tx = session.beginTransaction();
-            Criteria q = session.createCriteria(Productos.class)
-                      .setFetchMode("tipoProducto", FetchMode.JOIN);
-              q.setFetchMode("unidadesDeMedida", FetchMode.JOIN);
+            Criteria q = session.createCriteria(Productos.class);
+                      
               productos = (List<Productos>) q.list();
+              
               for(Productos producto: productos){
                   Hibernate.initialize(producto.getSubfamilias());
                   Hibernate.initialize(producto.getSubfamilias().getFamilias());
+                  Hibernate.initialize(producto.getTipoProducto());
+                  Hibernate.initialize(producto.getUnidadesDeMedida());
               }
               tx.commit();
             return productos;
@@ -169,6 +172,35 @@ public class ProductoDAO {
                   }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al consultar los producto.");
+            }
+        }
+    }
+    
+    public List<InventarioGlobal> getInventarioGlobal() throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        List<InventarioGlobal> inventarioGlobal = new ArrayList<InventarioGlobal>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(InventarioGlobal.class);
+                      
+              inventarioGlobal = (List<InventarioGlobal>) q.list();
+              
+              
+              tx.commit();
+            return inventarioGlobal;
+
+        } catch (HibernateException he) {
+            tx.commit();
+            throw new Exception("Ocurrió un error al consultar el inventario.");
+
+        } finally {
+            try {
+                if(session.isOpen()){
+                    session.close();
+                  }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar el inventario.");
             }
         }
     }

@@ -3,24 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.valco.dao;
+package dao;
 
-import com.valco.HibernateUtil;
-import com.valco.pojo.AbonosCuentasXCobrar;
-import com.valco.pojo.Clientes;
-import com.valco.pojo.CuentasXCobrar;
-import com.valco.pojo.NotasDeVenta;
-import com.valco.pojo.NotasDeVentaView;
-import com.valco.pojo.ProductosInventario;
-import com.valco.pojo.Repartidores;
+
+import Hibernate.HibernateUtil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import mapping.AbonosCuentasXCobrar;
+import mapping.Clientes;
+import mapping.CuentasXCobrar;
+import mapping.NotasDeVenta;
+import mapping.ProductosInventario;
+import mapping.Repartidores;
 import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Projections;
@@ -89,7 +87,7 @@ public class NotasVentaDAO {
     }
 
     public void actualizarNotaDeVenta(NotasDeVenta nota) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();    
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
@@ -200,6 +198,8 @@ public class NotasVentaDAO {
             }
         }
     }
+    
+    
 
     public void actualizarNotasDeVenta(List<NotasDeVenta> notas) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -501,34 +501,7 @@ public class NotasVentaDAO {
         }
     }
     
-    public List<NotasDeVentaView> getNotasDeVentaViewXCliente(Clientes cliente) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = null;
-        List<NotasDeVentaView> notas = new ArrayList<NotasDeVentaView>();
-        try {
-            tx = session.beginTransaction();
-            Criteria q = session.createCriteria(NotasDeVentaView.class)
-                    
-                    .add(Restrictions.eq("clientes", cliente));
-            notas = (List<NotasDeVentaView>) q.list();
-
-            tx.commit();
-            return notas;
-
-        } catch (HibernateException he) {
-            tx.commit();
-            throw new Exception("Ocurrió un error al consultar los clientes.");
-
-        } finally {
-            try {
-                if (session.isOpen()) {
-                    session.close();
-                }
-            } catch (HibernateException he) {
-                throw new Exception("Ocurrió un error al consultar los clientes.");
-            }
-        }
-    }
+    
 
     public List<NotasDeVenta> getNotasDeVentaXClienteVendidas(Clientes cliente) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -597,34 +570,7 @@ public class NotasVentaDAO {
         }
     }
     
-     public List<NotasDeVentaView> getNotasDeVentaVendidasView() throws Exception {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = null;
-        List<NotasDeVentaView> notas = new ArrayList<NotasDeVentaView>();
-        try {
-            tx = session.beginTransaction();
-            Criteria q = session.createCriteria(NotasDeVentaView.class)
-                    
-                    .add(Restrictions.eq("estatus", "VENDIDA"));
-            notas = (List<NotasDeVentaView>) q.list();
-            
-            tx.commit();
-            return notas;
-
-        } catch (HibernateException he) {
-            tx.commit();
-            throw new Exception("Ocurrió un error al consultar los clientes.");
-
-        } finally {
-            try {
-                if (session.isOpen()) {
-                    session.close();
-                }
-            } catch (HibernateException he) {
-                throw new Exception("Ocurrió un error al consultar los clientes.");
-            }
-        }
-    }
+   
 
     public List<AbonosCuentasXCobrar> getAbonosXCuenta(CuentasXCobrar cuenta) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
