@@ -5,7 +5,6 @@
  */
 package dao;
 
-
 import Hibernate.HibernateUtil;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,7 +27,7 @@ import org.hibernate.criterion.Restrictions;
  *
  * @author Karlitha
  */
-public class NotasVentaDAO {
+public class NotasVentaDAO implements NotaVentaDAOInterface {
 
     public void insertarNotaDeVenta(NotasDeVenta nota) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -198,8 +197,6 @@ public class NotasVentaDAO {
             }
         }
     }
-    
-    
 
     public void actualizarNotasDeVenta(List<NotasDeVenta> notas) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -476,7 +473,6 @@ public class NotasVentaDAO {
         try {
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(NotasDeVenta.class)
-                    
                     .add(Restrictions.eq("clientes", cliente));
             notas = (List<NotasDeVenta>) q.list();
             for (NotasDeVenta nota : notas) {
@@ -500,8 +496,6 @@ public class NotasVentaDAO {
             }
         }
     }
-    
-    
 
     public List<NotasDeVenta> getNotasDeVentaXClienteVendidas(Clientes cliente) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -542,7 +536,6 @@ public class NotasVentaDAO {
         try {
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(NotasDeVenta.class)
-                    
                     .add(Restrictions.eq("estatus", "VENDIDA"));
             notas = (List<NotasDeVenta>) q.list();
             for (NotasDeVenta nota : notas) {
@@ -569,8 +562,6 @@ public class NotasVentaDAO {
             }
         }
     }
-    
-   
 
     public List<AbonosCuentasXCobrar> getAbonosXCuenta(CuentasXCobrar cuenta) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -697,7 +688,7 @@ public class NotasVentaDAO {
             }
         }
     }
-    
+
     public List<NotasDeVenta> getNotasDeVentaXClienteConAbonos(Clientes cliente) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
@@ -705,12 +696,11 @@ public class NotasVentaDAO {
         try {
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(NotasDeVenta.class)
-                    
                     .add(Restrictions.eq("clientes", cliente))
                     .setProjection(Projections.alias(Projections.sum(""), null));
-            
+
             notas = (List<NotasDeVenta>) q.list();
-            
+
             tx.commit();
             return notas;
 
@@ -725,6 +715,50 @@ public class NotasVentaDAO {
                 }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al consultar los clientes.");
+            }
+        }
+    }
+
+    public void actualizarNotaDeVenta(NotasDeVenta nota, List<ProductosInventario> productos) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.update(nota);
+            CuentasXCobrar cuenta = new CuentasXCobrar();
+            cuenta.setEstatus("ACTIVO");
+            cuenta.setFecha(new Date());
+            cuenta.setImporte(nota.getTotal());
+            cuenta.setNotasDeVenta(nota);
+            session.save(cuenta);
+            for (ProductosInventario producto : nota.getProductosInventarios()) {
+                producto.setEstatus("VENDIDO");
+                session.saveOrUpdate(producto);
+            }
+            if (productos != null) {
+
+                for (ProductosInventario producto : productos) {
+
+                    session.update(producto);
+                }
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                try {
+                    tx.rollback();
+                } catch (HibernateException he) {
+                    throw new Exception("Ocurrió un error al realizar la venta.");
+                }
+            }
+            throw new Exception("Ocurrió un error al realizar la venta.");
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al realizar la venta.");
             }
         }
     }

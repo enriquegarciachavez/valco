@@ -1,57 +1,56 @@
-<?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 24-may-2015 21:47:36 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="mapping.Usuarios" table="USUARIOS" catalog="valco" optimistic-lock="version">
-        <id name="codigo" type="java.lang.Integer">
-            <column name="CODIGO" />
-            <generator class="identity" />
-        </id>
-        <many-to-one name="ubicaciones" class="mapping.Ubicaciones" fetch="select">
-            <column name="UBICACIONES_CODIGO" not-null="true" />
-        </many-to-one>
-        <property name="correo" type="string">
-            <column name="CORREO" length="100" not-null="true" unique="true" />
-        </property>
-        <property name="nombre" type="string">
-            <column name="NOMBRE" length="100" not-null="true" />
-        </property>
-        <property name="apellidoPaterno" type="string">
-            <column name="APELLIDO_PATERNO" length="100" not-null="true" />
-        </property>
-        <property name="apellidoMaterno" type="string">
-            <column name="APELLIDO_MATERNO" length="100" />
-        </property>
-        <property name="password" type="string">
-            <column name="PASSWORD" length="100" not-null="true" />
-        </property>
-        <property name="estatus" type="string">
-            <column name="ESTATUS" length="20" />
-        </property>
-        <set name="movimientoses" table="MOVIMIENTOS" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="USUARIOS_CODIGO" not-null="true" />
-            </key>
-            <one-to-many class="mapping.Movimientos" />
-        </set>
-        <set name="notasDeVentas" table="NOTAS_DE_VENTA" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="USUARIOS_CODIGO" not-null="true" />
-            </key>
-            <one-to-many class="mapping.NotasDeVenta" />
-        </set>
-        <set name="tranferenciases" table="TRANFERENCIAS" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="USUARIOS_CODIGO" not-null="true" />
-            </key>
-            <one-to-many class="mapping.Tranferencias" />
-        </set>
-        <set name="ordenesCompras" table="ORDENES_COMPRA" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="USUARIOS_CODIGO" not-null="true" />
-            </key>
-            <one-to-many class="mapping.OrdenesCompra" />
-        </set>
-    </class>
+  <class catalog="valco" name="mapping.Usuarios" optimistic-lock="version" table="USUARIOS">
+    <id name="codigo" type="java.lang.Integer">
+      <column name="CODIGO"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="mapping.Ubicaciones" fetch="select" name="ubicaciones">
+      <column name="UBICACIONES_CODIGO" not-null="true"/>
+    </many-to-one>
+    <property name="correo" type="string">
+      <column length="100" name="CORREO" not-null="true" unique="true"/>
+    </property>
+    <property name="nombre" type="string">
+      <column length="100" name="NOMBRE" not-null="true"/>
+    </property>
+    <property name="apellidoPaterno" type="string">
+      <column length="100" name="APELLIDO_PATERNO" not-null="true"/>
+    </property>
+    <property name="apellidoMaterno" type="string">
+      <column length="100" name="APELLIDO_MATERNO"/>
+    </property>
+    <property name="password" type="string">
+      <column length="100" name="PASSWORD" not-null="true"/>
+    </property>
+    <property name="estatus" type="string">
+      <column length="20" name="ESTATUS"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="movimientoses" table="MOVIMIENTOS">
+      <key>
+        <column name="USUARIOS_CODIGO" not-null="true"/>
+      </key>
+      <one-to-many class="mapping.Movimientos"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="notasDeVentas" table="NOTAS_DE_VENTA">
+      <key>
+        <column name="USUARIOS_CODIGO" not-null="true"/>
+      </key>
+      <one-to-many class="mapping.NotasDeVenta"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="tranferenciases" table="TRANFERENCIAS">
+      <key>
+        <column name="USUARIOS_CODIGO" not-null="true"/>
+      </key>
+      <one-to-many class="mapping.Tranferencias"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="ordenesCompras" table="ORDENES_COMPRA">
+      <key>
+        <column name="USUARIOS_CODIGO" not-null="true"/>
+      </key>
+      <one-to-many class="mapping.OrdenesCompra"/>
+    </set>
+  </class>
 </hibernate-mapping>

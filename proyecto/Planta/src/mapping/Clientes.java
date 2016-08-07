@@ -247,7 +247,7 @@ public class Clientes  implements java.io.Serializable {
     }
 
     public String toString() {
-        return this.getApellidoPaterno()+" "+(null == this.getApellidoMaterno() ? "" : this.getApellidoMaterno())+" "+this.getNombres();
+        return this.getRazonSocial();
     }
 
     public boolean equals(Object o) {

@@ -1,33 +1,32 @@
-<?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 24-may-2015 21:47:36 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="mapping.CuentasXPagar" table="CUENTAS_X_PAGAR" catalog="valco" optimistic-lock="version">
-        <id name="codigo" type="java.lang.Integer">
-            <column name="CODIGO" />
-            <generator class="identity" />
-        </id>
-        <many-to-one name="ordenesCompra" class="mapping.OrdenesCompra" fetch="select">
-            <column name="ORDENES_COMPRA_CODIGO" not-null="true" unique="true" />
-        </many-to-one>
-        <property name="fecha" type="timestamp">
-            <column name="FECHA" length="19" not-null="true" />
-        </property>
-        <property name="importe" type="big_decimal">
-            <column name="IMPORTE" precision="7" not-null="true" />
-        </property>
-        <property name="observaciones" type="string">
-            <column name="OBSERVACIONES" length="65535" />
-        </property>
-        <property name="estatus" type="string">
-            <column name="ESTATUS" length="20" not-null="true" />
-        </property>
-        <set name="abonosCuentasXPagars" table="ABONOS_CUENTAS_X_PAGAR" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="CUENTAS_X_PAGAR_CODIGO" not-null="true" />
-            </key>
-            <one-to-many class="mapping.AbonosCuentasXPagar" />
-        </set>
-    </class>
+  <class catalog="valco" name="mapping.CuentasXPagar" optimistic-lock="version" table="CUENTAS_X_PAGAR">
+    <id name="codigo" type="java.lang.Integer">
+      <column name="CODIGO"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="mapping.OrdenesCompra" fetch="select" name="ordenesCompra">
+      <column name="ORDENES_COMPRA_CODIGO" not-null="true" unique="true"/>
+    </many-to-one>
+    <property name="fecha" type="timestamp">
+      <column length="19" name="FECHA" not-null="true"/>
+    </property>
+    <property name="importe" type="big_decimal">
+      <column name="IMPORTE" not-null="true" precision="7"/>
+    </property>
+    <property name="observaciones" type="string">
+      <column length="65535" name="OBSERVACIONES"/>
+    </property>
+    <property name="estatus" type="string">
+      <column length="20" name="ESTATUS" not-null="true"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="abonosCuentasXPagars" table="ABONOS_CUENTAS_X_PAGAR">
+      <key>
+        <column name="CUENTAS_X_PAGAR_CODIGO" not-null="true"/>
+      </key>
+      <one-to-many class="mapping.AbonosCuentasXPagar"/>
+    </set>
+  </class>
 </hibernate-mapping>

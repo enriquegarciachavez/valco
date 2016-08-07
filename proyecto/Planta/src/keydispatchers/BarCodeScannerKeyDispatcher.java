@@ -17,12 +17,13 @@ import javax.swing.JTextField;
  *
  * @author Karla
  */
-public class BarCodeScannerKeyDispatcher implements KeyEventDispatcher{
+public class BarCodeScannerKeyDispatcher implements KeyEventDispatcher {
+
     private JTextField barcodeField;
     private KeyboardFocusManager manager;
     private List<Component> exceptions;
-    
-    public BarCodeScannerKeyDispatcher(JTextField barcodeField, KeyboardFocusManager manager, List<Component> exceptions){
+
+    public BarCodeScannerKeyDispatcher(JTextField barcodeField, KeyboardFocusManager manager, List<Component> exceptions) {
         this.barcodeField = barcodeField;
         this.manager = manager;
         this.exceptions = exceptions;
@@ -30,14 +31,17 @@ public class BarCodeScannerKeyDispatcher implements KeyEventDispatcher{
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
-        for(Component exception: exceptions){
-        if(exception.equals(e.getSource())){
-            manager.redispatchEvent(exception, e);
-            return true;
-        }
+        if (exceptions != null) {
+
+            for (Component exception : exceptions) {
+                if (e.getSource().equals(exception)) {
+                    manager.redispatchEvent(exception, e);
+                    return true;
+                }
+            }
         }
         manager.redispatchEvent(barcodeField, e);
         return true;
     }
-    
+
 }

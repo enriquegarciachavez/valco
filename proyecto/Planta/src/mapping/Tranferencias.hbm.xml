@@ -1,42 +1,41 @@
-<?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 24-may-2015 21:47:36 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="mapping.Tranferencias" table="TRANFERENCIAS" catalog="valco" optimistic-lock="version">
-        <id name="codigo" type="java.lang.Integer">
-            <column name="CODIGO" />
-            <generator class="identity" />
-        </id>
-        <many-to-one name="ubicacionesByDestino" class="mapping.Ubicaciones" fetch="select">
-            <column name="DESTINO" not-null="true" />
-        </many-to-one>
-        <many-to-one name="ubicacionesBySalida" class="mapping.Ubicaciones" fetch="select">
-            <column name="SALIDA" not-null="true" />
-        </many-to-one>
-        <many-to-one name="usuarios" class="mapping.Usuarios" fetch="select">
-            <column name="USUARIOS_CODIGO" not-null="true" />
-        </many-to-one>
-        <property name="estatus" type="string">
-            <column name="ESTATUS" length="20" not-null="true" />
-        </property>
-        <property name="fechaEnvio" type="date">
-            <column name="FECHA_ENVIO" length="10" not-null="true" />
-        </property>
-        <property name="fechaLlegada" type="date">
-            <column name="FECHA_LLEGADA" length="45" />
-        </property>
-        <set name="productosInventarios" table="PRODUCTOS_INVENTARIO" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="TRANFERENCIAS_CODIGO" />
-            </key>
-            <one-to-many class="mapping.ProductosInventario" />
-        </set>
-        <set name="mermas" table="MERMAS" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="TRANFERENCIAS_CODIGO" />
-            </key>
-            <one-to-many class="mapping.Mermas" />
-        </set>
-    </class>
+  <class catalog="valco" name="mapping.Tranferencias" optimistic-lock="version" table="TRANFERENCIAS">
+    <id name="codigo" type="java.lang.Integer">
+      <column name="CODIGO"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="mapping.Ubicaciones" fetch="select" name="ubicacionesByDestino">
+      <column name="DESTINO" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="mapping.Ubicaciones" fetch="select" name="ubicacionesBySalida">
+      <column name="SALIDA" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="mapping.Usuarios" fetch="select" name="usuarios">
+      <column name="USUARIOS_CODIGO" not-null="true"/>
+    </many-to-one>
+    <property name="estatus" type="string">
+      <column length="20" name="ESTATUS" not-null="true"/>
+    </property>
+    <property name="fechaEnvio" type="date">
+      <column length="10" name="FECHA_ENVIO" not-null="true"/>
+    </property>
+    <property name="fechaLlegada" type="date">
+      <column length="45" name="FECHA_LLEGADA"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="productosInventarios" table="PRODUCTOS_INVENTARIO">
+      <key>
+        <column name="TRANFERENCIAS_CODIGO"/>
+      </key>
+      <one-to-many class="mapping.ProductosInventario"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="mermas" table="MERMAS">
+      <key>
+        <column name="TRANFERENCIAS_CODIGO"/>
+      </key>
+      <one-to-many class="mapping.Mermas"/>
+    </set>
+  </class>
 </hibernate-mapping>

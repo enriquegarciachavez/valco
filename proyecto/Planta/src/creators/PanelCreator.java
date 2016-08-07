@@ -14,45 +14,53 @@ import panels.AsignacionProductoRepartidor;
 import panels.ConfigBascula;
 import panels.EnviosPanel;
 import panels.InventariosMain;
+import panels.PuntoVenta;
 import panels.ReciboDeProducto;
 import panels.ReciboProductoBC;
 import panels.ReciboTransferenciasPanel;
 import panels.VentasPanel;
+import utilities.SpringContext;
 
 /**
  *
  * @author Administrador
  */
 public class PanelCreator {
-    
-    
-    public static JPanel createPanel(String panelName, JDesktopPane mainPanel){
-        
-        
-        if("Recibo de canales".equals(panelName)){
-            return new ReciboDeProducto();
-        }else if("Apertura de proceso".equals(panelName)){
+
+    public static JPanel createPanel(String panelName, JDesktopPane mainPanel) {
+
+        if ("Recibo de canales".equals(panelName)) {
+            //return new ReciboDeProducto();
+            ReciboDeProducto reciboDeProducto = (ReciboDeProducto) SpringContext.getContext().getBean("reciboDeProducto");
+            return reciboDeProducto;
+        } else if ("Apertura de proceso".equals(panelName)) {
             return new AbrirProcesoPanel();
-        }else if("Pesar y etiquetar".equals(panelName)){
-            return new EtiquetadoPanel(mainPanel);
-        }else if("Configuración de la báscula".equals(panelName)){
+        } else if ("Pesar y etiquetar".equals(panelName)) {
+            EtiquetadoPanel etiquetadoPanel = new EtiquetadoPanel(mainPanel);
+            etiquetadoPanel.init();
+            return etiquetadoPanel;
+        } else if ("Configuración de la báscula".equals(panelName)) {
             return new ConfigBascula();
-        }else if("Inventarios".equals(panelName)){
+        } else if ("Inventarios".equals(panelName)) {
             return new InventariosMain();
-        }else if("Recibo de producto".equals(panelName)){
+        } else if ("Recibo de producto".equals(panelName)) {
             return new ReciboProductoBC();
-        }else if("Transferencia de Producto".equals(panelName)){
+        } else if ("Transferencia de Producto".equals(panelName)) {
             return new EnviosPanel();
-        }else if("Recibo de transferencias".equals(panelName)){
+        } else if ("Recibo de transferencias".equals(panelName)) {
             return new ReciboTransferenciasPanel();
-        }else if("Asignar producto a repartidor".equals(panelName)){
+        } else if ("Asignar producto a repartidor".equals(panelName)) {
             return new AsignacionProductoRepartidor();
-        }else if("Producto no vendido".equals(panelName)){
+        } else if ("Producto no vendido".equals(panelName)) {
             return new AsignacionProductoRepartidor("ENTRADA");
-        }else if("Venta".equals(panelName)){
+        } else if ("Venta".equals(panelName)) {
             return new VentasPanel();
+        } else if ("Punto de Venta".equals(panelName)) {
+            PuntoVenta puntoDeVenta = (PuntoVenta) SpringContext.getContext().getBean("puntoDeVenta");
+            return puntoDeVenta;
+
         }
         return null;
-    } 
-    
+    }
+
 }

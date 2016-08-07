@@ -1,36 +1,35 @@
-<?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 24-may-2015 21:47:36 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="mapping.Repartidores" table="REPARTIDORES" catalog="valco" optimistic-lock="version">
-        <id name="codigo" type="java.lang.Integer">
-            <column name="CODIGO" />
-            <generator class="identity" />
-        </id>
-        <property name="apellidoPaterno" type="string">
-            <column name="APELLIDO_PATERNO" length="100" not-null="true" />
-        </property>
-        <property name="apellidoMaterno" type="string">
-            <column name="APELLIDO_MATERNO" length="100" />
-        </property>
-        <property name="nombres" type="string">
-            <column name="NOMBRES" length="100" not-null="true" />
-        </property>
-        <property name="estatus" type="string">
-            <column name="ESTATUS" length="20" not-null="true" />
-        </property>
-        <set name="notasDeVentas" table="NOTAS_DE_VENTA" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="REPARTIDORES_CODIGO" not-null="true" />
-            </key>
-            <one-to-many class="mapping.NotasDeVenta" />
-        </set>
-        <set name="productosInventarios" table="PRODUCTOS_INVENTARIO" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="REPARTIDORES_CODIGO" />
-            </key>
-            <one-to-many class="mapping.ProductosInventario" />
-        </set>
-    </class>
+  <class catalog="valco" name="mapping.Repartidores" optimistic-lock="version" table="REPARTIDORES">
+    <id name="codigo" type="java.lang.Integer">
+      <column name="CODIGO"/>
+      <generator class="identity"/>
+    </id>
+    <property name="apellidoPaterno" type="string">
+      <column length="100" name="APELLIDO_PATERNO" not-null="true"/>
+    </property>
+    <property name="apellidoMaterno" type="string">
+      <column length="100" name="APELLIDO_MATERNO"/>
+    </property>
+    <property name="nombres" type="string">
+      <column length="100" name="NOMBRES" not-null="true"/>
+    </property>
+    <property name="estatus" type="string">
+      <column length="20" name="ESTATUS" not-null="true"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="notasDeVentas" table="NOTAS_DE_VENTA">
+      <key>
+        <column name="REPARTIDORES_CODIGO" not-null="true"/>
+      </key>
+      <one-to-many class="mapping.NotasDeVenta"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="productosInventarios" table="PRODUCTOS_INVENTARIO">
+      <key>
+        <column name="REPARTIDORES_CODIGO"/>
+      </key>
+      <one-to-many class="mapping.ProductosInventario"/>
+    </set>
+  </class>
 </hibernate-mapping>

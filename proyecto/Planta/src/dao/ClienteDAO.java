@@ -9,7 +9,11 @@ import Hibernate.HibernateUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import mapping.Clientes;
 import mapping.NotasDeVenta;
 import org.apache.commons.lang.StringUtils;
@@ -26,7 +30,7 @@ import org.hibernate.criterion.Restrictions;
  *
  * @author Enrique
  */
-public class ClienteDAO implements Serializable {
+public class ClienteDAO implements Serializable, DAO {
 
     public void insertarCliente(Clientes cliente) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -252,5 +256,77 @@ public class ClienteDAO implements Serializable {
                   throw new Exception("Ocurrió un error al consultar los productos.");
               }
         }
+    }
+
+    @Override
+    public Collection getElements() throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        List<Clientes> clientes = new ArrayList<Clientes>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(Clientes.class);
+            clientes = (List<Clientes>) q.list();
+            tx.commit();
+            return clientes;
+
+        } catch (HibernateException he) {
+            tx.commit();
+            throw new Exception("Ocurrió un error al consultar los clientes.");
+
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar los clientes.");
+            }
+        }
+    }
+
+    @Override
+    public Object getElementsByCodeOrDesc(String criteria) throws Exception {
+         Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        Clientes producto = new Clientes();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(Clientes.class);
+            if (StringUtils.isNumeric(criteria)) {
+                q.add(Restrictions.eq("codigo", new Integer(criteria)));
+            } else {
+
+                q.add(Restrictions.like("razonSocial", criteria + "%"))
+                        .addOrder(Order.asc("razonSocial"))
+                        .setMaxResults(1);
+            }
+
+            producto = (Clientes) q.uniqueResult();
+            tx.commit();
+            return producto;
+
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar los productos.");
+
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar los productos.");
+            }
+        }
+    }
+
+    @Override
+    public Object[] getElementsArray() {
+        try {
+            return getElements().toArray();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+        return new Object[0];
     }
 }

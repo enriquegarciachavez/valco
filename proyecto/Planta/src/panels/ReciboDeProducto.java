@@ -1,5 +1,6 @@
 package panels;
 
+import components.CustomDropDown;
 import dao.ProductoDAO;
 import dao.ProveedorDAO;
 import dao.UbicacionesDAO;
@@ -17,6 +18,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import listeners.NumericKeyListener;
 import mapping.OrdenesCompra;
@@ -26,6 +28,7 @@ import mapping.ProductosInventario;
 import mapping.Proveedores;
 import mapping.Ubicaciones;
 import table.custom.NoEditableTableModel;
+import utilities.SpringContext;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -46,13 +49,24 @@ public class ReciboDeProducto extends javax.swing.JPanel {
     UsuariosDAO usuariosDao = new UsuariosDAO();
     String modoOperacion = "CANAL DE RES";
     ProductosHasProveedores productoAnterior = new ProductosHasProveedores();
+    private Timer proveedorTimer;
+    private CustomDropDown proveedorSelection;
+    private CustomDropDown productosSelection;
 
     /**
      * Creates new form ReciboDeProducto
      */
     public ReciboDeProducto() {
-        initComponents();
 
+    }
+
+    public void init() {
+
+        initComponents();
+        this.jPanel6.add(proveedorSelection);
+        this.proveedorSelection.setBounds(100, 100, 500, 200);
+        this.jPanel6.add(productosSelection);
+        this.productosSelection.setBounds(300, 300, 500, 200);
     }
 
     /**
@@ -100,7 +114,7 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         proveedorLOV1 = new javax.swing.JComboBox();
         proveedorTxt1 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        pesoTxt = new javax.swing.JTextField();
+        pesoTxt = new components.NumericTextField();
         jLabel9 = new javax.swing.JLabel();
         ingresarBnt = new javax.swing.JButton();
 
@@ -513,54 +527,58 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(proveedorLOV1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(proveedorTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel8)
-                        .addGap(22, 22, 22)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(productoTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(productoLov1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(229, 229, 229)
-                        .addComponent(ingresarBnt))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pesoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(237, Short.MAX_VALUE))
+                .addGap(146, 146, 146)
+                .addComponent(productoLov1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(productoTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(jLabel8)
+                .addGap(5, 5, 5)
+                .addComponent(proveedorLOV1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(proveedorTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(jLabel7)
+                .addGap(5, 5, 5)
+                .addComponent(pesoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(jLabel9)
+                .addGap(5, 5, 5)
+                .addComponent(ingresarBnt)
+                .addGap(114, 114, 114))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8)
-                            .addComponent(productoTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(6, 6, 6)
                         .addComponent(productoLov1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(proveedorTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(proveedorLOV1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(48, 48, 48)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(pesoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(46, 46, 46)
-                .addComponent(ingresarBnt)
-                .addContainerGap(363, Short.MAX_VALUE))
+                        .addGap(6, 6, 6)
+                        .addComponent(productoTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addComponent(jLabel8))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(proveedorLOV1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(proveedorTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addComponent(jLabel7))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(pesoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addComponent(jLabel9))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(ingresarBnt)))
+                .addGap(534, 534, 534))
         );
 
         jTabbedPane1.addTab("Recibo de Producto por Kg", jPanel6);
@@ -1110,28 +1128,42 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         }
         try {
             ProductosInventario productoMaster = productoDAO.getProductoMaster(productoProv);
+
+            ProductosInventario productoNuevo = new ProductosInventario();
+            productoNuevo = new ProductosInventario();
+            productoNuevo.setEstatus("PESADO");
+            productoNuevo.setProductoMaestro(false);
+            productoNuevo.setProductosHasProveedores(productoProv);
+            productoNuevo.setPeso(new BigDecimal(pesoTxt.getText()));
+            Ubicaciones ubicacion = (Ubicaciones) almacenLOV.getSelectedItem();
+            productoNuevo.setUbicaciones(ubicacion);
+            BigDecimal precio = ((ProductosHasProveedores) productoLov1.getSelectedItem()).getProductos().getPrecioSugerido();
+            BigDecimal costo = ((ProductosHasProveedores) productoLov1.getSelectedItem()).getPrecioSugerido();
+            productoNuevo.setPrecio(precio);
+            productoNuevo.setCosto(costo);
+            total = productoNuevo.getPeso().multiply(productoNuevo.getCosto()).setScale(2, RoundingMode.HALF_EVEN);
+            orden.setTotal(total);
+            orden.setUsuarios(usuariosDao.getUsuarios().get(0));
+            productoNuevo.setOrdenesCompra(orden);
+            productoNuevo.setFechaCreacion(new Date());
+            List<ProductosInventario> lista = new ArrayList<>();
+            lista.add(productoNuevo);
             if (productoMaster == null) {
-                productoMaster.setEstatus("MASTER");
-                productoMaster.setProductosHasProveedores(productoProv);
-                productoMaster.setPeso(new BigDecimal(pesoTxt.getText()));
-                Ubicaciones ubicacion = (Ubicaciones) almacenLOV.getSelectedItem();
-                productoMaster.setUbicaciones(ubicacion);
-                BigDecimal precio = ((ProductosHasProveedores) productoLov.getSelectedItem()).getProductos().getPrecioSugerido();
-                BigDecimal costo = ((ProductosHasProveedores) productoLov.getSelectedItem()).getPrecioSugerido();
-                productoMaster.setPrecio(precio);
-                productoMaster.setCosto(costo);
-                total = productoMaster.getPeso().multiply(productoMaster.getCosto()).setScale(2, RoundingMode.HALF_EVEN);
-                orden.setTotal(total);
-                orden.setUsuarios(usuariosDao.getUsuarios().get(0));
-                productoMaster.setOrdenesCompra(orden);
+                productoMaster = (ProductosInventario) productoNuevo.clone();
+                productoMaster.setProductoMaestro(true);
+                productoMaster.setEstatus("ACTIVO");
+                productoMaster.setOrdenesCompra(null);
+
                 productoDAO.insertarProducto(productoMaster);
-                productoDAO.recibirProductos(new ArrayList<ProductosInventario>(), orden);
+
+                productoDAO.recibirProductos(lista, orden);
                 JOptionPane.showMessageDialog(null, "El Prodcuto se guardó correctamente");
                 return;
             } else {
                 BigDecimal peso = new BigDecimal(pesoTxt.getText());
                 productoMaster.setPeso(productoMaster.getPeso().add(peso));
                 productoDAO.actualizarProductoInventario(productoMaster);
+                productoDAO.recibirProductos(lista, orden);
                 JOptionPane.showMessageDialog(null, "El producto se ingresó correctamente");
                 return;
             }
@@ -1142,6 +1174,16 @@ public class ReciboDeProducto extends javax.swing.JPanel {
 
 
     }//GEN-LAST:event_ingresarBntActionPerformed
+
+    public void setProveedorSelection(CustomDropDown proveedorSelection) {
+        this.proveedorSelection = proveedorSelection;
+    }
+
+    public void setProductosSelection(CustomDropDown productosSelection) {
+        this.productosSelection = productosSelection;
+    }
+    
+    
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

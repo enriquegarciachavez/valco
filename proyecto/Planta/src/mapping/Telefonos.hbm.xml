@@ -1,27 +1,26 @@
-<?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 24-may-2015 21:47:36 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="mapping.Telefonos" table="TELEFONOS" catalog="valco" optimistic-lock="version">
-        <id name="codigo" type="java.lang.Integer">
-            <column name="CODIGO" />
-            <generator class="identity" />
-        </id>
-        <many-to-one name="clientes" class="mapping.Clientes" fetch="select">
-            <column name="CLIENTES_CODIGO" not-null="true" />
-        </many-to-one>
-        <many-to-one name="proveedores" class="mapping.Proveedores" fetch="select">
-            <column name="PROVEEDORES_CODIGO" not-null="true" />
-        </many-to-one>
-        <property name="tipo" type="string">
-            <column name="TIPO" length="40" not-null="true" />
-        </property>
-        <property name="lada" type="int">
-            <column name="LADA" not-null="true" />
-        </property>
-        <property name="numero" type="int">
-            <column name="NUMERO" not-null="true" />
-        </property>
-    </class>
+  <class catalog="valco" name="mapping.Telefonos" optimistic-lock="version" table="TELEFONOS">
+    <id name="codigo" type="java.lang.Integer">
+      <column name="CODIGO"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="mapping.Clientes" fetch="select" name="clientes">
+      <column name="CLIENTES_CODIGO" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="mapping.Proveedores" fetch="select" name="proveedores">
+      <column name="PROVEEDORES_CODIGO" not-null="true"/>
+    </many-to-one>
+    <property name="tipo" type="string">
+      <column length="40" name="TIPO" not-null="true"/>
+    </property>
+    <property name="lada" type="int">
+      <column name="LADA" not-null="true"/>
+    </property>
+    <property name="numero" type="int">
+      <column name="NUMERO" not-null="true"/>
+    </property>
+  </class>
 </hibernate-mapping>

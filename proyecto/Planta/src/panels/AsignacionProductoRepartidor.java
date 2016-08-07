@@ -462,7 +462,7 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
                             .addComponent(PanelCodigoBarras, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
                             .addComponent(PanelRepartidor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(PanelPeso, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+                    .addComponent(PanelPeso, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
                     .addComponent(PanelFinalizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -767,7 +767,7 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
     private javax.swing.JTextField barCodeTxt;
     private javax.swing.JButton eliminarCajaBtn;
     private javax.swing.JButton finalizarBtn;
-    private javax.swing.JButton imprimirEtiquetaBtn;
+    public javax.swing.JButton imprimirEtiquetaBtn;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel9;

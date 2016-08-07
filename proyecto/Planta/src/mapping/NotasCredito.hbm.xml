@@ -1,24 +1,23 @@
-<?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 24-may-2015 21:47:36 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="mapping.NotasCredito" table="NOTAS_CREDITO" catalog="valco" optimistic-lock="version">
-        <id name="codigo" type="java.lang.Integer">
-            <column name="CODIGO" />
-            <generator class="identity" />
-        </id>
-        <many-to-one name="clientes" class="mapping.Clientes" fetch="select">
-            <column name="CLIENTES_CODIGO" not-null="true" />
-        </many-to-one>
-        <property name="fecha" type="date">
-            <column name="FECHA" length="10" not-null="true" />
-        </property>
-        <property name="observaciones" type="string">
-            <column name="OBSERVACIONES" length="65535" />
-        </property>
-        <property name="estatus" type="string">
-            <column name="ESTATUS" length="20" />
-        </property>
-    </class>
+  <class catalog="valco" name="mapping.NotasCredito" optimistic-lock="version" table="NOTAS_CREDITO">
+    <id name="codigo" type="java.lang.Integer">
+      <column name="CODIGO"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="mapping.Clientes" fetch="select" name="clientes">
+      <column name="CLIENTES_CODIGO" not-null="true"/>
+    </many-to-one>
+    <property name="fecha" type="date">
+      <column length="10" name="FECHA" not-null="true"/>
+    </property>
+    <property name="observaciones" type="string">
+      <column length="65535" name="OBSERVACIONES"/>
+    </property>
+    <property name="estatus" type="string">
+      <column length="20" name="ESTATUS"/>
+    </property>
+  </class>
 </hibernate-mapping>

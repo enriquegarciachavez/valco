@@ -21,6 +21,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -149,8 +150,9 @@ public class ProveedorDAO implements Serializable {
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(Proveedores.class);
             Criteria x = q.createCriteria("productosHasProveedoreses");
-            Criteria y = x.createCriteria("productos");
-            Criteria z = y.createCriteria("unidadesDeMedida").add(Restrictions.eq("abreviacion", "KG"));
+            Criteria y = x.createCriteria("productos").add(Restrictions.eq("productoPesado", true));
+            
+           
 
             q.addOrder(Order.asc("razonSocial"));
             proveedores = (List<Proveedores>) q.list();
@@ -233,13 +235,13 @@ public class ProveedorDAO implements Serializable {
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(Proveedores.class);
             Criteria x = q.createCriteria("productosHasProveedoreses");
-            Criteria y = x.createCriteria("productos");
-            Criteria z = y.createCriteria("unidadesDeMedida").add(Restrictions.eq("abreviacion", "KG"));
+            Criteria y = x.createCriteria("productos").add(Restrictions.eq("productoPesado", true));
+            
 
             if (StringUtils.isNumeric(criterio)) {
                 q.add(Restrictions.eq("codigo", new Integer(criterio)));
             } else {
-                q.add(Restrictions.eq("razonSocial", criterio));
+                q.add(Restrictions.like("razonSocial", criterio, MatchMode.ANYWHERE));
             }
 
             q.setMaxResults(1);

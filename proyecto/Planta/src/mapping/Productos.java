@@ -24,6 +24,8 @@ public class Productos  implements java.io.Serializable {
      private Set<Productos> productosesForProductosCodigoPadre = new HashSet<Productos>(0);
      private Set<Productos> productosesForProductosCodigoHijo = new HashSet<Productos>(0);
      private Set<ProductosHasProveedores> productosHasProveedoreses = new HashSet<ProductosHasProveedores>(0);
+     private boolean ProductoPesado;
+     
 
     public Productos() {
     }
@@ -52,6 +54,16 @@ public class Productos  implements java.io.Serializable {
        this.productosesForProductosCodigoHijo = productosesForProductosCodigoHijo;
        this.productosHasProveedoreses = productosHasProveedoreses;
     }
+
+    public boolean isProductoPesado() {
+        return ProductoPesado;
+    }
+
+    public void setProductoPesado(boolean ProductoPesado) {
+        this.ProductoPesado = ProductoPesado;
+    }
+    
+    
    
     public Integer getCodigo() {
         return this.codigo;

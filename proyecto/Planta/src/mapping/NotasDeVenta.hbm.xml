@@ -1,54 +1,53 @@
-<?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 24-may-2015 21:47:36 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="mapping.NotasDeVenta" table="NOTAS_DE_VENTA" catalog="valco" optimistic-lock="version">
-        <id name="codigo" type="java.lang.Integer">
-            <column name="CODIGO" />
-            <generator class="identity" />
-        </id>
-        <many-to-one name="clientes" class="mapping.Clientes" fetch="select">
-            <column name="CLIENTES_CODIGO" />
-        </many-to-one>
-        <many-to-one name="facturas" class="mapping.Facturas" fetch="select">
-            <column name="FACTURAS_CODIGO" />
-        </many-to-one>
-        <many-to-one name="repartidores" class="mapping.Repartidores" fetch="select">
-            <column name="REPARTIDORES_CODIGO" not-null="true" />
-        </many-to-one>
-        <many-to-one name="usuarios" class="mapping.Usuarios" fetch="select">
-            <column name="USUARIOS_CODIGO" not-null="true" />
-        </many-to-one>
-        <property name="folio" type="int">
-            <column name="FOLIO" not-null="true" unique="true" />
-        </property>
-        <property name="fechaDeVenta" type="date">
-            <column name="FECHA_DE_VENTA" length="10" />
-        </property>
-        <property name="flete" type="java.lang.Integer">
-            <column name="FLETE" />
-        </property>
-        <property name="estatus" type="string">
-            <column name="ESTATUS" length="20" />
-        </property>
-        <set name="cuentasXCobrars" table="CUENTAS_X_COBRAR" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="NOTAS_DE_VENTA_CODIGO" not-null="true" unique="true" />
-            </key>
-            <one-to-many class="mapping.CuentasXCobrar" />
-        </set>
-        <set name="facturases" table="FACTURAS" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="NOTAS_DE_VENTA_CODIGO" not-null="true" />
-            </key>
-            <one-to-many class="mapping.Facturas" />
-        </set>
-        <set name="productosInventarios" table="PRODUCTOS_INVENTARIO" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="NOTAS_DE_VENTA_CODIGO" />
-            </key>
-            <one-to-many class="mapping.ProductosInventario" />
-        </set>
-    </class>
+  <class catalog="valco" name="mapping.NotasDeVenta" optimistic-lock="version" table="NOTAS_DE_VENTA">
+    <id name="codigo" type="java.lang.Integer">
+      <column name="CODIGO"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="mapping.Clientes" fetch="select" name="clientes">
+      <column name="CLIENTES_CODIGO"/>
+    </many-to-one>
+    <many-to-one class="mapping.Facturas" fetch="select" name="facturas">
+      <column name="FACTURAS_CODIGO"/>
+    </many-to-one>
+    <many-to-one class="mapping.Repartidores" fetch="select" name="repartidores">
+      <column name="REPARTIDORES_CODIGO" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="mapping.Usuarios" fetch="select" name="usuarios">
+      <column name="USUARIOS_CODIGO" not-null="true"/>
+    </many-to-one>
+    <property name="folio" type="int">
+      <column name="FOLIO" not-null="true" unique="true"/>
+    </property>
+    <property name="fechaDeVenta" type="date">
+      <column length="10" name="FECHA_DE_VENTA"/>
+    </property>
+    <property name="flete" type="java.lang.Integer">
+      <column name="FLETE"/>
+    </property>
+    <property name="estatus" type="string">
+      <column length="20" name="ESTATUS"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="cuentasXCobrars" table="CUENTAS_X_COBRAR">
+      <key>
+        <column name="NOTAS_DE_VENTA_CODIGO" not-null="true" unique="true"/>
+      </key>
+      <one-to-many class="mapping.CuentasXCobrar"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="facturases" table="FACTURAS">
+      <key>
+        <column name="NOTAS_DE_VENTA_CODIGO" not-null="true"/>
+      </key>
+      <one-to-many class="mapping.Facturas"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="productosInventarios" table="PRODUCTOS_INVENTARIO">
+      <key>
+        <column name="NOTAS_DE_VENTA_CODIGO"/>
+      </key>
+      <one-to-many class="mapping.ProductosInventario"/>
+    </set>
+  </class>
 </hibernate-mapping>

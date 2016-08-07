@@ -33,6 +33,8 @@ public class ProductosInventario  implements java.io.Serializable {
      private Integer consecutivoProceso;
      private Integer numeroCanal;
      private Set<Mermas> mermas = new HashSet<Mermas>(0);
+     private Boolean ProductoMaestro;
+     
 
     public ProductosInventario() {
     }
@@ -62,6 +64,15 @@ public class ProductosInventario  implements java.io.Serializable {
        this.fechaCaducidad = fechaCaducidad;
        this.numeroMatanza = numeroMatanza;
     }
+
+    public Boolean getProductoMaestro() {
+        return ProductoMaestro;
+    }
+
+    public void setProductoMaestro(Boolean ProductoMaestro) {
+        this.ProductoMaestro = ProductoMaestro;
+    }
+ 
    
     public Integer getCodigo() {
         return this.codigo;
@@ -243,6 +254,32 @@ public class ProductosInventario  implements java.io.Serializable {
              return true;
          }
      }
+    
+    public Object clone() throws CloneNotSupportedException {
+      ProductosInventario clon = new ProductosInventario();
+      clon.setCodigoBarras(this.getCodigoBarras());
+      clon.setConsecutivoProceso(this.getConsecutivoProceso());
+      clon.setCosto(this.getCosto());
+      clon.setEstatus(this.getEstatus());
+      clon.setFechaCaducidad(this.getFechaCaducidad());
+      clon.setFechaCreacion(this.fechaCreacion);
+      clon.setMermas(this.getMermas());
+      clon.setNotasDeVenta(this.getNotasDeVenta());
+      clon.setNumeroCanal(this.getNumeroCanal());
+      clon.setNumeroMatanza(this.getNumeroMatanza());
+      clon.setOrdenesCompra(this.getOrdenesCompra());
+      clon.setPeso(this.getPeso());
+      clon.setPrecio(this.getPrecio());
+      clon.setProcesosCodigoHijo(this.getProcesosCodigoHijo());
+      clon.setProcesosCodigoPadre(this.getProcesosCodigoPadre());
+      clon.setProductoMaestro(this.getProductoMaestro());
+      clon.setProductosHasProveedores(this.getProductosHasProveedores());
+      clon.setRepartidores(this.getRepartidores());
+      clon.setTranferencias(this.getTranferencias());
+      clon.setUbicaciones(this.getUbicaciones());
+      
+      return clon;
+    }
     
 
 }

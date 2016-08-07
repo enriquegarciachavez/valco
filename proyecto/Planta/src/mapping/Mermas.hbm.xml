@@ -1,24 +1,23 @@
-<?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 24-may-2015 21:47:36 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="mapping.Mermas" table="MERMAS" catalog="valco" optimistic-lock="version">
-        <id name="codigo" type="java.lang.Integer">
-            <column name="CODIGO" />
-            <generator class="identity" />
-        </id>
-        <property name="peso" type="big_decimal">
-            <column name="PESO" precision="6" not-null="true" />
-        </property>
-        <property name="fecha" type="timestamp">
-            <column name="FECHA" length="19" />
-        </property>
-        <many-to-one name="productosInventario" class="mapping.ProductosInventario" fetch="select">
-            <column name="PRODUCTOS_INVENTARIO_CODIGO" not-null="true" />
-        </many-to-one>
-        <many-to-one name="tranferencias" class="mapping.Tranferencias" fetch="select">
-            <column name="TRANFERENCIAS_CODIGO" not-null="false" />
-        </many-to-one>
-    </class>
+  <class catalog="valco" name="mapping.Mermas" optimistic-lock="version" table="MERMAS">
+    <id name="codigo" type="java.lang.Integer">
+      <column name="CODIGO"/>
+      <generator class="identity"/>
+    </id>
+    <property name="peso" type="big_decimal">
+      <column name="PESO" not-null="true" precision="6"/>
+    </property>
+    <property name="fecha" type="timestamp">
+      <column length="19" name="FECHA"/>
+    </property>
+    <many-to-one class="mapping.ProductosInventario" fetch="select" name="productosInventario">
+      <column name="PRODUCTOS_INVENTARIO_CODIGO" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="mapping.Tranferencias" fetch="select" name="tranferencias">
+      <column name="TRANFERENCIAS_CODIGO" not-null="false"/>
+    </many-to-one>
+  </class>
 </hibernate-mapping>
