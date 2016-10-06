@@ -25,10 +25,8 @@ public class NotaVentaTxt extends javax.swing.JPanel {
      */
     public NotaVentaTxt() {
         initComponents();
-        
+
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -87,8 +85,10 @@ public class NotaVentaTxt extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void notaTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_notaTextFieldFocusLost
+        if (!notaTextField.getText().equals("")) {
+            getNotaVenta();
+        }
 
-        getNotaVenta();
 
     }//GEN-LAST:event_notaTextFieldFocusLost
 
@@ -103,6 +103,7 @@ public class NotaVentaTxt extends javax.swing.JPanel {
 
             } else if (!"ASIGNADA".equals(nota.getEstatus())) {
                 JOptionPane.showMessageDialog(null, "La nota de venta no esta disponible para realizar la venta");
+                notaTextField.setText("");
                 notaSeleccionada = null;
                 return;
 
@@ -112,7 +113,9 @@ public class NotaVentaTxt extends javax.swing.JPanel {
 
             }
         } catch (Exception ex) {
+            
             JOptionPane.showMessageDialog(null, "Ocurrio un error al verificar la nota");
+            notaTextField.setText("");
             notaSeleccionada = null;
             return;
         }
@@ -133,8 +136,6 @@ public class NotaVentaTxt extends javax.swing.JPanel {
     public JTextField getNotaTextField() {
         return notaTextField;
     }
-    
-    
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 24-may-2015 21:47:36 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="valco" name="mapping.ProductosHasProveedoresView" optimistic-lock="version" table="PRODUCTOS_has_PROVEEDORES_VIEW">
+    <id name="codigo" type="java.lang.Integer">
+      <column name="CODIGO"/>
+      <generator class="identity"/>
+    </id>
+        <property name="posicionPesoInicial" type="int">
+      <column name="POSICION_PESO_INICIAL" not-null="true"/>
+    </property>
+    <property name="posicionPesoFinal" type="int">
+      <column name="POSICION_PESO_FINAL" not-null="true"/>
+    </property>
+    <property name="posicionCodigoInicial" type="int">
+      <column name="POSICION_CODIGO_INICIAL" not-null="true"/>
+    </property>
+    <property name="posicionCodigoFinal" type="int">
+      <column name="POSICION_CODIGO_FINAL" not-null="true"/>
+    </property>
+    <property name="estatus" type="string">
+      <column length="20" name="ESTATUS" not-null="true"/>
+    </property>
+    <property name="codigoProveedor" type="string">
+      <column length="20" name="CODIGO_PROVEEDOR" not-null="true"/>
+    </property>
+    <property name="productosCodigo" type="int">
+      <column length="20" name="PRODUCTOS_CODIGO" not-null="true"/>
+    </property>
+    
+    <many-to-one class="mapping.ProductosHasProveedores" fetch="select" name="productoProveedor">
+      <column name="CODIGO_PRODUCTOS_PROVEEDORES"/>
+    </many-to-one>
+  </class>
+</hibernate-mapping>

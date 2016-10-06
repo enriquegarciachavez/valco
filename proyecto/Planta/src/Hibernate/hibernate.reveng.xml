@@ -31,4 +31,5 @@
   <table-filter match-name="USUARIOS"/>
   <table-filter match-name="CONCEPTOS_FACTURA"/>
   <table-filter match-name="MERMAS"/>
+  <table-filter match-name="PRODUCTOS_has_PROVEEDORES_VIEW"/>
 </hibernate-reverse-engineering>

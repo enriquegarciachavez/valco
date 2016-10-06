@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -64,6 +65,7 @@ public class PuntoVenta extends barcode.BarCodableImpl implements ActionListener
         exeptions.add(barCodeTxt1.getBarCodeTxt());
         exeptions.add(notaVentaTxt.getNotaTextField());
         exeptions.add(clienteDropDown.getTxt());
+        exeptions.add(productosTable);
         setManager(KeyboardFocusManager.getCurrentKeyboardFocusManager());
         setDispacher(new BarCodeScannerKeyDispatcher(barCodeTxt.getBarCodeTxt(), getManager(), exeptions) {
             @Override
@@ -90,6 +92,7 @@ public class PuntoVenta extends barcode.BarCodableImpl implements ActionListener
         clienteDropDown.setBounds(20, 55, 300, 100);
         publicoGeneralCheck.setSelected(true);
         clienteDropDown.setVisible(false);
+        
 
     }
 
@@ -117,7 +120,7 @@ public class PuntoVenta extends barcode.BarCodableImpl implements ActionListener
                             break;
                         }
                     }
-                    ProductosInventario productoHijo = (ProductosInventario) productoMaster.clone();
+                    ProductosInventario productoHijo = (ProductosInventario) productoMaster.getBasicClone();
                     productoHijo.setCodigo(null);
                     productoHijo.setProductoMaestro(false);
                     productoHijo.setPeso(basculaPanel1.getPeso());
@@ -143,8 +146,9 @@ public class PuntoVenta extends barcode.BarCodableImpl implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e) {
         Integer[] codigos = new Integer[tableModel.getProductos().size()];
-        try {
-            if (e.getSource().equals(barCodeTxt.getBarCodeTxt())) {
+
+        if (e.getSource().equals(barCodeTxt.getBarCodeTxt())) {
+            try {
                 int x = 0;
                 for (ProductosInventario productoInv : tableModel.getProductos()) {
                     codigos[x] = productoInv.getCodigo();
@@ -154,7 +158,13 @@ public class PuntoVenta extends barcode.BarCodableImpl implements ActionListener
 
                 tableModel.agregarProducto(producto);
 
-            } else if (e.getSource().equals(barCodeTxt1.getBarCodeTxt())) {
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+            barCodeTxt.getBarCodeTxt().setText("");
+
+        } else if (e.getSource().equals(barCodeTxt1.getBarCodeTxt())) {
+            try {
                 ProductosInventario producto = dao.getProductoByBarCode(((JTextField) e.getSource()).getText());
                 for (ProductosInventario productoInventario : productoMaestro) {
                     if (productoInventario.getCodigo() == producto.getCodigo()) {
@@ -166,7 +176,7 @@ public class PuntoVenta extends barcode.BarCodableImpl implements ActionListener
                     JOptionPane.showMessageDialog(codigoBarrasDialog, "El peso capturado es mayor al peso de la caja");
                     return;
                 } else {
-                    ProductosInventario productoHijo = (ProductosInventario) producto.clone();
+                    ProductosInventario productoHijo = (ProductosInventario) producto.getBasicClone();
                     productoHijo.setPeso(basculaPanel1.getPeso());
                     producto.setPeso(producto.getPeso().subtract(basculaPanel1.getPeso()));
                     tableModel.agregarProducto(productoHijo);
@@ -176,11 +186,11 @@ public class PuntoVenta extends barcode.BarCodableImpl implements ActionListener
                     codigoBarrasDialog.setVisible(false);
 
                 }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex);
             }
-
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex);
         }
+
     }
 
     /**
@@ -197,7 +207,7 @@ public class PuntoVenta extends barcode.BarCodableImpl implements ActionListener
         barCodeTxt1 = new components.BarCodeTxt();
         basculaPanel1 = new components.BasculaPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        productosTable = new javax.swing.JTable();
         barCodeTxt = new components.BarCodeTxt();
         finalizar = new javax.swing.JButton();
         clientesPanel = new javax.swing.JPanel();
@@ -210,6 +220,11 @@ public class PuntoVenta extends barcode.BarCodableImpl implements ActionListener
         productosDialog.setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
         productosDialog.setResizable(false);
         productosDialog.setType(java.awt.Window.Type.POPUP);
+        productosDialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                productosDialogWindowClosing(evt);
+            }
+        });
 
         javax.swing.GroupLayout productosDialogLayout = new javax.swing.GroupLayout(productosDialog.getContentPane());
         productosDialog.getContentPane().setLayout(productosDialogLayout);
@@ -224,6 +239,11 @@ public class PuntoVenta extends barcode.BarCodableImpl implements ActionListener
 
         codigoBarrasDialog.setAlwaysOnTop(true);
         codigoBarrasDialog.setBounds(new java.awt.Rectangle(0, 0, 481, 93));
+        codigoBarrasDialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                codigoBarrasDialogWindowClosing(evt);
+            }
+        });
 
         javax.swing.GroupLayout codigoBarrasDialogLayout = new javax.swing.GroupLayout(codigoBarrasDialog.getContentPane());
         codigoBarrasDialog.getContentPane().setLayout(codigoBarrasDialogLayout);
@@ -243,8 +263,13 @@ public class PuntoVenta extends barcode.BarCodableImpl implements ActionListener
 
         setPreferredSize(new java.awt.Dimension(1558, 755));
 
-        jTable1.setModel((TableModel)this.tableModel);
-        jScrollPane1.setViewportView(jTable1);
+        productosTable.setModel((TableModel)this.tableModel);
+        productosTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                productosTableKeyReleased(evt);
+            }
+        });
+        jScrollPane1.setViewportView(productosTable);
 
         finalizar.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         finalizar.setText("Finalizar");
@@ -286,19 +311,17 @@ public class PuntoVenta extends barcode.BarCodableImpl implements ActionListener
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(barCodeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(clientesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(basculaPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(finalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(431, 431, 431))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addGap(33, 33, 33))))
+                .addComponent(barCodeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(clientesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(basculaPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(finalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(431, 431, 431))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1471, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -313,9 +336,9 @@ public class PuntoVenta extends barcode.BarCodableImpl implements ActionListener
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(finalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -325,13 +348,16 @@ public class PuntoVenta extends barcode.BarCodableImpl implements ActionListener
 
         if (tableModel.getProductos() == null || tableModel.getProductos().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Debes ingresar por lo menos un producto para la venta");
+            return;
 
         }
         if (notaVentaTxt.getNotaSeleccionada() == null) {
             JOptionPane.showMessageDialog(null, "Debe ingresar la nota de venta ");
+            return;
         }
         if (!publicoGeneralCheck.isSelected() && clienteDropDown.getSelectedItem() == null) {
             JOptionPane.showMessageDialog(null, "Debe seleccionar el cliente");
+            return;
         }
 
         if (publicoGeneralCheck.isSelected()) {
@@ -341,7 +367,7 @@ public class PuntoVenta extends barcode.BarCodableImpl implements ActionListener
             cliente = (Clientes) clienteDropDown.getSelectedItem();
 
         }
-        
+
         for (ProductosInventario producto : tableModel.getProductos()) {
             notaVentaTxt.getNotaSeleccionada().getProductosInventarios().add(producto);
             producto.setRepartidores(notaVentaTxt.getNotaSeleccionada().getRepartidores());
@@ -350,7 +376,7 @@ public class PuntoVenta extends barcode.BarCodableImpl implements ActionListener
         }
         for (ProductosInventario productoMaestro : productoMaestro) {
             for (ProductosInventario producto : tableModel.getProductos()) {
-                if (productoMaestro.getCodigo() == producto.getCodigo()) {
+                if (productoMaestro.getCodigo().equals(producto.getCodigo()) ) {
                     producto.setCodigo(null);
                 }
             }
@@ -380,6 +406,28 @@ public class PuntoVenta extends barcode.BarCodableImpl implements ActionListener
         }
 
     }//GEN-LAST:event_publicoGeneralCheckActionPerformed
+
+    private void productosTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productosTableKeyReleased
+        if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
+            Collection<ProductosInventario> productosEliminados = tableModel.eliminarProductos(productosTable.getSelectedRows());
+            for (ProductosInventario productoEliminado : productosEliminados) {
+                for (ProductosInventario maestro : productoMaestro) {
+                    if (productoEliminado.getCodigo() == maestro.getCodigo()) {
+                        maestro.setPeso(maestro.getPeso().add(productoEliminado.getPeso()));
+                    }
+                }
+            }
+            barCodeTxt.getBarCodeTxt().requestFocusInWindow();
+        }
+    }//GEN-LAST:event_productosTableKeyReleased
+
+    private void productosDialogWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_productosDialogWindowClosing
+       this.state = "inicio";
+    }//GEN-LAST:event_productosDialogWindowClosing
+
+    private void codigoBarrasDialogWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_codigoBarrasDialogWindowClosing
+         this.state = "inicio";
+    }//GEN-LAST:event_codigoBarrasDialogWindowClosing
 
     public void setTableModel(ProductosTableModel tableModel) {
         this.tableModel = tableModel;
@@ -418,8 +466,8 @@ public class PuntoVenta extends barcode.BarCodableImpl implements ActionListener
     private javax.swing.JDialog codigoBarrasDialog;
     private javax.swing.JButton finalizar;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JDialog productosDialog;
+    private javax.swing.JTable productosTable;
     private javax.swing.JCheckBox publicoGeneralCheck;
     // End of variables declaration//GEN-END:variables
 

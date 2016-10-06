@@ -5,6 +5,7 @@
  */
 package table.custom;
 
+import components.CustomCellRendered;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JTable;
@@ -14,7 +15,8 @@ import javax.swing.table.DefaultTableCellRenderer;
  *
  * @author Karla
  */
-public class EtiquetadoTableCellRendered extends DefaultTableCellRenderer {
+public class EtiquetadoTableCellRendered extends DefaultTableCellRenderer implements CustomCellRendered{
+    private int estatusColumn ;
 
     @Override
     public Component getTableCellRendererComponent(JTable table,
@@ -22,7 +24,7 @@ public class EtiquetadoTableCellRendered extends DefaultTableCellRenderer {
 
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
 
-        String status = (String) table.getModel().getValueAt(row, 4);
+        String status = (String) table.getModel().getValueAt(row, estatusColumn);
         if ("CANCELADO".equals(status)) {
             setBackground(Color.RED);
             setForeground(table.getForeground());
@@ -38,5 +40,15 @@ public class EtiquetadoTableCellRendered extends DefaultTableCellRenderer {
 
         return this;
     }
+
+    public int getEstatusColumn() {
+        return estatusColumn;
+    }
+
+    public void setEstatusColumn(int estatusColumn) {
+        this.estatusColumn = estatusColumn;
+    }
+    
+    
 
 }

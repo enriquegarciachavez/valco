@@ -13,6 +13,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
@@ -21,11 +22,13 @@ import org.hibernate.criterion.Restrictions;
  * @author Karla
  */
 public class UbicacionesDAO {
+    private SessionFactory sessionFactory;
     
      public void insertarUbicacion(Ubicaciones ubicaciones) throws Exception {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Session session = sessionFactory.getCurrentSession();
         Transaction tx = null;
         try {
+            
             tx = session.beginTransaction();
             session.save(ubicaciones);
             tx.commit();
@@ -34,17 +37,17 @@ public class UbicacionesDAO {
                 try {
                     tx.rollback();
                 } catch (HibernateException he) {
-                    throw new Exception("Ocurrió un error al registrar la ubicacion.");
+                    throw new Exception(he.getMessage());
                 }
             }
-            throw new Exception("Ocurrió un error al registrar la ubicacion.");
+            throw new Exception(e.getMessage());
         } finally {
             try {
                 if(session.isOpen()){
                 session.close();
                 }
             } catch (HibernateException he) {
-                throw new Exception("Ocurrió un error al registrar la ubicacion.");
+                throw new Exception(he.getMessage());
             }
         }
     }
@@ -152,6 +155,12 @@ public class UbicacionesDAO {
               }
         }
     }
+
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+      
+      
     
 }
 

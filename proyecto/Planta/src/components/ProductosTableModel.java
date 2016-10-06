@@ -16,10 +16,13 @@ import mapping.ProductosInventario;
 public interface ProductosTableModel {
     
     public void convertirProductos(Collection<ProductosInventario> productos);
-    public void eliminarProductos(int[] indices);
+    public Collection<ProductosInventario> eliminarProductos(int[] indices);
     public void agregarProducto(ProductosInventario producto);
     public Collection<ProductosInventario> getProductos();
     public BigDecimal getTotalSeleccionado();
+    public void eliminarProductos();
+    public Object getElementAt(int row, int column);
+    
     
       
    

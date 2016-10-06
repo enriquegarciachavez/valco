@@ -5,25 +5,34 @@
  */
 package configuration;
 
+import components.CustomCellRendered;
 import components.CustomDropDown;
 import components.NotaVentaTxt;
 import components.ProductosTableModel;
 import components.ProductosTableModelPOS;
+import components.ProductosTableModelProceso;
+import components.ProductosTableModelReetiquetado;
+import components.TablaProductos;
 import dao.BarCodeDAO;
 import dao.ClienteDAO;
 import dao.DAO;
 import dao.FiltrableByFather;
 import dao.NotaVentaDAOInterface;
 import dao.NotasVentaDAO;
+import dao.ProcesosDAO;
+import dao.ProcesosDAOImpl;
 import dao.ProductoDAO;
 import dao.ProductosDAO;
 import dao.ProveedoresDAO;
 import dao.ProveedoresKiloDAO;
+import dao.ReetiquetadoDAO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import panels.EtiquetadoPanel;
 import panels.PuntoVenta;
 import panels.ReciboDeProducto;
+import table.custom.EtiquetadoTableCellRendered;
 
 /**
  *
@@ -137,6 +146,68 @@ public class SpringConfiguration {
         reciboDeProducto.setProductosSelection(proveedorSelectionKilo.getChild());
         reciboDeProducto.init();
         return reciboDeProducto;
+    }
+    
+    @Scope("prototype")
+    @Bean
+    public ProductosTableModel tableProcesos(){
+        return new ProductosTableModelProceso();
+    }
+
+    @Scope("prototype")
+    @Bean
+    public ProcesosDAO procesosDAOImpl() {
+        return new ProcesosDAOImpl();
+    }
+    
+    @Scope("prototype")
+    @Bean
+    public CustomCellRendered etiquetadoCellRendered(){
+        EtiquetadoTableCellRendered cellRendered = new EtiquetadoTableCellRendered();
+        cellRendered.setEstatusColumn(4);
+        return cellRendered;
+    }
+
+    @Scope("prototype")
+    @Bean
+    public EtiquetadoPanel etiquetadoPanel() {
+        EtiquetadoPanel panel = new EtiquetadoPanel(false);
+        panel.setCajasProcesoDAO(procesosDAOImpl());
+        panel.setModel(tableProcesos());
+        panel.setCellRendered(etiquetadoCellRendered());
+       panel.init();
+        return panel;
+    }
+    
+    @Scope("prototype")
+    @Bean
+    public ProductosTableModel tableReetiquetado(){
+        return new ProductosTableModelReetiquetado();
+    }
+
+    @Scope("prototype")
+    @Bean
+    public ProcesosDAO reetiquetadoDAOImpl() {
+        return new ReetiquetadoDAO();
+    }
+    
+    @Scope("prototype")
+    @Bean
+    public CustomCellRendered reetiquetadoCellRendered(){
+        EtiquetadoTableCellRendered cellRendered = new EtiquetadoTableCellRendered();
+        cellRendered.setEstatusColumn(3);
+        return cellRendered;
+    }
+
+    @Scope("prototype")
+    @Bean
+    public EtiquetadoPanel reetiquetadoPanel() {
+        EtiquetadoPanel panel = new EtiquetadoPanel(true);
+        panel.setCajasProcesoDAO(reetiquetadoDAOImpl());
+        panel.setModel(tableReetiquetado());
+        panel.setCellRendered(reetiquetadoCellRendered());
+        panel.init();
+        return panel;
     }
 
 }

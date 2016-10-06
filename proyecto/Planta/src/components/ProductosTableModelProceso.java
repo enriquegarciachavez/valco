@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.swing.JOptionPane;
-import static javax.swing.JOptionPane.ERROR_MESSAGE;
-import mapping.Procesos;
 import mapping.ProductosInventario;
 import table.custom.NoEditableTableModel;
 
@@ -22,16 +20,18 @@ import table.custom.NoEditableTableModel;
  *
  * @author Administrador
  */
-public class ProductosTableModelPOS extends NoEditableTableModel implements ProductosTableModel {
+public class ProductosTableModelProceso extends NoEditableTableModel implements ProductosTableModel {
 
     private List<ProductosInventario> productosInventario = new ArrayList<>();
 
-    public ProductosTableModelPOS() {
+    public ProductosTableModelProceso() {
         String[] columnNames = {
             "Nombre",
             "Peso",
-            "Precio",
-            "Precio Total"
+            "Etiqueta",
+            "Consecutivo",
+            "Estatus",
+            
         };
 
         this.setColumnIdentifiers(columnNames);
@@ -49,8 +49,9 @@ public class ProductosTableModelPOS extends NoEditableTableModel implements Prod
             Object[] row = new Object[5];
             row[0] = producto;
             row[1] = producto.getPeso();
-            row[2] = producto.getPrecio();
-            row[3] = producto.getPeso().add(producto.getPrecio().setScale(2, RoundingMode.HALF_EVEN));
+            row[2] = producto.getCodigoBarras();
+            row[3] = producto.getConsecutivoProceso();
+            row[4] = producto.getEstatus();
 
             this.addRow(row);
         }
@@ -79,8 +80,9 @@ public class ProductosTableModelPOS extends NoEditableTableModel implements Prod
         Object[] row = new Object[5];
         row[0] = producto;
         row[1] = producto.getPeso();
-        row[2] = producto.getPrecio();
-        row[3] = producto.getPeso().add(producto.getPrecio().setScale(2, RoundingMode.HALF_EVEN));
+        row[2] = producto.getCodigoBarras();
+        row[3] = producto.getConsecutivoProceso();
+        row[4] = producto.getEstatus();
 
         this.addRow(row);
 
@@ -99,29 +101,29 @@ public class ProductosTableModelPOS extends NoEditableTableModel implements Prod
         this.productosInventario = productosInventario;
     }
 
-    public BigDecimal getTotalSeleccionado(){
+    public BigDecimal getTotalSeleccionado() {
         DecimalFormat df = new DecimalFormat("0.00");
-        BigDecimal total = new BigDecimal(BigInteger.ZERO,2);
+        BigDecimal total = new BigDecimal(BigInteger.ZERO, 2);
         total.setScale(2, BigDecimal.ROUND_HALF_UP);
-        if(this.productosInventario != null && !this.productosInventario.isEmpty()){
-            for(ProductosInventario producto : this.productosInventario){
-                if(producto.getPeso() != null && producto.getPrecio() != null){
+        if (this.productosInventario != null && !this.productosInventario.isEmpty()) {
+            for (ProductosInventario producto : this.productosInventario) {
+                if (producto.getPeso() != null && producto.getPrecio() != null) {
                     total = total.add(producto.getPeso().multiply(producto.getPrecio()).setScale(2, RoundingMode.HALF_EVEN));
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null, "Presione enter después de capturar un precio o un peso, de lo contrario el total podía no mostrarse bien");
                 }
             }
         }
-            return total;
+        return total;
 
     }
-    
-     @Override
+
+    @Override
     public void eliminarProductos() {
         this.setRowCount(0);
         
     }
-
+    
     @Override
     public Object getElementAt(int row, int column) {
         return this.getValueAt(row, column);

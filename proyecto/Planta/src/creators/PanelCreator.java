@@ -36,8 +36,10 @@ public class PanelCreator {
         } else if ("Apertura de proceso".equals(panelName)) {
             return new AbrirProcesoPanel();
         } else if ("Pesar y etiquetar".equals(panelName)) {
-            EtiquetadoPanel etiquetadoPanel = new EtiquetadoPanel(mainPanel);
-            etiquetadoPanel.init();
+            EtiquetadoPanel etiquetadoPanel = (EtiquetadoPanel) SpringContext.getContext().getBean("etiquetadoPanel");
+            return etiquetadoPanel;
+        } else if ("Reetiquetar".equals(panelName)) {
+            EtiquetadoPanel etiquetadoPanel = (EtiquetadoPanel) SpringContext.getContext().getBean("reetiquetadoPanel");
             return etiquetadoPanel;
         } else if ("Configuración de la báscula".equals(panelName)) {
             return new ConfigBascula();

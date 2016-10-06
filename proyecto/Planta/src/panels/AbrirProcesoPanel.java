@@ -3,7 +3,7 @@ package panels;
 
 import barcode.BarCodableImpl;
 import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
-import dao.ProcesosDAO;
+import dao.ProcesosDAOImpl;
 import dao.ProductoDAO;
 import java.awt.Component;
 import java.awt.KeyEventDispatcher;
@@ -40,7 +40,7 @@ import mapping.Procesos;
  */
 public class AbrirProcesoPanel extends BarCodableImpl {
     ProductoDAO productoDAO = new ProductoDAO();
-    ProcesosDAO procesosDAO = new ProcesosDAO();
+    ProcesosDAOImpl procesosDAO = new ProcesosDAOImpl();
     DefaultListModel lmDisponibles =new DefaultListModel();
     DefaultListModel lmSeleccionados =new DefaultListModel();
     

@@ -449,7 +449,7 @@ public class EnviosPanel extends PesableBarCodeable {
             try {
                 producto = productoDAO.getProductosXDescripcionOCodigo(productoCodigoArea.getText());
             } catch (Exception ex) {
-                Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(EnviosPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
             productoProveedor.setProductos(producto);
             Proveedores prov = new Proveedores();

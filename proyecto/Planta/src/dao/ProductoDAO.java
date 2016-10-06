@@ -19,6 +19,7 @@ import mapping.CuentasXPagar;
 import mapping.OrdenesCompra;
 import mapping.Productos;
 import mapping.ProductosHasProveedores;
+import mapping.ProductosHasProveedoresView;
 import mapping.ProductosInventario;
 import mapping.Proveedores;
 import mapping.Tranferencias;
@@ -1066,6 +1067,33 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
                 }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al consultar los productos.");
+            }
+        }
+    }
+    
+    public List<ProductosHasProveedoresView> getProductosHasProveedoresView() throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        List<ProductosHasProveedoresView> productos = new ArrayList<ProductosHasProveedoresView>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(ProductosHasProveedoresView.class);
+
+            productos = (List<ProductosHasProveedoresView>) q.list();
+            
+            tx.commit();
+            return productos;
+
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar los Prodcutos por proveedor.");
+
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar los Prodcutos por proveedor.");
             }
         }
     }

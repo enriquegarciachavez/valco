@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReporteDetallado" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.4641000000000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\apps\\valco\\valco\\proyecto\\valco\\web\\pagina\\reportes\\planta\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaInicial" class="java.util.Date"/>
+	<parameter name="fechaFinal" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT
+     PRODUCTOS_INVENTARIO.`CODIGO` AS PRODUCTOS_INVENTARIO_CODIGO,
+     PRODUCTOS_INVENTARIO.`PESO` AS PRODUCTOS_INVENTARIO_PESO,
+     PRODUCTOS_INVENTARIO.`PRECIO` AS PRODUCTOS_INVENTARIO_PRECIO,
+     PRODUCTOS_INVENTARIO.`PRODUCTOS_has_PROVEEDORES_CODIGO` AS PRODUCTOS_INVENTARIO_PRODUCTOS_has_PROVEEDORES_CODIGO,
+     PRODUCTOS_INVENTARIO.`CODIGO_BARRAS` AS PRODUCTOS_INVENTARIO_CODIGO_BARRAS,
+     PRODUCTOS_INVENTARIO.`ESTATUS` AS PRODUCTOS_INVENTARIO_ESTATUS,
+     PRODUCTOS_INVENTARIO.`CONSECUTIVO_PROCESO` AS PRODUCTOS_INVENTARIO_CONSECUTIVO_PROCESO,
+     PRODUCTOS_INVENTARIO.`COSTO` AS PRODUCTOS_INVENTARIO_COSTO,
+     PRODUCTOS_INVENTARIO.`FECHA_CREACION` AS PRODUCTOS_INVENTARIO_FECHA_CREACION,
+     PRODUCTOS_has_PROVEEDORES.`CODIGO` AS PRODUCTOS_has_PROVEEDORES_CODIGO,
+     PRODUCTOS_has_PROVEEDORES.`PRODUCTOS_CODIGO` AS PRODUCTOS_has_PROVEEDORES_PRODUCTOS_CODIGO,
+     PRODUCTOS.`CODIGO` AS PRODUCTOS_CODIGO
+FROM
+     `PRODUCTOS_has_PROVEEDORES` PRODUCTOS_has_PROVEEDORES INNER JOIN `PRODUCTOS_INVENTARIO` PRODUCTOS_INVENTARIO ON PRODUCTOS_has_PROVEEDORES.`CODIGO` = PRODUCTOS_INVENTARIO.`PRODUCTOS_has_PROVEEDORES_CODIGO`
+     INNER JOIN `PRODUCTOS` PRODUCTOS ON PRODUCTOS_has_PROVEEDORES.`PRODUCTOS_CODIGO` = PRODUCTOS.`CODIGO`]]>
+	</queryString>
+	<field name="PRODUCTOS_INVENTARIO_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_PESO" class="java.math.BigDecimal"/>
+	<field name="PRODUCTOS_INVENTARIO_PRECIO" class="java.math.BigDecimal"/>
+	<field name="PRODUCTOS_INVENTARIO_PRODUCTOS_has_PROVEEDORES_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_CODIGO_BARRAS" class="java.lang.String"/>
+	<field name="PRODUCTOS_INVENTARIO_ESTATUS" class="java.lang.String"/>
+	<field name="PRODUCTOS_INVENTARIO_CONSECUTIVO_PROCESO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_COSTO" class="java.math.BigDecimal"/>
+	<field name="PRODUCTOS_INVENTARIO_FECHA_CREACION" class="java.sql.Timestamp"/>
+	<field name="PRODUCTOS_has_PROVEEDORES_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_has_PROVEEDORES_PRODUCTOS_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_CODIGO" class="java.lang.Integer"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="89">
+			<staticText>
+				<reportElement x="159" y="35" width="270" height="34"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Inventario Global Detallado	]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="115" height="75"/>
+				<imageExpression class="java.lang.String"><![CDATA["C:\\Valco\\Imagenes\\logo.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="128" y="0" width="270" height="15"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DISTRIBUIDORA DE CARNES VALCO S.A. DE C.V.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="131" y="15" width="28" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="259" y="15" width="29" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[AL]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="159" y="15" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new SimpleDateFormat("dd/MMM/yyyy").format($P{fechaInicial})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="288" y="15" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new SimpleDateFormat("dd/MMM/yyyy").format($P{fechaFinal})]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="191">
+			<subreport>
+				<reportElement x="0" y="0" width="200" height="100"/>
+				<subreportParameter name="fechaInicial"/>
+				<subreportParameter name="fechaFinal"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "InventarioGlobalDetallado_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

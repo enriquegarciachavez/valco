@@ -64,6 +64,9 @@
     <property name="productoMaestro" type="java.lang.Boolean">
       <column name="PRODUCTO_MAESTRO" not-null="false"/>
     </property>
+    <property name="reetiquetado" type="java.lang.Boolean">
+      <column name="REETIQUETADO" not-null="false"/>
+    </property>
     <set fetch="select" inverse="true" lazy="true" name="mermas" table="MERMAS">
       <key>
         <column name="TRANFERENCIAS_CODIGO"/>

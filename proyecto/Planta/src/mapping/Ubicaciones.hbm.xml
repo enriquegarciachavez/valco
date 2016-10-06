@@ -2,10 +2,10 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 24-may-2015 21:47:36 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-  <class catalog="valco" name="mapping.Ubicaciones" optimistic-lock="version" table="UBICACIONES">
+  <class  name="mapping.Ubicaciones" optimistic-lock="version" table="UBICACIONES">
     <id name="codigo" type="java.lang.Integer">
       <column name="CODIGO"/>
-      <generator class="identity"/>
+      
     </id>
     <property name="estado" type="string">
       <column length="45" name="ESTADO" not-null="true"/>

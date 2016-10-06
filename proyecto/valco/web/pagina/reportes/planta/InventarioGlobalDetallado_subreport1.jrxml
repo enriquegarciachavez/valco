@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="InventarioGlobal_subreport1" language="groovy" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.3310000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fechaConsulta" class="java.util.Date"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+     PRODUCTOS_INVENTARIO.`CODIGO` AS PRODUCTOS_INVENTARIO_CODIGO,
+     PRODUCTOS_INVENTARIO.`PESO` AS PRODUCTOS_INVENTARIO_PESO,
+     PRODUCTOS_INVENTARIO.`PRECIO` AS PRODUCTOS_INVENTARIO_PRECIO,
+     PRODUCTOS_INVENTARIO.`NOTAS_DE_VENTA_CODIGO` AS PRODUCTOS_INVENTARIO_NOTAS_DE_VENTA_CODIGO,
+     PRODUCTOS_INVENTARIO.`PRODUCTOS_has_PROVEEDORES_CODIGO` AS PRODUCTOS_INVENTARIO_PRODUCTOS_has_PROVEEDORES_CODIGO,
+     PRODUCTOS_INVENTARIO.`ORDENES_COMPRA_CODIGO` AS PRODUCTOS_INVENTARIO_ORDENES_COMPRA_CODIGO,
+     PRODUCTOS_INVENTARIO.`TRANFERENCIAS_CODIGO` AS PRODUCTOS_INVENTARIO_TRANFERENCIAS_CODIGO,
+     PRODUCTOS_INVENTARIO.`CODIGO_BARRAS` AS PRODUCTOS_INVENTARIO_CODIGO_BARRAS,
+     PRODUCTOS_INVENTARIO.`UBICACIONES_CODIGO` AS PRODUCTOS_INVENTARIO_UBICACIONES_CODIGO,
+     PRODUCTOS_INVENTARIO.`ESTATUS` AS PRODUCTOS_INVENTARIO_ESTATUS,
+     PRODUCTOS_INVENTARIO.`REPARTIDORES_CODIGO` AS PRODUCTOS_INVENTARIO_REPARTIDORES_CODIGO,
+     PRODUCTOS_INVENTARIO.`PROCESOS_CODIGO_PADRE` AS PRODUCTOS_INVENTARIO_PROCESOS_CODIGO_PADRE,
+     PRODUCTOS_INVENTARIO.`PROCESOS_CODIGO_HIJO` AS PRODUCTOS_INVENTARIO_PROCESOS_CODIGO_HIJO,
+     PRODUCTOS_INVENTARIO.`FECHA_CADUCIDAD` AS PRODUCTOS_INVENTARIO_FECHA_CADUCIDAD,
+     PRODUCTOS_INVENTARIO.`NUMERO_MATANZA` AS PRODUCTOS_INVENTARIO_NUMERO_MATANZA,
+     PRODUCTOS_INVENTARIO.`CONSECUTIVO_PROCESO` AS PRODUCTOS_INVENTARIO_CONSECUTIVO_PROCESO,
+     PRODUCTOS_INVENTARIO.`COSTO` AS PRODUCTOS_INVENTARIO_COSTO,
+     PRODUCTOS_INVENTARIO.`FECHA_CREACION` AS PRODUCTOS_INVENTARIO_FECHA_CREACION,
+     PRODUCTOS_INVENTARIO.`NUMERO_CANAL` AS PRODUCTOS_INVENTARIO_NUMERO_CANAL,
+     PRODUCTOS_INVENTARIO.`PRODUCTO_MAESTRO` AS PRODUCTOS_INVENTARIO_PRODUCTO_MAESTRO,
+     PRODUCTOS_INVENTARIO.`REETIQUETADO` AS PRODUCTOS_INVENTARIO_REETIQUETADO,
+     PRODUCTOS_has_PROVEEDORES.`CODIGO` AS PRODUCTOS_has_PROVEEDORES_CODIGO,
+     PRODUCTOS_has_PROVEEDORES.`PRODUCTOS_CODIGO` AS PRODUCTOS_has_PROVEEDORES_PRODUCTOS_CODIGO,
+     PRODUCTOS_has_PROVEEDORES.`PROVEEDORES_CODIGO` AS PRODUCTOS_has_PROVEEDORES_PROVEEDORES_CODIGO,
+     PRODUCTOS_has_PROVEEDORES.`CODIGO_PROVEEDOR` AS PRODUCTOS_has_PROVEEDORES_CODIGO_PROVEEDOR,
+     PRODUCTOS_has_PROVEEDORES.`PRECIO_SUGERIDO` AS PRODUCTOS_has_PROVEEDORES_PRECIO_SUGERIDO,
+     PRODUCTOS.`CODIGO` AS PRODUCTOS_CODIGO,
+     PRODUCTOS.`DESCRIPCION` AS PRODUCTOS_DESCRIPCION,
+     PRODUCTOS.`TIPO_PRODUCTO_CODIGO` AS PRODUCTOS_TIPO_PRODUCTO_CODIGO,
+     PRODUCTOS.`UNIDADES_DE_MEDIDA_CODIGO` AS PRODUCTOS_UNIDADES_DE_MEDIDA_CODIGO,
+     PRODUCTOS.`INCLUYE_VICERA` AS PRODUCTOS_INCLUYE_VICERA,
+     PRODUCTOS.`GENERAR_SUBPRODUCTO` AS PRODUCTOS_GENERAR_SUBPRODUCTO,
+     PRODUCTOS.`APLICA_INVENTARIO_FISICO` AS PRODUCTOS_APLICA_INVENTARIO_FISICO,
+     PRODUCTOS.`ESTATUS` AS PRODUCTOS_ESTATUS,
+     PRODUCTOS.`PRECIO_SUGERIDO` AS PRODUCTOS_PRECIO_SUGERIDO,
+     PRODUCTOS.`SUBFAMILIAS_CODIGO` AS PRODUCTOS_SUBFAMILIAS_CODIGO,
+     PRODUCTOS.`IVA` AS PRODUCTOS_IVA,
+     PRODUCTOS.`ABARROTES` AS PRODUCTOS_ABARROTES,
+     PRODUCTOS.`PRODUCTO_PESADO` AS PRODUCTOS_PRODUCTO_PESADO
+FROM
+     `PRODUCTOS_has_PROVEEDORES` PRODUCTOS_has_PROVEEDORES INNER JOIN `PRODUCTOS_INVENTARIO` PRODUCTOS_INVENTARIO ON PRODUCTOS_has_PROVEEDORES.`CODIGO` = PRODUCTOS_INVENTARIO.`PRODUCTOS_has_PROVEEDORES_CODIGO`
+     INNER JOIN `PRODUCTOS` PRODUCTOS ON PRODUCTOS_has_PROVEEDORES.`PRODUCTOS_CODIGO` = PRODUCTOS.`CODIGO`]]>
+	</queryString>
+	<field name="PRODUCTOS_INVENTARIO_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_PESO" class="java.math.BigDecimal"/>
+	<field name="PRODUCTOS_INVENTARIO_PRECIO" class="java.math.BigDecimal"/>
+	<field name="PRODUCTOS_INVENTARIO_NOTAS_DE_VENTA_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_PRODUCTOS_has_PROVEEDORES_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_ORDENES_COMPRA_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_TRANFERENCIAS_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_CODIGO_BARRAS" class="java.lang.String"/>
+	<field name="PRODUCTOS_INVENTARIO_UBICACIONES_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_ESTATUS" class="java.lang.String"/>
+	<field name="PRODUCTOS_INVENTARIO_REPARTIDORES_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_PROCESOS_CODIGO_PADRE" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_PROCESOS_CODIGO_HIJO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_FECHA_CADUCIDAD" class="java.sql.Timestamp"/>
+	<field name="PRODUCTOS_INVENTARIO_NUMERO_MATANZA" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_CONSECUTIVO_PROCESO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_COSTO" class="java.math.BigDecimal"/>
+	<field name="PRODUCTOS_INVENTARIO_FECHA_CREACION" class="java.sql.Timestamp"/>
+	<field name="PRODUCTOS_INVENTARIO_NUMERO_CANAL" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INVENTARIO_PRODUCTO_MAESTRO" class="java.lang.Boolean"/>
+	<field name="PRODUCTOS_INVENTARIO_REETIQUETADO" class="java.lang.Boolean"/>
+	<field name="PRODUCTOS_has_PROVEEDORES_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_has_PROVEEDORES_PRODUCTOS_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_has_PROVEEDORES_PROVEEDORES_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_has_PROVEEDORES_CODIGO_PROVEEDOR" class="java.lang.String"/>
+	<field name="PRODUCTOS_has_PROVEEDORES_PRECIO_SUGERIDO" class="java.math.BigDecimal"/>
+	<field name="PRODUCTOS_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_DESCRIPCION" class="java.lang.String"/>
+	<field name="PRODUCTOS_TIPO_PRODUCTO_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_UNIDADES_DE_MEDIDA_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_INCLUYE_VICERA" class="java.lang.Boolean"/>
+	<field name="PRODUCTOS_GENERAR_SUBPRODUCTO" class="java.lang.Boolean"/>
+	<field name="PRODUCTOS_APLICA_INVENTARIO_FISICO" class="java.lang.Boolean"/>
+	<field name="PRODUCTOS_ESTATUS" class="java.lang.String"/>
+	<field name="PRODUCTOS_PRECIO_SUGERIDO" class="java.math.BigDecimal"/>
+	<field name="PRODUCTOS_SUBFAMILIAS_CODIGO" class="java.lang.Integer"/>
+	<field name="PRODUCTOS_IVA" class="java.lang.Boolean"/>
+	<field name="PRODUCTOS_ABARROTES" class="java.lang.Boolean"/>
+	<field name="PRODUCTOS_PRODUCTO_PESADO" class="java.lang.Boolean"/>
+	<background>
+		<band/>
+	</background>
+	<columnHeader>
+		<band height="16">
+			<rectangle>
+				<reportElement x="460" y="0" width="112" height="15" backcolor="#CCCCCC"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="368" y="0" width="92" height="15" backcolor="#CCCCCC"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="300" y="0" width="68" height="15" backcolor="#CCCCCC"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="174" y="0" width="126" height="15" backcolor="#CCCCCC"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="0" y="0" width="174" height="15" backcolor="#CCCCCC"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="174" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Producto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="0" width="126" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Codigo de Barras	]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="68" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Peso Kg]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="368" y="0" width="92" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Precio Unitario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="460" y="0" width="112" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor total]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21">
+			<textField>
+				<reportElement x="0" y="0" width="174" height="20"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PRODUCTOS_DESCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="174" y="0" width="126" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PRODUCTOS_INVENTARIO_CODIGO_BARRAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="68" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PRODUCTOS_INVENTARIO_PESO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="368" y="0" width="92" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PRODUCTOS_INVENTARIO_PRECIO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="460" y="0" width="112" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[($F{PRODUCTOS_INVENTARIO_PESO})*($F{PRODUCTOS_INVENTARIO_PRECIO})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

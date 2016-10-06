@@ -2,12 +2,13 @@
 <!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
   <session-factory>
-    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-    <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/valco?zeroDateTimeBehavior=convertToNull</property>
-    <property name="hibernate.connection.username">admin3ZheGrA</property>
-    <property name="hibernate.connection.password">1VtHQW5M-3g-</property>
+    <property name="hibernate.dialect">org.hibernate.dialect.HSQLDialect</property>
+    <property name="hibernate.connection.driver_class">org.hsqldb.jdbcDriver</property>
+    <property name="hibernate.connection.url">jdbc:hsqldb:mem:valco</property>
+    <property name="hibernate.connection.username">sa</property>
+    <property name="hibernate.connection.password"/>
     <property name="hibernate.show_sql">true</property>
+    <property name="hibernate.hbm2ddl.auto">create-drop</property>
     <property name="hibernate.current_session_context_class">thread</property>
     <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
     <property name="hibernate.enable_lazy_load_no_trans">true</property>
@@ -45,6 +46,5 @@
     <mapping resource="mapping/ProductosDelInventario.hbm.xml"/>
     <mapping resource="mapping/Inventarios.hbm.xml"/>
     <mapping resource="mapping/Mermas.hbm.xml"/>
-    <mapping resource="mapping/ProductosHasProveedoresView.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>
