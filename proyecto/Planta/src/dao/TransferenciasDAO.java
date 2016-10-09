@@ -33,7 +33,7 @@ public class TransferenciasDAO {
             tx = session.beginTransaction();
             session.save(transferencia);
             for (ProductosInventario producto : productos) {
-                session.update(producto);
+                session.saveOrUpdate(producto);
             }
             tx.commit();
         } catch (Exception e) {

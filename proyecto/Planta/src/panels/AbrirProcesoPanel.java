@@ -1,6 +1,5 @@
 package panels;
 
-
 import barcode.BarCodableImpl;
 import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
 import dao.ProcesosDAOImpl;
@@ -27,32 +26,33 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import mapping.Procesos;
+import utilities.ParametrosGeneralesUtility;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Karla
  */
 public class AbrirProcesoPanel extends BarCodableImpl {
+
     ProductoDAO productoDAO = new ProductoDAO();
     ProcesosDAOImpl procesosDAO = new ProcesosDAOImpl();
-    DefaultListModel lmDisponibles =new DefaultListModel();
-    DefaultListModel lmSeleccionados =new DefaultListModel();
-    
+    DefaultListModel lmDisponibles = new DefaultListModel();
+    DefaultListModel lmSeleccionados = new DefaultListModel();
+
     boolean modoEdicion = false;
     Set<ProductosInventario> toRemove = new HashSet<>();
     Set<ProductosInventario> toAdd = new HashSet<>();
     List<ProductosInventario> source = new ArrayList<>();
     List<ProductosInventario> destination = new ArrayList<>();
     Procesos procesoEdicion;
-    
+
     public List<Component> exceptions = new ArrayList<>();
-    
+
     /**
      * Creates new form AbrirProcesoPanel
      */
@@ -67,15 +67,14 @@ public class AbrirProcesoPanel extends BarCodableImpl {
         exceptions.add(observacionesTxt);
         setDispacher(new BarCodeScannerKeyDispatcher(barCodeTxt, getManager(), exceptions));
         getManager().addKeyEventDispatcher(getDispacher());
-        
-        
+
     }
-    
-    public AbrirProcesoPanel(Procesos proceso){
+
+    public AbrirProcesoPanel(Procesos proceso) {
         try {
             source = productoDAO.getCanalesDisponibles();
-            destination= procesosDAO.getCajasPorProcesoHijo(proceso.getCodigo());
-            this.procesoEdicion= proceso;
+            destination = procesosDAO.getCajasPorProcesoHijo(proceso.getCodigo());
+            this.procesoEdicion = proceso;
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", ERROR_MESSAGE);
         }
@@ -84,8 +83,8 @@ public class AbrirProcesoPanel extends BarCodableImpl {
         exceptions.add(observacionesTxt);
         setDispacher(new BarCodeScannerKeyDispatcher(barCodeTxt, getManager(), exceptions));
         getManager().addKeyEventDispatcher(getDispacher());
-        modoEdicion= true;
-       
+        modoEdicion = true;
+
     }
 
     /**
@@ -321,22 +320,22 @@ public class AbrirProcesoPanel extends BarCodableImpl {
 
     private void seleccionarSelecBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seleccionarSelecBtnActionPerformed
         int[] indices = disponiblesJList.getSelectedIndices();
-        for(int x = indices.length-1 ; x >= 0; x--){
+        for (int x = indices.length - 1; x >= 0; x--) {
             lmSeleccionados.addElement(lmDisponibles.getElementAt(indices[x]));
-            if(!destination.contains(lmDisponibles.getElementAt(indices[x]))&& modoEdicion){
+            if (!destination.contains(lmDisponibles.getElementAt(indices[x])) && modoEdicion) {
                 toAdd.add((ProductosInventario) lmDisponibles.getElementAt(indices[x]));
-                toRemove.remove( lmDisponibles.getElementAt(indices[x]));
+                toRemove.remove(lmDisponibles.getElementAt(indices[x]));
             }
             lmDisponibles.removeElementAt(indices[x]);
         }
         actualizarPeso();
     }//GEN-LAST:event_seleccionarSelecBtnActionPerformed
 
-    
+
     private void SeleccionarTodosBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SeleccionarTodosBtnActionPerformed
-        for(Object element : lmDisponibles.toArray()){
+        for (Object element : lmDisponibles.toArray()) {
             lmSeleccionados.addElement(element);
-            if(!destination.contains(element) && modoEdicion){
+            if (!destination.contains(element) && modoEdicion) {
                 toAdd.add((ProductosInventario) element);
                 toRemove.remove(element);
             }
@@ -346,9 +345,9 @@ public class AbrirProcesoPanel extends BarCodableImpl {
     }//GEN-LAST:event_SeleccionarTodosBtnActionPerformed
 
     private void quitarTodosBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitarTodosBtnActionPerformed
-        for(Object element : lmSeleccionados.toArray()){
+        for (Object element : lmSeleccionados.toArray()) {
             lmDisponibles.addElement(element);
-            if(!source.contains(element) && modoEdicion){
+            if (!source.contains(element) && modoEdicion) {
                 toRemove.add((ProductosInventario) element);
                 toAdd.remove(element);
             }
@@ -359,14 +358,14 @@ public class AbrirProcesoPanel extends BarCodableImpl {
 
     private void quitarSelecBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitarSelecBtnActionPerformed
         int[] indices = seleccionadosJList.getSelectedIndices();
-        for(int x = indices.length-1 ; x >= 0; x--){
+        for (int x = indices.length - 1; x >= 0; x--) {
             lmDisponibles.addElement(lmSeleccionados.getElementAt(indices[x]));
-            if(!source.contains(lmSeleccionados.getElementAt(indices[x]))&& modoEdicion){
+            if (!source.contains(lmSeleccionados.getElementAt(indices[x])) && modoEdicion) {
                 toRemove.add((ProductosInventario) lmSeleccionados.getElementAt(indices[x]));
-                toAdd.remove( lmSeleccionados.getElementAt(indices[x]));
+                toAdd.remove(lmSeleccionados.getElementAt(indices[x]));
             }
             lmSeleccionados.removeElementAt(indices[x]);
-            
+
         }
         actualizarPeso();
     }//GEN-LAST:event_quitarSelecBtnActionPerformed
@@ -382,15 +381,15 @@ public class AbrirProcesoPanel extends BarCodableImpl {
             JOptionPane.showMessageDialog(null, "Ocurriò un error al abrir el proceso", "Error", ERROR_MESSAGE);
             return;
         }
-        
+
         try {
-            if(modoEdicion){
+            if (modoEdicion) {
                 procesosDAO.actualizarProceso(procesoEdicion, toAdd, toRemove);
-              
-            }else{
-            procesosDAO.abrirProceso(proceso, lmSeleccionados.toArray());
+
+            } else {
+                procesosDAO.abrirProceso(proceso, lmSeleccionados.toArray());
             }
-            
+
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Ocurriò un error al abrir el proceso", "Error", ERROR_MESSAGE);
             return;
@@ -399,43 +398,52 @@ public class AbrirProcesoPanel extends BarCodableImpl {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void barCodeTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_barCodeTxtKeyTyped
-        if(evt.getKeyChar()== KeyEvent.VK_ENTER)
-            {
-                changeScanned(barCodeTxt.getText());
-            }
+        if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
+            changeScanned(barCodeTxt.getText());
+        }
     }//GEN-LAST:event_barCodeTxtKeyTyped
 
     private void barCodeTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barCodeTxtActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_barCodeTxtActionPerformed
 
-    private void changeScanned(String barCode){
-        for(int x = 0 ; x < lmDisponibles.getSize(); x++){
-            ProductosInventario producto = (ProductosInventario) lmDisponibles.getElementAt(x);
-            if(barCode.equals(producto.getCodigoBarras())){
-                lmSeleccionados.addElement(lmDisponibles.getElementAt(x));
-                lmDisponibles.removeElementAt(x);
-                actualizarPeso();
-                return;
+    private void changeScanned(String barCode) {
+        try {
+            for (int x = 0; x < lmDisponibles.getSize(); x++) {
+                ProductosInventario producto = (ProductosInventario) lmDisponibles.getElementAt(x);
+                if (barCode.equals(producto.getCodigoBarras())) {
+                    lmSeleccionados.addElement(lmDisponibles.getElementAt(x));
+                    lmDisponibles.removeElementAt(x);
+                    actualizarPeso();
+                    return;
+                }
             }
-        }
-        
-        for(int x = 0 ; x < lmSeleccionados.getSize(); x++){
-            ProductosInventario producto = (ProductosInventario) lmSeleccionados.getElementAt(x);
-            if(producto.getCodigoBarras().equals(barCode)){
-                lmDisponibles.addElement(lmSeleccionados.getElementAt(x));
-                lmSeleccionados.removeElementAt(x);
-                actualizarPeso();
-                return;
+
+            for (int x = 0; x < lmSeleccionados.getSize(); x++) {
+                ProductosInventario producto = (ProductosInventario) lmSeleccionados.getElementAt(x);
+                if (producto.getCodigoBarras().equals(barCode)) {
+                    lmDisponibles.addElement(lmSeleccionados.getElementAt(x));
+                    lmSeleccionados.removeElementAt(x);
+                    actualizarPeso();
+                    return;
+                }
             }
+
+            if (ParametrosGeneralesUtility.getValor("CB001").equals("true")) {
+                ProductosInventario producto = productoDAO.getProductoByBarCode(barCode);
+                lmSeleccionados.addElement(producto);
+
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(AbrirProcesoPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
-    
-    private void actualizarPeso(){
+
+    private void actualizarPeso() {
         BigDecimal pesoInicial = new BigDecimal("0.00");
-        for (Object producto : lmSeleccionados.toArray()){
-            pesoInicial= pesoInicial.add(((ProductosInventario)producto).getPeso());
+        for (Object producto : lmSeleccionados.toArray()) {
+            pesoInicial = pesoInicial.add(((ProductosInventario) producto).getPeso());
         }
         pesoLbl2.setText(pesoInicial.toString());
     }

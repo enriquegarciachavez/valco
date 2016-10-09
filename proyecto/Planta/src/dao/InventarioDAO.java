@@ -152,6 +152,7 @@ public class InventarioDAO {
 
           } finally {
               try {
+                  if(session.isOpen())
                   session.close();
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar el inventario.");
@@ -254,6 +255,7 @@ public class InventarioDAO {
 
           } finally {
               try {
+                  if(session.isOpen())
                   session.close();
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar el producto del inventario.");
@@ -281,6 +283,7 @@ public class InventarioDAO {
 
           } finally {
               try {
+                  if(session.isOpen())
                   session.close();
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar el producto del inventario.");

@@ -5,13 +5,11 @@
         <group>
             <file>file:/C:/apps/valco/valco/proyecto/Planta/src/dao/ProductoDAO.java</file>
             <file>file:/C:/apps/valco/valco/proyecto/Planta/src/utilities/ProductosUtility.java</file>
-            <file>file:/C:/apps/valco/valco/proyecto/Planta/src/mapping/ProductosHasProveedoresView.java</file>
-            <file>file:/C:/apps/valco/valco/proyecto/Planta/src/mapping/ProductosHasProveedores.java</file>
-            <file>file:/C:/apps/valco/valco/proyecto/Planta/test/TestProductosInventarioDAO.java</file>
+            <file>file:/C:/apps/valco/valco/proyecto/Planta/src/panels/AbrirProcesoPanel.java</file>
             <file>file:/C:/apps/valco/valco/proyecto/Planta/test/TestEtiquetadoPanel.java</file>
-            <file>file:/C:/apps/valco/valco/proyecto/Planta/src/Hibernate/HibernateUtil.java</file>
-            <file>file:/C:/apps/valco/valco/proyecto/Planta/test/NewEmptyJUnitTest.java</file>
-            <file>file:/C:/apps/valco/valco/proyecto/Planta/src/hibernate.cfg.xml</file>
+            <file>file:/C:/apps/valco/valco/proyecto/Planta/src/panels/AsignacionProductoRepartidor.java</file>
+            <file>file:/C:/apps/valco/valco/proyecto/Planta/src/dao/ParametrosGeneralesDAO.java</file>
+            <file>file:/C:/apps/valco/valco/proyecto/Planta/src/panels/ReciboProductoBC.java</file>
         </group>
     </open-files>
 </project-private>

@@ -34,6 +34,7 @@ import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import utilities.ProductosUtility;
 
 /**
  *
@@ -101,7 +102,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
         try {
             tx = session.beginTransaction();
             for (ProductosInventario producto : productos) {
-                session.update(producto);
+                session.saveOrUpdate(producto);
             }
             tx.commit();
         } catch (Exception e) {
@@ -346,6 +347,13 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
                     .add(Restrictions.eq("estatus", "ACTIVO"));
             q.setMaxResults(1);
             if (q.uniqueResult() == null) {
+                Criteria x = session.createCriteria(ProductosHasProveedoresView.class);
+                List<ProductosHasProveedoresView> productosHasProveedores = x.list();
+                ProductosHasProveedores productoProveedor = ProductosUtility.getProductosHasProveedoresByBarCode(productosHasProveedores, codigo);
+                ProductosInventario productoBuild = ProductosUtility.buildProductoFromBarCode(productoProveedor, codigo);
+                if (productoBuild != null){
+                    return productoBuild;
+                }
                 throw new Exception("No se encontró el producto buscado.");
             }
             producto = (ProductosInventario) q.uniqueResult();
@@ -383,6 +391,13 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
             }
             q.setMaxResults(1);
             if (q.uniqueResult() == null) {
+                Criteria x = session.createCriteria(ProductosHasProveedoresView.class);
+                List<ProductosHasProveedoresView> productosHasProveedores = x.list();
+                ProductosHasProveedores productoProveedor = ProductosUtility.getProductosHasProveedoresByBarCode(productosHasProveedores, codigo);
+                ProductosInventario productoBuild = ProductosUtility.buildProductoFromBarCode(productoProveedor, codigo);
+                if (productoBuild != null){
+                    return productoBuild;
+                }
                 throw new Exception("No se encontró el producto buscado.");
             }
             producto = (ProductosInventario) q.uniqueResult();
@@ -419,6 +434,13 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
             }
             q.setMaxResults(1);
             if (q.uniqueResult() == null) {
+                Criteria x = session.createCriteria(ProductosHasProveedoresView.class);
+                List<ProductosHasProveedoresView> productosHasProveedores = x.list();
+                ProductosHasProveedores productoProveedor = ProductosUtility.getProductosHasProveedoresByBarCode(productosHasProveedores, codigo);
+                ProductosInventario productoBuild = ProductosUtility.buildProductoFromBarCode(productoProveedor, codigo);
+                if (productoBuild != null){
+                    return productoBuild;
+                }
                 throw new Exception("No se encontró el producto buscado.");
             }
             producto = (ProductosInventario) q.uniqueResult();
@@ -1020,6 +1042,13 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
                     .add(Restrictions.eq("estatus", "ACTIVO"));
             q.setMaxResults(1);
             if (q.uniqueResult() == null) {
+                Criteria x = session.createCriteria(ProductosHasProveedoresView.class);
+                List<ProductosHasProveedoresView> productosHasProveedores = x.list();
+                ProductosHasProveedores productoProveedor = ProductosUtility.getProductosHasProveedoresByBarCode(productosHasProveedores, barCode);
+                ProductosInventario productoBuild = ProductosUtility.buildProductoFromBarCode(productoProveedor, barCode);
+                if (productoBuild != null){
+                    return productoBuild;
+                }
                 throw new Exception("No se encontró el producto buscado.");
             }
             producto = (ProductosInventario) q.uniqueResult();

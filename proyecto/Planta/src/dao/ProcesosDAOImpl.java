@@ -41,7 +41,7 @@ public class ProcesosDAOImpl implements ProcesosDAO{
             for(Object producto : productos){
                 ((ProductosInventario)producto).setProcesosCodigoHijo(proceso.getCodigo());
                 ((ProductosInventario)producto).setEstatus("ASIGNADO");
-                session.update(producto);
+                session.saveOrUpdate(producto);
             }
             tx.commit();
         } catch (Exception e) {

@@ -463,6 +463,7 @@ public class ReciboProductoBC extends BarCodableImpl {
         String peso
                 = codigoBarrasTxt.getText().substring(getProveedorSeleccionado().getPosicionPesoInicial(),
                         getProveedorSeleccionado().getPosicionPesoFinal());
+        peso= new StringBuilder(peso).insert(peso.length()-2, ".").toString();
         try {
             productoHasProveedores
                     = productoDAO.getProductoXProveYCodigo(getProveedorSeleccionado(), codigoProducto);
