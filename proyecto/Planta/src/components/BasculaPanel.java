@@ -121,7 +121,8 @@ public class BasculaPanel extends PesableBarCodeable {
             }
             return (new BigDecimal(pesoManualTxt.getText()));
         } else {
-           return (new BigDecimal(pesoBasculaLbl.getText()));
+            System.out.println("lalalala "+pesoBasculaLbl.getText());
+           return (new BigDecimal(pesoBasculaLbl.getText().trim()));
         }
     }
 

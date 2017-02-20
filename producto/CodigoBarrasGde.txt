@@ -1,0 +1,5 @@
+^XA
+                 ^FO30,70^ANR,66,60^FD  PRODUCTO  ^FS
+                ^FO100,150^ANR,96,60^FD PESOKG ^FS
+                ^FO300,30^BY2^BCR, 120, Y, N, N^FD CODIGO_BARRAS  ^FS 
+                ^XZ

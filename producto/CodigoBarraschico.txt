@@ -1,0 +1,5 @@
+^XA
+                 ^FO230,50^ARN,16,9^FD  PRODUCTO  ^FS
+                ^FO300,100^ARN,16,9^FD   PESO  KG^BY1,3.0^FS
+                ^FO230,180^BCN, 80, Y, N, N^FD CODIGO_BARRAS  ^FS 
+                ^XZ

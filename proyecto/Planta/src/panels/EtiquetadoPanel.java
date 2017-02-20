@@ -1233,7 +1233,12 @@ public class EtiquetadoPanel extends PesableBarCodeable {
                 + "^FO230,50^ARN,16,9^FD " + this.productosLov.getSelectedItem() + "^FS"
                 + "^FO300,100^ARN,16,9^FD " + producto.getPeso() + " KG^BY1,3.0^FS"
                 + "^FO230,180^BCN, 80, Y, N, N^FD" + producto.getCodigoBarras() + "^FS "
-                + "^XZ";*/
+                + "^XZ";
+        
+        
+               
+        */
+        
 
 // convertimos el comando a bytes  
         byte[] by = label.getBytes();

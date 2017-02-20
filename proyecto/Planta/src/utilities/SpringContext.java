@@ -5,7 +5,9 @@
  */
 package utilities;
 
+import configuration.SpringConfiguration;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
@@ -23,7 +25,7 @@ public class SpringContext {
 
     public static ApplicationContext getContext() {
         if (context == null) {
-             context = new ClassPathXmlApplicationContext("context.xml");
+             context = new AnnotationConfigApplicationContext(SpringConfiguration.class);
             
 
         }
