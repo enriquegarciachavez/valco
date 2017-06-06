@@ -64,23 +64,23 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import sun.misc.BASE64Encoder;
-
+import java.util.Base64;
 /**
  *
  * @author Administrador
  */
 public class FacturasUtility {
-
+    
     private static final String[] UNIDADES = {"", "un ", "dos ", "tres ", "cuatro ", "cinco ", "seis ", "siete ", "ocho ", "nueve "};
     private static final String[] DECENAS = {"diez ", "once ", "doce ", "trece ", "catorce ", "quince ", "dieciseis ",
         "diecisiete ", "dieciocho ", "diecinueve", "veinte ", "treinta ", "cuarenta ",
         "cincuenta ", "sesenta ", "setenta ", "ochenta ", "noventa "};
     private static final String[] CENTENAS = {"", "ciento ", "doscientos ", "trecientos ", "cuatrocientos ", "quinientos ", "seiscientos ",
         "setecientos ", "ochocientos ", "novecientos "};
-
+    
     public static OutputStream getCadenaOriginal(String cadenaOriginalDir, String xml) throws Exception {
-        InputStream content = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream(cadenaOriginalDir);
+        File file = new File(cadenaOriginalDir);
+        InputStream content = new FileInputStream(file);
         StreamSource sourceXSL = new StreamSource(content);
         StringReader reader = new StringReader(xml);
         TransformerFactory tFactory = TransformerFactory.newInstance();
@@ -89,10 +89,10 @@ public class FacturasUtility {
         transformer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
         OutputStream output = new ByteArrayOutputStream();
         transformer.transform(new StreamSource(reader), new StreamResult(output));
-
+        
         return output;
     }
-
+    
     private static byte[] getBytesPrivateKey(String directorio) throws Exception {
         try (InputStream inputstream = new FileInputStream(directorio);) {
             return getBytes(inputstream);
@@ -101,31 +101,40 @@ public class FacturasUtility {
                     + "directorio especificado");
         } catch (IOException iOE) {
             throw new IOException("Ocurrió un error al leer el archivo con la llave");
+        }catch (Exception ex){
+            throw new Exception("Fallo en el pinche getBytesPrivateKey");
         }
     }
-
-    private static java.security.PrivateKey getPrivateKey(byte[] bytesClave, String clave) throws GeneralSecurityException {
+    
+    private static java.security.PrivateKey getPrivateKey(byte[] bytesClave, String clave) throws Exception  {
+        java.security.PrivateKey pk;
+        try{
+            
+       
         PKCS8Key pkcs8 = null;
         pkcs8 = new PKCS8Key(bytesClave, clave.toCharArray());
-        java.security.PrivateKey pk;
-        pk = pkcs8.getPrivateKey();
+        
+        pk = pkcs8.getPrivateKey(); 
+        } catch(Exception ex){
+            throw new Exception("Fallo en el pinche getPrivateKey");
+        }
         return pk;
     }
-
-    private static byte[] getBytesCadenaFirmada(java.security.PrivateKey pk, OutputStream output) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, UnsupportedEncodingException {
-        Signature firma = Signature.getInstance("SHA1withRSA");
+    
+    private static byte[] getBytesCadenaFirmada(java.security.PrivateKey pk, OutputStream output) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, UnsupportedEncodingException, Exception {
+        Signature firma = Signature.getInstance(ParametrosGeneralesUtility.getValor("FA011"));
         firma.initSign(pk);
         firma.update(output.toString().getBytes("UTF-8"));
         byte[] cadenaFirmada = firma.sign();
         return cadenaFirmada;
     }
-
+    
     private static String getSelloBase64(byte[] cadenaFirmada) {
-        BASE64Encoder b64 = new BASE64Encoder();
-        String selloDigital = b64.encode(cadenaFirmada);
-        return selloDigital;
+        
+        byte[] selloDigital = Base64.getEncoder().encode(cadenaFirmada);
+        return new String(selloDigital);
     }
-
+    
     private static String formaXmlFactura(String serie,
             String folio,
             Date fecha,
@@ -164,20 +173,20 @@ public class FacturasUtility {
             Iterator<ConceptosFactura> conceptosFactura,
             Set<Impuestos> impuestos) throws ParseException {
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        String factura = "<cfdi:Comprobante xmlns:cfdi=\"http://www.sat.gob.mx/cfd/3\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd \" version=\"3.2\" serie= \"" + serie + "\" folio= \"" + folio + "\" fecha=\"" + formatDate.format(fecha) + "\" formaDePago= \"" + formaPago + "\"\n"
+        String factura = "<cfdi:Comprobante xmlns:cfdi=\"http://www.sat.gob.mx/cfd/3\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd \" version=\"3.2\" serie=\"" + serie + "\" folio=\"" + folio + "\" fecha=\"" + formatDate.format(fecha) + "\" formaDePago=\"" + formaPago + "\"\n"
                 + "sello=\"AQUIVAELSELLO\""
-                + " total=\"" + total + "\" subTotal=\"" + subTotal + "\" certificado=\"MIIEdDCCA1ygAwIBAgIUMjAwMDEwMDAwMDAxMDAwMDU4NjcwDQYJKoZIhvcNAQEFBQAwggFvMRgwFgYDVQQDDA9BLkMuIGRlIHBydWViYXMxLzAtBgNVBAoMJlNlcnZpY2lvIGRlIEFkbWluaXN0cmFjacOzbiBUcmlidXRhcmlhMTgwNgYDVQQLDC9BZG1pbmlzdHJhY2nDs24gZGUgU2VndXJpZGFkIGRlIGxhIEluZm9ybWFjacOzbjEpMCcGCSqGSIb3DQEJARYaYXNpc25ldEBwcnVlYmFzLnNhdC5nb2IubXgxJjAkBgNVBAkMHUF2LiBIaWRhbGdvIDc3LCBDb2wuIEd1ZXJyZXJvMQ4wDAYDVQQRDAUwNjMwMDELMAkGA1UEBhMCTVgxGTAXBgNVBAgMEERpc3RyaXRvIEZlZGVyYWwxEjAQBgNVBAcMCUNveW9hY8OhbjEVMBMGA1UELRMMU0FUOTcwNzAxTk4zMTIwMAYJKoZIhvcNAQkCDCNSZXNwb25zYWJsZTogSMOpY3RvciBPcm5lbGFzIEFyY2lnYTAeFw0xMjA3MjcxNzAyMDBaFw0xNjA3MjcxNzAyMDBaMIHbMSkwJwYDVQQDEyBBQ0NFTSBTRVJWSUNJT1MgRU1QUkVTQVJJQUxFUyBTQzEpMCcGA1UEKRMgQUNDRU0gU0VSVklDSU9TIEVNUFJFU0FSSUFMRVMgU0MxKTAnBgNVBAoTIEFDQ0VNIFNFUlZJQ0lPUyBFTVBSRVNBUklBTEVTIFNDMSUwIwYDVQQtExxBQUEwMTAxMDFBQUEgLyBIRUdUNzYxMDAzNFMyMR4wHAYDVQQFExUgLyBIRUdUNzYxMDAzTURGUk5OMDkxETAPBgNVBAsTCFVuaWRhZCAxMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC2TTQSPONBOVxpXv9wLYo8jezBrb34i/tLx8jGdtyy27BcesOav2c1NS/Gdv10u9SkWtwdy34uRAVe7H0a3VMRLHAkvp2qMCHaZc4T8k47Jtb9wrOEh/XFS8LgT4y5OQYo6civfXXdlvxWU/gdM/e6I2lg6FGorP8H4GPAJ/qCNwIDAQABox0wGzAMBgNVHRMBAf8EAjAAMAsGA1UdDwQEAwIGwDANBgkqhkiG9w0BAQUFAAOCAQEATxMecTpMbdhSHo6KVUg4QVF4Op2IBhiMaOrtrXBdJgzGotUFcJgdBCMjtTZXSlq1S4DG1jr8p4NzQlzxsdTxaB8nSKJ4KEMgIT7E62xRUj15jI49qFz7f2uMttZLNThipunsN/NF1XtvESMTDwQFvas/Ugig6qwEfSZc0MDxMpKLEkEePmQwtZD+zXFSMVa6hmOu4M+FzGiRXbj4YJXn9Myjd8xbL/c+9UIcrYoZskxDvMxc6/6M3rNNDY3OFhBK+V/sPMzWWGt8S1yjmtPfXgFs1t65AZ2hcTwTAuHrKwDatJ1ZPfa482ZBROAAX1waz7WwXp0gso7sDCm2/yUVww==\" Moneda= \"" + moneda + "\" metodoDePago= \"" + metodoPago + "\" LugarExpedicion= \"" + lugarExpedicion + "\" NumCtaPago= \"" + numCtaPago + "\" noCertificado=\"" + noCertificado + "\" tipoDeComprobante=\"" + tipoDeComprobante + "\">\n"
-                + "<cfdi:Emisor rfc= \"" + rfcEmisor + "\" nombre= \"" + nombreEmisor + "\">\n"
-                + "		<cfdi:DomicilioFiscal calle= \"" + calleEmisor + "\" noExterior= \"" + numExtEmisor + "\" noInterior= \"" + numInteriorEmisor + "\" colonia= \"" + coloniaEmisor + "\" localidad= \"" + localidadEmisor + "\" referencia= \"" + referenciaEmisor + "\" municipio= \"" + municipioEmisor + "\" estado= \"" + estadoEmisor + "\" pais= \"" + paisEmisor + "\" codigoPostal= \"" + cpEmisor + "\" />\n"
-                + "		<cfdi:RegimenFiscal Regimen= \"" + regimenEmisor + "\" />\n"
+                + " total=\"" + total + "\" subTotal=\"" + subTotal + "\" certificado=\"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\" Moneda=\"" + moneda + "\" metodoDePago=\"" + metodoPago + "\" LugarExpedicion=\"" + lugarExpedicion + "\" noCertificado=\"" + noCertificado + "\" tipoDeComprobante=\"" + tipoDeComprobante + "\">\n"
+                + "<cfdi:Emisor rfc=\"" + rfcEmisor + "\" nombre=\"" + nombreEmisor + "\">\n"
+                + "		<cfdi:DomicilioFiscal calle=\"" + calleEmisor + "\" noExterior=\"" + numExtEmisor + "\" noInterior=\"" + numInteriorEmisor + "\" colonia=\"" + coloniaEmisor + "\" localidad=\"" + localidadEmisor + "\" referencia=\"" + referenciaEmisor + "\" municipio=\"" + municipioEmisor + "\" estado=\"" + estadoEmisor + "\" pais=\"" + paisEmisor + "\" codigoPostal=\"" + cpEmisor + "\" />\n"
+                + "		<cfdi:RegimenFiscal Regimen=\"" + regimenEmisor + "\" />\n"
                 + "	</cfdi:Emisor>\n"
-                + "<cfdi:Receptor rfc= \"" + rfcReceptor + "\" nombre= \"" + nombreReceptor + "\">\n"
-                + "		<cfdi:Domicilio calle= \"" + calleReceptor + "\" noExterior= \"" + numExtReceptor + "\" noInterior= \"" + numInteriorReceptor + "\" colonia= \"" + coloniaReceptor + "\" municipio= \"" + municipioReceptor + "\" estado= \"" + estadoReceptor + "\" pais= \"" + paisReceptor + "\" codigoPostal= \"" + cpReceptor + "\" />\n"
+                + "<cfdi:Receptor rfc=\"" + rfcReceptor + "\" nombre=\"" + nombreReceptor + "\">\n"
+                + "		<cfdi:Domicilio calle=\"" + calleReceptor + "\" noExterior=\"" + numExtReceptor + "\" colonia=\"" + coloniaReceptor + "\" municipio=\"" + municipioReceptor + "\" estado=\"" + estadoReceptor + "\" pais=\"" + paisReceptor + "\" codigoPostal=\"" + cpReceptor + "\" />\n"
                 + "</cfdi:Receptor>\n"
                 + "<cfdi:Conceptos>\n"
                 + formaXmlConceptos(conceptosFactura)
                 + "</cfdi:Conceptos>\n"
-                + "<cfdi:Impuestos totalImpuestosTrasladados= \"" + getTotalImpuestos(impuestos) + "\">\n";
+                + "<cfdi:Impuestos totalImpuestosTrasladados=\"" + getTotalImpuestos(impuestos) + "\">\n";
         if (impuestos != null && !impuestos.isEmpty() && getTotalImpuestos(impuestos).compareTo(BigDecimal.ZERO) != 0) {
             factura += "		<cfdi:Traslados>\n"
                     + formaXmlImpuestos(impuestos)
@@ -185,55 +194,62 @@ public class FacturasUtility {
         }
         factura += "</cfdi:Impuestos>\n"
                 + "</cfdi:Comprobante>";
+        
         return factura;
     }
-
+    
     public static String formaXmlConceptos(Iterator<ConceptosFactura> conceptos) {
         String cadena = "";
         while (conceptos.hasNext()) {
             ConceptosFactura concepto = conceptos.next();
-            cadena += "<cfdi:Concepto cantidad= \"" + concepto.getCantidad() + "\" unidad= \"" + concepto.getUnidad() + "\" noIdentificacion= \"" + concepto.getClave() + "\" descripcion= \"" + concepto.getDescripcion() + "\" valorUnitario= \"" + concepto.getPrecioUnitario() + "\" importe= \"" + concepto.getImporteTotal() + "\"/>\n";
+            cadena += "<cfdi:Concepto cantidad=\"" + concepto.getCantidad() + "\" unidad=\"" + concepto.getUnidad() + "\" noIdentificacion=\"" + concepto.getClave() + "\" descripcion=\"" + concepto.getDescripcion() + "\" valorUnitario=\"" + concepto.getPrecioUnitario() + "\" importe=\"" + concepto.getImporteTotal() + "\"/>\n";
         }
         return cadena;
     }
-
+    
     public static String formaXmlImpuestos(Set<Impuestos> impuestos) {
         String cadena = "";
         for (Impuestos impuesto : impuestos) {
-            cadena += "<cfdi:Traslado impuesto= \"" + impuesto.getImpuesto() + "\" tasa= \"" + impuesto.getTasa() + "\" importe= \"" + impuesto.getImporte() + "\"/>\n";
+            cadena += "<cfdi:Traslado impuesto=\"" + impuesto.getImpuesto() + "\" tasa=\"" + impuesto.getTasa() + "\" importe=\"" + impuesto.getImporte() + "\"/>\n";
         }
         return cadena;
     }
-
+    
     public static String getFacturaConSello(Facturas factura) throws Exception {
-
+        
         Clientes cliente = factura.getNotasDeVenta().getClientes();
+        String rfcEmisor = ParametrosGeneralesUtility.getValor("FA004");
         String xml = null;
         try {
             xml = formaXmlFactura(factura.getSerie(), Integer.toString(factura.getFolio()), factura.getFecha(),
                     factura.getFormaPago(), factura.getTotal().setScale(2, RoundingMode.HALF_EVEN).toString(), factura.getSubtotal().setScale(2, RoundingMode.HALF_EVEN).toString(),
                     factura.getMoneda(), factura.getMetodoPago(), factura.getLugar(),
                     cliente.getCuentaBancaria().toString(), factura.getNoSeieCertEmisor(), "ingreso",
-                    "AAA010101AAA", "DISTRIBUIDORA DE CARNES VALCO S.A. DE C.V.", "PARRAL", "246",
-                    "123", "REVOLUCION", "CHIHUAHUA", "referencia",
+                    "DCV9612126N6", "DISTRIBUIDORA DE CARNES VALCO S.A. DE C.V.", "PARRAL", "246",
+                    "0", "REVOLUCION", "CHIHUAHUA", "referencia",
                     "CHIHUAHUA", "CHIHUAHUA", "MÉXICO", "31110",
-                    "REGIMEN", cliente.getRfc(), cliente.getNombreCompleto(), cliente.getCalle(),
+                    "SOCIEDAD ANONIMA", cliente.getRfc(), cliente.getNombreCompleto(), cliente.getCalle(),
                     Integer.toString(cliente.getNumeroExterior()), cliente.getNumeroInterior(), cliente.getColonia(),
                     cliente.getCiudad(), cliente.getEstado(), cliente.getPais(),
                     Integer.toString(cliente.getCodigoPostal()), factura.getConceptosFacturas().iterator(), factura.getImpuestoses());
         } catch (ParseException ex) {
             throw new Exception("Ocurrió un error al formar el XML de la factura");
+            
         }
+      
+        String xml1 = new String(xml);
+        
         OutputStream cadenaOriginal = null;
-
+        
         try {
-
+            
             cadenaOriginal = getCadenaOriginal(ParametrosGeneralesUtility.getValor("FA005"), new String(xml.getBytes("Windows-1252")));
         } catch (UnsupportedEncodingException ex) {
             cadenaOriginal = getCadenaOriginal("//resources//xslt//cadenaoriginal_3_2.xslt", new String(xml.getBytes("Windows-1252")));
         }
         String cadena = cadenaOriginal.toString();
         cadena = cadena.replace("\n", "").replace("\r", "");
+        
         factura.setCadenaOriginal(cadena);
         byte[] bytesKey = null;
         java.security.PrivateKey pk = null;
@@ -241,6 +257,8 @@ public class FacturasUtility {
             bytesKey = getBytesPrivateKey(ParametrosGeneralesUtility.getValor("FA003"));
             pk = getPrivateKey(bytesKey, ParametrosGeneralesUtility.getValor("FA004"));
         } catch (GeneralSecurityException ex) {
+            if (true)
+            throw new Exception ("Entro al pinche catch-"+ ex.getMessage());
             bytesKey = getBytesPrivateKey("C:/SAT/aaa010101aaa__csd_01.key");
             pk = getPrivateKey(bytesKey, "12345678a");
         }
@@ -253,18 +271,20 @@ public class FacturasUtility {
             throw new Exception("Ocurrió un error al ofirmar la cadena original");
         }
         String selloBase64 = getSelloBase64(bytesCadenaFirmada);
+        
+        selloBase64 = selloBase64.replace("\n", "").replace("\r", "");
         xml = xml.replace("AQUIVAELSELLO", selloBase64);
         return xml;
-
+        
     }
-
+    
     public static String facturar(Facturas factura, Integer facturaId) throws Exception {
         String facturaXml = null;
         String result = null;
         Boolean debug = false;
-        try{
+        try {
             debug = new Boolean(ParametrosGeneralesUtility.getValor("FA006"));
-        }catch(Exception e){
+        } catch (Exception e) {
             debug = false;
         }
         try {
@@ -277,45 +297,47 @@ public class FacturasUtility {
         java.lang.String sNombre = ParametrosGeneralesUtility.getValor("FA008");
         java.lang.String sContraseña = ParametrosGeneralesUtility.getValor("FA009");
         java.lang.String sVersion = ParametrosGeneralesUtility.getValor("FA010");
-        if(debug){
+        if (debug) {
             https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX service = new https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX();
             https.test_paxfacturacion_com_mx._453.WcfRecepcionASMXSoap port = service.getWcfRecepcionASMXSoap();
             result = port.fnEnviarXML(facturaXml, psTipoDocumento, pnIdEstructura, sNombre, sContraseña, sVersion);
-        }else{
+        } else {
             https.www_paxfacturacion_com_mx._453.WcfRecepcionASMX service = new https.www_paxfacturacion_com_mx._453.WcfRecepcionASMX();
             https.www_paxfacturacion_com_mx._453.WcfRecepcionASMXSoap port = service.getWcfRecepcionASMXSoap();
             // TODO process result here
             result = port.fnEnviarXML(facturaXml, psTipoDocumento, pnIdEstructura, sNombre, sContraseña, sVersion);
         }
-
-
-        if (result.startsWith("301")) {
-            throw new Exception("El xml se encuentra mal formado.");
-        } else if (result.startsWith("302")) {
-            throw new Exception("El sello de la factura está mal formado.");
-        } else if (result.startsWith("303")) {
-            throw new Exception("El xml se encuentra mal formado.");
-        } else if (result.startsWith("304")) {
-            throw new Exception("El Sello no corresponde al emisor o ya caducó.");
-        } else if (result.startsWith("305")) {
-            throw new Exception("El certificado fue revocado o está caduco.");
-        } else if (result.startsWith("306")) {
-            throw new Exception("La fecha de emisión no está dentro de la vigencia del CSD del Emisor.");
-        } else if (result.startsWith("307")) {
-            throw new Exception("El CDFI tiene un timbre previo.");
-        } else if (result.startsWith("308")) {
-            throw new Exception("Certificado no expedido or el SAT.");
-        } else if (result.startsWith("401")) {
-            throw new Exception("El rango de la fecha de generación es mayor a 72 horas para la emisión del timbre.");
-        } else if (result.startsWith("402")) {
-            throw new Exception("El RFC del emisor no existe.");
-        } else if (result.startsWith("403")) {
-            throw new Exception("La fecha de emisión es anterior al primero de enero del 2011.");
-        }
-
+        
+        if (result.startsWith("96")) {
+            throw new Exception(sNombre+ sContraseña);
+        }else if (result.startsWith("301")) {
+                throw new Exception("El xml se encuentra mal formado.");
+            } else if (result.startsWith("302")) {
+                throw new Exception("El sello de la factura está mal formado."+ facturaXml);
+            } else if (result.startsWith("303")) {
+                throw new Exception("El xml se encuentra mal formado.");
+            } else if (result.startsWith("304")) {
+                throw new Exception("El Sello no corresponde al emisor o ya caducó.");
+            } else if (result.startsWith("305")) {
+                throw new Exception("El certificado fue revocado o está caduco.");
+            } else if (result.startsWith("306")) {
+                throw new Exception("La fecha de emisión no está dentro de la vigencia del CSD del Emisor.");
+            } else if (result.startsWith("307")) {
+                throw new Exception("El CDFI tiene un timbre previo.");
+            } else if (result.startsWith("308")) {
+                throw new Exception("Certificado no expedido or el SAT.");
+            } else if (result.startsWith("401")) {
+                throw new Exception("El rango de la fecha de generación es mayor a 72 horas para la emisión del timbre.");
+            } else if (result.startsWith("402")) {
+                throw new Exception("El RFC del emisor no existe." + facturaXml);
+            } else if (result.startsWith("403")) {
+                throw new Exception("La fecha de emisión es anterior al primero de enero del 2011.");
+            }
+        
+        
         return result;
     }
-
+    
     public static void agregarDatosDeTimbrado(Facturas factura, String xml) throws ParserConfigurationException, SAXException, IOException, ParseException {
         String folioFiscal = null;
         Date fechaTimbrado = new Date();
@@ -323,31 +345,31 @@ public class FacturasUtility {
         String noCertificadoSat = null;
         String selloSat = null;
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
+        
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         InputStream inputXml = new ByteArrayInputStream(xml.getBytes("UTF-8"));
         org.w3c.dom.Document doc = dBuilder.parse(inputXml);
         doc.getDocumentElement().normalize();
-
+        
         NodeList nList = doc.getElementsByTagName("tfd:TimbreFiscalDigital");
-
+        
         for (int temp = 0; temp < nList.getLength(); temp++) {
-
+            
             Node nNode = nList.item(temp);
-
+            
             System.out.println("\nCurrent Element :" + nNode.getNodeName());
-
+            
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
+                
                 Element eElement = (Element) nNode;
-
+                
                 folioFiscal = eElement.getAttribute("UUID");
                 fechaTimbrado = formatDate.parse(eElement.getAttribute("FechaTimbrado"));
                 selloCFD = eElement.getAttribute("selloCFD");
                 noCertificadoSat = eElement.getAttribute("noCertificadoSAT");
                 selloSat = eElement.getAttribute("selloSAT");
-
+                
                 factura.setFolioFiscal(folioFiscal);
                 factura.setFechaTimbrado(fechaTimbrado);
                 factura.setSelloCdfi(selloCFD);
@@ -356,14 +378,14 @@ public class FacturasUtility {
             }
         }
     }
-
+    
     public static Set<ConceptosFactura> convierteProductosAConceptos(Iterator<ProductosInventario> productos) {
         Set<ConceptosFactura> conceptos = new HashSet<>();
         while (productos.hasNext()) {
             ProductosInventario producto = productos.next();
             ConceptosFactura concepto = new ConceptosFactura();
             concepto.setPrecioUnitario(new BigDecimal("0.00").setScale(3, RoundingMode.HALF_EVEN));
-
+            
             concepto.setClave(producto.getProductosHasProveedores().getProductos().getCodigo());
             concepto.setCantidad(new BigDecimal("1.00").setScale(2, RoundingMode.HALF_EVEN));
             concepto.setDescripcion(producto.getProductosHasProveedores().getProductos().getDescripcion());
@@ -384,7 +406,7 @@ public class FacturasUtility {
         }
         return conceptos;
     }
-
+    
     public static void calculaTotalImpuestos(Impuestos impuesto, NotasDeVenta nota) {
         BigDecimal totalIva = new BigDecimal("0.00");
         for (ProductosInventario producto : nota.getProductosInventarios()) {
@@ -392,11 +414,11 @@ public class FacturasUtility {
                 totalIva = totalIva.add(impuesto.getTasa().divide(new BigDecimal("100.00")).multiply(producto.getPeso().multiply(producto.getPrecio()))).setScale(2, RoundingMode.HALF_EVEN);
             }
         }
-
+        
         impuesto.setImporte(totalIva);
-
+        
     }
-
+    
     public static BigDecimal getTotalImpuestos(Set<Impuestos> impuestos) {
         BigDecimal totalImpuesto = new BigDecimal("0.000000");
         for (Impuestos impuesto : impuestos) {
@@ -404,7 +426,7 @@ public class FacturasUtility {
         }
         return totalImpuesto;
     }
-
+    
     public static String byteArrayToHexString(byte[] b) {
         String result = "";
         for (int i = 0; i < b.length; i++) {
@@ -413,17 +435,17 @@ public class FacturasUtility {
         }
         return result;
     }
-
+    
     private static byte[] getBytes(InputStream is) throws IOException {
         int totalBytes = 714;
         byte[] buffer = null;
         buffer = new byte[totalBytes];
         is.read(buffer, 0, totalBytes);
         is.close();
-
+        
         return buffer;
     }
-
+    
     public static void guardaXml(String name, String content, String path, Integer facturaId) throws Exception {
         try {
             File file = new File(path + name);
@@ -431,7 +453,7 @@ public class FacturasUtility {
             if (!file.exists()) {
                 file.createNewFile();
             }
-
+            
             FileWriter fw = new FileWriter(file.getAbsoluteFile());
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(content);
@@ -439,9 +461,9 @@ public class FacturasUtility {
         } catch (Exception ex) {
             throw new Exception("Factura " + facturaId + ": Ocurrio un error al generar el PDF.");
         }
-
+        
     }
-
+    
     public static void guardaPdf(Integer facturaId, String name, String path) throws Exception {
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -456,21 +478,21 @@ public class FacturasUtility {
             String reportsDir = ParametrosGeneralesUtility.getValor("RE001");
             JasperReport jasperReport = null;
             jasperReport = JasperCompileManager.compileReport(reportsDir + "ventasconfactura//FacturaNuevo.jrxml");
-
+            
             JasperPrint jasperPrint = null;
-
+            
             Map mapa = new HashMap();
             mapa.put("FacturaId", facturaId);
             mapa.put("SUBREPORT_DIR", reportsDir + "ventasconfactura//");
             jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
-
+            
             JasperExportManager.exportReportToPdfFile(jasperPrint, path + name);
-
+            
         } catch (Exception ex) {
             throw new Exception("Factura " + facturaId + ": Ocurrio un error al generar el PDF.");
         }
     }
-
+    
     public static String Convertir(String numero, boolean mayusculas) {
         String literal = "";
         String parte_decimal;
@@ -517,7 +539,7 @@ public class FacturasUtility {
         String num = numero.substring(numero.length() - 1);
         return UNIDADES[Integer.parseInt(num)];
     }
-
+    
     private static String getDecenas(String num) {// 99                        
         int n = Integer.parseInt(num);
         if (n < 10) {//para casos como -> 01 - 09
@@ -533,7 +555,7 @@ public class FacturasUtility {
             return DECENAS[n - 10];
         }
     }
-
+    
     private static String getCentenas(String num) {// 999 o 099
         if (Integer.parseInt(num) > 99) {//es centena
             if (Integer.parseInt(num) == 100) {//caso especial
@@ -546,7 +568,7 @@ public class FacturasUtility {
             return getDecenas(Integer.parseInt(num) + "");
         }
     }
-
+    
     private static String getMiles(String numero) {// 999 999
         //obtiene las centenas
         String c = numero.substring(numero.length() - 3);
@@ -560,9 +582,9 @@ public class FacturasUtility {
         } else {
             return "" + getCentenas(c);
         }
-
+        
     }
-
+    
     private static String getMillones(String numero) { //000 000 000        
         //se obtiene los miles
         String miles = numero.substring(numero.length() - 6);

@@ -151,7 +151,7 @@ public class CreacionFacturaBean {
         factura.setMoneda("MXN");
         factura.setBanco("Santander");
         factura.setCondicionPago("contado");
-        factura.setNoSeieCertEmisor("20001000000100005867");
+        factura.setNoSeieCertEmisor("00001000000405339543");
         factura.setFolio(1);
         factura.setNotasDeVenta(nota);
         factura.setConceptosFacturas(FacturasUtility.convierteProductosAConceptos(nota.getProductosInventarios().iterator()));
@@ -244,7 +244,7 @@ public class CreacionFacturaBean {
                 factura.setMoneda("MXN");
                 factura.setBanco("Santander");
                 factura.setCondicionPago("contado");
-                factura.setNoSeieCertEmisor("20001000000100005867");
+                factura.setNoSeieCertEmisor("00001000000405339543");
                 factura.setFolio(1);
                 nota.setFacturas(factura);
                 nota.setEstatus("FACTURADA");
