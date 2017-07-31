@@ -115,8 +115,11 @@
 
                             <h:outputText value="Incluye Devolucion" />
                             <p:selectBooleanCheckbox value="#{cancelacionFacturaBean.notaNueva.devolucion}" />
+                            
+                            <h:outputText value="Descripción"/>
+                            <p:inputText value="#{cancelacionFacturaBean.notaNueva.observaciones}"/>
 
-                        </h:panelGrid>
+                       </h:panelGrid>
                         <p:dataTable id="tablaNotas" 
                                      var="nota" 
                                      value="#{cancelacionFacturaBean.notasDeVenta}"

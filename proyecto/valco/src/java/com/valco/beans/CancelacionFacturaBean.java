@@ -7,15 +7,22 @@ package com.valco.beans;
 
 import com.valco.dao.FacturasDAO;
 import com.valco.dao.NotasVentaDAO;
+import com.valco.dao.ParametrosGeneralesDAO;
+import com.valco.pojo.ConceptosFactura;
 import com.valco.pojo.Devoluciones;
 import com.valco.pojo.Facturas;
 import com.valco.pojo.NotasCredito;
 import com.valco.pojo.NotasDeVenta;
 import com.valco.pojo.ProductosInventario;
+import com.valco.utility.FacturasUtility;
+import com.valco.utility.Mail;
 import com.valco.utility.MsgUtility;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
@@ -23,6 +30,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
+import javax.mail.MessagingException;
 
 /**
  *
@@ -43,6 +51,8 @@ private List<NotasDeVenta> notasDeVenta;
 private NotasDeVenta notaSeleccionada;
 private NotasCredito notaNueva = new NotasCredito();
 private ProductosInventario productoSeleccionado;
+@ManagedProperty(value = "#{parametrosGeneralesDAO}")
+    private ParametrosGeneralesDAO parametrosGeneralesDAO;
 
 
 
@@ -121,6 +131,68 @@ private ProductosInventario productoSeleccionado;
             }
         }
     try {
+        Facturas notaDeCredito = new Facturas();
+        notaDeCredito = facturaSeleccionada.getNotaDeCredito();
+        ConceptosFactura concepto = new ConceptosFactura();
+        concepto.setDescripcion(notaNueva.getObservaciones());
+        concepto.setClave(0);
+        concepto.setCantidad(BigDecimal.ONE);
+        concepto.setPrecioUnitario(notaNueva.getCantidad());
+        concepto.setImporteTotal(notaNueva.getCantidad());
+        concepto.setUnidad("KG");
+        Set<ConceptosFactura> conceptos = new HashSet<>();
+        conceptos.add(concepto);
+        notaDeCredito.setConceptosFacturas(conceptos);
+        notaDeCredito.setSubtotal(notaNueva.getCantidad());
+        notaDeCredito.setTotal(notaNueva.getCantidad());
+        notaDeCredito.setTipoDocumento("egreso");
+        notaDeCredito.setNoSeieCertEmisor("00001000000405339543");
+        String correoCopia = "info.valco.sistemas@hotmail.com";
+                try {
+                    correoCopia = parametrosGeneralesDAO.getParametroGeneralXClave("FA001");
+                } catch (Exception ex) {
+                    correoCopia = "info.valco.sistemas@hotmail.com";
+                }
+                String xml = null;
+                try {
+                    notaDeCredito.setCodigo(facturasDao.getConsecutivo());
+                    xml = FacturasUtility.facturar(notaDeCredito, notaDeCredito.getCodigo());
+                    MsgUtility.showInfoMeage("Factura " + notaDeCredito.getCodigo() + ": Facturada correctamente.");
+                } catch (Exception ex) {
+                    MsgUtility.showErrorMeage(ex.getMessage());
+                    
+                }
+                try {
+                    FacturasUtility.agregarDatosDeTimbrado(notaDeCredito, xml);
+                    MsgUtility.showInfoMeage("Factura " + notaDeCredito.getCodigo() + ": Datos de timbrado obtenidos correctamente.");
+                } catch (Exception ex) {
+                    MsgUtility.showErrorMeage(ex.getMessage());
+                }
+                try {
+                    facturasDao.insertarFacturaYActualizarNota(notaDeCredito);
+                    MsgUtility.showInfoMeage("Factura " + notaDeCredito.getCodigo() + ": Guardada correctamente en el sistema.");
+                } catch (Exception ex) {
+                    MsgUtility.showErrorMeage(ex.getMessage());
+                }
+                try {
+                    FacturasUtility.guardaXml(notaDeCredito.getNotasDeVenta().getClientes().getRfc() + "-" + notaDeCredito.getCodigo() + ".xml", xml, "C:/SAT/", notaDeCredito.getCodigo());
+                    MsgUtility.showInfoMeage("Factura " + notaDeCredito.getCodigo() + ": XML guardado correctamente.");
+                } catch (Exception ex) {
+                    MsgUtility.showErrorMeage(ex.getMessage());
+                }
+                try {
+                    FacturasUtility.guardaPdf(notaDeCredito.getCodigo(), notaDeCredito.getNotasDeVenta().getClientes().getRfc() + "-" + notaDeCredito.getCodigo() + ".pdf", "C:/SAT/");
+                    MsgUtility.showInfoMeage("Factura " + notaDeCredito.getCodigo() + ": PDF guardado correctamente.");
+                } catch (Exception ex) {
+                    MsgUtility.showErrorMeage(ex.getMessage());
+                }
+                try {
+                    Mail.Send(notaDeCredito.getNotasDeVenta().getClientes().getCorreoElectronico(), correoCopia, "Factura de valco", "Esta es una factura de valco", "C:\\SAT\\" + notaDeCredito.getNotasDeVenta().getClientes().getRfc() + "-" + notaDeCredito.getCodigo());
+                    MsgUtility.showInfoMeage("Factura " + notaDeCredito.getCodigo() + ": Correo enviado correctamente.");
+                } catch (MessagingException ex) {
+                    MsgUtility.showErrorMeage(ex.getMessage());
+                }
+        
         this.facturasDao.crearNotadeCredito(notaNueva, productos, devoluciones);
     } catch (Exception ex) {
         MsgUtility.showErrorMeage(ex.getMessage());

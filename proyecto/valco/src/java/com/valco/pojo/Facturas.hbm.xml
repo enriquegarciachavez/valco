@@ -6,7 +6,7 @@
     <class name="com.valco.pojo.Facturas" table="FACTURAS" catalog="valco" optimistic-lock="version">
         <id name="codigo" type="java.lang.Integer">
             <column name="CODIGO" />
-            <generator class="identity" />
+            <!-- <generator class="identity" /> -->
         </id>
         <many-to-one name="notasDeVenta" class="com.valco.pojo.NotasDeVenta" fetch="select">
             <column name="NOTAS_DE_VENTA_CODIGO" not-null="true" />
@@ -34,6 +34,9 @@
         </property>
         <property name="estatus" type="string">
             <column name="ESTATUS" length="20" not-null="true" />
+        </property>
+        <property name="tipoDocumento" type="string">
+            <column name="TIPO_DOCUMENTO" length="45" not-null="false" />
         </property>
         <property name="xml" type="string">
             <column name="XML" not-null="true" />
@@ -69,10 +72,10 @@
             <column name="IMPORTE_LETRA" length="200" />
         </property>
         <property name="selloCdfi" type="string">
-            <column name="SELLO_CDFI" length="300" not-null="true" />
+            <column name="SELLO_CDFI" length="1000" not-null="true" />
         </property>
         <property name="selloSat" type="string">
-            <column name="SELLO_SAT" length="300" not-null="true" />
+            <column name="SELLO_SAT" length="1000" not-null="true" />
         </property>
         <property name="cadenaOriginal" type="string">
             <column name="CADENA_ORIGINAL" length="400" not-null="true" />

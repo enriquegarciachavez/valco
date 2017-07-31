@@ -154,6 +154,7 @@ public class CreacionFacturaBean {
         factura.setNoSeieCertEmisor("00001000000405339543");
         factura.setFolio(1);
         factura.setNotasDeVenta(nota);
+        factura.setTipoDocumento("ingreso");
         factura.setConceptosFacturas(FacturasUtility.convierteProductosAConceptos(nota.getProductosInventarios().iterator()));
         String correoCopia = "info.valco.sistemas@hotmail.com";
         try {
@@ -163,20 +164,21 @@ public class CreacionFacturaBean {
         }
         String xml = null;
         try {
-            xml = FacturasUtility.facturar(factura, facturasDao.getConsecutivo());
-            MsgUtility.showInfoMeage("Factura " + facturasDao.getConsecutivo() + ": Facturada correctamente.");
+            factura.setCodigo(facturasDao.getConsecutivo());
+            xml = FacturasUtility.facturar(factura, factura.getCodigo());
+            MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": Facturada correctamente.");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
 
         }
         try {
             FacturasUtility.agregarDatosDeTimbrado(factura, xml);
-            MsgUtility.showInfoMeage("Factura " + facturasDao.getConsecutivo() + ": Datos de timbrado obtenidos correctamente.");
+            MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": Datos de timbrado obtenidos correctamente.");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
         try {
-            nota.setFolio(facturasDao.getConsecutivo());
+            nota.setFolio(factura.getCodigo());
             nota.setRepartidores(repartidoresDao.getRepartidores().get(0));
             nota.setUsuarios(UsuariosUtility.getUsuarioFirmado());
             facturasDao.insertarFacturaYActualizarNota(factura);
@@ -201,7 +203,7 @@ public class CreacionFacturaBean {
             Mail.Send(nota.getClientes().getCorreoElectronico(), correoCopia, "Factura de valco", "Esta es una factura de valco", "C:\\SAT\\" + nota.getClientes().getRfc() + "-" + factura.getCodigo());
             MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": Correo enviado correctamente.");
         } catch (MessagingException ex) {
-            MsgUtility.showErrorMeage(ex.getMessage());
+            MsgUtility.showErrorMeage("Ocurrio un error al enviar el correo" + ex.getMessage()+ ex.getCause());
         }
         notasDeVenta.getTarget().clear();
 
@@ -258,15 +260,16 @@ public class CreacionFacturaBean {
                 }
                 String xml = null;
                 try {
-                    xml = FacturasUtility.facturar(factura, facturasDao.getConsecutivo());
-                    MsgUtility.showInfoMeage("Factura " + facturasDao.getConsecutivo() + ": Facturada correctamente.");
+                    factura.setCodigo(facturasDao.getConsecutivo());
+                    xml = FacturasUtility.facturar(factura, factura.getCodigo());
+                    MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": Facturada correctamente.");
                 } catch (Exception ex) {
                     MsgUtility.showErrorMeage(ex.getMessage());
                     continue;
                 }
                 try {
                     FacturasUtility.agregarDatosDeTimbrado(factura, xml);
-                    MsgUtility.showInfoMeage("Factura " + facturasDao.getConsecutivo() + ": Datos de timbrado obtenidos correctamente.");
+                    MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": Datos de timbrado obtenidos correctamente.");
                 } catch (Exception ex) {
                     MsgUtility.showErrorMeage(ex.getMessage());
                 }

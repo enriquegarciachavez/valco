@@ -8,7 +8,7 @@
       <generator class="identity"/>
     </id>
     <many-to-one class="com.valco.pojo.Facturas" fetch="select" name="facturas">
-      <column name="FACTURAS_CODIGO" not-null="true"/>
+      <column name="FACTURAS_CODIGO" />
     </many-to-one>
     <property name="cantidad" type="big_decimal">
       <column name="CANTIDAD" not-null="true" precision="6"/>
