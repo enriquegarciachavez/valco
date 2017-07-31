@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="FacturaNuevo" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="413"/>
+	<property name="ireport.y" value="0"/>
 	<style name="table" lineSpacing="Single">
 		<box>
 			<topPen lineWidth="1.0" lineColor="#000000"/>
@@ -66,6 +66,7 @@
      FACTURAS.`CADENA_COMPROMISO` AS FACTURAS_CADENA_COMPROMISO,
      FACTURAS.`CONDICION_PAGO` AS FACTURAS_CONDICION_PAGO,
      FACTURAS.`NOTAS_DE_VENTA_CODIGO` AS FACTURAS_NOTAS_DE_VENTA_CODIGO,
+     FACTURAS.`TIPO_DOCUMENTO` AS FACTURAS_TIPO_DOCUMENTO,
      CLIENTES.`RAZON_SOCIAL` AS CLIENTES_RAZON_SOCIAL,
      CLIENTES.`APELLIDO_PATERNO` AS CLIENTES_APELLIDO_PATERNO,
      CLIENTES.`APELLIDO_MATERNO` AS CLIENTES_APELLIDO_MATERNO,
@@ -123,6 +124,7 @@ WHERE
 	<field name="CLIENTES_ESTADO" class="java.lang.String"/>
 	<field name="CLIENTES_PAIS" class="java.lang.String"/>
 	<field name="CLIENTES_CODIGO" class="java.lang.Integer"/>
+	<field name="FACTURAS_TIPO_DOCUMENTO" class="java.lang.String"/>
 	<background>
 		<band/>
 	</background>
@@ -339,11 +341,6 @@ WHERE
 			<rectangle>
 				<reportElement x="4" y="157" width="432" height="20" backcolor="#999999"/>
 			</rectangle>
-			<staticText>
-				<reportElement x="4" y="157" width="432" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single"/>
-				<text><![CDATA[Vendido A:]]></text>
-			</staticText>
 			<rectangle>
 				<reportElement x="4" y="177" width="432" height="54"/>
 			</rectangle>
@@ -662,6 +659,11 @@ WHERE
 				</textElement>
 				<text><![CDATA[Acepto(amos)]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="4" y="157" width="432" height="20"/>
+				<textElement textAlignment="Center" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_TIPO_DOCUMENTO}=="egreso" ? "Acreditado a:" : "Vendido a:"]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 </jasperReport>
