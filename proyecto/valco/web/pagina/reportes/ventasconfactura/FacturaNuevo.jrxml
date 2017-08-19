@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="FacturaNuevo" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="36"/>
-	<property name="ireport.y" value="336"/>
+	<property name="ireport.y" value="0"/>
 	<style name="table" lineSpacing="Single">
 		<box>
 			<topPen lineWidth="1.0" lineColor="#000000"/>
@@ -636,7 +636,7 @@ WHERE
 			</image>
 			<textField>
 				<reportElement x="1" y="546" width="404" height="47">
-					<printWhenExpression><![CDATA[$F{FACTURAS_TIPO_DOCUMENTO}=="egreso"]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$F{FACTURAS_TIPO_DOCUMENTO}=="ingreso"]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Justified" lineSpacing="Single" markup="html">
 					<font size="7" isBold="false"/>
@@ -664,7 +664,7 @@ WHERE
 				<textElement textAlignment="Center" lineSpacing="Single">
 					<font size="5"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_TIPO_DOCUMENTO}=="egreso" ? "Documento: Factura" : "Documento: Nota de Credito"]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_TIPO_DOCUMENTO}=="ingreso" ? "Documento: Factura" : "Documento: Nota de Credito"]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
