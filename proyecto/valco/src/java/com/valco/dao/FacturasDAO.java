@@ -183,7 +183,13 @@ public class FacturasDAO implements Serializable {
             
             session.save(factura);
         } catch (Exception e) {
-            throw new Exception("Fallo en el segundo" + e.getMessage());
+            String message = "\n";
+            message += e.getCause() + "\n";
+            message += e.getMessage() + "\n";
+            for(StackTraceElement ste : e.getStackTrace()){
+                message += ste.toString() +"\n";
+            }
+            throw new Exception("Fallo en el segundo " + message);
         }
         try {
             for (ConceptosFactura concepto : factura.getConceptosFacturas()) {

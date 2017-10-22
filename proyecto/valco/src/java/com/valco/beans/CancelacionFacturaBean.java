@@ -31,6 +31,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.mail.MessagingException;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -147,6 +148,8 @@ private ProductosInventario productoSeleccionado;
         notaDeCredito.setTotal(notaNueva.getCantidad());
         notaDeCredito.setTipoDocumento("egreso");
         notaDeCredito.setNoSeieCertEmisor("00001000000405339543");
+        notaDeCredito.setIva(BigDecimal.ZERO);
+        notaDeCredito.setImporteLetra(FacturasUtility.Convertir(notaDeCredito.getTotal().toString(), true));
         String correoCopia = "info.valco.sistemas@hotmail.com";
                 try {
                     correoCopia = parametrosGeneralesDAO.getParametroGeneralXClave("FA001");
@@ -163,6 +166,7 @@ private ProductosInventario productoSeleccionado;
                     
                 }
                 try {
+                    notaDeCredito.setXml(xml);
                     FacturasUtility.agregarDatosDeTimbrado(notaDeCredito, xml);
                     MsgUtility.showInfoMeage("Factura " + notaDeCredito.getCodigo() + ": Datos de timbrado obtenidos correctamente.");
                 } catch (Exception ex) {
@@ -183,6 +187,11 @@ private ProductosInventario productoSeleccionado;
                 try {
                     FacturasUtility.guardaPdf(notaDeCredito.getCodigo(), notaDeCredito.getNotasDeVenta().getClientes().getRfc() + "-" + notaDeCredito.getCodigo() + ".pdf", "C:/SAT/");
                     MsgUtility.showInfoMeage("Factura " + notaDeCredito.getCodigo() + ": PDF guardado correctamente.");
+                    String url = "/valco/ReportesPdf?reporte="+
+                        "//pagina//reportes//ventasconfactura//FacturaNuevo.jrxml"+
+                        "&FacturaIdInt="+notaDeCredito.getCodigo().toString()+
+                         "&isCopiaBool=false";
+                    RequestContext.getCurrentInstance().execute("window.open('"+url+"');");
                 } catch (Exception ex) {
                     MsgUtility.showErrorMeage(ex.getMessage());
                 }
@@ -277,6 +286,10 @@ private ProductosInventario productoSeleccionado;
 
     public void setNotasDeVentaDao(NotasVentaDAO notasDeVentaDao) {
         this.notasDeVentaDao = notasDeVentaDao;
+    }
+
+    public void setParametrosGeneralesDAO(ParametrosGeneralesDAO parametrosGeneralesDAO) {
+        this.parametrosGeneralesDAO = parametrosGeneralesDAO;
     }
     
     

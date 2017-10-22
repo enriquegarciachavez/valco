@@ -335,7 +335,7 @@ public class FacturasUtility {
         if (result.startsWith("96")) {
             throw new Exception(sNombre + sContraseña);
         } else if (result.startsWith("301")) {
-            throw new Exception("El xml se encuentra mal formado.");
+            throw new Exception("El xml se encuentra mal formado." + facturaXml);
         } else if (result.startsWith("302")) {
             throw new Exception("El sello de la factura está mal formado." + facturaXml);
         } else if (result.startsWith("303")) {

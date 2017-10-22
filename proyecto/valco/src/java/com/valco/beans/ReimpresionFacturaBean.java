@@ -52,16 +52,16 @@ private FacturasDAO facturasDao;
                 }
                 if(this.isFacturaCopia()){
                     String url = "/valco/ReportesPdf?reporte="+
-                        "//pagina//reportes//factura//Factura.jrxml"+
+                        "//pagina//reportes//ventasconfactura//FacturaNuevo.jrxml"+
                         "&FacturaIdInt="+factura.getCodigo().toString()+
-                         "&isCopiaBool=true";
+                         "&IsCopiaBool=true";
                     RequestContext.getCurrentInstance().execute("window.open('"+url+"');");
                 }
                 if(this.isFacturaOriginal()){
                     String url = "/valco/ReportesPdf?reporte="+
-                        "//pagina//reportes//factura//Factura.jrxml"+
+                        "//pagina//reportes//ventasconfactura//FacturaNuevo.jrxml"+
                         "&FacturaIdInt="+factura.getCodigo().toString()+
-                         "&isCopiaBool=false";
+                         "&IsCopiaBool=false";
                     RequestContext.getCurrentInstance().execute("window.open('"+url+"');");
                 }
             }else{

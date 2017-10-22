@@ -6,7 +6,7 @@
     <class name="com.valco.pojo.Facturas" table="FACTURAS" catalog="valco" optimistic-lock="version">
         <id name="codigo" type="java.lang.Integer">
             <column name="CODIGO" />
-            <!-- <generator class="identity" /> -->
+             <generator class="identity" /> 
         </id>
         <many-to-one name="notasDeVenta" class="com.valco.pojo.NotasDeVenta" fetch="select">
             <column name="NOTAS_DE_VENTA_CODIGO" not-null="true" />

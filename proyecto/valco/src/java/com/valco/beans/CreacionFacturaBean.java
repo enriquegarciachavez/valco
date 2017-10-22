@@ -37,6 +37,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.mail.MessagingException;
 import javax.xml.parsers.ParserConfigurationException;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
 import org.xml.sax.SAXException;
 
@@ -196,6 +197,11 @@ public class CreacionFacturaBean {
         try {
             FacturasUtility.guardaPdf(factura.getCodigo(), nota.getClientes().getRfc() + "-" + factura.getCodigo() + ".pdf", "C:/SAT/");
             MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": PDF guardado correctamente.");
+            String url = "/valco/ReportesPdf?reporte="+
+                        "//pagina//reportes//ventasconfactura//FacturaNuevo.jrxml"+
+                        "&FacturaIdInt="+factura.getCodigo().toString()+
+                         "&isCopiaBool=false";
+                    RequestContext.getCurrentInstance().execute("window.open('"+url+"');");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
@@ -251,6 +257,7 @@ public class CreacionFacturaBean {
                 nota.setFacturas(factura);
                 nota.setEstatus("FACTURADA");
                 factura.setNotasDeVenta(nota);
+                factura.setTipoDocumento("ingreso");
                 factura.setConceptosFacturas(FacturasUtility.convierteProductosAConceptos(nota.getProductosInventarios().iterator()));
                 String correoCopia = "info.valco.sistemas@hotmail.com";
                 try {
@@ -288,6 +295,11 @@ public class CreacionFacturaBean {
                 try {
                     FacturasUtility.guardaPdf(factura.getCodigo(), factura.getNotasDeVenta().getClientes().getRfc() + "-" + factura.getCodigo() + ".pdf", "C:/SAT/");
                     MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": PDF guardado correctamente.");
+                    String url = "/valco/ReportesPdf?reporte="+
+                        "//pagina//reportes//ventasconfactura//FacturaNuevo.jrxml"+
+                        "&FacturaIdInt="+factura.getCodigo().toString()+
+                         "&isCopiaBool=false";
+                    RequestContext.getCurrentInstance().execute("window.open('"+url+"');");
                 } catch (Exception ex) {
                     MsgUtility.showErrorMeage(ex.getMessage());
                 }

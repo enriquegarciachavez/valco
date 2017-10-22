@@ -1201,9 +1201,9 @@ public class EtiquetadoPanel extends PesableBarCodeable {
     private String getCodigoBarras() {
         return this.procesosLov.getSelectedItem()
                 + new SimpleDateFormat("yyddMM").format(new Date())
-                + ((ProductosHasProveedores) this.productosLov.getSelectedItem()).getProductos().getCodigo()
-                + basculaPanel1.getPeso().toString().replaceAll("\\.", "")
-                + consecutivoLbl.getText();
+                + String.format("%05d", ((ProductosHasProveedores) this.productosLov.getSelectedItem()).getProductos().getCodigo())
+                + String.format("%06d", Integer.parseInt(basculaPanel1.getPeso().toString().replaceAll("\\.", "")))
+                + String.format("%09d", Integer.parseInt(consecutivoLbl.getText()));
     }
 
     private void imprimirCodigo(ProductosInventario producto) {
