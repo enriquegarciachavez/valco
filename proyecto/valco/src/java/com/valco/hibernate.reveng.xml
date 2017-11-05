@@ -43,4 +43,5 @@
   <table-filter match-name="CONCEPTOS"/>
   <table-filter match-name="INVENTARIO_GLOBAL"/>
   <table-filter match-name="INVENTARIO_DETALLADO"/>
+  <table-filter match-name="INVENTARIO_DETAL"/>
 </hibernate-reverse-engineering>

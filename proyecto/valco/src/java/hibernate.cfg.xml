@@ -50,5 +50,11 @@
     <mapping resource="com/valco/pojo/NotasDeVentaView.hbm.xml"/>
     <mapping resource="com/valco/pojo/InventarioGlobal.hbm.xml"/>
     <mapping resource="com/valco/pojo/InventarioDetallado.hbm.xml"/>
+    <mapping resource="com/valco/pojo/Pais.hbm.xml"/>
+    <mapping resource="com/valco/pojo/Estado.hbm.xml"/>
+    <mapping resource="com/valco/pojo/Municipio.hbm.xml"/>
+    <mapping resource="com/valco/pojo/Localidad.hbm.xml"/>
+    <mapping resource="com/valco/pojo/CodigoPostal.hbm.xml"/>
+    <mapping resource="com/valco/pojo/Colonia.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

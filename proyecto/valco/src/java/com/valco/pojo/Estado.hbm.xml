@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="com.valco.pojo.Estados" table="ESTADOS">
+      <id name="codigo" type="String">
+            <column name="C_ESTADO" />
+        </id>
+        <many-to-one class="com.valco.pojo.Paise" fetch="select" name="pais" >
+            <column name="C_PAIS" not-null="true"/>
+        </many-to-one>
+        <property name="nombre" type="string">
+            <column name="NOMBRE_ESTADO" length="100" />
+        </property>
+        <set fetch="select" inverse="true" lazy="true" name="municipios" table="MUNICIPIOS">
+            <key>
+                <column name="C_ESTADO" not-null="true"/>
+            </key>
+            <one-to-many class="com.valco.pojo.Municipio"/>
+        </set>
+        <set fetch="select" inverse="true" lazy="true" name="localidades" table="LOCALIDADES">
+            <key>
+                <column name="C_ESTADO" not-null="true"/>
+            </key>
+            <one-to-many class="com.valco.pojo.Localidad"/>
+        </set>
+        
+        
+        
+  </class>
+</hibernate-mapping>

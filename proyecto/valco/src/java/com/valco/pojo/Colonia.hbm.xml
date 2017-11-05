@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 16/03/2015 07:32:12 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.valco.pojo.Colonia" table="COLONIAS" catalog="valco" optimistic-lock="version">
+        <id name="codigo" type="java.lang.Integer">
+            <column name="C_COLONIA" />            
+        </id>
+        <many-to-one class="com.valco.pojo.CodigoPostal" fetch="select" name="codigoPostal" >
+            <column name="C_CP" not-null="true"/>
+        </many-to-one>
+        <property name="descripcion" type="string">
+            <column length="45" name="NOMBRE_ASENTAMIENTO" not-null="true"/>
+        </property>
+    </class>
+</hibernate-mapping>

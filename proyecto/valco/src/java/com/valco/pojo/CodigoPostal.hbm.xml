@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 29/11/2015 05:47:39 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="valco" name="com.valco.pojo.CodigoPostal" table="CODIGOS_POATALES" >
+    <id name="codigo" type="java.lang.String">
+      <column name="C_CP"/>      
+    </id>
+    <many-to-one class="com.valco.pojo.Estado" fetch="select" name="estado" >
+      <column name="C_ESTADO" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="com.valco.pojo.Municipio" fetch="select" name="municipio" >
+      <column name="C_MUNICIPIO" not-null="true"/>
+      <column name="C_ESTADO" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="com.valco.pojo.Localidad" fetch="select" name="localidad" >
+      <column name="C_LOCALIDAD" />
+      <column name="C_ESTADO" />
+    </many-to-one>
+    <set fetch="select" inverse="true" lazy="true" name="colonias" table="COLONIAS">
+      <key>
+        <column name="C_CP" not-null="true"/>
+      </key>
+      <one-to-many class="com.valco.pojo.Colonias"/>
+    </set>
+    
+  </class>
+</hibernate-mapping>

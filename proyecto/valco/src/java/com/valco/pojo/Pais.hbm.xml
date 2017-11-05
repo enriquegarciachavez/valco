@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 29/11/2015 05:47:39 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="valco" name="com.valco.pojo.Paise" table="PAISES" >
+    <id name="codigo" type="java.lang.String">
+      <column name="C_PAIS"/>     
+    </id>
+    <property name="descripcion" type="String">
+      <column length="45" name="DESCRIPCION" not-null="true" unique="true"/>
+    </property>
+    <property name="formatoCodigoPostal" type="String">
+      <column name="FORMATO_CP"/>
+    </property>
+    <property name="formatoRit" type="String">
+      <column name="FORMATO_RIT"/>
+    </property>
+    <property name="validacionRit" type="String">
+      <column name="VALIDACION_RIT"/>
+    </property>
+    <property name="agrupaciones" type="String">
+      <column name="AGRUPACIONES"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="estados" table="ESTADOS">
+      <key>
+        <column name="PAISES_CODIGO" not-null="true"/>
+      </key>
+      <one-to-many class="com.valco.pojo.Estado"/>
+    </set>
+    
+  </class>
+</hibernate-mapping>
