@@ -2,28 +2,28 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 29/11/2015 05:47:39 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-  <class catalog="valco" name="com.valco.pojo.Paise" table="PAISES" >
+  <class catalog="valco" name="com.valco.pojo.Pais" table="PAISES" >
     <id name="codigo" type="java.lang.String">
       <column name="C_PAIS"/>     
     </id>
-    <property name="descripcion" type="String">
+    <property name="descripcion" type="java.lang.String">
       <column length="45" name="DESCRIPCION" not-null="true" unique="true"/>
     </property>
-    <property name="formatoCodigoPostal" type="String">
+    <property name="formatoCodigoPostal" type="java.lang.String">
       <column name="FORMATO_CP"/>
     </property>
-    <property name="formatoRit" type="String">
+    <property name="formatoRit" type="java.lang.String">
       <column name="FORMATO_RIT"/>
     </property>
-    <property name="validacionRit" type="String">
+    <property name="validacionRit" type="java.lang.String">
       <column name="VALIDACION_RIT"/>
     </property>
-    <property name="agrupaciones" type="String">
+    <property name="agrupaciones" type="java.lang.String">
       <column name="AGRUPACIONES"/>
     </property>
     <set fetch="select" inverse="true" lazy="true" name="estados" table="ESTADOS">
       <key>
-        <column name="PAISES_CODIGO" not-null="true"/>
+        <column name="C_PAIS" not-null="true"/>
       </key>
       <one-to-many class="com.valco.pojo.Estado"/>
     </set>

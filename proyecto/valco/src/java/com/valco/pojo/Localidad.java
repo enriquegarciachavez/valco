@@ -5,6 +5,7 @@
  */
 package com.valco.pojo;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,20 +13,31 @@ import java.util.Set;
  *
  * @author Administrador
  */
-public class Localidad {
+public class Localidad implements Serializable{
     
-    private Integer codigo;
+    private String codigoLocalidad;
+    private String codigoEstado;
     private Estado estado;
     private String Descripcion;
     private Set<CodigoPostal> codigosPostales = new HashSet<CodigoPostal>();
 
-    public Integer getCodigo() {
-        return codigo;
+    public String getCodigoLocalidad() {
+        return codigoLocalidad;
     }
 
-    public void setCodigo(Integer codigo) {
-        this.codigo = codigo;
+    public void setCodigoLocalidad(String codigoLocalidad) {
+        this.codigoLocalidad = codigoLocalidad;
     }
+
+    public String getCodigoEstado() {
+        return codigoEstado;
+    }
+
+    public void setCodigoEstado(String codigoEstado) {
+        this.codigoEstado = codigoEstado;
+    }
+
+    
 
     public Estado getEstado() {
         return estado;

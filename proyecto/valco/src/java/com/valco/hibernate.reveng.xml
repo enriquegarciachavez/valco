@@ -44,4 +44,10 @@
   <table-filter match-name="INVENTARIO_GLOBAL"/>
   <table-filter match-name="INVENTARIO_DETALLADO"/>
   <table-filter match-name="INVENTARIO_DETAL"/>
+  <table-filter match-name="PAISES/>
+  <table-filter match-name="ESTADOS/>
+  <table-filter match-name="MUNICIPIOS"/>
+  <table-filter match-name="LOCALIDADES"/>
+  <table-filter match-name="CODIGOS_POSTALES"/>
+  <table-filter match-name="COLONIAS"/>
 </hibernate-reverse-engineering>

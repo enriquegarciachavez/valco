@@ -2,11 +2,12 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 29/11/2015 05:47:39 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-  <class catalog="valco" name="com.valco.pojo.Localidades" table="LOCALIDADES" >
-    <id name="codigo" type="java.lang.Integer">
-      <column name="C_LOCALIDAD"/>      
-    </id>
-    <many-to-one class="com.valco.pojo.Estado" fetch="select" name="estado" >
+  <class catalog="valco" name="com.valco.pojo.Localidad" table="LOCALIDADES" >
+    <composite-id>
+        <key-property name="codigoLocalidad" column="C_LOCALIDAD" type="java.lang.String"/>
+        <key-property name="codigoEstado" column="C_ESTADO" type="java.lang.String"/>
+    </composite-id>
+    <many-to-one class="com.valco.pojo.Estado" fetch="select" name="estado" insert="false" update="false">
       <column name="C_ESTADO" not-null="true"/>
     </many-to-one>
     <property name="descripcion" type="string">
@@ -14,7 +15,8 @@
     </property>
     <set fetch="select" inverse="true" lazy="true" name="codigosPostales" table="CODIGOS_POSTALES">
       <key>
-        <column name="C_LOCALIDAD" not-null="true"/>
+        <column name="C_LOCALIDAD"/>
+        <column name="C_ESTADO"/> 
       </key>
       <one-to-many class="com.valco.pojo.CodigoPostal"/>
     </set>
