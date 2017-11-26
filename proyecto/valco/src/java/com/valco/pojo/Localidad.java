@@ -7,6 +7,7 @@ package com.valco.pojo;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -18,7 +19,7 @@ public class Localidad implements Serializable{
     private String codigoLocalidad;
     private String codigoEstado;
     private Estado estado;
-    private String Descripcion;
+    private String descripcion;
     private Set<CodigoPostal> codigosPostales = new HashSet<CodigoPostal>();
 
     public String getCodigoLocalidad() {
@@ -48,12 +49,13 @@ public class Localidad implements Serializable{
     }
 
     public String getDescripcion() {
-        return Descripcion;
+        return descripcion;
     }
 
-    public void setDescripcion(String Descripcion) {
-        this.Descripcion = Descripcion;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
+
 
     public Set<CodigoPostal> getCodigosPostales() {
         return codigosPostales;
@@ -61,5 +63,23 @@ public class Localidad implements Serializable{
 
     public void setCodigosPostales(Set<CodigoPostal> codigosPostales) {
         this.codigosPostales = codigosPostales;
+    }
+    
+    public boolean equals(Object o){
+        if( o != null){
+        if(((o instanceof Localidad) && (((Localidad) o).getCodigoLocalidad().equals(this.getCodigoLocalidad()))
+                && (((Localidad) o).getCodigoEstado().equals(this.getCodigoEstado())))){
+            return true;
+        }else{
+            return false;
+           }
+        }else{
+            return false;
+        }
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(codigoLocalidad, codigoEstado, descripcion);
     }
 }

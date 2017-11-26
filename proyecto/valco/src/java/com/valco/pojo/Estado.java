@@ -6,6 +6,7 @@
 package com.valco.pojo;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -59,5 +60,23 @@ public class Estado {
     public void setLocalidades(Set<Localidad> localidades) {
         this.localidades = localidades;
     }
+    
+    public boolean equals(Object o){
+        if( o != null){
+        if(((o instanceof Estado) && (((Estado) o).getCodigo().equals(this.getCodigo())))){
+            return true;
+        }else{
+            return false;
+           }
+        }else{
+            return false;
+        }
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(codigo, nombre);
+    }
+    
 
 }

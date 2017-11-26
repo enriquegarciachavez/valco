@@ -6,6 +6,7 @@
 package com.valco.pojo;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -77,7 +78,22 @@ public class Pais {
     public void setAgrupaciones(String agrupaciones) {
         this.agrupaciones = agrupaciones;
     }
-
     
+    public boolean equals(Object o){
+        if( o != null){
+        if(((o instanceof Pais) && (((Pais) o).getCodigo().equals(this.getCodigo())))){
+            return true;
+        }else{
+            return false;
+           }
+        }else{
+            return false;
+        }
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(codigo, descripcion);
+    }
     
 }

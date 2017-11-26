@@ -5,6 +5,8 @@
  */
 package com.valco.pojo;
 
+import java.util.Objects;
+
 /**
  *
  * @author Administrador
@@ -38,6 +40,24 @@ public class Colonia {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+    
+    public boolean equals(Object o){
+        if( o != null){
+        if((o instanceof Colonia) && (((Colonia) o).getCodigo().equals(this.getCodigo()))){
+            return true;
+        }else{
+            return false;
+           }
+        }else{
+            return false;
+        }
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(codigo,descripcion);
+    }
+
     
     
 }
