@@ -16,9 +16,9 @@
         </property>
         <many-to-one name="poliza" class="com.valco.pojo.Polizas" fetch="select">
             <column name="POLIZAS_CODIGO" not-null="true" />
-         </many-to-one>
-         <many-to-one name="cuentaContable" class="com.valco.pojo.CuentasContables" fetch="select">
+        </many-to-one>
+        <many-to-one name="cuentaContable" class="com.valco.pojo.CuentasContables" fetch="select">
             <column name="CUENTAS_CONTABLES_CODIGO" not-null="true" />
-         </many-to-one>
+        </many-to-one>
     </class>
 </hibernate-mapping>

@@ -39,6 +39,7 @@ public class Facturas implements java.io.Serializable {
     private String condicionPago;
     private String serie;
     private String tipoDocumento;
+    private String usoCFDI;
     private Set<NotasDeVenta> notasDeVentas = new HashSet<NotasDeVenta>(0);
     private Set<ConceptosFactura> conceptosFacturas = new HashSet<ConceptosFactura>(0);
     private Set<Impuestos> impuestoses = new HashSet<Impuestos>(0);
@@ -371,6 +372,15 @@ public class Facturas implements java.io.Serializable {
     public void setTipoDocumento(String tipoDocumento) {
         this.tipoDocumento = tipoDocumento;
     }
+
+    public String getUsoCFDI() {
+        return usoCFDI;
+    }
+
+    public void setUsoCFDI(String usoCFDI) {
+        this.usoCFDI = usoCFDI;
+    }
+    
     
     
 

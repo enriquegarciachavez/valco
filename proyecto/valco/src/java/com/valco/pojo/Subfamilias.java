@@ -17,6 +17,7 @@ public class Subfamilias  implements java.io.Serializable {
      private String abreviacion;
      private String estatus;
      private Set<Productos> productoses = new HashSet<Productos>(0);
+     private String claveProducto;
 
     public Subfamilias() {
     }
@@ -78,6 +79,16 @@ public class Subfamilias  implements java.io.Serializable {
     public void setProductoses(Set<Productos> productoses) {
         this.productoses = productoses;
     }
+
+    public String getClaveProducto() {
+        return claveProducto;
+    }
+
+    public void setClaveProducto(String claveProducto) {
+        this.claveProducto = claveProducto;
+    }
+    
+    
 
     public boolean equals(Object o){
          if (o == null|| !Subfamilias.class.isInstance(o)|| ((Subfamilias)o).getCodigo()!= this.getCodigo()){

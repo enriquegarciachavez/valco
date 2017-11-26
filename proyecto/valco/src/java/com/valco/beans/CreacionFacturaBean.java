@@ -158,6 +158,7 @@ public class CreacionFacturaBean {
         factura.setTipoDocumento("ingreso");
         factura.setConceptosFacturas(FacturasUtility.convierteProductosAConceptos(nota.getProductosInventarios().iterator()));
         String correoCopia = "info.valco.sistemas@hotmail.com";
+        factura.setUsoCFDI("G01");
         try {
             correoCopia = parametrosGeneralesDAO.getParametroGeneralXClave("FA001");
         } catch (Exception ex) {
@@ -260,6 +261,8 @@ public class CreacionFacturaBean {
                 factura.setTipoDocumento("ingreso");
                 factura.setConceptosFacturas(FacturasUtility.convierteProductosAConceptos(nota.getProductosInventarios().iterator()));
                 String correoCopia = "info.valco.sistemas@hotmail.com";
+                factura.setUsoCFDI("G01");
+                
                 try {
                     correoCopia = parametrosGeneralesDAO.getParametroGeneralXClave("FA001");
                 } catch (Exception ex) {

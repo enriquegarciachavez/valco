@@ -17,6 +17,7 @@ public class ConceptosFactura implements java.io.Serializable {
     private String unidad;
     private BigDecimal precioUnitario;
     private BigDecimal importeTotal;
+    private String claveProducto;
 
     public ConceptosFactura() {
     }
@@ -94,6 +95,16 @@ public class ConceptosFactura implements java.io.Serializable {
     public void setImporteTotal(BigDecimal importeTotal) {
         this.importeTotal = importeTotal;
     }
+
+    public String getClaveProducto() {
+        return claveProducto;
+    }
+
+    public void setClaveProducto(String claveProducto) {
+        this.claveProducto = claveProducto;
+    }
+    
+    
 
     public boolean equals(Object o) {
         if (o != null) {

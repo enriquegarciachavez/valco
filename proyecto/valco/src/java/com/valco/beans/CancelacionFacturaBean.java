@@ -151,6 +151,7 @@ private ProductosInventario productoSeleccionado;
         notaDeCredito.setIva(BigDecimal.ZERO);
         notaDeCredito.setImporteLetra(FacturasUtility.Convertir(notaDeCredito.getTotal().toString(), true));
         String correoCopia = "info.valco.sistemas@hotmail.com";
+        notaDeCredito.setUsoCFDI("G02");
                 try {
                     correoCopia = parametrosGeneralesDAO.getParametroGeneralXClave("FA001");
                 } catch (Exception ex) {
