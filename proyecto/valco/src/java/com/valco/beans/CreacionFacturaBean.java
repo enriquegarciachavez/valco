@@ -12,13 +12,19 @@ import com.valco.dao.NotasVentaDAO;
 import com.valco.dao.ParametrosGeneralesDAO;
 import com.valco.dao.RepartidoresDAO;
 import com.valco.pojo.Clientes;
+import com.valco.pojo.ConceptosFactura;
 import com.valco.pojo.Facturas;
+import com.valco.pojo.FormaPago;
+import com.valco.pojo.Impuesto;
 import com.valco.pojo.Impuestos;
+import com.valco.pojo.MetodosPago;
 import com.valco.pojo.NotasDeVenta;
+import com.valco.pojo.UsoCFDI;
 import com.valco.utility.ClientesUtility;
 import com.valco.utility.FacturasUtility;
 import com.valco.utility.Mail;
 import com.valco.utility.MsgUtility;
+import com.valco.utility.ParametrosGeneralesUtility;
 import com.valco.utility.UsuariosUtility;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -63,10 +69,12 @@ public class CreacionFacturaBean {
     private List<Clientes> clientes;
     private Clientes clienteSeleccionado;
     private Double iva;
-    private String metodoPago;
     private String observaciones;
     private Set<Impuestos> impuestosDisponibles;
     private Set<Impuestos> impuestosSeleccionados;
+    private MetodosPago metodoPago;
+    private FormaPago formaPago;
+    private UsoCFDI usoCFDI;
 
     /**
      * Creates a new instance of CreacionFacturaBean
@@ -124,73 +132,42 @@ public class CreacionFacturaBean {
     }
 
     public void facturarPublicoEnGeneral() throws Exception {
-        Set<Impuestos> impuestos = new HashSet<Impuestos>();
+        String correoCopia = "info.valco.sistemas@hotmail.com";
         NotasDeVenta nota = buildNotaPublicoEnGeneral();
         if (nota == null) {
             throw new Exception("Ocurrió un problema al facturar al publico en general.");
         }
-        Impuestos impuesto = new Impuestos();
-        impuesto.setImpuesto("IVA");
-        impuesto.setTasa(new BigDecimal(16.00).setScale(2, RoundingMode.HALF_EVEN));
-        impuesto.setImporte(new BigDecimal("0.160000").setScale(6, RoundingMode.HALF_EVEN));
-        impuestos.add(impuesto);
+
         Facturas factura = new Facturas();
-        factura.setFecha(new Date());
-        factura.setEstatus("ACTIVO");
-        factura.setSerie("A");
-        factura.setFormaPago(metodoPago);
-        factura.setMetodoPago("EFECTIVO");
-        factura.setImpuestoses(impuestos);
-        factura.setObservaciones(observaciones);
-        factura.setSubtotal(nota.getTotal());
-        FacturasUtility.calculaTotalImpuestos(impuesto, nota);
-        factura.setIva(impuesto.getImporte());
-        factura.setTotal(factura.getSubtotal().add(FacturasUtility.getTotalImpuestos(impuestos)).setScale(2, RoundingMode.HALF_EVEN));
-        factura.setImporteLetra(FacturasUtility.Convertir(factura.getTotal().toString(), true));
-        factura.setXml(metodoPago);
-        factura.setLugar("CHIHUAHUA,CHIHUAHUA,MEXICO");
-        factura.setMoneda("MXN");
-        factura.setBanco("Santander");
-        factura.setCondicionPago("contado");
-        factura.setNoSeieCertEmisor("00001000000405339543");
-        factura.setFolio(1);
-        factura.setNotasDeVenta(nota);
-        factura.setTipoDocumento("ingreso");
-        factura.setConceptosFacturas(FacturasUtility.convierteProductosAConceptos(nota.getProductosInventarios().iterator()));
-        String correoCopia = "info.valco.sistemas@hotmail.com";
-        factura.setUsoCFDI("G01");
+        armarDocumento(factura, nota);
+        nota.setFolio(facturasDao.getConsecutivo());
+        nota.setRepartidores(repartidoresDao.getRepartidores().get(0));
+        nota.setUsuarios(UsuariosUtility.getUsuarioFirmado());
+        for (NotasDeVenta notaVenta : notasDeVenta.getTarget()) {
+            notaVenta.setFacturas(factura);
+            //notaVenta.setEstatus("FACTURADA");
+        }
         try {
             correoCopia = parametrosGeneralesDAO.getParametroGeneralXClave("FA001");
         } catch (Exception ex) {
             correoCopia = "info.valco.sistemas@hotmail.com";
         }
-        String xml = null;
         try {
-            factura.setCodigo(facturasDao.getConsecutivo());
-            xml = FacturasUtility.facturar(factura, factura.getCodigo());
+            FacturasUtility.facturarPago(factura, factura.getXml(), "01");
             MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": Facturada correctamente.");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
 
         }
         try {
-            FacturasUtility.agregarDatosDeTimbrado(factura, xml);
-            MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": Datos de timbrado obtenidos correctamente.");
-        } catch (Exception ex) {
-            MsgUtility.showErrorMeage(ex.getMessage());
-        }
-        try {
-            nota.setFolio(factura.getCodigo());
-            nota.setRepartidores(repartidoresDao.getRepartidores().get(0));
-            nota.setUsuarios(UsuariosUtility.getUsuarioFirmado());
             facturasDao.insertarFacturaYActualizarNota(factura);
-            notasDeVentaDao.actualizarNotasDeVentaEstatusFacturada(notasDeVenta.getTarget());
+            notasDeVentaDao.actualizarNotasDeVenta(notasDeVenta.getTarget());
             MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": Guardada correctamente en el sistema.");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
         try {
-            FacturasUtility.guardaXml(nota.getClientes().getRfc() + "-" + factura.getCodigo() + ".xml", xml, "C:/SAT/", factura.getCodigo());
+            FacturasUtility.guardaXml(nota.getClientes().getRfc() + "-" + factura.getCodigo() + ".xml", factura.getXml(), "C:/SAT/", factura.getCodigo());
             MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": XML guardado correctamente.");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
@@ -198,25 +175,25 @@ public class CreacionFacturaBean {
         try {
             FacturasUtility.guardaPdf(factura.getCodigo(), nota.getClientes().getRfc() + "-" + factura.getCodigo() + ".pdf", "C:/SAT/");
             MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": PDF guardado correctamente.");
-            String url = "/valco/ReportesPdf?reporte="+
-                        "//pagina//reportes//ventasconfactura//FacturaNuevo.jrxml"+
-                        "&FacturaIdInt="+factura.getCodigo().toString()+
-                         "&isCopiaBool=false";
-                    RequestContext.getCurrentInstance().execute("window.open('"+url+"');");
+            String url = "/valco/ReportesPdf?reporte="
+                    + "//pagina//reportes//ventasconfactura//FacturaNuevo.jrxml"
+                    + "&FacturaIdInt=" + factura.getCodigo().toString()
+                    + "&isCopiaBool=false";
+            RequestContext.getCurrentInstance().execute("window.open('" + url + "');");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
         try {
-            Mail.Send(nota.getClientes().getCorreoElectronico(), correoCopia, "Factura de valco", "Esta es una factura de valco", "C:\\SAT\\" + nota.getClientes().getRfc() + "-" + factura.getCodigo());
+            Mail.Send(nota.getClientes().getCorreoElectronico(), correoCopia, "Factura de valco", "Esta es una factura de valco", "C:\\SAT\\", nota.getClientes().getRfc() + "-" + factura.getCodigo());
             MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": Correo enviado correctamente.");
         } catch (MessagingException ex) {
-            MsgUtility.showErrorMeage("Ocurrio un error al enviar el correo" + ex.getMessage()+ ex.getCause());
+            MsgUtility.showErrorMeage("Ocurrio un error al enviar el correo" + ex.getMessage() + ex.getCause());
         }
         notasDeVenta.getTarget().clear();
 
     }
 
-    public void facturar() {
+    public void facturar() throws Exception {
         if (notasDeVenta.getTarget().isEmpty()) {
             MsgUtility.showInfoMeage("Debe de seleccionar una nota de venta para facturar.");
             return;
@@ -228,60 +205,22 @@ public class CreacionFacturaBean {
                 MsgUtility.showErrorMeage(ex.getMessage());
             }
         } else {
-            Set<Impuestos> impuestos = new HashSet<>();
-            Impuestos impuesto = new Impuestos();
-            impuesto.setImpuesto("IVA");
-            impuesto.setTasa(new BigDecimal(16.00).setScale(2, RoundingMode.HALF_EVEN));
-            impuesto.setImporte(new BigDecimal("0.160000").setScale(6, RoundingMode.HALF_EVEN));
-            impuestos.add(impuesto);
             for (NotasDeVenta nota : notasDeVenta.getTarget()) {
                 Facturas factura = new Facturas();
-                factura.setFecha(new Date());
-                factura.setEstatus("ACTIVO");
-                factura.setSerie("A");
-                factura.setFormaPago(metodoPago);
-                factura.setMetodoPago("EFECTIVO");
-                factura.setImpuestoses(impuestos);
-                factura.setObservaciones(observaciones);
-                factura.setSubtotal(nota.getTotal());
-                FacturasUtility.calculaTotalImpuestos(impuesto, nota);
-                factura.setIva(impuesto.getImporte());
-                factura.setTotal(factura.getSubtotal().add(FacturasUtility.getTotalImpuestos(impuestos)).setScale(2, RoundingMode.HALF_EVEN));
-                factura.setImporteLetra(FacturasUtility.Convertir(factura.getTotal().toString(), true));
-                factura.setXml(metodoPago);
-                factura.setLugar("CHIHUAHUA,CHIHUAHUA,MEXICO");
-                factura.setMoneda("MXN");
-                factura.setBanco("Santander");
-                factura.setCondicionPago("contado");
-                factura.setNoSeieCertEmisor("00001000000405339543");
-                factura.setFolio(1);
-                nota.setFacturas(factura);
-                nota.setEstatus("FACTURADA");
-                factura.setNotasDeVenta(nota);
-                factura.setTipoDocumento("ingreso");
-                factura.setConceptosFacturas(FacturasUtility.convierteProductosAConceptos(nota.getProductosInventarios().iterator()));
                 String correoCopia = "info.valco.sistemas@hotmail.com";
-                factura.setUsoCFDI("G01");
-                
+                armarDocumento(factura, nota);
                 try {
                     correoCopia = parametrosGeneralesDAO.getParametroGeneralXClave("FA001");
                 } catch (Exception ex) {
                     correoCopia = "info.valco.sistemas@hotmail.com";
                 }
-                String xml = null;
                 try {
-                    factura.setCodigo(facturasDao.getConsecutivo());
-                    xml = FacturasUtility.facturar(factura, factura.getCodigo());
+                    FacturasUtility.facturarPago(factura, factura.getXml(), "01");
                     MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": Facturada correctamente.");
                 } catch (Exception ex) {
                     MsgUtility.showErrorMeage(ex.getMessage());
+                    ex.printStackTrace();
                     continue;
-                }
-                try {
-                    FacturasUtility.agregarDatosDeTimbrado(factura, xml);
-                    MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": Datos de timbrado obtenidos correctamente.");
-                } catch (Exception ex) {
-                    MsgUtility.showErrorMeage(ex.getMessage());
                 }
                 try {
                     facturasDao.insertarFacturaYActualizarNota(factura);
@@ -290,7 +229,7 @@ public class CreacionFacturaBean {
                     MsgUtility.showErrorMeage(ex.getMessage());
                 }
                 try {
-                    FacturasUtility.guardaXml(nota.getClientes().getRfc() + "-" + factura.getCodigo() + ".xml", xml, "C:/SAT/", factura.getCodigo());
+                    FacturasUtility.guardaXml(nota.getClientes().getRfc() + "-" + factura.getCodigo() + ".xml", factura.getXml(), "C:/SAT/", factura.getCodigo());
                     MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": XML guardado correctamente.");
                 } catch (Exception ex) {
                     MsgUtility.showErrorMeage(ex.getMessage());
@@ -298,16 +237,16 @@ public class CreacionFacturaBean {
                 try {
                     FacturasUtility.guardaPdf(factura.getCodigo(), factura.getNotasDeVenta().getClientes().getRfc() + "-" + factura.getCodigo() + ".pdf", "C:/SAT/");
                     MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": PDF guardado correctamente.");
-                    String url = "/valco/ReportesPdf?reporte="+
-                        "//pagina//reportes//ventasconfactura//FacturaNuevo.jrxml"+
-                        "&FacturaIdInt="+factura.getCodigo().toString()+
-                         "&isCopiaBool=false";
-                    RequestContext.getCurrentInstance().execute("window.open('"+url+"');");
+                    String url = "/valco/ReportesPdf?reporte="
+                            + "//pagina//reportes//ventasconfactura//FacturaNuevo.jrxml"
+                            + "&FacturaIdInt=" + factura.getCodigo().toString()
+                            + "&isCopiaBool=false";
+                    RequestContext.getCurrentInstance().execute("window.open('" + url + "');");
                 } catch (Exception ex) {
                     MsgUtility.showErrorMeage(ex.getMessage());
                 }
                 try {
-                    Mail.Send(nota.getClientes().getCorreoElectronico(), correoCopia, "Factura de valco", "Esta es una factura de valco", "C:\\SAT\\" + factura.getNotasDeVenta().getClientes().getRfc() + "-" + factura.getCodigo());
+                    Mail.Send(nota.getClientes().getCorreoElectronico(), correoCopia, "Factura de valco", "Esta es una factura de valco", "C:\\SAT\\", factura.getNotasDeVenta().getClientes().getRfc() + "-" + factura.getCodigo());
                     MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": Correo enviado correctamente.");
                 } catch (MessagingException ex) {
                     MsgUtility.showErrorMeage(ex.getMessage());
@@ -316,6 +255,87 @@ public class CreacionFacturaBean {
         }
         notasDeVenta.getTarget().clear();
 
+    }
+
+    private void armarDocumento(Facturas factura, NotasDeVenta nota) throws Exception {
+        Set<Impuestos> impuestos = new HashSet<Impuestos>();
+        Impuestos impuesto = new Impuestos();
+        impuesto.setImpuesto("IVA");
+        impuesto.setTasa(new BigDecimal(16.00).setScale(2, RoundingMode.HALF_EVEN));
+        impuesto.setImporte(new BigDecimal("0.160000").setScale(6, RoundingMode.HALF_EVEN));
+        impuestos.add(impuesto);
+        Impuesto totalImpuestos = new Impuesto();
+        factura.setFecha(new Date());
+        factura.setVersion("3.3");
+        factura.setEstatus("ACTIVO");
+        factura.setSerie("A");
+        factura.setFormaPago(formaPago.getCodigo());
+        factura.setMetodoPago(metodoPago.getCodigoSat());
+        factura.setImpuestoses(impuestos);
+        factura.setObservaciones(observaciones);
+        factura.setSubtotal(nota.getTotal().setScale(2, RoundingMode.HALF_EVEN));
+        FacturasUtility.calculaTotalImpuestos(impuesto, nota);
+        factura.setIva(impuesto.getImporte());
+        factura.setTotal(factura.getSubtotal().add(FacturasUtility.getTotalImpuestos(impuestos)).setScale(2, RoundingMode.HALF_EVEN));
+        factura.setImporteLetra(FacturasUtility.Convertir(factura.getTotal().toString(), true));
+        factura.setLugar("31110");
+        factura.setMoneda("MXN");
+        factura.setBanco("Santander");
+        factura.setCondicionPago("contado");
+        factura.setNoSeieCertEmisor(ParametrosGeneralesUtility.getValor("FA013"));
+        factura.setCertificado(ParametrosGeneralesUtility.getValor("FA015"));
+        factura.setFolio(1);
+        factura.setNotasDeVenta(nota);
+        factura.setTipoDocumento("I");
+        factura.setConceptosFacturas(FacturasUtility.convierteProductosAConceptos(nota.getProductosInventarios().iterator()));
+        armarTotalImpuestos(totalImpuestos, factura.getConceptosFacturas());
+        if (totalImpuestos.getTotalImpuestosTrasladados().compareTo(BigDecimal.ZERO) != 0) {
+            factura.setImpuesto(totalImpuestos);
+        }
+        Clientes emisor = new Clientes();
+        armarEmisor(emisor);
+        Clientes receptor = new Clientes();
+        armarReceptor(receptor, nota);
+        receptor.setUsoCFDI(usoCFDI.getCodigo());
+        factura.setUsoCFDI(usoCFDI.getCodigo());
+        factura.setEmisor(emisor);
+        factura.setReceptor(receptor);
+        FacturasUtility.getFacturaConSelloPP(factura);
+    }
+
+    private void armarEmisor(Clientes emisor) throws Exception {
+        emisor.setRfc(ParametrosGeneralesUtility.getValor("FA016"));
+        emisor.setRazonSocial(ParametrosGeneralesUtility.getValor("FA017"));
+        emisor.setRegimenFiscal(ParametrosGeneralesUtility.getValor("FA018"));
+
+    }
+
+    private void armarReceptor(Clientes receptor, NotasDeVenta nota) {
+        receptor.setRfc(nota.getClientes().getRfc());
+        receptor.setRazonSocial(nota.getClientes().getRazonSocial());
+        receptor.setUsoCFDI(nota.getClientes().getUsoCFDI());
+    }
+
+    private void armarTotalImpuestos(Impuesto total, Set<ConceptosFactura> conceptos) {
+        List<Impuestos> impuestos = new ArrayList<>();
+        Impuestos iva = new Impuestos();
+        iva.setImpuesto("002");
+        iva.setImporte(BigDecimal.ZERO);
+        iva.setTipoFactor("Tasa");
+        iva.setTasa(new BigDecimal(.16).setScale(6, RoundingMode.HALF_EVEN));
+        for (ConceptosFactura concepto : conceptos) {
+            if (concepto.getImpuesto() != null) {
+                for (Impuestos imp : concepto.getImpuesto().getImpuestos()) {
+                    if (imp.getImpuesto().equals("002")) {
+                        iva.setImporte(iva.getImporte().add(imp.getImporte()));
+                    }
+                }
+            }
+
+        }
+        total.setTotalImpuestosTrasladados(iva.getImporte());
+        impuestos.add(iva);
+        total.setImpuestos(impuestos);
     }
 
     public NotasVentaDAO getNotasDeVentaDao() {
@@ -366,14 +386,6 @@ public class CreacionFacturaBean {
         this.iva = iva;
     }
 
-    public String getMetodoPago() {
-        return metodoPago;
-    }
-
-    public void setMetodoPago(String metodoPago) {
-        this.metodoPago = metodoPago;
-    }
-
     public String getObservaciones() {
         return observaciones;
     }
@@ -420,6 +432,30 @@ public class CreacionFacturaBean {
 
     public void setRepartidoresDao(RepartidoresDAO repartidoresDao) {
         this.repartidoresDao = repartidoresDao;
+    }
+
+    public MetodosPago getMetodoPago() {
+        return metodoPago;
+    }
+
+    public void setMetodoPago(MetodosPago metodoPago) {
+        this.metodoPago = metodoPago;
+    }
+
+    public FormaPago getFormaPago() {
+        return formaPago;
+    }
+
+    public void setFormaPago(FormaPago formaPago) {
+        this.formaPago = formaPago;
+    }
+
+    public UsoCFDI getUsoCFDI() {
+        return usoCFDI;
+    }
+
+    public void setUsoCFDI(UsoCFDI usoCFDI) {
+        this.usoCFDI = usoCFDI;
     }
 
 }

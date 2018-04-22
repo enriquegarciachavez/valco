@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:o="http://omnifaces.org/ui">
+
+    <o:methodParam name="formaPagoChangeParam" value="#{onFormaPagoChange}" />
+    <p:column style="text-align: right">
+        <p:outputLabel value="Forma de Pago: " />
+    </p:column>
+    <p:column>
+        <p:selectOneMenu value="#{formaPago}" converter="omnifaces.SelectItemsConverter">
+            <p:ajax listener="#{formaPagoChangeParam}" update="#{updates}" />
+            <f:selectItems value="#{formaPagoBean.formasPago}"/>       
+        </p:selectOneMenu>
+    </p:column>
+
+</html>
+

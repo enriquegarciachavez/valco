@@ -4,7 +4,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <body>
 
@@ -15,30 +16,29 @@
                 <h:form id="formAsignar">
                     <p:messages id="messages" showDetail="true" autoUpdate="true" />
                     <p:menubar>
-                        
+
                         <p:menuitem 
                             id="btnAbonar"
                             value="Abonar" 
-                            icon="ui-icon-plusthick"
-                            action="#{abonosCuentasXCobrarMainBean.insertarAbono()}" 
-                            update=":formAsignar:tabla"  
-                            
+                            icon="ui-icon-plusthick"                            
+                            update=":abonarForm"  
+                            oncomplete="if (args &amp;&amp; !args.validationFailed) PF('capAbonoPop').show();"
+                            actionListener="#{abonosCuentasXCobrarMainBean.validarAbonoSeleccionado(actionEvent)}"
                             partialSubmit="true"/>
                         <p:menuitem 
                             id="btnCancelar"
-                          value="Cancelar Abono" 
+                            value="Cancelar Abono" 
                             icon="ui-icon-circle-close"
-                            oncomplete="PF('cancelar').show();;" 
-                            
+                            oncomplete="PF('cancelar').show();" 
                             update=":formpop:popcancelar"
                             action="#{abonosCuentasXCobrarMainBean.obtenerAbonos()}"
                             process="@this,tabla"
-                            
-                            
-                           /> 
-                        
+
+
+                            /> 
+
                     </p:menubar>
-                    
+
 
                     <h:panelGrid id="ingresarGrid"  
                                  columns="10"
@@ -53,7 +53,9 @@
                                          effect="fade"  
                                          style="width:160px" 
                                          required="true"
-                                         requiredMessage="Debe seleccionar un cliente">
+                                         requiredMessage="Debe seleccionar un cliente"
+                                         filter="true" 
+                                         filterMatchMode="contains">
 
                             <f:selectItem itemLabel="Selecciona uno" itemValue="" />
                             <f:selectItems value="#{abonosCuentasXCobrarMainBean.clientes}" 
@@ -66,26 +68,9 @@
                         </p:selectOneMenu>
                         <p:message for="clientes" display="icon" />
 
-                        <p:outputLabel for="popup" value="Fecha:" />
-                        <p:calendar id="popup" 
-                                    required="true"
-                                    requiredMessage="Debe capturar una fecha"
-                                    value="#{abonosCuentasXCobrarMainBean.abonoSeleccionado.fecha}"
-                                    navigator="true" 
-                                    />
 
-                        <p:message for="popup" display="icon" />
 
-                        <p:outputLabel for="importe"   value="Importe " />
-                        <p:inputMask id="importe" 
-                                     required="true"
-                                     requiredMessage="Debe capturar un monto"
-                                     value="#{abonosCuentasXCobrarMainBean.abonoSeleccionado.importe}"
-                                      mask="99999.99"/>
-                        <p:message for="importe" 
-                                   display="icon" />
 
-                        
 
 
                     </h:panelGrid>
@@ -101,36 +86,36 @@
                                  selection="#{abonosCuentasXCobrarMainBean.notaSeleccionado}"
                                  rowKey="#{nota.codigo}"
                                  style="margin-bottom:40px"
-                                 
+
                                  >
 
                         <f:facet name="header">
                             Cuentas por Cobrar
                             <p:commandButton 
-                            id="btnCancelar2"
-                          value="Cancelar Abono" 
-                            icon="ui-icon-circle-close"
-                            oncomplete="PF('cancelar').show();;" 
-                            partialSubmit="true"
-                            update=":formpop:popcancelar"
-                            actionListener="#{abonosCuentasXCobrarMainBean.obtenerAbonos()}"
-                            process="@parent"
-                            immediate="true"
-                            
-                           />
+                                id="btnCancelar2"
+                                value="Cancelar Abono" 
+                                icon="ui-icon-circle-close"
+                                oncomplete="PF('cancelar').show();;" 
+                                partialSubmit="true"
+                                update=":formpop:popcancelar"
+                                actionListener="#{abonosCuentasXCobrarMainBean.obtenerAbonos()}"
+                                process="@parent"
+                                immediate="true"
+
+                                />
                         </f:facet>
 
                         <p:column  sortBy="#{nota.fechaDeVenta}" >
                             <f:facet name="header">
-                             <h:outputText value="Fecha Venta" />   
+                                <h:outputText value="Fecha Venta" />   
                             </f:facet>
                             <h:outputText value="#{nota.fechaDeVenta}" />
                         </p:column>
-                        
+
                         <p:column headerText="Nota de Venta"  sortBy="#{nota.folio}" >
                             <h:outputText value="#{nota.folio}" />
                         </p:column>
-                        
+
                         <p:column headerText="Importe" >
                             <h:outputText value="#{nota.importe}" />
                         </p:column>
@@ -149,8 +134,8 @@
                         </f:facet>
                     </p:dataTable>
                 </h:form>
-                
-                
+
+
                 <!--POP CANCELAR ABONO-->
                 <h:form id="formpop"> 
                     <p:dialog 
@@ -159,7 +144,7 @@
                         widgetVar="cancelar" 
                         modal="true" 
                         >
-                        
+
                         <p:commandButton 
                             id="Cancelar"
                             value="Cancelar Abono" 
@@ -168,50 +153,233 @@
                             update=":formpop:tablapop :formAsignar:tabla"
                             action="#{abonosCuentasXCobrarMainBean.actualizarAbono()}"
                             ></p:commandButton>
-                            
-                            
-                          
-                        
-                        
+
+
+
+
+
                         <p:dataTable id="tablapop" 
-                                 var="abonos" 
-                                 value="#{abonosCuentasXCobrarMainBean.abonos}"
-                                 selectionMode="single" 
-                                 selection="#{abonosCuentasXCobrarMainBean.abonoSeleccionado}"
-                                 rowKey="#{abonos.codigo}"
-                                 scrollHeight="150"
-                                 lazy="true"
-                                 
-                                      
-                                 >
-
-                        <f:facet name="header">
-                            Abonos
-                        </f:facet>
-
-                                             
-                        <p:column headerText="Fecha del abono"  sortBy="#{abonos.fecha}" >
-                            <h:outputText value="#{abonos.fecha}" />
-                        </p:column>
-                        
-                        <p:column headerText="Estatus" sortBy="#{abonos.estatus}" >
-                            <h:outputText value="#{abonos.estatus}" />
-                        </p:column>
-                        <p:column headerText="Saldo a la fecha " sortBy="#{abonos.importe}">
-                            <h:outputText value="#{abonos.importe}" />
-                        </p:column>
+                                     var="abonos" 
+                                     value="#{abonosCuentasXCobrarMainBean.abonos}"
+                                     selectionMode="single" 
+                                     selection="#{abonosCuentasXCobrarMainBean.abonoSeleccionado}"
+                                     rowKey="#{abonos.codigo}"
+                                     scrollHeight="150"
+                                     lazy="true"
 
 
+                                     >
 
-                        <f:facet name="footer">
+                            <f:facet name="header">
+                                Abonos
+                            </f:facet>
 
-                        </f:facet>
-                    </p:dataTable>
-                        
+
+                            <p:column headerText="Fecha del abono"  sortBy="#{abonos.fecha}" >
+                                <h:outputText value="#{abonos.fecha}" />
+                            </p:column>
+
+                            <p:column headerText="Estatus" sortBy="#{abonos.estatus}" >
+                                <h:outputText value="#{abonos.estatus}" />
+                            </p:column>
+                            <p:column headerText="Saldo a la fecha " sortBy="#{abonos.importe}">
+                                <h:outputText value="#{abonos.importe}" />
+                            </p:column>
+
+
+
+                            <f:facet name="footer">
+
+                            </f:facet>
+                        </p:dataTable>
+
                     </p:dialog>
                 </h:form>
-                
-                
+
+
+
+
+
+                <p:dialog id="capAbonoPop" header="Capturar Abono" widgetVar="capAbonoPop" focus=":abonarForm:fecha" modal="true">
+                    <h:form id="abonarForm">
+
+                        <p:panelGrid >
+                            <p:row>
+                                <p:column style="text-align: right">
+                                    <p:outputLabel for="fecha" value="Fecha:"  />
+                                </p:column>
+                                <p:column >
+                                    <p:calendar id="fecha" 
+                                                required="true"
+                                                requiredMessage="Debe capturar una fecha"
+                                                value="#{abonosCuentasXCobrarMainBean.abonoNuevo.fecha}"
+                                                navigator="true" 
+                                                />      
+                                </p:column>
+                                <p:column style="text-align: right">
+                                    <p:outputLabel for="importe"   value="Importe a Abonar: " />
+                                </p:column>
+                                <p:column>
+                                    <p:inputMask id="importe" 
+                                                 required="true"
+                                                 requiredMessage="Debe capturar un monto"
+                                                 value="#{abonosCuentasXCobrarMainBean.abonoNuevo.importe}"
+                                                 mask="99999.99"
+                                                 >
+                                        <p:ajax event="blur" update="saldoInsoluto"/>
+                                    </p:inputMask>                       
+                                </p:column>
+                            </p:row>
+
+                            <p:row>
+                                <ui:include src="../Widgets/FormaPago.xhtml">
+                                    <ui:param name="formaPago" value="#{abonosCuentasXCobrarMainBean.formaPagoSeleccionado}"/>
+                                    <ui:param name="updates" value="cuentaOrdenante cuentaBeneficiaro tipoCadenaPago certPago selloPago cadenaPago"/>
+                                </ui:include>
+                            </p:row>
+
+                            <p:row>
+                                <p:column style="text-align: right">
+
+                                    <h:outputLabel for="cuentaBeneficiaro" value="Cuenta Beneficiaro" />
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu value="#{abonosCuentasXCobrarMainBean.cuentaBeneficiario}"
+                                                     converter="omnifaces.SelectItemsConverter" 
+                                                     id="cuentaBeneficiaro" 
+                                                     disabled="#{!abonosCuentasXCobrarMainBean.formaPagoSeleccionado.bancarizado}"
+                                                     >
+                                        <f:selectItem itemValue=""/>
+                                        <f:selectItems value="#{abonosCuentasXCobrarMainBean.ctasBeneficiario}"/>
+                                    </p:selectOneMenu>
+                                </p:column>
+                                
+                                <p:column style="text-align: right">
+                                    <h:outputLabel for="cuentaOrdenante" 
+                                                   value="Cuenta Ordenante:" />
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu value="#{abonosCuentasXCobrarMainBean.cuentaOrdenante}" 
+                                                     converter="omnifaces.SelectItemsConverter" 
+                                                     id="cuentaOrdenante" 
+                                                     disabled="#{!abonosCuentasXCobrarMainBean.formaPagoSeleccionado.bancarizado}"
+                                                     >
+                                        <f:selectItem itemValue=""/>
+                                        <f:selectItems value="#{abonosCuentasXCobrarMainBean.ctasOrdenantes}"/>
+                                    </p:selectOneMenu>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column style="text-align: right">
+                                    <h:outputLabel for="referencia" 
+                                                   value="Referencia: " />
+                                </p:column>
+                                <p:column>
+                                    <p:inputText  id="referencia" 
+                                                  value="#{abonosCuentasXCobrarMainBean.abonoNuevo.numOperacion}"/>
+                                </p:column>
+                               
+                            </p:row>
+
+                            <p:row>
+                                <p:column style="text-align: right">
+                                    <h:outputText value="Informacion Adicional de SPEI: " />                                
+                                </p:column>                            
+                                <p:column>
+                                    <p:selectBooleanCheckbox value="#{abonosCuentasXCobrarMainBean.tipoCadenaPago}"
+                                                             disabled="#{!abonosCuentasXCobrarMainBean.formaPagoSeleccionado.tipoCadenaPago}"
+                                                             id="tipoCadenaPago"
+                                                             >
+                                        <p:ajax update="certPago selloPago cadenaPago"/>
+                                    </p:selectBooleanCheckbox>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column style="text-align: right">
+                                    <h:outputText value="Certificado de Pago: " />                                
+                                </p:column>                            
+                                <p:column>
+                                    <p:inputText value="#{abonosCuentasXCobrarMainBean.abonoNuevo.certPago}"
+                                                 disabled="#{!abonosCuentasXCobrarMainBean.tipoCadenaPago or 
+                                                             !abonosCuentasXCobrarMainBean.formaPagoSeleccionado.tipoCadenaPago}"
+                                                 id="certPago"/>
+                                </p:column> 
+                                <p:column style="text-align: right">
+                                    <h:outputText value="Cadena de Pago: " />                                
+                                </p:column>                            
+                                <p:column>
+                                    <p:inputText value="#{abonosCuentasXCobrarMainBean.abonoNuevo.cadenaPago}" 
+                                                 disabled="#{!abonosCuentasXCobrarMainBean.tipoCadenaPago or 
+                                                             !abonosCuentasXCobrarMainBean.formaPagoSeleccionado.tipoCadenaPago}"
+                                                 id="cadenaPago"/>
+                                </p:column>  
+                            </p:row>
+                            <p:row>
+                                <p:column style="text-align: right">
+                                    <h:outputText value="Sello de Pago: " />                                
+                                </p:column>                            
+                                <p:column>
+                                    <p:inputText value="#{abonosCuentasXCobrarMainBean.abonoNuevo.selloPago}" 
+                                                 disabled="#{!abonosCuentasXCobrarMainBean.tipoCadenaPago or 
+                                                             !abonosCuentasXCobrarMainBean.formaPagoSeleccionado.tipoCadenaPago}"
+                                                 id="selloPago"/>
+                                </p:column> 
+                                
+                            </p:row>
+
+                            <p:row>
+                                <p:column style="text-align: right">
+                                    <h:outputLabel for="saldoAnterior" value="Saldo Anterior: " />
+                                </p:column>
+                                <p:column >
+                                    <p:inputText disabled="true" id="saldoAnterior" value="#{abonosCuentasXCobrarMainBean.notaSeleccionado.cuentaXCobrar.saldoAnterior}"/>                                   
+                                </p:column>
+                                <p:column style="text-align: right">
+                                    <h:outputLabel for="saldoInsoluto" value="Saldo Insoluto: " />                                    
+                                </p:column>
+                                <p:column >
+                                    <p:inputText disabled="true" id="saldoInsoluto" value="#{abonosCuentasXCobrarMainBean.notaSeleccionado.cuentaXCobrar.saldoAnterior - abonosCuentasXCobrarMainBean.abonoNuevo.importe}"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                 <p:column style="text-align: right">
+                                    <h:outputLabel for="total" 
+                                                   value="Total:" />
+                                </p:column>
+                                <p:column>
+                                    <p:inputText disabled="true" 
+                                                 id="total" 
+                                                 value="#{abonosCuentasXCobrarMainBean.notaSeleccionado.cuentaXCobrar.importe}"/>
+                                </p:column>
+                            </p:row>
+
+                            <p:row>
+                                <p:column style="text-align: right">
+                                    <h:outputLabel for="serie" value="Serie: " />                                    
+                                </p:column>
+                                <p:column>
+                                    <p:inputText disabled="true" id="serie" value="#{abonosCuentasXCobrarMainBean.abonoNuevo.serie}"/>                                    
+                                </p:column>
+                                <p:column style="text-align: right">
+                                    <h:outputLabel for="folio" value="Folio: " />                                    
+                                </p:column>
+                                <p:column>
+                                    <p:inputText disabled="true" id="folio" value="#{abonosCuentasXCobrarMainBean.abonoNuevo.folio}"/>                                    
+                                </p:column>
+                            </p:row>
+
+
+                        </p:panelGrid>
+                        <p:commandButton action="#{abonosCuentasXCobrarMainBean.insertarAbono()}"
+                                         oncomplete="handleLoginRequest(xhr, status, args, 'capAbonoPop' )"
+                                         value="abonar"
+                                         id="abonar"/>
+                    </h:form>
+                </p:dialog>
+
+
+
+
                 <p:blockUI block="formAsignar" trigger=":formAsignar:btnAbonar :formAsignar:btnCancelar ">
                     Cargando.... Espere porfavor<br />
                     <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
@@ -221,7 +389,10 @@
 
 
 
+
+
         </ui:composition>
+
 
     </body>
 </html>

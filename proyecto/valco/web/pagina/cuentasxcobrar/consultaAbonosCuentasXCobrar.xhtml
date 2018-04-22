@@ -94,10 +94,10 @@
                         </p:column>
 
                         <p:column headerText="Importe Abonado " >
-                            <h:outputText value="#{nota.cuentaXCobrar.importeAbonado}" />
+                            <h:outputText value="#{nota.cuentaXCobrar.importePagado}" />
                         </p:column>
                         <p:column headerText="Saldo a la fecha " >
-                            <h:outputText value="#{nota.cuentaXCobrar.importe - nota.cuentaXCobrar.importeAbonado}" />
+                            <h:outputText value="#{nota.cuentaXCobrar.importe - nota.cuentaXCobrar.importePagado}" />
                         </p:column>
 
                         <p:rowExpansion>

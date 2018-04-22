@@ -6,15 +6,19 @@
 package com.valco.dao;
 
 import com.valco.HibernateUtil;
+import com.valco.pojo.AbonosCuentasXCobrar;
 import com.valco.pojo.Clientes;
 import com.valco.pojo.ConceptosFactura;
 import com.valco.pojo.Devoluciones;
 import com.valco.pojo.Facturas;
+import com.valco.pojo.FormaPago;
 import com.valco.pojo.Impuestos;
+import com.valco.pojo.MetodosPago;
 import com.valco.pojo.NotasCredito;
 import com.valco.pojo.NotasDeVenta;
 import com.valco.pojo.ProductosInventario;
 import com.valco.servlets.ReportesXls;
+import com.valco.utility.ParametrosGeneralesUtility;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.sql.Connection;
@@ -31,6 +35,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -80,9 +86,11 @@ public class FacturasDAO implements Serializable {
                 try {
                     tx.rollback();
                 } catch (HibernateException he) {
+                    he.printStackTrace();
                     throw new Exception("Ocurrió un error al crear la factura.");
                 }
             }
+            e.printStackTrace();
             throw new Exception("Ocurrió un error al crear la factura.");
         } finally {
             try {
@@ -90,6 +98,7 @@ public class FacturasDAO implements Serializable {
                     session.close();
                 }
             } catch (HibernateException he) {
+                he.printStackTrace();
                 throw new Exception("Ocurrió un error al crear las facturas.");
             }
         }
@@ -351,6 +360,7 @@ public class FacturasDAO implements Serializable {
 
         } finally {
             try {
+                if(session.isOpen())
                 session.close();
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al consultar las facturas.");
@@ -435,7 +445,7 @@ public class FacturasDAO implements Serializable {
         } catch (IllegalAccessException ex) {
             Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
         }
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/valco", "admin3ZheGrA", "1VtHQW5M-3g-");) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/valco", ParametrosGeneralesUtility.getValor("DB004"), ParametrosGeneralesUtility.getValor("DB005"));) {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT SECUENCIA\n"
                     + "FROM SECUENCIAS\n"
@@ -515,6 +525,87 @@ public class FacturasDAO implements Serializable {
                 throw new Exception("Ocurrió un error al registrar el cliente.");
             }
         }
+    }
+    
+    public List<FormaPago> getFormasPago() throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        List<FormaPago> formasPago = new ArrayList<FormaPago>();
+        try {
+            tx = session.beginTransaction();
+            String hql= "from FormaPago as f order by convert(f.codigo,  UNSIGNED INTEGER)";
+            Query q = session.createQuery(hql);
+            
+            formasPago = (List<FormaPago>) q.list();
+           
+            tx.commit();
+            return formasPago;
+
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar las formas de pago.");
+
+        } finally {
+            try {
+                if(session.isOpen())
+                session.close();
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar las formas de pago.");
+            }
+        }
+    }
+    
+    public List<MetodosPago> getMetodosPago() throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        List<MetodosPago> metodosPago = new ArrayList<MetodosPago>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(MetodosPago.class);
+            metodosPago = (List<MetodosPago>) q.list();
+           
+            tx.commit();
+            return metodosPago;
+
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar los metodos de pago.");
+
+        } finally {
+            try {
+                if(session.isOpen())
+                session.close();
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar los metodos de pago.");
+            }
+        }
+    }
+    
+    public Integer getNextFolioNC() throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        Integer folio = 0;
+        try {
+            tx = session.beginTransaction();
+            Criteria criteria = session
+                    .createCriteria(NotasCredito.class)
+                    .setProjection(Projections.max("codigo"));
+            folio = (Integer) criteria.uniqueResult();
+            tx.commit();
+            return folio+1;
+
+        } catch (HibernateException he) {
+            tx.commit();
+            throw new Exception("Ocurrió un error en la consulta del siguiente folio de la nota de credito");
+
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error en la consulta del siguiente folio de la nota de credito");
+            }
+        }
+
     }
 
 }

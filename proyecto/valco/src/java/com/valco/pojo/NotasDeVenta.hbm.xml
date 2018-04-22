@@ -12,7 +12,7 @@
             <column name="CLIENTES_CODIGO" not-null="true" />
         </many-to-one>
         <many-to-one name="facturas" class="com.valco.pojo.Facturas" fetch="select">
-            <column name="FACTURAS_CODIGO" not-null="true" />
+            <column name="FACTURAS_CODIGO"  />
         </many-to-one>
         <many-to-one name="repartidores" class="com.valco.pojo.Repartidores" fetch="select">
             <column name="REPARTIDORES_CODIGO" not-null="true" />

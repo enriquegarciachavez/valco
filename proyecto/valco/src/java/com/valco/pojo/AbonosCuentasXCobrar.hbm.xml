@@ -23,5 +23,62 @@
         <property name="estatus" type="string">
             <column name="ESTATUS" length="20" not-null="true" />
         </property>
+        <property name="formaPago" type="string">
+            <column name="FORMA_PAGO" length="45" />
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="45" />
+        </property>
+        <property name="numOperacion" type="string">
+            <column name="NUM_OPERACION" length="45" />
+        </property>
+        <property name="rfcCtaOrigen" type="string">
+            <column name="RFC_CTA_ORIGEN" length="45" />
+        </property>
+        <property name="ctaOrdenante" type="string">
+            <column name="CTA_ORDENANTE" length="45" />
+        </property>
+        <property name="rfcCtaBen" type="string">
+            <column name="RFC_CTA_BEN" length="45" />
+        </property>
+        <property name="ctaBen" type="string">
+            <column name="CTA_BENEFICIARIO" length="45" />
+        </property>
+        <property name="tipoCadPago" type="string">
+            <column name="TIPO_CAD_PAGO" length="45" />
+        </property>
+        <property name="certPago" type="string">
+            <column name="CERT_PAGO" length="45" />
+        </property>
+        <property name="cadenaPago" type="string">
+            <column name="CADENA_PAGO" length="45" />
+        </property>
+        <property name="selloPago" type="string">
+            <column name="SELLO_PAGO" length="45" />
+        </property>
+        <property name="numParcialidad" type="string">
+            <column name="NUM_PARCIALIDAD" length="45" />
+        </property>
+        <property name="impSaldoAnt" type="string">
+            <column name="IMP_SALDO_ANT" length="45" />
+        </property>
+        <property name="impSaldoInsoluto" type="string">
+            <column name="IMP_SALDO_INSOLUTO" length="45" />
+        </property>
+        <property name="nombreBancoOrd" type="string">
+            <column name="NOMBRE_BANCO_ORD" length="45" />
+        </property>
+        <property name="nombreBancoBen" type="string">
+            <column name="NOMBRE_BANCO_BEN" length="45" />
+        </property>
+        <property name="idDocRelacionado" type="string">
+            <column name="ID_DOC_RELACIONADO" length="245" />
+        </property>
+        <property name="serie" type="string">
+            <column name="serie" length="45" />
+        </property>
+        <property name="folio" type="java.lang.Integer">
+            <column name="FOLIO"  />
+        </property>
     </class>
 </hibernate-mapping>

@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:body>
+        <p:tabView id="tabView">
+            <p:tab title="Informacion General" >
+                <p:scrollPanel style="width:700px;height:500px">
+                    <p:fieldset legend="Datos Personales" style="margin-bottom: 20px" >
+                        <h:panelGrid id="ingresarGrid"  columns="6" cellpadding="5">
+
+                            <p:outputLabel for="codigo" value="Codigo:" />
+                            <p:inputText id="codigo"  required="true" label="codigo" value="#{editarClienteBean.cliente.codigo}"/>
+                            <p:message for="codigo" display="icon" />
+
+                            <p:outputLabel for="razon" value="Razón Social: " />
+                            <p:inputText id="razon" validator="#{editarClienteBean.validarRazonSocial}" required="true" label="razon" value="#{editarClienteBean.cliente.razonSocial}" />
+                            <p:message for="razon" display="icon" />
+
+                            <p:outputLabel for="paterno" value="Apellido Paterno: " />
+                            <p:inputText id="paterno" validatorMessage="El campo apellido paterno solo puede contener letras"  required="true" label="paterno" value="#{editarClienteBean.cliente.apellidoPaterno}">
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]+$"/>
+                            </p:inputText>
+                            <p:message for="paterno" display="icon" />
+
+                            <p:outputLabel for="materno" value="Apellido Materno: " />
+                            <p:inputText id="materno" validatorMessage="El campo apellido materno solo puede contener letras"   required="false" label="materno" value="#{editarClienteBean.cliente.apellidoMaterno}">
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]*$"/>
+                            </p:inputText>
+                            <p:message for="materno" display="icon" />
+
+                            <p:outputLabel for="nombre" value="Nombres: " />
+                            <p:inputText id="nombre" validatorMessage="El campo nombre solo puede contener letras"  required="true" label="nombre" value="#{editarClienteBean.cliente.nombres}">
+                                <f:validateRegex
+                                    pattern="^[A-Za-z\s]+$"/>
+                            </p:inputText>
+                            <p:message for="nombre" display="icon" />
+
+                            <p:outputLabel for="credito" value="Limite de Credito:" />
+                            <p:inputText id="credito"  required="false" label="credito" value="#{editarClienteBean.cliente.limiteCredito}"/>
+                            <p:message for="credito" display="icon" />
+
+                            <p:outputLabel for="rfc" value="RFC:" />
+                            <p:inputText id="rfc"  required="false" label="rfc" value="#{editarClienteBean.cliente.rfc}"/>
+                            <p:message for="rfc" display="icon" />
+
+                            <p:outputLabel for="correo" value="Correo Electronico:" />
+                            <p:inputText id="correo" validatorMessage="Formato de email incorrecto"  required="false" label="correo" value="#{editarClienteBean.cliente.correoElectronico}">
+                                <f:validateRegex
+                                    pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
+                            </p:inputText>
+                            <p:message for="correo" display="icon" />
+
+                            <p:outputLabel for="bancaria" value="Cuenta Bancaria:" />
+                            <p:inputText id="bancaria" validatorMessage="Solo debe introducir números" maxlength="4" required="false" label="bancaria" value="#{editarClienteBean.cliente.cuentaBancaria}">
+
+                            </p:inputText>
+                            <p:message for="bancaria" display="icon" />
+
+                            <p:outputLabel for="banco" value="Banco:" />
+                            <p:inputText id="banco"  required="false" label="banco" value="#{editarClienteBean.cliente.banco}"/>
+                            <p:message for="banco" display="icon" />
+
+                            <h:outputText value="Incobrable: " />
+                            <p:selectBooleanCheckbox value="#{editarClienteBean.cliente.incobrable}"  id="incobrable"/>
+                            <p:message for="incobrable" display="icon"/>
+
+                            <h:outputText value="Foraneo: " />
+                            <p:selectBooleanCheckbox value="#{editarClienteBean.cliente.foreano}" id="foraneo" />
+                            <p:message for="foraneo" display="icon"/>
+                        </h:panelGrid>
+                    </p:fieldset>
+                    <ui:include src="SelectDireccion.xhtml" />
+                </p:scrollPanel>
+            </p:tab>
+            <p:tab title="Datos Fiscales" >
+                    <ui:include src="UsoCFDI.xhtml" >
+                        <ui:param name="usoCfdi" value="#{editarClienteBean.usoSeleccionado}" />
+                    </ui:include>
+            </p:tab>                  
+            <p:tab title="Cuentas Bancarias" >
+                <ui:include src="CuentasBancarias.xhtml"/>
+            </p:tab>
+        </p:tabView>
+    </h:body>
+</html>
+

@@ -46,8 +46,8 @@ public class Mail {
      * @throws AddressException if the email address parse failed
      * @throws MessagingException if the connection is dead or not in the connected state or if the message is not a MimeMessage
      */
-    public static void Send(String recipientEmail, String title, String message) throws AddressException, MessagingException {
-        Mail.Send(recipientEmail, "", title, message,"");
+    public static void Send(String recipientEmail, String title, String message) throws AddressException, MessagingException, Exception {
+        Mail.Send(recipientEmail, "", title, message,"","");
     }
 
     /**
@@ -62,7 +62,7 @@ public class Mail {
      * @throws AddressException if the email address parse failed
      * @throws MessagingException if the connection is dead or not in the connected state or if the message is not a MimeMessage
      */
-    public static void Send( String recipientEmail, String ccEmail, String title, String message,String file) throws AddressException, MessagingException {
+    public static void Send( String recipientEmail, String ccEmail, String title, String message,String path,String file) throws AddressException, MessagingException, Exception {
         Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
         final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
         DataSource source = null;
@@ -108,13 +108,13 @@ public class Mail {
 
         BodyPart messageBodyPart = new MimeBodyPart();
          messageBodyPart = new MimeBodyPart();
-         source = new FileDataSource(file+".pdf");
+         source = new FileDataSource(path+file+".pdf");
          messageBodyPart.setDataHandler(new DataHandler(source));
          messageBodyPart.setFileName(file+".pdf");
          multipart.addBodyPart(messageBodyPart);
          
          messageBodyPart = new MimeBodyPart();
-         source = new FileDataSource(file+".xml");
+         source = new FileDataSource(path+file+".xml");
          messageBodyPart.setDataHandler(new DataHandler(source));
          messageBodyPart.setFileName(file+".xml");
          multipart.addBodyPart(messageBodyPart);
@@ -126,7 +126,8 @@ public class Mail {
 
         SMTPTransport t = (SMTPTransport)session.getTransport("smtps");
 
-        t.connect("smtp.gmail.com", "info.valco.sistemas@gmail.com", "K4rl1T$%");
+        t.connect("smtp.gmail.com", ParametrosGeneralesUtility.getValor("EM001"),
+                ParametrosGeneralesUtility.getValor("EM002"));
         t.sendMessage(msg, msg.getAllRecipients());      
         t.close();
     }

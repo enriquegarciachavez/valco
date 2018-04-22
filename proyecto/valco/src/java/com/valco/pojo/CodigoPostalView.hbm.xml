@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 29/11/2015 05:47:39 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class catalog="valco" name="com.valco.pojo.CodigoPostalView" table="CODIGOS_POSTALES_VIEW" >
+        <id name="codigo" type="java.lang.String">
+            <column name="CODIGO"/>
+        </id>
+        <property name="codigoPostal" type="string">
+            <column name="CODIGO_POSTAL"/>      
+        </property>
+        <property name="municipio" type="string">
+            <column name="NOMBRE_MUNICIPIO" length="100" />
+        </property>
+        <property name="estado" type="string">
+            <column name="NOMBRE_ESTADO" length="100" />
+        </property>
+        <property name="asentamiento" type="string">
+            <column name="NOMBRE_ASENTAMIENTO" length="100" />
+        </property>
+        <property name="pais" type="string">
+            <column name="NOMBRE_PAIS" length="100" />
+        </property>
+    
+    
+    </class>
+</hibernate-mapping>

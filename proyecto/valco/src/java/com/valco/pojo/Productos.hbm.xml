@@ -40,6 +40,9 @@
     <property name="estatus" type="string">
       <column length="20" name="ESTATUS"/>
     </property>
+    <property name="claveSAT" type="string">
+      <column length="45" name="CLAVE_PROD_SERVICIO"/>
+    </property>
     <set fetch="select" inverse="true" lazy="true" name="productosHasProveedoreses" table="PRODUCTOS_has_PROVEEDORES">
       <key>
         <column name="PRODUCTOS_CODIGO" not-null="true"/>

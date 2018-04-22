@@ -8,6 +8,7 @@ package com.valco.dao;
 import com.valco.HibernateUtil;
 import com.valco.pojo.Clientes;
 import com.valco.pojo.NotasDeVenta;
+import com.valco.pojo.UsoCFDI;
 import com.valco.utility.ClientesUtility;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -127,6 +128,31 @@ public class ClienteDAO implements Serializable{
                   session.close();
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar los clientes.");
+              }
+        }
+    }
+      
+      public List<UsoCFDI> getUsosCFDI() throws Exception {
+          Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+          Transaction tx = null;
+          List<UsoCFDI> usos = new ArrayList<UsoCFDI>();
+          try {
+              tx = session.beginTransaction();
+              Criteria q = session.createCriteria(UsoCFDI.class);
+              usos = (List<UsoCFDI>) q.list();
+              tx.commit();
+              return usos;
+
+          } catch (HibernateException he) {
+              tx.commit();
+              throw new Exception("Ocurrió un error al consultar los usos.");
+
+          } finally {
+              try {
+                  if(session.isOpen()   )
+                  session.close();
+              } catch (HibernateException he) {
+                  throw new Exception("Ocurrió un error al consultar los usos.");
               }
         }
     }

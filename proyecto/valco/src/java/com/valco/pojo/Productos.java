@@ -24,6 +24,7 @@ public class Productos  implements java.io.Serializable {
      private boolean iva;
      private boolean abarrotes;
      private String estatus;
+     private String claveSAT;
      private Set<ProductosHasProveedores> productosHasProveedoreses = new HashSet<ProductosHasProveedores>(0);
      private Set<Productos> productosesForProductosCodigoHijo = new HashSet<Productos>(0);
      private Set<Productos> productosesForProductosCodigoPadre = new HashSet<Productos>(0);
@@ -167,6 +168,16 @@ public class Productos  implements java.io.Serializable {
     public void setAbarrotes(boolean Abarrotes) {
         this.abarrotes = Abarrotes;
     }
+
+    public String getClaveSAT() {
+        return claveSAT;
+    }
+
+    public void setClaveSAT(String claveSAT) {
+        this.claveSAT = claveSAT;
+    }
+    
+    
 
     
 }

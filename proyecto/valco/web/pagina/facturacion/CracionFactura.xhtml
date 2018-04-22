@@ -105,6 +105,31 @@
                             </p:column>
                         </p:pickList>
                     </h:panelGrid>
+                    
+                    <h:panelGrid columns="3"
+                                 cellpadding="5"
+                                 cellspacing="5"
+                                 style="text-align: initial; margin: 0 auto;" >
+                        <ui:include src="../Widgets/FormaPago.xhtml">
+                            <ui:param name="formaPago" value="#{creacionFacturaBean.formaPago}"/>
+                        </ui:include>
+                    </h:panelGrid>
+                    <h:panelGrid columns="3"
+                                 cellpadding="5"
+                                 cellspacing="5"
+                                 style="text-align: initial; margin: 0 auto;" >
+                        <ui:include src="../Widgets/MetodosPago.xhtml">
+                            <ui:param name="metodoPago" value="#{creacionFacturaBean.metodoPago}"/>
+                        </ui:include>
+                    </h:panelGrid>
+                    <h:panelGrid columns="3"
+                                 cellpadding="5"
+                                 cellspacing="5"
+                                 style="text-align: initial; margin: 0 auto;" >
+                        <ui:include src="../clientes/UsoCFDI.xhtml">
+                            <ui:param name="usoCfdi" value="#{creacionFacturaBean.usoCFDI}"/>
+                        </ui:include>
+                    </h:panelGrid>
 
                     <h:panelGrid columns="2"
                                  cellpadding="5"
@@ -123,27 +148,14 @@
                                            var="impuestos"
                                            itemLabel="#{impuestos.impuesto}"
                                            itemValue="#{impuestos}"/>
-                                <p:column>
-                                    <h:outputText value="#{t.impuesto}" />
-                                </p:column>
-                                <p:column>
-                                    <h:outputText value="#{t.tasa}" />
-                                </p:column>
-                        </p:selectManyMenu>
-                        <p:outputLabel for="formaPago" value="Forma de pago:"  />
-                        <p:selectOneMenu 
-                            id="formaPago" 
-                            converter="omnifaces.SelectItemsConverter" 
-                            panelStyle="width:180px"
-                            effect="fade" 
-                            var="c" 
-                            style="width:150px" 
-                            filter="true" 
-                            filterMatchMode="contains"
-                            value="#{creacionFacturaBean.metodoPago}">
-                            <f:selectItem itemLabel="De contado" itemValue="CONTADO" />
-                            <f:selectItem itemLabel="Credito" itemValue="CREDITO" />
-                        </p:selectOneMenu>
+                            <p:column>
+                                <h:outputText value="#{t.impuesto}" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{t.tasa}" />
+                            </p:column>
+                        </p:selectManyMenu>                        
+
 
                         <p:outputLabel for="observaciones" value="Observaciones:"  />
                         <p:inputTextarea id="observaciones" rows="3" cols="50" value="#{creacionFacturaBean.observaciones}" />
@@ -155,6 +167,9 @@
                         </f:facet>
 
                     </h:panelGrid>
+                    
+                    
+
 
                     <p:blockUI block="form" trigger="btnBuscar btnFacturar">
                         Cargando.... Espere porfavor<br />

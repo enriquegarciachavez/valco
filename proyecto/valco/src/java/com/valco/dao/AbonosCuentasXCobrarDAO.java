@@ -20,6 +20,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -27,7 +28,7 @@ import org.hibernate.criterion.Restrictions;
  * @author Enrique
  */
 public class AbonosCuentasXCobrarDAO {
-    
+
     public void insertarAbono(AbonosCuentasXCobrar abono) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
@@ -54,8 +55,7 @@ public class AbonosCuentasXCobrarDAO {
             }
         }
     }
-    
-    
+
     public void actualizarAbono(AbonosCuentasXCobrar abono) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
@@ -74,15 +74,15 @@ public class AbonosCuentasXCobrarDAO {
             throw new Exception("Ocurrió un error al modificar el cliente.");
         } finally {
             try {
-                if(session.isOpen()){
-                session.close();
+                if (session.isOpen()) {
+                    session.close();
                 }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al modificar el cliente.");
             }
         }
     }
-    
+
     public void borrarAbono(AbonosCuentasXCobrar abono) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
@@ -95,154 +95,181 @@ public class AbonosCuentasXCobrarDAO {
                 try {
                     tx.rollback();
                 } catch (HibernateException he) {
-                    
+
                     throw new Exception("Ocurrió un error al borrar el abono.");
                 }
             }
             throw new Exception("Ocurrió un error al borrar el abono.");
         } finally {
             try {
-                if(session.isOpen()){
-                session.close();
+                if (session.isOpen()) {
+                    session.close();
                 }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al borrar el abono.");
             }
         }
     }
-    
+
     public List<AbonosCuentasXCobrar> getAbonosCuentasXCobrar() throws Exception {
-          Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-          Transaction tx = null;
-          List<AbonosCuentasXCobrar> abonos = new ArrayList<AbonosCuentasXCobrar>();
-          try {
-              tx = session.beginTransaction();
-              Query q = session.createQuery("FROM AbonosCuentasXCobrar");
-              abonos = (List<AbonosCuentasXCobrar>) q.list();
-              tx.commit();
-              return abonos;
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        List<AbonosCuentasXCobrar> abonos = new ArrayList<AbonosCuentasXCobrar>();
+        try {
+            tx = session.beginTransaction();
+            Query q = session.createQuery("FROM AbonosCuentasXCobrar");
+            abonos = (List<AbonosCuentasXCobrar>) q.list();
+            tx.commit();
+            return abonos;
 
-          } catch (HibernateException he) {
-              tx.commit();
-              throw new Exception("Ocurrió un error al consultar los clientes.");
+        } catch (HibernateException he) {
+            tx.commit();
+            throw new Exception("Ocurrió un error al consultar los clientes.");
 
-          } finally {
-              try {
-                  if(session.isOpen())
-                  session.close();
-              } catch (HibernateException he) {
-                  throw new Exception("Ocurrió un error al consultar los clientes.");
-              }
-        }
-    }
-    
-    public List<NotasDeVenta> getNotasDeVenta() throws Exception {
-          Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-          Transaction tx = null;
-          List<NotasDeVenta> notas = new ArrayList<NotasDeVenta>();
-          try {
-              tx = session.beginTransaction();
-              Query q = session.createQuery("FROM NotasDeVenta");
-              notas = (List<NotasDeVenta>) q.list();
-              tx.commit();
-              return notas;
-
-          } catch (HibernateException he) {
-              tx.commit();
-              throw new Exception("Ocurrió un error al consultar los clientes.");
-
-          } finally {
-              try {
-                  if(session.isOpen())
-                  session.close();
-              } catch (HibernateException he) {
-                  throw new Exception("Ocurrió un error al consultar los clientes.");
-              }
-        }
-    }
-    
-    public List<NotasDeVenta> getNotasDeVenta(Date fechaInicial, Date fechaFinal, 
-                                                Clientes cliente, Integer numeroNota, 
-                                                String estatus) throws Exception {
-          Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-          Transaction tx = null;
-          List<NotasDeVenta> notas = new ArrayList<NotasDeVenta>();
-          try {
-              tx = session.beginTransaction();
-              Criteria criteria = session.createCriteria(NotasDeVenta.class);
-              
-              if(fechaInicial != null && fechaFinal != null){
-                  criteria.add(Restrictions.between("fechaDeVenta",fechaInicial,fechaFinal));
-              }else if(fechaInicial != null){
-                  criteria.add(Restrictions.eq("fechaDeVenta", fechaInicial));
-              }else if(fechaFinal != null){
-                  criteria.add(Restrictions.eq("fechaDeVenta", fechaFinal));
-              }
-              
-              if(cliente != null){
-                  criteria.add(Restrictions.eq("clientes", cliente));
-              }
-              if(numeroNota != null){
-                  criteria.add(Restrictions.eq("folio", numeroNota));
-              }
-              if(estatus != null){
-                  criteria.add(Restrictions.eq("estatus", estatus));
-              }
-              notas = (List<NotasDeVenta>) criteria.list();
-              for(NotasDeVenta nota : notas){
-                  Hibernate.initialize(nota.getCuentaXCobrar());
-                  if(nota.getCuentaXCobrar() != null){
-                    Hibernate.initialize(nota.getCuentaXCobrar().getAbonosCuentasXCobrars());
-                  }
-              }
-              tx.commit();
-              return notas;
-
-          } catch (HibernateException he) {
-              tx.commit();
-              throw new Exception("Ocurrió un error al consultar los abonos.");
-
-          } finally {
-              try {
-                  if(session.isOpen()){
+        } finally {
+            try {
+                if (session.isOpen()) {
                     session.close();
-                  }
-              } catch (HibernateException he) {
-                  throw new Exception("Ocurrió un error al consultar los abonos.");
-              }
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar los clientes.");
+            }
         }
     }
-    
+
+    public List<NotasDeVenta> getNotasDeVenta() throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        List<NotasDeVenta> notas = new ArrayList<NotasDeVenta>();
+        try {
+            tx = session.beginTransaction();
+            Query q = session.createQuery("FROM NotasDeVenta");
+            notas = (List<NotasDeVenta>) q.list();
+            tx.commit();
+            return notas;
+
+        } catch (HibernateException he) {
+            tx.commit();
+            throw new Exception("Ocurrió un error al consultar los clientes.");
+
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar los clientes.");
+            }
+        }
+    }
+
+    public List<NotasDeVenta> getNotasDeVenta(Date fechaInicial, Date fechaFinal,
+            Clientes cliente, Integer numeroNota,
+            String estatus) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        List<NotasDeVenta> notas = new ArrayList<NotasDeVenta>();
+        try {
+            tx = session.beginTransaction();
+            Criteria criteria = session.createCriteria(NotasDeVenta.class);
+
+            if (fechaInicial != null && fechaFinal != null) {
+                criteria.add(Restrictions.between("fechaDeVenta", fechaInicial, fechaFinal));
+            } else if (fechaInicial != null) {
+                criteria.add(Restrictions.eq("fechaDeVenta", fechaInicial));
+            } else if (fechaFinal != null) {
+                criteria.add(Restrictions.eq("fechaDeVenta", fechaFinal));
+            }
+
+            if (cliente != null) {
+                criteria.add(Restrictions.eq("clientes", cliente));
+            }
+            if (numeroNota != null) {
+                criteria.add(Restrictions.eq("folio", numeroNota));
+            }
+            if (estatus != null) {
+                criteria.add(Restrictions.eq("estatus", estatus));
+            }
+            notas = (List<NotasDeVenta>) criteria.list();
+            for (NotasDeVenta nota : notas) {
+                Hibernate.initialize(nota.getCuentaXCobrar());
+                if (nota.getCuentaXCobrar() != null) {
+                    Hibernate.initialize(nota.getCuentaXCobrar().getAbonosCuentasXCobrars());
+                }
+            }
+            tx.commit();
+            return notas;
+
+        } catch (HibernateException he) {
+            tx.commit();
+            throw new Exception("Ocurrió un error al consultar los abonos.");
+
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar los abonos.");
+            }
+        }
+    }
+
     public List<AbonosCuentasXCobrar> getAbonosXCuentasXCobrar(CuentasXCobrar cuenta) throws Exception {
-          Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-          Transaction tx = null;
-          List<AbonosCuentasXCobrar> abonos = new ArrayList<AbonosCuentasXCobrar>();
-          try {
-              tx = session.beginTransaction();
-              Criteria q = session.createCriteria(AbonosCuentasXCobrar.class)
-                      .add(Restrictions.eq("cuentasXCobrar", cuenta));
-              abonos = (List<AbonosCuentasXCobrar>) q.list();
-              
-              tx.commit();
-              return abonos;
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        List<AbonosCuentasXCobrar> abonos = new ArrayList<AbonosCuentasXCobrar>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(AbonosCuentasXCobrar.class)
+                    .add(Restrictions.eq("cuentasXCobrar", cuenta));
+            abonos = (List<AbonosCuentasXCobrar>) q.list();
 
-          } catch (HibernateException he) {
-              tx.commit();
-              throw new Exception("Ocurrió un error al consultar los clientes.");
+            tx.commit();
+            return abonos;
 
-          } finally {
-              try {
-                  if(session.isOpen())
-                  session.close();
-              } catch (HibernateException he) {
-                  throw new Exception("Ocurrió un error al consultar los clientes.");
-              }
+        } catch (HibernateException he) {
+            tx.commit();
+            throw new Exception("Ocurrió un error al consultar los clientes.");
+
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar los clientes.");
+            }
         }
     }
-    
-    
-    
-    
-    
-    
+
+    public Integer getNextFolio() throws Exception {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        Integer folio = 0;
+        try {
+            tx = session.beginTransaction();
+            Criteria criteria = session
+                    .createCriteria(AbonosCuentasXCobrar.class)
+                    .setProjection(Projections.max("folio"));
+            folio = (Integer) criteria.uniqueResult();
+            tx.commit();
+            return folio+1;
+
+        } catch (HibernateException he) {
+            tx.commit();
+            throw new Exception("Ocurrió un error al consultar los clientes.");
+
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar los clientes.");
+            }
+        }
+
+    }
+
 }

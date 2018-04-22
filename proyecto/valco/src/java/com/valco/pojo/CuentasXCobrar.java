@@ -38,7 +38,23 @@ public class CuentasXCobrar  implements java.io.Serializable {
        this.estatus = estatus;
        this.abonosCuentasXCobrars = abonosCuentasXCobrars;
     }
-   
+    
+    public BigDecimal getImportePagado(){
+        BigDecimal importePagado = BigDecimal.ZERO;
+        for(AbonosCuentasXCobrar abono : this.abonosCuentasXCobrars){
+            if(abono.getEstatus().equals("ACTIVO")){
+                importePagado = importePagado.add(abono.getImporte());
+            }
+        }
+        return importePagado;
+    }
+    
+    public BigDecimal getSaldoAnterior(){
+        BigDecimal saldoAnterior = this.getImporte().subtract(this.getImportePagado());
+        return saldoAnterior;
+    }
+    
+       
     public Integer getCodigo() {
         return this.codigo;
     }

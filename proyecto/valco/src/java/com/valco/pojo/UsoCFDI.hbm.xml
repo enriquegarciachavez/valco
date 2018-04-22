@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 16/03/2015 07:32:12 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.valco.pojo.UsoCFDI" table="USO_CFDI" catalog="valco" optimistic-lock="version">
+        <id name="codigo" type="java.lang.String">
+            <column name="C_USO_CFDI" />            
+        </id>        
+        <property name="descripcion" type="string">
+            <column length="100" name="DESCRIPCION" not-null="true"/>
+        </property>
+        <property name="aplicaFisica" type="boolean">
+            <column  name="APLICA_FISICA" not-null="false"/>
+        </property>
+        <property name="aplicaMoral" type="boolean">
+            <column  name="APLICA_MORAL" not-null="false"/>
+        </property>
+    </class>
+</hibernate-mapping>

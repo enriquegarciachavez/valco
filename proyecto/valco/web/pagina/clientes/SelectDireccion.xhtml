@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:outputStylesheet library="css" name="ClienteCSS.css"  />
+    <h:body>
+        <p:fieldset legend="Direccion Fiscal"   style="margin-bottom: 20px">
+            <h:panelGrid id="direccionGrid"  columns="6" cellpadding="5">
+
+                <p:outputLabel for="postal" value="Código Postal:" />
+                <p:inputText id="postal"  required="true" label="postal" value="#{selecDireccionBean.codigoPostal}">
+                    <p:ajax event="blur" update="direccionGrid" process="direccionGrid, @this"  listener="#{selecDireccionBean.llenarDireccion()}"/>
+                </p:inputText>
+
+                <p:message for="postal" display="icon" />
+
+                <p:outputLabel for="pais" value="País:" />
+                <p:inputText id="pais"   label="pais" value="#{selecDireccionBean.pais}"/>
+                <p:message for="pais" display="icon" />
+
+                <p:outputLabel for="estado" value="Estado:" />
+                <p:inputText id="estado"   label="estado" value="#{selecDireccionBean.estado}"/>
+                <p:message for="estado" display="icon" />
+
+                <p:outputLabel for="ciudad" value="Ciudad:" />
+                <p:inputText id="ciudad"   label="ciudad" value="#{selecDireccionBean.ciudad}"/>
+                <p:message for="ciudad" display="icon" />
+
+                <p:outputLabel for="colonia" value="Colonia:" />
+                <p:selectOneMenu id="colonia"  label="colonia" value="#{selecDireccionBean.colonia}" >
+                    <f:selectItems value="#{selecDireccionBean.colonias}"/>
+                </p:selectOneMenu>
+                <p:message for="colonia" display="icon" />
+
+                <p:outputLabel for="direccion" value="Dirección:" />
+                <p:inputText id="direccion"   label="direccion" value="#{selecDireccionBean.calle}"/>
+                <p:message for="direccion" display="icon" />
+
+                <p:outputLabel for="exterior" value="No. Exterior:" />
+                <p:inputText id="exterior"   label="exterior" value="#{selecDireccionBean.noExterior}"/>
+                <p:message for="exterior" display="icon" /> 
+
+                <p:outputLabel for="interior" value="No. Interior:" />
+                <p:inputText id="interior"  required="false" label="interior" value="#{selecDireccionBean.noInterior}"/>
+                <p:message for="interior" display="icon" />
+
+            </h:panelGrid>
+        </p:fieldset>
+    </h:body>
+</html>
+

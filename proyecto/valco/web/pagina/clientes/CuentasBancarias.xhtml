@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:body>
+
+        <p:scrollPanel style="width:700px;height:500px" id="panelCuentas">
+            <p:menubar>
+
+                <p:menuitem 
+                    value="Agregar"
+                    id="guardarCta"
+                    icon="ui-icon-plusthick"                    
+                    update="panelCuentas"
+                    process="panelCuentas"
+                    action="#{cuentasBancariasBean.insertarCuentaBancaria()}"/>
+
+                <p:menuitem 
+                    value="Eliminar"
+                    id="btnBorrar"
+                    icon="ui-icon-circle-close"                                             
+                    update="panelCuentas"
+                    process="panelCuentas"
+                    action="#{cuentasBancariasBean.eliminarCuentaBancaria()}"
+
+                    /> 
+            </p:menubar>
+
+            <h:panelGrid columns="2" >
+
+                <h:outputText value="Nombre:" />
+                <p:inputText value="#{cuentasBancariasBean.cuentaNueva.descripcion}" />
+
+                <h:outputText value="RFC Banco:" />
+                <p:inputText value="#{cuentasBancariasBean.cuentaNueva.rfcBanco}" />
+
+                <h:outputText value="No. Cuenta*:" />
+                <p:inputText value="#{cuentasBancariasBean.cuentaNueva.noDeCuenta}" id="cuenta" />
+
+
+            </h:panelGrid>
+
+            <p:dataTable id="tablaCuentas" 
+                         var="cuenta" value="#{cuentasBancariasBean.cuentas}" 
+                         selection="#{cuentasBancariasBean.cuentaSeleccionada}" 
+                         selectionMode="single"  
+                         style="width:500px;" 
+                         emptyMessage="no hay cuentas bancarias"
+                         rowKey="#{cuenta.noDeCuenta}">
+                <p:column headerText="Nombre Cuenta" >
+                    <h:outputText value="#{cuenta.descripcion}" />
+                </p:column>
+
+                <p:column headerText="RFC Banco" >
+                    <h:outputText value="#{cuenta.rfcBanco}" />
+                </p:column>
+
+                <p:column headerText="Numero de Cuenta" >
+                    <h:outputText value="#{cuenta.noDeCuenta}" />
+                </p:column>
+
+
+            </p:dataTable>
+        </p:scrollPanel>
+
+    </h:body>
+</html>
+

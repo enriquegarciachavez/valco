@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/11/2014 06:06:43 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.valco.pojo.FormaPago" table="FORMAS_PAGO" catalog="valco" optimistic-lock="version">
+        <id name="codigo" type="string">
+            <column name="C_FORMA_PAGO" />
+            
+        </id>
+        <property name="descripcion" type="string">
+            <column name="DESCRIPCION" length="50" not-null="true" />
+        </property>
+        <property name="patronCtaOrdenante" type="string">
+            <column name="PATRON_CUENTA_ORDENANTE" length="100" not-null="false" />
+        </property>
+        <property name="patronCtaBeneficiario" type="string">
+            <column name="PATRON_CUENTA_BENEFICIARIO" length="100" not-null="false" />
+        </property>
+        <property name="bancarizado" type="boolean">
+            <column name="BANCARIZADO" not-null="true" />
+        </property>
+        <property name="tipoCadenaPago" type="boolean">
+            <column name="TIPO_CADENA_PAGO" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

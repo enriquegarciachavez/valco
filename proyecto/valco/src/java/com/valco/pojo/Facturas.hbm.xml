@@ -9,7 +9,7 @@
              <generator class="identity" /> 
         </id>
         <many-to-one name="notasDeVenta" class="com.valco.pojo.NotasDeVenta" fetch="select">
-            <column name="NOTAS_DE_VENTA_CODIGO" not-null="true" />
+            <column name="NOTAS_DE_VENTA_CODIGO" />
         </many-to-one>
         <property name="lugar" type="string">
             <column name="LUGAR" length="100" not-null="true" />
@@ -88,6 +88,9 @@
         </property>
         <property name="serie" type="string">
             <column name="SERIE" length="45" />
+        </property>
+        <property name="usoCFDI" type="string">
+            <column name="USO_CFDI" length="45" />
         </property>
         <set name="notasDeVentas" table="NOTAS_DE_VENTA" inverse="true" lazy="true" fetch="select">
             <key>
