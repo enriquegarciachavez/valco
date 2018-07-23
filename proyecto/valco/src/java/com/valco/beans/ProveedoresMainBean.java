@@ -7,9 +7,12 @@ package com.valco.beans;
 
 import com.valco.dao.ProveedorDAO;
 import com.valco.pojo.Proveedores;
+import com.valco.pojo.ProveedoresCodigo;
 import com.valco.utility.MsgUtility;
 import java.awt.event.ActionEvent;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,9 +39,13 @@ public class ProveedoresMainBean implements Serializable {
 
     @ManagedProperty(value = "#{proveedorDAO}")
     private ProveedorDAO proveedorDAO;
+    @ManagedProperty(value = "#{proveedoresCodigosBean}")
+    private ProveedoresCodigosBean proveedoresCodigosBean;
     List<Proveedores> proveedores;
     Proveedores proveedorSeleccionado;
     Proveedores proveedorNuevo;
+    private List<ProveedoresCodigo> codigosAEliminar;
+    private List<ProveedoresCodigo> codigosNuevos;
     DataModel modeloProveedores;
     UIInput codigo;
     UIInput razonSocial;
@@ -72,10 +79,6 @@ public class ProveedoresMainBean implements Serializable {
         ciudad.setValue(null);
         estado.setValue(null);
         rfc.setValue(null);
-        posicionCodigoInicial.setValue(null);
-        posicionCodigoFinal.setValue(null);
-        posicionPesoInicial.setValue(null);
-        posicionPesoFinal.setValue(null);
         abarrotes.setValue(false);
 
     }
@@ -83,6 +86,7 @@ public class ProveedoresMainBean implements Serializable {
     @PostConstruct
     public void init() {
         try {
+            codigosAEliminar = new ArrayList<>();
             proveedores = proveedorDAO.getProveedores();
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
@@ -95,15 +99,24 @@ public class ProveedoresMainBean implements Serializable {
             MsgUtility.showErrorMeage("Debe seleccionar una familia");
             FacesContext.getCurrentInstance().validationFailed();
         }
+        proveedoresCodigosBean.getCodigos().clear();
+        proveedoresCodigosBean.getCodigos().addAll(proveedorSeleccionado.getProveedoresCodigos());
+        codigosAEliminar.addAll(proveedorSeleccionado.getProveedoresCodigos());
 
     }
 
     public void insertarProveedor() {
         try {
             proveedorNuevo.setEstatus("ACTIVO");
+            proveedorNuevo.getProveedoresCodigos().addAll(proveedoresCodigosBean.getCodigos());
+            for(ProveedoresCodigo codigo: proveedorNuevo.getProveedoresCodigos()){
+                codigo.setProveedor(proveedorNuevo);
+            }
             proveedorDAO.insertarProveedor(proveedorNuevo);
             MsgUtility.showInfoMeage("El proveedor se insertó con éxito");
             this.proveedores.add(proveedorNuevo);
+            proveedorNuevo= new Proveedores();
+            proveedoresCodigosBean.setCodigos(new ArrayList<ProveedoresCodigo>());
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
@@ -121,7 +134,17 @@ public class ProveedoresMainBean implements Serializable {
 
     public void actualizarProveedor() {
         try {
-            proveedorDAO.actualizarProveedor(proveedorSeleccionado);
+            codigosAEliminar.removeAll(proveedoresCodigosBean.getCodigos());
+            proveedorSeleccionado.getProveedoresCodigos().clear();
+            proveedorSeleccionado.getProveedoresCodigos().addAll(proveedoresCodigosBean.getCodigos());
+            for(ProveedoresCodigo codigo: proveedorSeleccionado.getProveedoresCodigos()){
+                codigo.setProveedor(proveedorSeleccionado);
+            }
+            for(ProveedoresCodigo codigo: codigosAEliminar){
+                codigo.setProveedor(null);
+            }
+            proveedorDAO.actualizarProveedor(proveedorSeleccionado,codigosAEliminar);
+            codigosAEliminar.clear();
             MsgUtility.showInfoMeage("El proveedor se actualizó con éxito");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
@@ -130,8 +153,8 @@ public class ProveedoresMainBean implements Serializable {
     }
 
     public void inicializarProveedor() {
-        this.proveedorNuevo = new Proveedores();
-        limpiarIngresarForm();
+        proveedorNuevo = new Proveedores();
+        proveedoresCodigosBean.setCodigos(new ArrayList<ProveedoresCodigo>());
     }
 
     public void validarRazonSocial(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
@@ -193,7 +216,6 @@ public class ProveedoresMainBean implements Serializable {
     public Proveedores getProveedorSeleccionado() {
         return proveedorSeleccionado;
     }
-
     public void setProveedorSeleccionado(Proveedores proveedorSeleccionado) {
         this.proveedorSeleccionado = proveedorSeleccionado;
     }
@@ -330,6 +352,14 @@ public class ProveedoresMainBean implements Serializable {
 
     public void setAbarrotes(UISelectBoolean abarrotes) {
         this.abarrotes = abarrotes;
+    }
+
+    public ProveedoresCodigosBean getProveedoresCodigosBean() {
+        return proveedoresCodigosBean;
+    }
+
+    public void setProveedoresCodigosBean(ProveedoresCodigosBean proveedoresCodigosBean) {
+        this.proveedoresCodigosBean = proveedoresCodigosBean;
     }
     
     

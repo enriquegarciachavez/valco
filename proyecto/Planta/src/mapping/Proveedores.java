@@ -29,6 +29,7 @@ public class Proveedores  implements java.io.Serializable {
      private Set<ProductosHasProveedores> productosHasProveedoreses = new HashSet<ProductosHasProveedores>(0);
      private Set<Telefonos> telefonoses = new HashSet<Telefonos>(0);
      private Set<OrdenesCompra> ordenesCompras = new HashSet<OrdenesCompra>(0);
+     private Set<ProveedoresCodigo> proveedoresCodigos = new HashSet<ProveedoresCodigo>(0);
 
     public Proveedores() {
     }
@@ -192,6 +193,14 @@ public class Proveedores  implements java.io.Serializable {
     
     public void setOrdenesCompras(Set<OrdenesCompra> ordenesCompras) {
         this.ordenesCompras = ordenesCompras;
+    }
+
+    public Set<ProveedoresCodigo> getProveedoresCodigos() {
+        return proveedoresCodigos;
+    }
+
+    public void setProveedoresCodigos(Set<ProveedoresCodigo> proveedoresCodigos) {
+        this.proveedoresCodigos = proveedoresCodigos;
     }
 
     public String toString(){

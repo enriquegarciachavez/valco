@@ -59,5 +59,6 @@
     <mapping resource="com/valco/pojo/CodigoPostalView.hbm.xml"/>
     <mapping resource="com/valco/pojo/UsoCFDI.hbm.xml"/>
     <mapping resource="com/valco/pojo/FormaPago.hbm.xml"/>
+    <mapping resource="com/valco/pojo/ProveedoresCodigos.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

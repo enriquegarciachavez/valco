@@ -5,8 +5,8 @@
     <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
     <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
     <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/valco?zeroDateTimeBehavior=convertToNull</property>
-    <property name="hibernate.connection.username">admin3ZheGrA</property>
-    <property name="hibernate.connection.password">1VtHQW5M-3g-</property>
+    <property name="hibernate.connection.username">root</property>
+    <property name="hibernate.connection.password">root</property>
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.current_session_context_class">thread</property>
     <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
@@ -46,5 +46,6 @@
     <mapping resource="mapping/Inventarios.hbm.xml"/>
     <mapping resource="mapping/Mermas.hbm.xml"/>
     <mapping resource="mapping/ProductosHasProveedoresView.hbm.xml"/>
+    <mapping resource="mapping/ProveedoresCodigo.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

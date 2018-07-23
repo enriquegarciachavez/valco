@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/11/2014 06:06:43 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="mapping.ProveedoresCodigo" table="PROVEEDORES_CODIGOS" catalog="valco" optimistic-lock="version">
+        <id name="codigo" type="java.lang.Integer">
+            <column name="CODIGO" />
+            <generator class="identity"/>
+        </id>
+        <property name="posicionPesoInicial" type="int">
+            <column name="pos_peso_inicial" not-null="true" />
+        </property>
+        <property name="posicionPesoFinal" type="int">
+            <column name="POS_PESO_FINAL" not-null="true" />
+        </property>
+        <property name="posicionCodigoInicial" type="int">
+            <column name="POS_CODIGO_INICIAL" not-null="true" />
+        </property>
+        <property name="posicionCodigoFinal" type="int">
+            <column name="POS_CODIGO_FINAL" not-null="true" />
+        </property>
+        <property name="decimales" type="int">
+            <column name="DECIMALES" not-null="true" />
+        </property>
+        <property name="longMinima" type="int">
+            <column name="LONG_MINIMA" not-null="true" />
+        </property>
+        <property name="longMaxima" type="int">
+            <column name="LONG_MAXIMA" not-null="true" />
+        </property>
+        <many-to-one name="proveedor" class="mapping.Proveedores" 
+                     fetch="select" insert="true" update="true">
+            <column name="ID_PROVEEDOR" not-null="true"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

@@ -3,7 +3,8 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 2/11/2014 06:06:43 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="com.valco.pojo.Proveedores" table="PROVEEDORES" catalog="valco" optimistic-lock="version">
+    <class name="com.valco.pojo.Proveedores" table="PROVEEDORES" catalog="valco"
+           optimistic-lock="version">
         <id name="codigo" type="java.lang.Integer">
             <column name="CODIGO" />
         </id>
@@ -34,21 +35,10 @@
         <property name="rfc" type="string">
             <column name="RFC" length="50" />
         </property>
-        <property name="posicionPesoInicial" type="int">
-            <column name="POSICION_PESO_INICIAL" not-null="true" />
-        </property>
-        <property name="posicionPesoFinal" type="int">
-            <column name="POSICION_PESO_FINAL" not-null="true" />
-        </property>
-        <property name="posicionCodigoInicial" type="int">
-            <column name="POSICION_CODIGO_INICIAL" not-null="true" />
-        </property>
-        <property name="posicionCodigoFinal" type="int">
-            <column name="POSICION_CODIGO_FINAL" not-null="true" />
-        </property>
+        
         <property name="abarrotes" type="boolean">
-      <column name="ABARROTES"/>
-    </property>
+            <column name="ABARROTES"/>
+        </property>
         <property name="estatus" type="string">
             <column name="ESTATUS" length="20" not-null="true" />
         </property>
@@ -64,11 +54,19 @@
             </key>
             <one-to-many class="com.valco.pojo.Telefonos" />
         </set>
-        <set name="productosHasProveedoreses" table="PRODUCTOS_has_PROVEEDORES" inverse="true" lazy="true" fetch="select">
+        <set name="productosHasProveedoreses" table="PRODUCTOS_has_PROVEEDORES" 
+             inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="PROVEEDORES_CODIGO" not-null="true" />
             </key>
             <one-to-many class="com.valco.pojo.ProductosHasProveedores" />
+        </set>
+        <set name="proveedoresCodigos" table="PROVEEDORES_CODIGOS" 
+             inverse="true" lazy="true" fetch="select" cascade="all">
+            <key>
+                <column name="ID_PROVEEDOR" not-null="true"/>
+            </key>
+            <one-to-many class="com.valco.pojo.ProveedoresCodigo"/>
         </set>
     </class>
 </hibernate-mapping>

@@ -47,6 +47,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import utilities.RequestFocusListener;
 
 /**
  * <p>
@@ -136,6 +137,7 @@ public class DialogCallbackHandler implements CallbackHandler {
                 JLabel prompt = new JLabel(nc.getPrompt());
 
                 final JTextField name = new JTextField(JTextFieldLen);
+                name.addAncestorListener(new RequestFocusListener());
                 String defaultName = nc.getDefaultName();
                 if (defaultName != null) {
                     name.setText(defaultName);

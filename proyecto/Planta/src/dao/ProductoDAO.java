@@ -351,7 +351,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
                 List<ProductosHasProveedoresView> productosHasProveedores = x.list();
                 ProductosHasProveedores productoProveedor = ProductosUtility.getProductosHasProveedoresByBarCode(productosHasProveedores, codigo);
                 ProductosInventario productoBuild = ProductosUtility.buildProductoFromBarCode(productoProveedor, codigo);
-                if (productoBuild != null){
+                if (productoBuild != null) {
                     return productoBuild;
                 }
                 throw new Exception("No se encontró el producto buscado.");
@@ -395,7 +395,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
                 List<ProductosHasProveedoresView> productosHasProveedores = x.list();
                 ProductosHasProveedores productoProveedor = ProductosUtility.getProductosHasProveedoresByBarCode(productosHasProveedores, codigo);
                 ProductosInventario productoBuild = ProductosUtility.buildProductoFromBarCode(productoProveedor, codigo);
-                if (productoBuild != null){
+                if (productoBuild != null) {
                     return productoBuild;
                 }
                 throw new Exception("No se encontró el producto buscado.");
@@ -438,7 +438,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
                 List<ProductosHasProveedoresView> productosHasProveedores = x.list();
                 ProductosHasProveedores productoProveedor = ProductosUtility.getProductosHasProveedoresByBarCode(productosHasProveedores, codigo);
                 ProductosInventario productoBuild = ProductosUtility.buildProductoFromBarCode(productoProveedor, codigo);
-                if (productoBuild != null){
+                if (productoBuild != null) {
                     return productoBuild;
                 }
                 throw new Exception("No se encontró el producto buscado.");
@@ -538,7 +538,9 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
                     .add(Restrictions.eq("proveedores", proveedor))
                     .add(Restrictions.eq("codigoProveedor", codigo));
             producto = (ProductosHasProveedores) q.uniqueResult();
-            Hibernate.initialize(producto.getProductos());
+            if (producto != null) {
+                Hibernate.initialize(producto.getProductos());
+            }
             tx.commit();
             return producto;
 
@@ -1046,7 +1048,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
                 List<ProductosHasProveedoresView> productosHasProveedores = x.list();
                 ProductosHasProveedores productoProveedor = ProductosUtility.getProductosHasProveedoresByBarCode(productosHasProveedores, barCode);
                 ProductosInventario productoBuild = ProductosUtility.buildProductoFromBarCode(productoProveedor, barCode);
-                if (productoBuild != null){
+                if (productoBuild != null) {
                     return productoBuild;
                 }
                 throw new Exception("No se encontró el producto buscado.");
@@ -1099,7 +1101,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
             }
         }
     }
-    
+
     public List<ProductosHasProveedoresView> getProductosHasProveedoresView() throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
@@ -1109,7 +1111,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
             Criteria q = session.createCriteria(ProductosHasProveedoresView.class);
 
             productos = (List<ProductosHasProveedoresView>) q.list();
-            
+
             tx.commit();
             return productos;
 

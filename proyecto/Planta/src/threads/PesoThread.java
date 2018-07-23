@@ -21,6 +21,7 @@ import static java.lang.Thread.sleep;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -76,6 +77,10 @@ public class PesoThread implements Runnable {
             portIdentifier = CommPortIdentifier.getPortIdentifier(puerto);
         } catch (NoSuchPortException ex) {
             throw new Exception("No se encontro el puerto especificado en la configuracion");
+        } catch (UnsatisfiedLinkError  ex) {
+            throw new Exception("No se puede leer el peso de la bascula");
+        } catch (Error ex){
+            throw new Exception("No se puede leer el peso de la bascula");
         }
         if (portIdentifier.isCurrentlyOwned()) {
             throw new Exception("El puerto de la bascula ya se encuentra en uso");

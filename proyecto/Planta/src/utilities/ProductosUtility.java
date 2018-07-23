@@ -44,6 +44,10 @@ public class ProductosUtility {
                 String codigoProducto = barCode.substring(productoProveedor.getPosicionCodigoInicial(), productoProveedor.getPosicionCodigoFinal());
                 System.out.println(codigoProducto + " " + productoProveedor.getCodigoProveedor());
                 if (codigoProducto.equals(productoProveedor.getCodigoProveedor())) {
+                    productoProveedor.getProductoProveedor().getProveedores().setPosicionCodigoInicial(productoProveedor.getPosicionCodigoInicial());
+                    productoProveedor.getProductoProveedor().getProveedores().setPosicionCodigoFinal(productoProveedor.getPosicionCodigoFinal());
+                    productoProveedor.getProductoProveedor().getProveedores().setPosicionPesoInicial(productoProveedor.getPosicionPesoInicial());
+                    productoProveedor.getProductoProveedor().getProveedores().setPosicionPesoFinal(productoProveedor.getPosicionPesoFinal());
                     return productoProveedor.getProductoProveedor();
 
                 }

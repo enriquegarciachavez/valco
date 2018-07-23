@@ -53,4 +53,5 @@
   <table-filter match-name="CODIGOS_POSTALES_VIEW"/>
   <table-filter match-name="USO_CFDI"/>
   <table-filter match-name="FORMAS_PAGO"/>
+  <table-filter match-name="PROVEEDORES_CODIGOS"/>
 </hibernate-reverse-engineering>

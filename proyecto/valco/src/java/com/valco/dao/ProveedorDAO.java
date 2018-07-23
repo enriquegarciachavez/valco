@@ -9,6 +9,7 @@ import com.valco.HibernateUtil;
 import com.valco.pojo.Clientes;
 import com.valco.pojo.OrdenesCompra;
 import com.valco.pojo.Proveedores;
+import com.valco.pojo.ProveedoresCodigo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +38,11 @@ public class ProveedorDAO implements Serializable{
                 try {
                     tx.rollback();
                 } catch (HibernateException he) {
+                    he.printStackTrace();
                     throw new Exception("Ocurrió un error al registrar el proveedor.");
                 }
             }
+            e.printStackTrace();
             throw new Exception("Ocurrió un error al registrar el proveedor.");
         } finally {
             try {
@@ -47,26 +50,33 @@ public class ProveedorDAO implements Serializable{
                     session.close();
                 }
             } catch (HibernateException he) {
+                he.printStackTrace();
                 throw new Exception("Ocurrió un error al registrar el proveedor.");
             }
         }
     }
     
-    public void actualizarProveedor (Proveedores proveedor) throws Exception{
+    public void actualizarProveedor (Proveedores proveedor,List<ProveedoresCodigo> codigos) throws Exception{
      Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
             session.update(proveedor);
+            for(ProveedoresCodigo codigo: codigos){
+                session.delete(codigo);
+            }
             tx.commit();
         } catch (Exception e) {
+            e.printStackTrace();
             if (tx != null) {
                 try {
                     tx.rollback();
                 } catch (HibernateException he) {
+                    //he.printStackTrace();
                     throw new Exception("Ocurrió un error al registrar el proveedor.");
                 }
             }
+            
             throw new Exception("Ocurrió un error al registrar el proveedor.");
         } finally {
             try {
@@ -74,6 +84,7 @@ public class ProveedorDAO implements Serializable{
                     session.close();
                 }
             } catch (HibernateException he) {
+                he.printStackTrace();
                 throw new Exception("Ocurrió un error al registrar el proveedor.");
             }
         }
@@ -158,7 +169,7 @@ public class ProveedorDAO implements Serializable{
     }
     
     public Proveedores getProveedoresXRazonSocial(String razonSocial) throws Exception {
-          Session session = HibernateUtil.getSessionFactory().openSession();
+          Session session = HibernateUtil.getSessionFactory().getCurrentSession();
           Transaction tx = null;
           Proveedores proveedor = new Proveedores();
           try {

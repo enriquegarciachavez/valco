@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:body>
+        <p:scrollPanel style="width:700px;height:500px" id="panelCodigos">
+            <p:menubar>
+
+                <p:menuitem 
+                    value="Agregar"
+                    id="guardarCodigo"
+                    icon="ui-icon-plusthick"                    
+                    update="panelCodigos"
+                    process="panelCodigos"
+                    action="#{proveedoresCodigosBean.insertarCodigo()}"/>
+
+                <p:menuitem 
+                    value="Eliminar"
+                    id="btnBorrar"
+                    icon="ui-icon-circle-close"                                             
+                    update="panelCodigos"
+                    process="panelCodigos"
+                    action="#{proveedoresCodigosBean.eliminarCodigo()}"
+
+                    /> 
+            </p:menubar>
+
+            <h:panelGrid columns="2" >
+
+                <h:outputText value="Posición código inicial*:" />
+                <p:inputText value="#{proveedoresCodigosBean.codigoNuevo.posicionCodigoInicial}" />
+
+                <h:outputText value="Posición código final*:" />
+                <p:inputText value="#{proveedoresCodigosBean.codigoNuevo.posicionCodigoFinal}" />
+
+                <h:outputText value="Posición peso inicial*:" />
+                <p:inputText value="#{proveedoresCodigosBean.codigoNuevo.posicionPesoInicial}"/>
+                
+                <h:outputText value="Posición peso final*:" />
+                <p:inputText value="#{proveedoresCodigosBean.codigoNuevo.posicionPesoFinal}"/>
+                
+                <h:outputText value="Longitud minima*:" />
+                <p:inputText value="#{proveedoresCodigosBean.codigoNuevo.longMinima}"/>
+                
+                <h:outputText value="Longitud maxima*:" />
+                <p:inputText value="#{proveedoresCodigosBean.codigoNuevo.longMaxima}"/>
+                
+                <h:outputText value="Decimales*:" />
+                <p:inputText value="#{proveedoresCodigosBean.codigoNuevo.decimales}"/>
+
+            </h:panelGrid>
+
+            <p:dataTable id="tablaCodigos" 
+                         var="codigo" value="#{proveedoresCodigosBean.codigos}" 
+                         selection="#{proveedoresCodigosBean.codigoSeleccionado}" 
+                         selectionMode="single"  
+                         style="width:500px;" 
+                         emptyMessage="no hay cuentas bancarias"
+                         rowKey="#{codigo.hashCode}"
+                         >
+                <p:column headerText="Pos peso ini" >
+                    <h:outputText value="#{codigo.posicionPesoInicial}" />
+                </p:column>
+
+                <p:column headerText="Pos peso fin" >
+                    <h:outputText value="#{codigo.posicionPesoFinal}" />
+                </p:column>
+
+                <p:column headerText="Pos codigo ini" >
+                    <h:outputText value="#{codigo.posicionCodigoInicial}" />
+                </p:column>
+
+                <p:column headerText="Pos codigo fin" >
+                    <h:outputText value="#{codigo.posicionCodigoFinal}" />
+                </p:column>
+
+                <p:column headerText="Long min" >
+                    <h:outputText value="#{codigo.longMinima}" />
+                </p:column>
+                
+                <p:column headerText="Long max" >
+                    <h:outputText value="#{codigo.longMaxima}" />
+                </p:column>
+                
+                <p:column headerText="Decimales" >
+                    <h:outputText value="#{codigo.decimales}" />
+                </p:column>
+            </p:dataTable>
+        </p:scrollPanel>
+
+    </h:body>
+</html>
+

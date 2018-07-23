@@ -33,6 +33,7 @@ import mapping.Procesos;
 import mapping.ProductosHasProveedores;
 import mapping.ProductosInventario;
 import mapping.Proveedores;
+import mapping.ProveedoresCodigo;
 import table.custom.NoEditableTableModel;
 import utilities.UsuarioFirmado;
 
@@ -65,7 +66,7 @@ public class ReciboProductoBC extends BarCodableImpl {
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
 
-                if(e.getKeyCode() == KeyEvent.VK_F5){
+                if (e.getKeyCode() == KeyEvent.VK_F5) {
                     cajasDialog.show();
                 }
                 for (Component exception : exceptions) {
@@ -80,21 +81,21 @@ public class ReciboProductoBC extends BarCodableImpl {
         });
         getManager().addKeyEventDispatcher(getDispacher());
     }
-    
-    public void multiplicarUltimaCaja(){
-        if(ultimoProductoInventario == null){
+
+    public void multiplicarUltimaCaja() {
+        if (ultimoProductoInventario == null) {
             JOptionPane.showMessageDialog(null, "No ha ingresado ningun producto");
         }
         String texto = numeroCajasTxt.getText();
         int cajas = 0;
-        try{
+        try {
             cajas = Integer.parseInt(texto);
-        }catch (Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Ingrese un número entero.");
             return;
         }
-        for(int x = 1; x < cajas; x++){
-            
+        for (int x = 1; x < cajas; x++) {
+
             ProductosInventario productoNuevo = new ProductosInventario();
             productoNuevo.setPeso(ultimoProductoInventario.getPeso());
             productoNuevo.setCodigoBarras(ultimoProductoInventario.getCodigoBarras());
@@ -103,13 +104,13 @@ public class ReciboProductoBC extends BarCodableImpl {
             productoNuevo.setUbicaciones(ultimoProductoInventario.getUbicaciones());
             productoNuevo.setEstatus(ultimoProductoInventario.getEstatus());
             nuevosProductos.add(productoNuevo);
-            
+
             Object[] producto = new Object[5];
             producto[0] = ultimoProducto[0];
             producto[1] = ultimoProducto[1];
             producto[2] = ultimoProducto[2];
             producto[3] = ultimoProducto[3];
-            producto[4] = ultimoProducto[4];  
+            producto[4] = ultimoProducto[4];
             model.addRow(producto);
         }
     }
@@ -412,11 +413,11 @@ public class ReciboProductoBC extends BarCodableImpl {
     private void eliminarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarBtnActionPerformed
         String barCode = (String) model.getValueAt(tablaCanales.getSelectedRow(), 4);
         model.removeRow(tablaCanales.getSelectedRow());
-        for(ProductosInventario producto : nuevosProductos){
-            if(producto.getCodigoBarras().equals(barCode)){
-                try{
-                nuevosProductos.remove(producto);
-                }catch(Exception e){
+        for (ProductosInventario producto : nuevosProductos) {
+            if (producto.getCodigoBarras().equals(barCode)) {
+                try {
+                    nuevosProductos.remove(producto);
+                } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, e.getMessage());
                 }
                 return;
@@ -425,9 +426,9 @@ public class ReciboProductoBC extends BarCodableImpl {
     }//GEN-LAST:event_eliminarBtnActionPerformed
 
     private void numeroCajasTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numeroCajasTxtActionPerformed
-       multiplicarUltimaCaja();
-       numeroCajasTxt.setText("");
-       cajasDialog.dispose();
+        multiplicarUltimaCaja();
+        numeroCajasTxt.setText("");
+        cajasDialog.dispose();
     }//GEN-LAST:event_numeroCajasTxtActionPerformed
 
     private Object[] getProveedoresArray() {
@@ -443,31 +444,42 @@ public class ReciboProductoBC extends BarCodableImpl {
 
     public void agregarProducto() throws Exception {
         int barCodeSize = 0;
-        
-        if(codigoBarrasTxt.getText().length() < getProveedorSeleccionado().getPosicionCodigoFinal()){
+        String peso = "";
+
+        if (codigoBarrasTxt.getText().length() < getProveedorSeleccionado().getPosicionCodigoFinal()) {
             return;
         }
 
         ProductosHasProveedores productoHasProveedores = null;
-        barCodeSize= codigoBarrasTxt.getText().length();
-        if(barCodeSize< getProveedorSeleccionado().getPosicionCodigoInicial() || 
-                barCodeSize< getProveedorSeleccionado().getPosicionCodigoFinal() ||
-                barCodeSize < getProveedorSeleccionado().getPosicionPesoInicial() ||
-                barCodeSize< getProveedorSeleccionado().getPosicionPesoFinal()){
-            return;
-        }
-
-        String codigoProducto
-                = codigoBarrasTxt.getText().substring(getProveedorSeleccionado().getPosicionCodigoInicial(),
-                        getProveedorSeleccionado().getPosicionCodigoFinal());
-        String peso
-                = codigoBarrasTxt.getText().substring(getProveedorSeleccionado().getPosicionPesoInicial(),
-                        getProveedorSeleccionado().getPosicionPesoFinal());
-        peso= new StringBuilder(peso).insert(peso.length()-2, ".").toString();
         try {
-            productoHasProveedores
-                    = productoDAO.getProductoXProveYCodigo(getProveedorSeleccionado(), codigoProducto);
+            for (ProveedoresCodigo codigo : getProveedorSeleccionado().getProveedoresCodigos()) {
+                barCodeSize = codigoBarrasTxt.getText().length();
+                System.out.println(codigo.getPosicionCodigoInicial() + " " + codigo.getPosicionCodigoFinal());
+                if (barCodeSize < codigo.getPosicionCodigoInicial()
+                        || barCodeSize < codigo.getPosicionCodigoFinal()
+                        || barCodeSize < codigo.getPosicionPesoInicial()
+                        || barCodeSize < codigo.getPosicionPesoFinal()) {
+                    return;
+                }
+
+                String codigoProducto
+                        = codigoBarrasTxt.getText().substring(codigo.getPosicionCodigoInicial(),
+                                codigo.getPosicionCodigoFinal()+1);
+                peso
+                        = codigoBarrasTxt.getText().substring(codigo.getPosicionPesoInicial(),
+                                codigo.getPosicionPesoFinal()+1);
+                peso = new StringBuilder(peso).insert(peso.length() - codigo.getDecimales(), ".").toString();
+
+                System.out.println(codigoProducto+" "+peso);
+                productoHasProveedores
+                        = productoDAO.getProductoXProveYCodigo(getProveedorSeleccionado(), codigoProducto);
+                if (productoHasProveedores != null){
+                    break;
+                }
+            }
+
         } catch (Exception ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Ocurrió un error al consultar el producto.");
         }
 
@@ -493,7 +505,7 @@ public class ReciboProductoBC extends BarCodableImpl {
             canal[3] = UsuarioFirmado.getUsuarioFirmado().getUbicaciones();
             canal[4] = codigoBarrasTxt.getText();
             ultimoProducto = canal;
-            
+
             model.addRow(canal);
         }
     }
