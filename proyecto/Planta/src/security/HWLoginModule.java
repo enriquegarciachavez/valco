@@ -125,7 +125,7 @@ public class HWLoginModule implements LoginModule {
             "para recoger información de autenticación del usuario");
 
     Callback[] callbacks = new Callback[2];
-    callbacks[0] = new NameCallback("\n\nUsuario: ");
+    callbacks[0] = new NameCallback("\n\nUsuario: ","admin");
     callbacks[1] = new PasswordCallback("Password: ", false);
 
             try {

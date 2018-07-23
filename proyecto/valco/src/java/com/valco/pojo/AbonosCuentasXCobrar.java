@@ -61,7 +61,7 @@ public class AbonosCuentasXCobrar implements java.io.Serializable {
     private String impSaldoInsoluto;
     @XmlAttribute(name="NomBancoOrdExt")
     private String nombreBancoOrd;
-    @XmlAttribute
+    @XmlTransient
     private String nombreBancoBen;
     @XmlTransient
     private String idDocRelacionado;

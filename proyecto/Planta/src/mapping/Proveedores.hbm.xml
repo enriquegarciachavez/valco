@@ -49,7 +49,7 @@
     <property name="estatus" type="string">
       <column length="20" name="ESTATUS" not-null="true"/>
     </property>
-    <set fetch="select" inverse="true" lazy="true" name="productosHasProveedoreses" table="PRODUCTOS_has_PROVEEDORES">
+    <set fetch="select" inverse="true" lazy="false" name="productosHasProveedoreses" table="PRODUCTOS_has_PROVEEDORES">
       <key>
         <column name="PROVEEDORES_CODIGO" not-null="true"/>
       </key>

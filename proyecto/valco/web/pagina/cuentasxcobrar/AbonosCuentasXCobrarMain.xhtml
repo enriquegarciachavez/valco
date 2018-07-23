@@ -351,6 +351,12 @@
                                                  id="total" 
                                                  value="#{abonosCuentasXCobrarMainBean.notaSeleccionado.cuentaXCobrar.importe}"/>
                                 </p:column>
+                                <p:column style="text-align: right">
+                                    <h:outputLabel for="numParcialidad" value="Num. Parcialidad: " />                                    
+                                </p:column>
+                                <p:column >
+                                    <p:inputText disabled="true" id="numParcialidad" value="#{abonosCuentasXCobrarMainBean.notaSeleccionado.numParcialidad + 1}"/>
+                                </p:column>
                             </p:row>
 
                             <p:row>

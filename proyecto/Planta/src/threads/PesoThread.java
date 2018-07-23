@@ -74,7 +74,7 @@ public class PesoThread implements Runnable {
 
         try {
             portIdentifier = CommPortIdentifier.getPortIdentifier(puerto);
-        } catch (NoSuchPortException ex) {
+        } catch (Throwable ex) {
             throw new Exception("No se encontro el puerto especificado en la configuracion");
         }
         if (portIdentifier.isCurrentlyOwned()) {

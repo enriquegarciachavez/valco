@@ -117,6 +117,10 @@ public class CustomDropDown extends javax.swing.JPanel {
         return combo.getSelectedItem();
     }
     
+    public Object[] getItems(){
+        return dao.getElementsArray();
+    }
+    
     public void setDao(DAO dao) {
         this.dao = dao;
     }
@@ -147,12 +151,18 @@ public class CustomDropDown extends javax.swing.JPanel {
         return child;
     }
     
-        
-     
-
- 
-
-
+    public void disable(){
+        combo.setEnabled(false);
+        label.setEnabled(false);
+        txt.setEnabled(false);
+    }
+    
+    public void enable(){
+        combo.setEnabled(true);
+        label.setEnabled(true);
+        txt.setEnabled(true);
+    }    
+    
     private void txtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtActionPerformed
