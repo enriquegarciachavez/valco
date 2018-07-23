@@ -145,7 +145,7 @@ public class CreacionFacturaBean {
         nota.setUsuarios(UsuariosUtility.getUsuarioFirmado());
         for (NotasDeVenta notaVenta : notasDeVenta.getTarget()) {
             notaVenta.setFacturas(factura);
-            //notaVenta.setEstatus("FACTURADA");
+            notaVenta.setEstatus("FACTURADA");
         }
         try {
             correoCopia = parametrosGeneralesDAO.getParametroGeneralXClave("FA001");
@@ -173,7 +173,7 @@ public class CreacionFacturaBean {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
         try {
-            FacturasUtility.guardaPdf(factura.getCodigo(), nota.getClientes().getRfc() + "-" + factura.getCodigo() + ".pdf", "C:/SAT/");
+            FacturasUtility.guardaPdf(factura.getCodigo(), nota.getClientes().getRfc() + "-" + factura.getCodigo() + ".pdf", "C:/SAT/","FacturaNuevo.jrxml");
             MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": PDF guardado correctamente.");
             String url = "/valco/ReportesPdf?reporte="
                     + "//pagina//reportes//ventasconfactura//FacturaNuevo.jrxml"
@@ -209,6 +209,7 @@ public class CreacionFacturaBean {
                 Facturas factura = new Facturas();
                 String correoCopia = "info.valco.sistemas@hotmail.com";
                 armarDocumento(factura, nota);
+                nota.setEstatus("FACTURADA");
                 try {
                     correoCopia = parametrosGeneralesDAO.getParametroGeneralXClave("FA001");
                 } catch (Exception ex) {
@@ -235,7 +236,7 @@ public class CreacionFacturaBean {
                     MsgUtility.showErrorMeage(ex.getMessage());
                 }
                 try {
-                    FacturasUtility.guardaPdf(factura.getCodigo(), factura.getNotasDeVenta().getClientes().getRfc() + "-" + factura.getCodigo() + ".pdf", "C:/SAT/");
+                    FacturasUtility.guardaPdf(factura.getCodigo(), factura.getNotasDeVenta().getClientes().getRfc() + "-" + factura.getCodigo() + ".pdf", "C:/SAT/","FacturaNuevo.jrxml");
                     MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": PDF guardado correctamente.");
                     String url = "/valco/ReportesPdf?reporte="
                             + "//pagina//reportes//ventasconfactura//FacturaNuevo.jrxml"
@@ -286,6 +287,8 @@ public class CreacionFacturaBean {
         factura.setCertificado(ParametrosGeneralesUtility.getValor("FA015"));
         factura.setFolio(1);
         factura.setNotasDeVenta(nota);
+        factura.setNoCliente(nota.getClientes().getCodigo());
+        nota.setFacturas(factura);
         factura.setTipoDocumento("I");
         factura.setConceptosFacturas(FacturasUtility.convierteProductosAConceptos(nota.getProductosInventarios().iterator()));
         armarTotalImpuestos(totalImpuestos, factura.getConceptosFacturas());

@@ -23,6 +23,7 @@ import com.valco.pojo.FormaPago;
 import com.valco.pojo.NotasDeVentaView;
 import com.valco.utility.DefaultNamespacePrefixMapper;
 import com.valco.utility.FacturasUtility;
+import com.valco.utility.Mail;
 import com.valco.utility.MsgUtility;
 import com.valco.utility.Pagos;
 import com.valco.utility.ParametrosGeneralesUtility;
@@ -47,6 +48,7 @@ import javax.faces.component.html.HtmlSelectOneMenu;
 import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
+import javax.mail.MessagingException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import org.primefaces.context.RequestContext;
@@ -141,7 +143,8 @@ public class AbonosCuentasXCobrarMainBean {
         abonoNuevo.setSerie(ParametrosGeneralesUtility.getValor("FA014"));
     }
 
-    public void insertarAbono() {
+    public void insertarAbono() throws Exception {
+        Facturas factura = new Facturas();
         try {
             if (notaSeleccionado == null) {
                 throw new Exception("Debe Seleccionar una nota para realizar el abono");
@@ -154,9 +157,10 @@ public class AbonosCuentasXCobrarMainBean {
                 FacesContext.getCurrentInstance().validationFailed();
                 return;
             }
-            if (formaPagoSeleccionado.getTipoCadenaPago()) {
+            if (tipoCadenaPago) {
                 abonoNuevo.setTipoCadPago("01");
             } else {
+                abonoNuevo.setTipoCadPago(null);
                 abonoNuevo.setCadenaPago(null);
                 abonoNuevo.setCertPago(null);
                 abonoNuevo.setSelloPago(null);
@@ -179,26 +183,56 @@ public class AbonosCuentasXCobrarMainBean {
             }
             abonoNuevo.setImpSaldoAnt(notaSeleccionado.getCuentaXCobrar().getSaldoAnterior().toString());
             abonoNuevo.setImpSaldoInsoluto(notaSeleccionado.getCuentaXCobrar().getSaldoAnterior().subtract(abonoNuevo.getImporte()).toString());
-            abonoNuevo.setNumParcialidad(String.valueOf(notaSeleccionado.getCuentaXCobrar().getAbonosCuentasXCobrars().size()));
+            abonoNuevo.setNumParcialidad(String.valueOf(notaSeleccionado.getNumParcialidad() + 1));
             abonoNuevo.setFormaPago(formaPagoSeleccionado.getCodigo());
             if (notaSeleccionado.getFacturas() != null) {
                 System.out.println(notaSeleccionado.getFacturas().getFolioFiscal());
                 abonoNuevo.setIdDocRelacionado(notaSeleccionado.getFacturas().getFolioFiscal());
             }
-            abonoscuentascobrarDAO.insertarAbono(abonoNuevo);
+
             notaSeleccionado.setImporteAbonado(notaSeleccionado.getImporteAbonado().add(abonoNuevo.getImporte()));
             notaSeleccionado.setSaldoPendiente(notaSeleccionado.getImporte().subtract(notaSeleccionado.getImporteAbonado()));
 
-            Facturas factura = new Facturas();
             armarComprobanteDeRcepcionDePago(factura);
-            FacturasUtility.facturarPago(factura, factura.getXml(),"07");
-            facturasDao.insertarFactura(factura);
+            FacturasUtility.facturarPago(factura, factura.getXml(), "07");
+            abonoscuentascobrarDAO.insertarAbono(abonoNuevo);
+            facturasDao.insertarFacturaYActualizarNota(factura);
             MsgUtility.showInfoMeage("Se realizó el abono correctamente.");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
-            //System.out.println(ex.getCause());
             ex.printStackTrace();
         }
+        String correoCopia = "info.valco.sistemas@hotmail.com";
+        try {
+            correoCopia = ParametrosGeneralesUtility.getValor("FA001");
+        } catch (Exception ex) {
+            correoCopia = "info.valco.sistemas@hotmail.com";
+        }
+        try {
+            FacturasUtility.guardaXml(factura.getReceptor().getRfc() + "-" + factura.getCodigo() + ".xml", factura.getXml(), "C:/SAT/", factura.getCodigo());
+            MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": XML guardado correctamente.");
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+        try {
+            FacturasUtility.guardaPdf(factura.getCodigo(), factura.getNotasDeVenta().getClientes().getRfc() + "-" + factura.getCodigo() + ".pdf", "C:/SAT/","RecepcionPago.jrxml");
+            MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": PDF guardado correctamente.");
+            String url = "/valco/ReportesPdf?reporte="
+                    + "//pagina//reportes//ventasconfactura//RecepcionPago.jrxml"
+                    + "&FacturaIdInt=" + factura.getCodigo().toString()
+                    + "&isCopiaBool=false";
+            RequestContext.getCurrentInstance().execute("window.open('" + url + "');");
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+        try {
+            Mail.Send(notaSeleccionado.getClientes().getCorreoElectronico(), correoCopia, "Factura de valco", "Esta es una factura de valco", "C:\\SAT\\", factura.getNotasDeVenta().getClientes().getRfc() + "-" + factura.getCodigo());
+            MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": Correo enviado correctamente.");
+        } catch (MessagingException ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+        }
+        
+           
     }
 
     public void actualizarAbono() {
@@ -277,6 +311,8 @@ public class AbonosCuentasXCobrarMainBean {
         factura.setReceptor(receptor);
         conceptos.add(concepto);
         factura.setConceptosFacturas(conceptos);
+        factura.setNotasDeVenta(notaSeleccionado.getNota());
+        factura.setNoCliente(notaSeleccionado.getClientes().getCodigo());
         FacturasUtility.getFacturaConSelloPP(factura);
     }
 
@@ -305,7 +341,7 @@ public class AbonosCuentasXCobrarMainBean {
     private void armarReceptor(Clientes receptor) {
         receptor.setRfc(notaSeleccionado.getClientes().getRfc());
         receptor.setRazonSocial(notaSeleccionado.getClientes().getRazonSocial());
-        receptor.setUsoCFDI(notaSeleccionado.getClientes().getUsoCFDI());
+        receptor.setUsoCFDI("P01");
     }
 
     private void armarConcepto(ConceptosFactura concepto) {

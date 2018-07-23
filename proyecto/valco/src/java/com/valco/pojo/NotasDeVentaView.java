@@ -197,6 +197,16 @@ public class NotasDeVentaView  implements java.io.Serializable {
         this.repartidor = repartidor;
     }
     
+    public int getNumParcialidad(){
+        int result = 0;
+        for(AbonosCuentasXCobrar abono: cuentaXCobrar.getAbonosCuentasXCobrars()){
+            if(abono.getEstatus().equals("ACTIVO")){
+                result++;
+            }
+        }
+        return result;
+    }
+    
     
     
 

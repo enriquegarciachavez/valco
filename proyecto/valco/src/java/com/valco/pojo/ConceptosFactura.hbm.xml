@@ -22,6 +22,9 @@
         <property name="unidad" type="string">
             <column length="20" name="UNIDAD" not-null="true"/>
         </property>
+        <property name="claveUnidad" type="string">
+            <column length="20" name="CLAVE_UNIDAD" not-null="true"/>
+        </property>
         <property name="precioUnitario" type="big_decimal">
             <column name="PRECIO_UNITARIO" not-null="true" precision="8"/>
         </property>

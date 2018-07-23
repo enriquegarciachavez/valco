@@ -134,7 +134,7 @@ public class RepartidoresDAO {
               tx = session.beginTransaction();
               Criteria q = session.createCriteria(Repartidores.class);
                       if(StringUtils.isNumeric(criterio)){
-                          q.add(Restrictions.eq("codigo", new Integer( criterio)));
+                          q.add(Restrictions.eq("codigo", criterio));
                       }else{
                           q.add(Restrictions.disjunction()
                                 .add(Restrictions.like("nombres", criterio + "%"))

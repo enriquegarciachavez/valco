@@ -449,33 +449,56 @@ public class FacturasUtility {
         }
     }
 
-    public static String facturarPago(Facturas factura, String xml, String tipoDocumento) throws FileNotFoundException, JAXBException {
+    public static String facturarPago(Facturas factura, String xml, String tipoDocumento) throws FileNotFoundException, JAXBException, Exception {
 
         String result = "";
+        java.lang.String sNombre = ParametrosGeneralesUtility.getValor("FA008");
+        java.lang.String sContraseña = ParametrosGeneralesUtility.getValor("FA009");
+        Boolean debug = false;
+        try {
+            debug = Boolean.valueOf(ParametrosGeneralesUtility.getValor("FA006"));
+        } catch (Exception e) {
+            debug = false;
+        }
 
         try {
-            https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX service1 = new https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX();
-            https.test_paxfacturacion_com_mx._453.WcfRecepcionASMXSoap port1 = service1.getWcfRecepcionASMXSoap();
-            // TODO process result here
-            result = port1.fnEnviarXML(xml,
-                    tipoDocumento,
-                    0,
-                    "WSDL_PAX",
-                    "wqfCr8O3xLfEhMOHw4nEjMSrxJnvv7bvvr4cVcKuKkBEM++/ke+/gCPvv4nvvrfvvaDvvb/vvqTvvoA=",
-                    factura.getVersion());
-            factura.setXml(result);
+            if (debug) {
+                https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX service1 = new https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX();
+                https.test_paxfacturacion_com_mx._453.WcfRecepcionASMXSoap port1 = service1.getWcfRecepcionASMXSoap();
+                result = port1.fnEnviarXML(xml,
+                        tipoDocumento,
+                        0,
+                        sNombre,
+                        sContraseña,
+                        factura.getVersion());
+            } else {
+
+                try {
+                    https.www_paxfacturacion_com_mx._453.WcfRecepcionASMX service1 = new https.www_paxfacturacion_com_mx._453.WcfRecepcionASMX();
+                    https.www_paxfacturacion_com_mx._453.WcfRecepcionASMXSoap port1 = service1.getWcfRecepcionASMXSoap();
+                    result = port1.fnEnviarXML(xml, 
+                            tipoDocumento, 
+                            0, 
+                            sNombre, 
+                            sContraseña, 
+                            factura.getXml());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
         try (PrintWriter out = new PrintWriter("C:\\SAT\\popo.txt")) {
-            out.println(factura.getXml());
+            out.println(result);
         }
+        validarRespuesta(result);
+        factura.setXml(result);
+
         JAXBContext jaxbContext = JAXBContext.newInstance(Facturas.class);
-
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-
         ByteArrayInputStream is = new ByteArrayInputStream(factura.getXml().getBytes());
         Facturas factura2 = (Facturas) jaxbUnmarshaller.unmarshal(is);
         factura.setFolioFiscal(factura2.getComplemento().getTimbreFiscalDigital().getUuid());
@@ -484,6 +507,34 @@ public class FacturasUtility {
         factura.setNoSerieCertSat(factura2.getComplemento().getTimbreFiscalDigital().getNoCertificadoSat());
         return result;
 
+    }
+
+    private static void validarRespuesta(String result) throws Exception {
+        if (result.startsWith("96")) {
+            throw new Exception("Usuario o contasenia incorrectos");
+        } else if (result.startsWith("301")) {
+            throw new Exception("El xml se encuentra mal formado.");
+        } else if (result.startsWith("302")) {
+            throw new Exception("El sello de la factura está mal formado.");
+        } else if (result.startsWith("303")) {
+            throw new Exception("El xml se encuentra mal formado.");
+        } else if (result.startsWith("304")) {
+            throw new Exception("El Sello no corresponde al emisor o ya caducó.");
+        } else if (result.startsWith("305")) {
+            throw new Exception("El certificado fue revocado o está caduco.");
+        } else if (result.startsWith("306")) {
+            throw new Exception("La fecha de emisión no está dentro de la vigencia del CSD del Emisor.");
+        } else if (result.startsWith("307")) {
+            throw new Exception("El CDFI tiene un timbre previo.");
+        } else if (result.startsWith("308")) {
+            throw new Exception("Certificado no expedido or el SAT.");
+        } else if (result.startsWith("401")) {
+            throw new Exception("El rango de la fecha de generación es mayor a 72 horas para la emisión del timbre.");
+        } else if (result.startsWith("402")) {
+            throw new Exception("El RFC del emisor no existe.");
+        } else if (result.startsWith("403")) {
+            throw new Exception("La fecha de emisión es anterior al primero de enero del 2011.");
+        }
     }
 
     public static String facturar(Facturas factura, Integer facturaId) throws Exception {
@@ -517,32 +568,6 @@ public class FacturasUtility {
             // TODO process result here
             result = port.fnEnviarXML(facturaXml, psTipoDocumento, pnIdEstructura, sNombre, sContraseña, sVersion);
             factura.setXml(result);
-        }
-
-        if (result.startsWith("96")) {
-            throw new Exception(sNombre + sContraseña);
-        } else if (result.startsWith("301")) {
-            throw new Exception("El xml se encuentra mal formado." + facturaXml);
-        } else if (result.startsWith("302")) {
-            throw new Exception("El sello de la factura está mal formado." + facturaXml);
-        } else if (result.startsWith("303")) {
-            throw new Exception("El xml se encuentra mal formado.");
-        } else if (result.startsWith("304")) {
-            throw new Exception("El Sello no corresponde al emisor o ya caducó.");
-        } else if (result.startsWith("305")) {
-            throw new Exception("El certificado fue revocado o está caduco.");
-        } else if (result.startsWith("306")) {
-            throw new Exception("La fecha de emisión no está dentro de la vigencia del CSD del Emisor.");
-        } else if (result.startsWith("307")) {
-            throw new Exception("El CDFI tiene un timbre previo.");
-        } else if (result.startsWith("308")) {
-            throw new Exception("Certificado no expedido or el SAT.");
-        } else if (result.startsWith("401")) {
-            throw new Exception("El rango de la fecha de generación es mayor a 72 horas para la emisión del timbre.");
-        } else if (result.startsWith("402")) {
-            throw new Exception("El RFC del emisor no existe." + facturaXml);
-        } else if (result.startsWith("403")) {
-            throw new Exception("La fecha de emisión es anterior al primero de enero del 2011.");
         }
 
         return result;
@@ -605,33 +630,33 @@ public class FacturasUtility {
             concepto.setImporteTotal(producto.getPrecio().multiply(producto.getPeso()).setScale(2, RoundingMode.HALF_EVEN));
             List<Impuestos> imp = new ArrayList<>();
             Impuesto impuestos = new Impuesto();
-            if(producto.getProductosHasProveedores().getProductos().isIva()){                
+            if (producto.getProductosHasProveedores().getProductos().isIva()) {
                 Impuestos impuesto = new Impuestos();
                 impuesto.setImpuesto("002");
                 impuesto.setBase(concepto.getImporteTotal());
                 impuesto.setTipoFactor("Tasa");
                 impuesto.setTasa(new BigDecimal(.16).setScale(6, RoundingMode.HALF_EVEN));
                 impuesto.setImporte(impuesto.getTasa().multiply(impuesto.getBase()).setScale(2, RoundingMode.HALF_EVEN));
-                System.out.println("!!!!!!!!!!!"+impuesto.getImporte());
+                System.out.println("!!!!!!!!!!!" + impuesto.getImporte());
                 imp.add(impuesto);
                 System.out.println(impuestos.getImpuestos().size());
-                
+
             }
             //if (!conceptos.contains(concepto)) {
-                impuestos.setImpuestos(imp);
-                if(imp.size()>0){
-                    concepto.setImpuesto(impuestos);
-                }
-                
-                conceptos.add(concepto);
+            impuestos.setImpuestos(imp);
+            if (imp.size() > 0) {
+                concepto.setImpuesto(impuestos);
+            }
+
+            conceptos.add(concepto);
             /*} else {
-                for (ConceptosFactura conceptoRepetio : conceptos) {
-                    if (conceptoRepetio.equals(concepto)) {
-                        conceptoRepetio.setCantidad(conceptoRepetio.getCantidad().add(concepto.getCantidad()));
-                        conceptoRepetio.setImporteTotal(conceptoRepetio.getImporteTotal().add(concepto.getImporteTotal()));
-                    }
-                }
-            }*/
+             for (ConceptosFactura conceptoRepetio : conceptos) {
+             if (conceptoRepetio.equals(concepto)) {
+             conceptoRepetio.setCantidad(conceptoRepetio.getCantidad().add(concepto.getCantidad()));
+             conceptoRepetio.setImporteTotal(conceptoRepetio.getImporteTotal().add(concepto.getImporteTotal()));
+             }
+             }
+             }*/
         }
         return conceptos;
     }
@@ -693,7 +718,7 @@ public class FacturasUtility {
 
     }
 
-    public static void guardaPdf(Integer facturaId, String name, String path) throws Exception {
+    public static void guardaPdf(Integer facturaId, String name, String path, String reportName) throws Exception {
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
         } catch (ClassNotFoundException ex) {
@@ -708,10 +733,10 @@ public class FacturasUtility {
         String dbName = ParametrosGeneralesUtility.getValor("DB003");
         String user = ParametrosGeneralesUtility.getValor("DB004");
         String pss = ParametrosGeneralesUtility.getValor("DB005");
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://"+host+":"+port+"/"+dbName,user, pss);) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + dbName, user, pss);) {
             String reportsDir = ParametrosGeneralesUtility.getValor("RE001");
             JasperReport jasperReport = null;
-            jasperReport = JasperCompileManager.compileReport(reportsDir + "ventasconfactura//FacturaNuevo.jrxml");
+            jasperReport = JasperCompileManager.compileReport(reportsDir + "ventasconfactura//" + reportName);
 
             JasperPrint jasperPrint = null;
 

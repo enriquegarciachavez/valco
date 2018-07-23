@@ -195,7 +195,7 @@ public class CancelacionFacturaBean {
                 MsgUtility.showErrorMeage(ex.getMessage());
             }
             try {
-                FacturasUtility.guardaPdf(notaDeCredito.getCodigo(), notaDeCredito.getReceptor().getRfc() + "-" + notaDeCredito.getCodigo() + ".pdf", "C:/SAT/");
+                FacturasUtility.guardaPdf(notaDeCredito.getCodigo(), notaDeCredito.getReceptor().getRfc() + "-" + notaDeCredito.getCodigo() + ".pdf", "C:/SAT/","FacturaNuevo.jrxml");
                 MsgUtility.showInfoMeage("Factura " + notaDeCredito.getCodigo() + ": PDF guardado correctamente.");
                 String url = "/valco/ReportesPdf?reporte="
                         + "//pagina//reportes//ventasconfactura//FacturaNuevo.jrxml"
