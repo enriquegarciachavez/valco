@@ -29,7 +29,7 @@ public class ProductosUtility {
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
-            return null;
+            //return null;
         }
         if (productosHasProveedores == null || barCode == null) {
             return null;

@@ -46,8 +46,8 @@ public class ProveedoresKiloDAO implements ProveedoresDAO {
             List<Proveedores> proveedores = new ArrayList<Proveedores>();
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(Proveedores.class);
-            Criteria x = q.createCriteria("productosHasProveedoreses");
-            Criteria y = x.createCriteria("productos").add(Restrictions.eq("productoPesado", true));
+            //Criteria x = q.createCriteria("productosHasProveedoreses");
+            //Criteria y = x.createCriteria("productos").add(Restrictions.eq("productoPesado", true));
 
             q.addOrder(Order.asc("razonSocial"));
             proveedores = (List<Proveedores>) q.list();

@@ -6,8 +6,12 @@
 package panels;
 
 import barcode.BarCodableImpl;
+import components.BarCodeTxt;
+import components.CustomDropDown;
 import dao.ProductoDAO;
 import dao.ProveedorDAO;
+import dao.ProveedoresDAO;
+import dao.ProveedoresKiloDAO;
 import dao.UbicacionesDAO;
 import dao.UsuariosDAO;
 import java.awt.Component;
@@ -34,6 +38,8 @@ import mapping.ProductosHasProveedores;
 import mapping.ProductosInventario;
 import mapping.Proveedores;
 import mapping.ProveedoresCodigo;
+import observables.Observable;
+import observers.Observer;
 import table.custom.NoEditableTableModel;
 import utilities.UsuarioFirmado;
 
@@ -41,11 +47,11 @@ import utilities.UsuarioFirmado;
  *
  * @author Administrador
  */
-public class ReciboProductoBC extends BarCodableImpl {
+public class ReciboProductoBC extends BarCodableImpl implements Observer {
 
     private UsuariosDAO usuariosDao = new UsuariosDAO();
     ProductoDAO productoDAO = new ProductoDAO();
-    ProveedorDAO proveedorDAO = new ProveedorDAO();
+    ProveedoresDAO proveedoresDao = new ProveedoresKiloDAO();
     UbicacionesDAO ubicacionesDAO = new UbicacionesDAO();
     DefaultTableModel model = new NoEditableTableModel();
     List<ProductosInventario> nuevosProductos = new ArrayList<ProductosInventario>();
@@ -53,33 +59,30 @@ public class ReciboProductoBC extends BarCodableImpl {
     Object[] ultimoProducto = null;
     ProductosInventario ultimoProductoInventario = null;
     JOptionPane dialog = new JOptionPane();
+    private CustomDropDown proveedoresDropDown = new CustomDropDown();
+    private BarCodeTxt barCode = new BarCodeTxt();
 
     /**
      * Creates new form ReciboProducto
      */
     public ReciboProductoBC() {
         initComponents();
+        proveedoresDropDown.setDao(proveedoresDao);
+        proveedoresDropDown.setEtiqueta("Proveedor");
+        proveedoresDropDown.init();
+        panelBusqueda.add(proveedoresDropDown);
+        proveedoresDropDown.setBounds(50, 50, 500, 65);
+        panelBusqueda.add(barCode);
+        barCode.setModoOperacion("ENTRADA");
+        barCode.setProveedoresDropDown(proveedoresDropDown);
+        barCode.setBounds(600, 50, 400, 40);
+        barCode.registerObserver(this);
         setManager(KeyboardFocusManager.getCurrentKeyboardFocusManager());
-        exceptions.add(proveedorTxt);
+        exceptions.add(proveedoresDropDown.getTxt());
         exceptions.add(numeroCajasTxt);
-        setDispacher(new BarCodeScannerKeyDispatcher(codigoBarrasTxt, getManager(), exceptions) {
-            @Override
-            public boolean dispatchKeyEvent(KeyEvent e) {
-
-                if (e.getKeyCode() == KeyEvent.VK_F5) {
-                    cajasDialog.show();
-                }
-                for (Component exception : exceptions) {
-                    if (exception.equals(e.getSource())) {
-                        getManager().redispatchEvent(exception, e);
-                        return true;
-                    }
-                }
-                getManager().redispatchEvent(codigoBarrasTxt, e);
-                return true;
-            }
-        });
+        setDispacher(new BarCodeScannerKeyDispatcher(barCode.getBarCodeTxt(), getManager(), exceptions));
         getManager().addKeyEventDispatcher(getDispacher());
+        eliminarBtn.setFocusTraversalKeysEnabled(false);
     }
 
     public void multiplicarUltimaCaja() {
@@ -128,16 +131,10 @@ public class ReciboProductoBC extends BarCodableImpl {
         numeroCajasTxt = new javax.swing.JTextField();
         recibirNumCajasBtn = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        proveedorTxt = new javax.swing.JTextField();
-        proveedorLOV = new javax.swing.JComboBox();
-        jLabel1 = new javax.swing.JLabel();
-        codigoBarrasTxt = new javax.swing.JTextField();
+        panelBusqueda = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanel3 = new javax.swing.JPanel();
-        agregarBtn = new javax.swing.JButton();
         limpiarBtn = new javax.swing.JButton();
         finalizarBtn = new javax.swing.JButton();
         eliminarBtn = new javax.swing.JButton();
@@ -189,91 +186,30 @@ public class ReciboProductoBC extends BarCodableImpl {
         jSplitPane1.setDividerLocation(300);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Proveedor y codigo de barras"));
-
-        jLabel4.setText("Proveedor:");
-
-        proveedorTxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                proveedorTxtActionPerformed(evt);
-            }
-        });
-        proveedorTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                proveedorTxtKeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                proveedorTxtKeyTyped(evt);
+        panelBusqueda.setBorder(javax.swing.BorderFactory.createTitledBorder("Proveedor y codigo de barras"));
+        panelBusqueda.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                panelBusquedaComponentResized(evt);
             }
         });
 
-        proveedorLOV.setModel(new DefaultComboBoxModel(getProveedoresArray()));
-        proveedorLOV.setSelectedItem(proveedorLOV.getSelectedItem());
-        proveedorLOV.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                proveedorLOVActionPerformed(evt);
-            }
-        });
-
-        jLabel1.setText("Código de barras:");
-
-        codigoBarrasTxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                codigoBarrasTxtActionPerformed(evt);
-            }
-        });
-        codigoBarrasTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                codigoBarrasTxtKeyPressed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(proveedorLOV, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(proveedorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(70, 70, 70)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(codigoBarrasTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(728, Short.MAX_VALUE))
+        javax.swing.GroupLayout panelBusquedaLayout = new javax.swing.GroupLayout(panelBusqueda);
+        panelBusqueda.setLayout(panelBusquedaLayout);
+        panelBusquedaLayout.setHorizontalGroup(
+            panelBusquedaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1350, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(proveedorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
-                    .addComponent(codigoBarrasTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(proveedorLOV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(196, Short.MAX_VALUE))
+        panelBusquedaLayout.setVerticalGroup(
+            panelBusquedaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 276, Short.MAX_VALUE)
         );
 
-        jSplitPane1.setTopComponent(jPanel1);
+        jSplitPane1.setTopComponent(panelBusqueda);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Productos a ingresar"));
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
 
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-
-        agregarBtn.setText("Agregar");
-        agregarBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                agregarBtnActionPerformed(evt);
-            }
-        });
-        jPanel3.add(agregarBtn);
 
         limpiarBtn.setText("Limpiar");
         limpiarBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -295,6 +231,11 @@ public class ReciboProductoBC extends BarCodableImpl {
         eliminarBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 eliminarBtnActionPerformed(evt);
+            }
+        });
+        eliminarBtn.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                eliminarBtnKeyPressed(evt);
             }
         });
         jPanel3.add(eliminarBtn);
@@ -324,15 +265,6 @@ public class ReciboProductoBC extends BarCodableImpl {
         add(jSplitPane1);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void agregarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarBtnActionPerformed
-        try {
-            agregarProducto();
-            codigoBarrasTxt.setText("");
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
-        }
-    }//GEN-LAST:event_agregarBtnActionPerformed
-
     private void limpiarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarBtnActionPerformed
         model.setRowCount(0);
     }//GEN-LAST:event_limpiarBtnActionPerformed
@@ -341,7 +273,7 @@ public class ReciboProductoBC extends BarCodableImpl {
         OrdenesCompra orden = new OrdenesCompra();
         orden.setEstatus("ACTIVO");
         orden.setFecha(new Date());
-        orden.setProveedores((Proveedores) proveedorLOV.getSelectedItem());
+        orden.setProveedores((Proveedores) proveedoresDropDown.getSelectedItem());
         BigDecimal total = BigDecimal.ZERO;
         for (ProductosInventario producto : nuevosProductos) {
             total = total.add(producto.getCosto().multiply(producto.getPeso()));
@@ -361,50 +293,6 @@ public class ReciboProductoBC extends BarCodableImpl {
             JOptionPane.showMessageDialog(null, "Ocurrió un error al recibir los canales");
         }
     }//GEN-LAST:event_finalizarBtnActionPerformed
-
-    private void proveedorTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proveedorTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_proveedorTxtActionPerformed
-
-    private void proveedorTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_proveedorTxtKeyReleased
-        try {
-
-            if (!proveedorTxt.getText().equals("")) {
-                Proveedores proveedor = proveedorDAO.getProveedoresXCodigo(proveedorTxt.getText());
-                if (proveedor != null) {
-                    proveedorLOV.setSelectedItem(proveedor);
-                    proveedorLOV.repaint();
-                }
-            }
-
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Ocurriò un error al consultar el proveedor", "Error", ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_proveedorTxtKeyReleased
-
-    private void proveedorTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_proveedorTxtKeyTyped
-
-    }//GEN-LAST:event_proveedorTxtKeyTyped
-
-    private void proveedorLOVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proveedorLOVActionPerformed
-
-
-    }//GEN-LAST:event_proveedorLOVActionPerformed
-
-    private void codigoBarrasTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_codigoBarrasTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_codigoBarrasTxtActionPerformed
-
-    private void codigoBarrasTxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_codigoBarrasTxtKeyPressed
-        if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
-            try {
-                agregarProducto();
-                codigoBarrasTxt.setText("");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, ex.getMessage());
-            }
-        }
-    }//GEN-LAST:event_codigoBarrasTxtKeyPressed
 
     private void recibirNumCajasBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recibirNumCajasBtnActionPerformed
         multiplicarUltimaCaja();
@@ -431,10 +319,25 @@ public class ReciboProductoBC extends BarCodableImpl {
         cajasDialog.dispose();
     }//GEN-LAST:event_numeroCajasTxtActionPerformed
 
+    private void panelBusquedaComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_panelBusquedaComponentResized
+        proveedoresDropDown.getTxt().requestFocusInWindow();
+    }//GEN-LAST:event_panelBusquedaComponentResized
+
+    private void eliminarBtnKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_eliminarBtnKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_TAB) {
+            System.out.println(evt.getModifiers());
+            if(evt.getModifiers() > 0) 
+                eliminarBtn.transferFocusBackward();
+            else 
+                proveedoresDropDown.getTxt().requestFocusInWindow();
+            evt.consume();
+        }
+    }//GEN-LAST:event_eliminarBtnKeyPressed
+
     private Object[] getProveedoresArray() {
         Object[] proveedores = null;
         try {
-            proveedores = proveedorDAO.getProveedores().toArray();
+            proveedores = proveedoresDao.getElementsArray();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Ocurriò un error al consultar los proveedores", "Error", ERROR_MESSAGE);
             return null;
@@ -442,56 +345,17 @@ public class ReciboProductoBC extends BarCodableImpl {
         return proveedores;
     }
 
-    public void agregarProducto() throws Exception {
-        int barCodeSize = 0;
-        String peso = "";
-
-        if (codigoBarrasTxt.getText().length() < getProveedorSeleccionado().getPosicionCodigoFinal()) {
-            return;
-        }
-
-        ProductosHasProveedores productoHasProveedores = null;
-        try {
-            for (ProveedoresCodigo codigo : getProveedorSeleccionado().getProveedoresCodigos()) {
-                barCodeSize = codigoBarrasTxt.getText().length();
-                System.out.println(codigo.getPosicionCodigoInicial() + " " + codigo.getPosicionCodigoFinal());
-                if (barCodeSize < codigo.getPosicionCodigoInicial()
-                        || barCodeSize < codigo.getPosicionCodigoFinal()
-                        || barCodeSize < codigo.getPosicionPesoInicial()
-                        || barCodeSize < codigo.getPosicionPesoFinal()) {
-                    return;
-                }
-
-                String codigoProducto
-                        = codigoBarrasTxt.getText().substring(codigo.getPosicionCodigoInicial(),
-                                codigo.getPosicionCodigoFinal()+1);
-                peso
-                        = codigoBarrasTxt.getText().substring(codigo.getPosicionPesoInicial(),
-                                codigo.getPosicionPesoFinal()+1);
-                peso = new StringBuilder(peso).insert(peso.length() - codigo.getDecimales(), ".").toString();
-
-                System.out.println(codigoProducto+" "+peso);
-                productoHasProveedores
-                        = productoDAO.getProductoXProveYCodigo(getProveedorSeleccionado(), codigoProducto);
-                if (productoHasProveedores != null){
-                    break;
-                }
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Ocurrió un error al consultar el producto.");
-        }
-
-        if (productoHasProveedores == null) {
+    @Override
+    public void update() {
+        if (barCode.getProducto() == null) {
             JOptionPane.showMessageDialog(null, "No se encontro un producto con el código especificado");
         } else {
             ProductosInventario productoNuevo = new ProductosInventario();
-            productoNuevo.setPeso(new BigDecimal(peso));
-            productoNuevo.setCodigoBarras(codigoBarrasTxt.getText());
-            productoNuevo.setProductosHasProveedores(productoHasProveedores);
-            productoNuevo.setCosto(productoHasProveedores.getPrecioSugerido());
-            productoNuevo.setPrecio(productoHasProveedores.getProductos().getPrecioSugerido());
+            productoNuevo.setPeso(new BigDecimal(barCode.getPeso()));
+            productoNuevo.setCodigoBarras(barCode.getBarCode());
+            productoNuevo.setProductosHasProveedores(barCode.getProducto());
+            productoNuevo.setCosto(barCode.getProducto().getPrecioSugerido());
+            productoNuevo.setPrecio(barCode.getProducto().getProductos().getPrecioSugerido());
             productoNuevo.setUbicaciones(UsuarioFirmado.getUsuarioFirmado().getUbicaciones());
             productoNuevo.setEstatus("ACTIVO");
             ultimoProductoInventario = productoNuevo;
@@ -499,11 +363,11 @@ public class ReciboProductoBC extends BarCodableImpl {
 
             Object[] canal = new Object[5];
 
-            canal[0] = peso;
-            canal[1] = proveedorLOV.getSelectedItem().toString();
-            canal[2] = productoHasProveedores.getProductos().getDescripcion();
+            canal[0] = barCode.getPeso();
+            canal[1] = proveedoresDropDown.getSelectedItem().toString();
+            canal[2] = barCode.getProducto().getProductos().getDescripcion();
             canal[3] = UsuarioFirmado.getUsuarioFirmado().getUbicaciones();
-            canal[4] = codigoBarrasTxt.getText();
+            canal[4] = barCode.getBarCode();
             ultimoProducto = canal;
 
             model.addRow(canal);
@@ -511,18 +375,13 @@ public class ReciboProductoBC extends BarCodableImpl {
     }
 
     private Proveedores getProveedorSeleccionado() {
-        return (Proveedores) proveedorLOV.getSelectedItem();
+        return (Proveedores) proveedoresDropDown.getSelectedItem();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton agregarBtn;
     private javax.swing.JDialog cajasDialog;
-    private javax.swing.JTextField codigoBarrasTxt;
     private javax.swing.JButton eliminarBtn;
     private javax.swing.JButton finalizarBtn;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
@@ -531,9 +390,9 @@ public class ReciboProductoBC extends BarCodableImpl {
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JButton limpiarBtn;
     private javax.swing.JTextField numeroCajasTxt;
-    private javax.swing.JComboBox proveedorLOV;
-    private javax.swing.JTextField proveedorTxt;
+    private javax.swing.JPanel panelBusqueda;
     private javax.swing.JButton recibirNumCajasBtn;
     private javax.swing.JTable tablaCanales;
     // End of variables declaration//GEN-END:variables
+
 }

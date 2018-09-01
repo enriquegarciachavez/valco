@@ -18,10 +18,10 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="barrasLbl" min="-2" pref="95" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="barrasLbl" min="-2" pref="109" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="barCodeTxt" min="-2" pref="324" max="-2" attributes="0"/>
-              <EmptySpace pref="42" max="32767" attributes="0"/>
+              <EmptySpace pref="34" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -36,6 +36,10 @@
   </Layout>
   <SubComponents>
     <Component class="javax.swing.JTextField" name="barCodeTxt">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="barCodeTxtActionPerformed"/>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="barCodeTxtKeyReleased"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="barrasLbl">
       <Properties>

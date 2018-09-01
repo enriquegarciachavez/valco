@@ -11,11 +11,15 @@
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="jMenu1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="File"/>
+            <Property name="mnemonic" type="int" value="79"/>
+            <Property name="text" type="java.lang.String" value="Opciones"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="reciboCanales">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/cow.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Recibo de canales"/>
               </Properties>
               <Events>
@@ -24,6 +28,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/conveyor.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Apertura de proceso"/>
               </Properties>
               <Events>
@@ -32,6 +39,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem4">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/scale.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Pesar y etiquetar"/>
               </Properties>
               <Events>
@@ -40,6 +50,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/warehouse.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Inventarios"/>
               </Properties>
               <Events>
@@ -48,6 +61,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem5">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/box.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Recibo de producto"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
@@ -57,6 +73,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem6">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/transfer.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Transferencia de Producto"/>
               </Properties>
               <Events>
@@ -65,6 +84,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem7">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/recibo.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Recibo de transferencias"/>
               </Properties>
               <Events>
@@ -73,6 +95,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem8">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/delivery-man.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Asignar producto a repartidor"/>
               </Properties>
               <Events>
@@ -81,6 +106,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem9">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/noVendido.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Producto no vendido"/>
               </Properties>
               <Events>
@@ -89,6 +117,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem10">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/money.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Venta"/>
               </Properties>
               <Events>
@@ -97,6 +128,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem11">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/pos.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Punto de Venta"/>
               </Properties>
               <Events>
@@ -105,6 +139,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem12">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/reetiqetar.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Reetiquetar"/>
               </Properties>
               <Events>

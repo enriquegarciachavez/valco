@@ -101,8 +101,10 @@ public class MainFrame extends javax.swing.JFrame {
         mainPanel.setLayout(new javax.swing.BoxLayout(mainPanel, javax.swing.BoxLayout.LINE_AXIS));
         getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
 
-        jMenu1.setText("File");
+        jMenu1.setMnemonic('O');
+        jMenu1.setText("Opciones");
 
+        reciboCanales.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cow.png"))); // NOI18N
         reciboCanales.setText("Recibo de canales");
         reciboCanales.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -111,6 +113,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jMenu1.add(reciboCanales);
 
+        jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/conveyor.png"))); // NOI18N
         jMenuItem2.setText("Apertura de proceso");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -119,6 +122,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem2);
 
+        jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/scale.png"))); // NOI18N
         jMenuItem4.setText("Pesar y etiquetar");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -127,6 +131,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem4);
 
+        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/warehouse.png"))); // NOI18N
         jMenuItem1.setText("Inventarios");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,6 +140,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem1);
 
+        jMenuItem5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/box.png"))); // NOI18N
         jMenuItem5.setText("Recibo de producto");
         jMenuItem5.setToolTipText("");
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
@@ -144,6 +150,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem5);
 
+        jMenuItem6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/transfer.png"))); // NOI18N
         jMenuItem6.setText("Transferencia de Producto");
         jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -152,6 +159,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem6);
 
+        jMenuItem7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/recibo.png"))); // NOI18N
         jMenuItem7.setText("Recibo de transferencias");
         jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -160,6 +168,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem7);
 
+        jMenuItem8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/delivery-man.png"))); // NOI18N
         jMenuItem8.setText("Asignar producto a repartidor");
         jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -168,6 +177,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem8);
 
+        jMenuItem9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/noVendido.png"))); // NOI18N
         jMenuItem9.setText("Producto no vendido");
         jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -176,6 +186,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem9);
 
+        jMenuItem10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/money.png"))); // NOI18N
         jMenuItem10.setText("Venta");
         jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -184,6 +195,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem10);
 
+        jMenuItem11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/pos.png"))); // NOI18N
         jMenuItem11.setText("Punto de Venta");
         jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -192,6 +204,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem11);
 
+        jMenuItem12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/reetiqetar.png"))); // NOI18N
         jMenuItem12.setText("Reetiquetar");
         jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -270,7 +283,6 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_reciboCanalesActionPerformed
 
     private void formKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyTyped
-        JOptionPane.showMessageDialog(null, "hola");
     }//GEN-LAST:event_formKeyTyped
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed

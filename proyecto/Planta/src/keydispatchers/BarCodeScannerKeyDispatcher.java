@@ -12,6 +12,7 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 
 /**
  *
@@ -31,6 +32,15 @@ public class BarCodeScannerKeyDispatcher implements KeyEventDispatcher {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
+        if ((((KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, java.awt.event.InputEvent.ALT_DOWN_MASK)) != null)  &&  e.getKeyCode() == KeyEvent.VK_F4)||
+                e.getKeyChar() == KeyEvent.VK_TAB ||
+                e.getKeyCode()== KeyEvent.VK_UP ||
+                e.getKeyCode()== KeyEvent.VK_DOWN ||
+                e.getKeyCode()== KeyEvent.VK_LEFT ||
+                e.getKeyCode()== KeyEvent.VK_RIGHT){
+            manager.dispatchKeyEvent(e);
+            return true;
+        }
         if (exceptions != null) {
 
             for (Component exception : exceptions) {

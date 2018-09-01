@@ -5,13 +5,41 @@
  */
 package components;
 
+import dao.ProductoDAO;
+import dao.ProductosDAO;
+import java.awt.event.KeyEvent;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import mapping.ProductosHasProveedores;
+import mapping.ProductosInventario;
+import mapping.Proveedores;
+import mapping.ProveedoresCodigo;
+import observables.Observable;
+import observers.Observer;
+import utilities.UsuarioFirmado;
 
 /**
  *
  * @author Administrador
  */
-public class BarCodeTxt extends javax.swing.JPanel {
+public class BarCodeTxt extends javax.swing.JPanel implements Observable {
+
+    private ProductoDAO productosDAO = new ProductoDAO();
+    private ProductosHasProveedores producto;
+    private boolean productoExistente;
+    private Integer[] codigos;
+    private ProductosInventario productoInventario;
+    private List<Observer> observers = new ArrayList<>();
+    private String peso;
+    private String barCode;
+    private String modoOperacion;
+    private CustomDropDown proveedoresDropDown;
 
     /**
      * Creates new form BarCodeTxt
@@ -32,6 +60,17 @@ public class BarCodeTxt extends javax.swing.JPanel {
         barCodeTxt = new javax.swing.JTextField();
         barrasLbl = new javax.swing.JLabel();
 
+        barCodeTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                barCodeTxtActionPerformed(evt);
+            }
+        });
+        barCodeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                barCodeTxtKeyReleased(evt);
+            }
+        });
+
         barrasLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         barrasLbl.setText("Codigo de Barras:");
 
@@ -41,10 +80,10 @@ public class BarCodeTxt extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(barrasLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(barrasLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(barCodeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -54,16 +93,187 @@ public class BarCodeTxt extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void barCodeTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barCodeTxtActionPerformed
+
+    }//GEN-LAST:event_barCodeTxtActionPerformed
+
+    private void barCodeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_barCodeTxtKeyReleased
+        if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
+            if (!productoExistente) {
+                armarProductoConCodigo();
+            } else {
+                changeScanned(barCodeTxt.getText());
+            }
+        }
+    }//GEN-LAST:event_barCodeTxtKeyReleased
+
+    private void armarProductoConCodigo() {
+        int barCodeSize = 0;
+        barCode = barCodeTxt.getText();
+        barCodeTxt.setText("");
+        for (ProveedoresCodigo codigo : ((Proveedores)proveedoresDropDown.getSelectedItem()).getProveedoresCodigos()) {
+            try {
+                barCodeSize = barCode.length();
+                System.out.println(codigo.getPosicionCodigoInicial() + " " + codigo.getPosicionCodigoFinal());
+                if (barCodeSize < codigo.getPosicionCodigoInicial()
+                        || barCodeSize < codigo.getPosicionCodigoFinal()
+                        || barCodeSize < codigo.getPosicionPesoInicial()
+                        || barCodeSize < codigo.getPosicionPesoFinal()) {
+                    return;
+                }
+
+                String codigoProducto
+                        = barCode.substring(codigo.getPosicionCodigoInicial(),
+                                codigo.getPosicionCodigoFinal() + 1);
+                peso
+                        = barCode.substring(codigo.getPosicionPesoInicial(),
+                                codigo.getPosicionPesoFinal() + 1);
+                peso = new StringBuilder(peso).insert(peso.length() - codigo.getDecimales(), ".").toString();
+
+                System.out.println(codigoProducto + " " + peso);
+                producto
+                        = productosDAO.getProductoXProveYCodigo(((Proveedores)proveedoresDropDown.getSelectedItem()), codigoProducto);
+                if (producto != null) {
+                    notifyObservers();
+                    break;
+                }
+            } catch (Exception ex) {
+                producto = null;
+            }
+        }
+    }
+
+    private void changeScanned(String barCode) {
+        barCodeTxt.setText("");
+        try {
+            if (modoOperacion.equals("ENTRADA")) {
+                productoInventario = productosDAO.getProductosXCodigoBarrasTransito(barCode, codigos);
+            } else {
+                productoInventario = productosDAO.getProductosXCodigoBarrasActivos(barCode, codigos);
+            }
+            notifyObservers();
+        } catch (Exception ex) {
+            //JOptionPane.showMessageDialog(null, ex);
+            productoInventario = null;
+            System.out.println(ex.getMessage());
+            return;
+        }
+    }
+
     public JTextField getBarCodeTxt() {
         return barCodeTxt;
+    }
+
+    public ProductoDAO getProductosDAO() {
+        return productosDAO;
+    }
+
+    public void setProductosDAO(ProductoDAO productosDAO) {
+        this.productosDAO = productosDAO;
+    }
+
+    public ProductosHasProveedores getProducto() {
+        return producto;
+    }
+
+    public void setProducto(ProductosHasProveedores producto) {
+        this.producto = producto;
+    }
+
+    public String getModoOperacion() {
+        return modoOperacion;
+    }
+
+    public void setModoOperacion(String modoOperacion) {
+        this.modoOperacion = modoOperacion;
+    }
+
+    public Integer[] getCodigos() {
+        return codigos;
+    }
+
+    public void setCodigos(Integer[] codigos) {
+        this.codigos = codigos;
+    }
+
+    public ProductosInventario getProductoInventario() {
+        return productoInventario;
+    }
+
+    public void setProductoInventario(ProductosInventario productoInventario) {
+        this.productoInventario = productoInventario;
+    }
+
+    public List<Observer> getObservers() {
+        return observers;
+    }
+
+    public void setObservers(List<Observer> observers) {
+        this.observers = observers;
+    }
+
+    public JLabel getBarrasLbl() {
+        return barrasLbl;
+    }
+
+    public void setBarrasLbl(JLabel barrasLbl) {
+        this.barrasLbl = barrasLbl;
+    }
+
+    public String getPeso() {
+        return peso;
+    }
+
+    public void setPeso(String peso) {
+        this.peso = peso;
+    }
+
+    public String getBarCode() {
+        return barCode;
+    }
+
+    public void setBarCode(String barCode) {
+        this.barCode = barCode;
+    }
+
+    public boolean isProductoExistente() {
+        return productoExistente;
+    }
+
+    public void setProductoExistente(boolean productoExistente) {
+        this.productoExistente = productoExistente;
+    }
+
+    public CustomDropDown getProveedoresDropDown() {
+        return proveedoresDropDown;
+    }
+
+    public void setProveedoresDropDown(CustomDropDown proveedoresDropDown) {
+        this.proveedoresDropDown = proveedoresDropDown;
     }
     
     
 
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField barCodeTxt;
     private javax.swing.JLabel barrasLbl;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void registerObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update();
+        }
+    }
 }

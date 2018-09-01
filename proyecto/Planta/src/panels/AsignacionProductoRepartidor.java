@@ -5,6 +5,7 @@
  */
 package panels;
 
+import components.BarCodeTxt;
 import components.CustomDropDown;
 import dao.ProductoDAO;
 import dao.ProveedoresDAO;
@@ -47,6 +48,7 @@ import mapping.ProductosHasProveedores;
 import mapping.ProductosInventario;
 import mapping.Proveedores;
 import mapping.Repartidores;
+import observers.Observer;
 import pesable.PesableBarCodeable;
 import table.custom.NoEditableTableModel;
 import threads.PesoThread;
@@ -56,7 +58,7 @@ import utilities.UsuarioFirmado;
  *
  * @author Administrador
  */
-public class AsignacionProductoRepartidor extends PesableBarCodeable {
+public class AsignacionProductoRepartidor extends PesableBarCodeable implements Observer {
 
     ProductoDAO productoDAO = new ProductoDAO();
     ProveedoresDAO proveedoresDao = new ProveedoresKiloDAO();
@@ -67,6 +69,7 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
     public List<Component> exceptions = new ArrayList<>();
     private String modoOperacion;
     private CustomDropDown proveedoresDropDown = new CustomDropDown();
+    private BarCodeTxt barCode = new BarCodeTxt();
 
     /**
      * Creates new form AsignacionProductoRepartidor
@@ -80,12 +83,11 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         panelProveedor.add(proveedoresDropDown);
         proveedoresDropDown.setBounds(10, 20, 500, 65);
         proveedoresDropDown.disable();
-        setManager(KeyboardFocusManager.getCurrentKeyboardFocusManager());
-        exceptions.add(pesoManualLbl);
-        exceptions.add(repartidorTxt);
-        exceptions.add(productoCodigoArea);
-        setDispacher(new BarCodeScannerKeyDispatcher(barCodeTxt, getManager(), exceptions));
-        getManager().addKeyEventDispatcher(getDispacher());
+        PanelCodigoBarras.add(barCode);
+        barCode.setModoOperacion(modoOperacion);
+        barCode.setProveedoresDropDown(proveedoresDropDown);
+        barCode.setBounds(10, 40, 400, 40);
+        barCode.registerObserver(this);
         try {
             setPesoThread(new PesoThread());
         } catch (Exception ex) {
@@ -96,11 +98,17 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
             pesoManualLbl.setEnabled(true);
             //return;
         }
-        if(getPesoThread() != null){
+        if (getPesoThread() != null) {
             getPesoThread().setPesoLbl(pesoBasculaLbl);
             Thread thread = new Thread(getPesoThread());
             thread.start();
         }
+        setManager(KeyboardFocusManager.getCurrentKeyboardFocusManager());
+        exceptions.add(pesoManualLbl);
+        exceptions.add(repartidorTxt);
+        exceptions.add(productoCodigoArea);
+        setDispacher(new BarCodeScannerKeyDispatcher(barCode.getBarCodeTxt(), getManager(), exceptions));
+        getManager().addKeyEventDispatcher(getDispacher());
     }
 
     public AsignacionProductoRepartidor(String modoOperacion) {
@@ -110,11 +118,13 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         repartidorTxt.setVisible(false);
         repartidoresLov.setVisible(false);
         PanelRepartidor.setVisible(false);
-        setManager(KeyboardFocusManager.getCurrentKeyboardFocusManager());
-        exceptions.add(pesoManualLbl);
-        exceptions.add(productoCodigoArea);
-        setDispacher(new BarCodeScannerKeyDispatcher(barCodeTxt, getManager(), exceptions));
-        getManager().addKeyEventDispatcher(getDispacher());
+
+        PanelCodigoBarras.add(barCode.getBarCodeTxt());
+        barCode.setModoOperacion(modoOperacion);
+        barCode.setProveedoresDropDown(proveedoresDropDown);
+        barCode.setBounds(10, 40, 400, 40);
+        barCode.registerObserver(this);
+
         try {
             setPesoThread(new PesoThread());
         } catch (Exception ex) {
@@ -128,6 +138,12 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         getPesoThread().setPesoLbl(pesoBasculaLbl);
         Thread thread = new Thread(getPesoThread());
         thread.start();
+        setManager(KeyboardFocusManager.getCurrentKeyboardFocusManager());
+        exceptions.add(pesoManualLbl);
+        exceptions.add(productoCodigoArea);
+        setDispacher(new BarCodeScannerKeyDispatcher(barCode.getBarCodeTxt(), getManager(), exceptions));
+        getManager().addKeyEventDispatcher(getDispacher());
+        repartidorTxt.requestFocusInWindow();
     }
 
     /**
@@ -163,8 +179,6 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         repartidoresLov = new javax.swing.JComboBox();
         repartidorTxt = new javax.swing.JTextField();
         PanelCodigoBarras = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        barCodeTxt = new javax.swing.JTextField();
         PanelPeso = new javax.swing.JPanel();
         pesoBasculaLbl = new javax.swing.JLabel();
         pesoManualLbl = new javax.swing.JTextField();
@@ -251,6 +265,7 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
 
         jSplitPane2.setRightComponent(jPanel4);
 
+        jScrollPane2.setFocusCycleRoot(true);
         jScrollPane2.setMinimumSize(new java.awt.Dimension(631, 655));
 
         jPanel3.setMinimumSize(new java.awt.Dimension(629, 653));
@@ -267,7 +282,17 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
                 repartidoresLovItemStateChanged(evt);
             }
         });
+        repartidoresLov.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                repartidoresLovActionPerformed(evt);
+            }
+        });
 
+        repartidorTxt.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                repartidorTxtComponentResized(evt);
+            }
+        });
         repartidorTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 repartidorTxtKeyReleased(evt);
@@ -279,11 +304,11 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         PanelRepartidorLayout.setHorizontalGroup(
             PanelRepartidorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelRepartidorLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(repartidorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(repartidoresLov, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -291,11 +316,10 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
             PanelRepartidorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelRepartidorLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(PanelRepartidorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(repartidoresLov, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(PanelRepartidorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(repartidorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(PanelRepartidorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(repartidorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(repartidoresLov, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -304,41 +328,15 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         PanelCodigoBarras.setName(""); // NOI18N
         PanelCodigoBarras.setPreferredSize(new java.awt.Dimension(584, 78));
 
-        jLabel3.setText("Codigo de Barras");
-
-        barCodeTxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                barCodeTxtActionPerformed(evt);
-            }
-        });
-        barCodeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                barCodeTxtKeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                barCodeTxtKeyTyped(evt);
-            }
-        });
-
         javax.swing.GroupLayout PanelCodigoBarrasLayout = new javax.swing.GroupLayout(PanelCodigoBarras);
         PanelCodigoBarras.setLayout(PanelCodigoBarrasLayout);
         PanelCodigoBarrasLayout.setHorizontalGroup(
             PanelCodigoBarrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelCodigoBarrasLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(barCodeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         PanelCodigoBarrasLayout.setVerticalGroup(
             PanelCodigoBarrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelCodigoBarrasLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(PanelCodigoBarrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(barCodeTxt))
-                .addContainerGap(27, Short.MAX_VALUE))
+            .addGap(0, 69, Short.MAX_VALUE)
         );
 
         PanelPeso.setBorder(javax.swing.BorderFactory.createTitledBorder("Ó Seleccione y pese un producto"));
@@ -388,6 +386,9 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         productoCodigoArea.setColumns(20);
         productoCodigoArea.setRows(5);
         productoCodigoArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                productoCodigoAreaKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 productoCodigoAreaKeyReleased(evt);
             }
@@ -491,6 +492,7 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         buttonGroup1.add(yesRadio);
         yesRadio.setSelected(true);
         yesRadio.setText("Si");
+        yesRadio.setFocusCycleRoot(true);
         yesRadio.setName("yes"); // NOI18N
         yesRadio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -609,24 +611,24 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         } else {
             peso = pesoBasculaLbl.getText();
         }
-        
-        if(noRadio.isSelected()){
+
+        if (noRadio.isSelected()) {
             ProductosInventario productoInventario = new ProductosInventario();
-        productoInventario.setProductosHasProveedores((ProductosHasProveedores) productosLov.getSelectedItem());
-        productoInventario.setUbicaciones(UsuarioFirmado.getUsuarioFirmado().getUbicaciones());
-        productoInventario.setPeso(new BigDecimal(peso));
-        productoInventario.setPrecio(BigDecimal.ZERO);
-        productoInventario.setEstatus("ACTIVO");
-        productoInventario.setCodigoBarras(getCodigoBarras(peso));
-        productoInventario.setFechaCreacion(new Date());
-        productoInventario.setReetiquetado(false);
-        try {
-            productoDAO.insertarProducto(productoInventario);
-            imprimirCodigo(productoInventario);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex, "Errot", ERROR_MESSAGE);
-        }
-        setTableModel();
+            productoInventario.setProductosHasProveedores((ProductosHasProveedores) productosLov.getSelectedItem());
+            productoInventario.setUbicaciones(UsuarioFirmado.getUsuarioFirmado().getUbicaciones());
+            productoInventario.setPeso(new BigDecimal(peso));
+            productoInventario.setPrecio(BigDecimal.ZERO);
+            productoInventario.setEstatus("ACTIVO");
+            productoInventario.setCodigoBarras(getCodigoBarras(peso));
+            productoInventario.setFechaCreacion(new Date());
+            productoInventario.setReetiquetado(false);
+            try {
+                productoDAO.insertarProducto(productoInventario);
+                imprimirCodigo(productoInventario);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex, "Errot", ERROR_MESSAGE);
+            }
+            setTableModel();
         }
 
         try {
@@ -649,7 +651,7 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         productos.add(productoNuevo);
         setTableModel();
     }
-    
+
     private String getCodigoBarras(String peso) {
         return "N"
                 + new SimpleDateFormat("yyddMM").format(new Date())
@@ -658,15 +660,11 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
                 + String.format("%09d", 999999999);
     }
 
-    private void barCodeTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barCodeTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_barCodeTxtActionPerformed
-
     private void imprimirCodigo(ProductosInventario producto) {
         // aca obtenemos la printer default  
 
         String label = "";
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\valco\\CodigoBarras.txt"))){
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\valco\\CodigoBarras.txt"))) {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 
@@ -679,23 +677,21 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
             br.close();
         } catch (IOException ex) {
             Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
         PrintService printService = PrintServiceLookup.lookupDefaultPrintService();
         label = label.replace("PRODUCTO", this.productosLov.getSelectedItem().toString());
         label = label.replace("PESO", producto.getPeso().toString());
         label = label.replace("CODIGO_BARRAS", producto.getCodigoBarras());
-        
-       /* String zplCommand = "^XA"
-                + "^FO230,50^ARN,16,9^FD " + this.productosLov.getSelectedItem() + "^FS"
-                + "^FO300,100^ARN,16,9^FD " + producto.getPeso() + " KG^BY1,3.0^FS"
-                + "^FO230,180^BCN, 80, Y, N, N^FD" + producto.getCodigoBarras() + "^FS "
-                + "^XZ";
+
+        /* String zplCommand = "^XA"
+         + "^FO230,50^ARN,16,9^FD " + this.productosLov.getSelectedItem() + "^FS"
+         + "^FO300,100^ARN,16,9^FD " + producto.getPeso() + " KG^BY1,3.0^FS"
+         + "^FO230,180^BCN, 80, Y, N, N^FD" + producto.getCodigoBarras() + "^FS "
+         + "^XZ";
         
         
                
-        */
-        
-
+         */
 // convertimos el comando a bytes  
         byte[] by = label.getBytes();
         DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
@@ -712,68 +708,11 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
         }
 
     }
-    
-    private void barCodeTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_barCodeTxtKeyTyped
-        if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
-            if(noRadio.isSelected()){
-                armarProductoConCodigo();
-            }else{
-                changeScanned(barCodeTxt.getText());
-            }
-        }
-    }//GEN-LAST:event_barCodeTxtKeyTyped
 
     private Proveedores getProveedorSeleccionado() {
         return (Proveedores) proveedoresDropDown.getSelectedItem();
     }
-    
-    private void armarProductoConCodigo(){
-       int barCodeSize = 0;
-        
-        if(barCodeTxt.getText().length() < getProveedorSeleccionado().getPosicionCodigoFinal()){
-            return;
-        }
 
-        ProductosHasProveedores productoHasProveedores = null;
-        barCodeSize= barCodeTxt.getText().length();
-        if(barCodeSize< getProveedorSeleccionado().getPosicionCodigoInicial() || 
-                barCodeSize< getProveedorSeleccionado().getPosicionCodigoFinal() ||
-                barCodeSize < getProveedorSeleccionado().getPosicionPesoInicial() ||
-                barCodeSize< getProveedorSeleccionado().getPosicionPesoFinal()){
-            return;
-        }
-
-        String codigoProducto
-                = barCodeTxt.getText().substring(getProveedorSeleccionado().getPosicionCodigoInicial(),
-                        getProveedorSeleccionado().getPosicionCodigoFinal());
-        String peso
-                = barCodeTxt.getText().substring(getProveedorSeleccionado().getPosicionPesoInicial(),
-                        getProveedorSeleccionado().getPosicionPesoFinal());
-        peso= new StringBuilder(peso).insert(peso.length()-2, ".").toString();
-        try {
-            productoHasProveedores
-                    = productoDAO.getProductoXProveYCodigo(getProveedorSeleccionado(), codigoProducto);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Ocurrió un error al consultar el producto.");
-        }
-
-        if (productoHasProveedores == null) {
-            JOptionPane.showMessageDialog(null, "No se encontro un producto con el código especificado");
-        } else {
-            ProductosInventario productoNuevo = new ProductosInventario();
-            productoNuevo.setPeso(new BigDecimal(peso));
-            productoNuevo.setCodigoBarras(barCodeTxt.getText());
-            productoNuevo.setProductosHasProveedores(productoHasProveedores);
-            productoNuevo.setCosto(productoHasProveedores.getPrecioSugerido());
-            productoNuevo.setPrecio(productoHasProveedores.getProductos().getPrecioSugerido());
-            productoNuevo.setUbicaciones(UsuarioFirmado.getUsuarioFirmado().getUbicaciones());
-            productoNuevo.setEstatus("ACTIVO");
-            productos.add(productoNuevo);
-            barCodeTxt.setText("");
-            setTableModel();
-        } 
-    }
-    
     private void repartidorTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_repartidorTxtKeyReleased
         char c = evt.getKeyChar();
 
@@ -790,10 +729,6 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
 
         }
     }//GEN-LAST:event_repartidorTxtKeyReleased
-
-    private void barCodeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_barCodeTxtKeyReleased
-
-    }//GEN-LAST:event_barCodeTxtKeyReleased
 
     private void finalizarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finalizarBtnActionPerformed
         if (productos == null || productos.isEmpty()) {
@@ -872,6 +807,9 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
             } catch (Exception ex) {
                 Logger.getLogger(AsignacionProductoRepartidor.class.getName()).log(Level.SEVERE, null, ex);
             }
+            if (producto == null) {
+                return;
+            }
             productoProveedor.setProductos(producto);
             Proveedores prov = new Proveedores();
             prov.setCodigo(1);
@@ -904,18 +842,37 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
     private void noRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noRadioActionPerformed
         panelProveedor.setEnabled(true);
         proveedoresDropDown.enable();
+        barCode.setProductoExistente(false);
     }//GEN-LAST:event_noRadioActionPerformed
 
     private void yesRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yesRadioActionPerformed
         panelProveedor.setEnabled(false);
         proveedoresDropDown.disable();
         productosLov.setModel(new DefaultComboBoxModel(getProducts()));
+        barCode.setProductoExistente(true);
     }//GEN-LAST:event_yesRadioActionPerformed
 
     private void repartidoresLovItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_repartidoresLovItemStateChanged
         Proveedores proveedorSeleccionado = (Proveedores) proveedoresDropDown.getSelectedItem();
         productosLov.setModel(new DefaultComboBoxModel(proveedorSeleccionado.getProductosHasProveedoreses().toArray()));
     }//GEN-LAST:event_repartidoresLovItemStateChanged
+
+    private void repartidoresLovActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repartidoresLovActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_repartidoresLovActionPerformed
+
+    private void productoCodigoAreaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_TAB) {
+            System.out.println(evt.getModifiers());
+            if(evt.getModifiers() > 0) productoCodigoArea.transferFocusBackward();
+            else productoCodigoArea.transferFocus(); 
+            evt.consume();
+        }
+    }//GEN-LAST:event_productoCodigoAreaKeyPressed
+
+    private void repartidorTxtComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_repartidorTxtComponentResized
+        repartidorTxt.requestFocusInWindow();
+    }//GEN-LAST:event_repartidorTxtComponentResized
 
     public void limpiar() {
         modelProductos.setRowCount(0);
@@ -945,47 +902,7 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
     }
 
     private void changeScanned(String barCode) {
-        ProductosInventario producto = null;
-        Integer[] codigos = new Integer[productos.size()];
-        try {
-            int x = 0;
-            for (ProductosInventario productoInv : productos) {
-                codigos[x] = productoInv.getCodigo();
-                x++;
-            }
-            if (modoOperacion.equals("ENTRADA")) {
-                producto = productoDAO.getProductosXCodigoBarrasTransito(barCode, codigos);
-            } else {
-                producto = productoDAO.getProductosXCodigoBarrasActivos(barCode, codigos);
-            }
 
-        } catch (Exception ex) {
-            //JOptionPane.showMessageDialog(null, ex);
-            barCodeTxt.setText("");
-            System.out.println(ex.getMessage());
-            return;
-        }
-        if (producto == null) {
-            //JOptionPane.showMessageDialog(null, "No se encontro el codigo de barras");
-            barCodeTxt.setText("");
-            return;
-        } else {
-
-            try {
-                if (isProductoRepetido(modelProductos, producto)) {
-                    barCodeTxt.setText("");
-                    return;
-                }
-                productos.add(producto);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, ex);
-                barCodeTxt.setText("");
-                return;
-            }
-            this.setTableModel();
-            barCodeTxt.setText("");
-
-        }
     }
 
     private void setTableModel() {
@@ -1004,7 +921,7 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
             modelProductos.addRow(row);
         }
     }
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelCodigoBarras;
@@ -1012,13 +929,11 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
     private javax.swing.JPanel PanelPeso;
     private javax.swing.JPanel PanelRepartidor;
     private javax.swing.JPanel Pesaje;
-    private javax.swing.JTextField barCodeTxt;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton eliminarCajaBtn;
     private javax.swing.JButton finalizarBtn;
     public javax.swing.JButton imprimirEtiquetaBtn;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -1043,4 +958,54 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable {
     private javax.swing.JTable tablaProductos1;
     private javax.swing.JRadioButton yesRadio;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void update() {
+        if (noRadio.isSelected()) {
+            ProductosHasProveedores producto = barCode.getProducto();
+            if (producto == null) {
+                JOptionPane.showMessageDialog(null, "No se encontro un producto con el código especificado");
+            } else {
+                ProductosInventario productoNuevo = new ProductosInventario();
+                productoNuevo.setPeso(new BigDecimal(barCode.getPeso()));
+                productoNuevo.setCodigoBarras(barCode.getBarCode());
+                productoNuevo.setProductosHasProveedores(producto);
+                productoNuevo.setCosto(producto.getPrecioSugerido());
+                productoNuevo.setPrecio(producto.getProductos().getPrecioSugerido());
+                productoNuevo.setUbicaciones(UsuarioFirmado.getUsuarioFirmado().getUbicaciones());
+                productoNuevo.setEstatus("ACTIVO");
+                productos.add(productoNuevo);
+                setTableModel();
+            }
+
+        } else {
+            ProductosInventario producto = null;
+            Integer[] codigos = new Integer[productos.size()];
+
+            int x = 0;
+            for (ProductosInventario productoInv : productos) {
+                codigos[x] = productoInv.getCodigo();
+                x++;
+            }
+            producto = barCode.getProductoInventario();
+
+            if (producto == null) {
+                //JOptionPane.showMessageDialog(null, "No se encontro el codigo de barras");
+                return;
+            } else {
+
+                try {
+                    if (isProductoRepetido(modelProductos, producto)) {
+                        return;
+                    }
+                    productos.add(producto);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, ex);
+                    return;
+                }
+                this.setTableModel();
+
+            }
+        }
+    }
 }
