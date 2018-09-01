@@ -332,13 +332,13 @@
                                     <h:outputLabel for="saldoAnterior" value="Saldo Anterior: " />
                                 </p:column>
                                 <p:column >
-                                    <p:inputText disabled="true" id="saldoAnterior" value="#{abonosCuentasXCobrarMainBean.notaSeleccionado.cuentaXCobrar.saldoAnterior}"/>                                   
+                                    <p:inputText disabled="true" id="saldoAnterior" value="#{abonosCuentasXCobrarMainBean.notaSeleccionado.saldoPendiente}"/>                                   
                                 </p:column>
                                 <p:column style="text-align: right">
                                     <h:outputLabel for="saldoInsoluto" value="Saldo Insoluto: " />                                    
                                 </p:column>
                                 <p:column >
-                                    <p:inputText disabled="true" id="saldoInsoluto" value="#{abonosCuentasXCobrarMainBean.notaSeleccionado.cuentaXCobrar.saldoAnterior - abonosCuentasXCobrarMainBean.abonoNuevo.importe}"/>
+                                    <p:inputText disabled="true" id="saldoInsoluto" value="#{abonosCuentasXCobrarMainBean.notaSeleccionado.saldoPendiente - abonosCuentasXCobrarMainBean.abonoNuevo.importe}"/>
                                 </p:column>
                             </p:row>
                             <p:row>

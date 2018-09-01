@@ -103,6 +103,7 @@ public class AbonosCuentasXCobrarMainBean {
         try {
 
             abonoNuevo = new AbonosCuentasXCobrar();
+            abonoNuevo.setFecha(new Date());
             notas = new ArrayList<>();
             this.date1 = new Date();
             this.abonoSeleccionado = new AbonosCuentasXCobrar();
@@ -231,8 +232,16 @@ public class AbonosCuentasXCobrarMainBean {
         } catch (MessagingException ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
-        
-           
+        //cuentaSeleccionado.getAbonosCuentasXCobrars().add(abonoNuevo);
+        AbonosCuentasXCobrar abono = new AbonosCuentasXCobrar();
+        abono.setImporte(abonoNuevo.getImporte());
+        //notaSeleccionado.getCuentaXCobrar().getAbonosCuentasXCobrars().add(abono);
+        //notaSeleccionado.setImporteAbonado(notaSeleccionado.getImporteAbonado().add(abonoNuevo.getImporte()));
+        formaPagoSeleccionado = new FormaPago();
+        formaPagoSeleccionado.setCodigo("01");
+        abonoNuevo = new AbonosCuentasXCobrar();
+        abonoNuevo.setFecha(new Date());
+        tipoCadenaPago = false;
     }
 
     public void actualizarAbono() {
