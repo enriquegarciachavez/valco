@@ -115,7 +115,7 @@ public class ProductosTableModelReetiquetado extends NoEditableTableModel implem
     }
     
      @Override
-    public void eliminarProductos() {
+    public void limpiar() {
         this.setRowCount(0);
         
     }

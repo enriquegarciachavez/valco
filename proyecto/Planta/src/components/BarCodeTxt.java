@@ -20,22 +20,22 @@ import mapping.ProductosHasProveedores;
 import mapping.ProductosInventario;
 import mapping.Proveedores;
 import mapping.ProveedoresCodigo;
-import observables.Observable;
-import observers.Observer;
+import observables.BarCodeTxtObservable;
+import observers.BarCodeTxtObserver;
 import utilities.UsuarioFirmado;
 
 /**
  *
  * @author Administrador
  */
-public class BarCodeTxt extends javax.swing.JPanel implements Observable {
+public class BarCodeTxt extends javax.swing.JPanel implements BarCodeTxtObservable {
 
     private ProductoDAO productosDAO = new ProductoDAO();
     private ProductosHasProveedores producto;
     private boolean productoExistente;
     private Integer[] codigos;
     private ProductosInventario productoInventario;
-    private List<Observer> observers = new ArrayList<>();
+    private List<BarCodeTxtObserver> observers = new ArrayList<>();
     private String peso;
     private String barCode;
     private String modoOperacion;
@@ -72,7 +72,7 @@ public class BarCodeTxt extends javax.swing.JPanel implements Observable {
         });
 
         barrasLbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        barrasLbl.setText("Codigo de Barras:");
+        barrasLbl.setText("Código de Barras:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -82,8 +82,8 @@ public class BarCodeTxt extends javax.swing.JPanel implements Observable {
                 .addContainerGap()
                 .addComponent(barrasLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(barCodeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addComponent(barCodeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,11 +110,11 @@ public class BarCodeTxt extends javax.swing.JPanel implements Observable {
     private void armarProductoConCodigo() {
         int barCodeSize = 0;
         barCode = barCodeTxt.getText();
+        System.out.println(barCode);
         barCodeTxt.setText("");
         for (ProveedoresCodigo codigo : ((Proveedores)proveedoresDropDown.getSelectedItem()).getProveedoresCodigos()) {
             try {
                 barCodeSize = barCode.length();
-                System.out.println(codigo.getPosicionCodigoInicial() + " " + codigo.getPosicionCodigoFinal());
                 if (barCodeSize < codigo.getPosicionCodigoInicial()
                         || barCodeSize < codigo.getPosicionCodigoFinal()
                         || barCodeSize < codigo.getPosicionPesoInicial()
@@ -123,11 +123,11 @@ public class BarCodeTxt extends javax.swing.JPanel implements Observable {
                 }
 
                 String codigoProducto
-                        = barCode.substring(codigo.getPosicionCodigoInicial(),
-                                codigo.getPosicionCodigoFinal() + 1);
+                        = barCode.substring(codigo.getPosicionCodigoInicial()-1,
+                                codigo.getPosicionCodigoFinal());
                 peso
-                        = barCode.substring(codigo.getPosicionPesoInicial(),
-                                codigo.getPosicionPesoFinal() + 1);
+                        = barCode.substring(codigo.getPosicionPesoInicial()-1,
+                                codigo.getPosicionPesoFinal());
                 peso = new StringBuilder(peso).insert(peso.length() - codigo.getDecimales(), ".").toString();
 
                 System.out.println(codigoProducto + " " + peso);
@@ -138,6 +138,7 @@ public class BarCodeTxt extends javax.swing.JPanel implements Observable {
                     break;
                 }
             } catch (Exception ex) {
+                ex.printStackTrace();
                 producto = null;
             }
         }
@@ -153,7 +154,7 @@ public class BarCodeTxt extends javax.swing.JPanel implements Observable {
             }
             notifyObservers();
         } catch (Exception ex) {
-            //JOptionPane.showMessageDialog(null, ex);
+            JOptionPane.showMessageDialog(null, ex);
             productoInventario = null;
             System.out.println(ex.getMessage());
             return;
@@ -204,11 +205,11 @@ public class BarCodeTxt extends javax.swing.JPanel implements Observable {
         this.productoInventario = productoInventario;
     }
 
-    public List<Observer> getObservers() {
+    public List<BarCodeTxtObserver> getObservers() {
         return observers;
     }
 
-    public void setObservers(List<Observer> observers) {
+    public void setObservers(List<BarCodeTxtObserver> observers) {
         this.observers = observers;
     }
 
@@ -261,19 +262,19 @@ public class BarCodeTxt extends javax.swing.JPanel implements Observable {
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void registerObserver(Observer observer) {
+    public void registerObserver(BarCodeTxtObserver observer) {
         observers.add(observer);
     }
 
     @Override
-    public void removeObserver(Observer observer) {
+    public void removeObserver(BarCodeTxtObserver observer) {
         observers.remove(observer);
     }
 
     @Override
     public void notifyObservers() {
-        for (Observer observer : observers) {
-            observer.update();
+        for (BarCodeTxtObserver observer : observers) {
+            observer.updateBarCodeTxtObserver();
         }
     }
 }

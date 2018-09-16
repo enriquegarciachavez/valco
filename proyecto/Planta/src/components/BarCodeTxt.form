@@ -20,8 +20,8 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="barrasLbl" min="-2" pref="109" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="barCodeTxt" min="-2" pref="324" max="-2" attributes="0"/>
-              <EmptySpace pref="34" max="32767" attributes="0"/>
+              <Component id="barCodeTxt" pref="348" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -44,7 +44,7 @@
     <Component class="javax.swing.JLabel" name="barrasLbl">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="4"/>
-        <Property name="text" type="java.lang.String" value="Codigo de Barras:"/>
+        <Property name="text" type="java.lang.String" value="C&#xf3;digo de Barras:"/>
       </Properties>
     </Component>
   </SubComponents>

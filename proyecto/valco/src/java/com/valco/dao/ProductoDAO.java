@@ -35,6 +35,13 @@ public class ProductoDAO {
     public void insertarProducto(Productos productos) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
+        ProductosHasProveedores prodHasPorv = new ProductosHasProveedores();
+        Proveedores proveedor = new Proveedores();
+        proveedor.setCodigo(9999999);
+        prodHasPorv.setProductos(productos);
+        prodHasPorv.setProveedores(proveedor);
+        prodHasPorv.setCodigoProveedor(String.format("%05d", productos.getCodigo()));
+        prodHasPorv.setPrecioSugerido(productos.getPrecioSugerido());
         try {
             tx = session.beginTransaction();
             session.save(productos);

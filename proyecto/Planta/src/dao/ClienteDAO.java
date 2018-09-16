@@ -230,11 +230,11 @@ public class ClienteDAO implements Serializable, DAO {
                       if(StringUtils.isNumeric(criterio)){
                           q.add(Restrictions.eq("codigo", new Integer( criterio)));
                       }else{
-                          q.add(Restrictions.disjunction()
+                          q.add(Restrictions.like("razonSocial", criterio + "%"))/*disjunction()
                                 .add(Restrictions.like("nombres", criterio + "%"))
                                   .add(Restrictions.like("apellidoPaterno", criterio+"%"))
                                   .add(Restrictions.like("apellidoMaterno", criterio+"%")));
-                                q.addOrder(Order.asc("apellidoPaterno"))
+                                q.addOrder(Order.asc("apellidoPaterno"))*/
                                 .setMaxResults(1);
                       }
                       

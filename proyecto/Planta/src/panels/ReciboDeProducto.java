@@ -61,12 +61,7 @@ public class ReciboDeProducto extends javax.swing.JPanel {
     }
 
     public void init() {
-
         initComponents();
-        this.jPanel6.add(proveedorSelection);
-        this.proveedorSelection.setBounds(100, 100, 500, 200);
-        this.jPanel6.add(productosSelection);
-        this.productosSelection.setBounds(300, 300, 500, 200);
     }
 
     /**
@@ -78,6 +73,7 @@ public class ReciboDeProducto extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        basculaPanel1 = new components.BasculaPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -107,16 +103,17 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         finalizarBtn = new javax.swing.JButton();
         agregarBtn = new javax.swing.JButton();
         limpiarBtn = new javax.swing.JButton();
-        jPanel6 = new javax.swing.JPanel();
-        productoLov1 = new javax.swing.JComboBox();
-        productoTxt1 = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
-        proveedorLOV1 = new javax.swing.JComboBox();
-        proveedorTxt1 = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        pesoTxt = new components.NumericTextField();
-        jLabel9 = new javax.swing.JLabel();
-        ingresarBnt = new javax.swing.JButton();
+
+        javax.swing.GroupLayout basculaPanel1Layout = new javax.swing.GroupLayout(basculaPanel1);
+        basculaPanel1.setLayout(basculaPanel1Layout);
+        basculaPanel1Layout.setHorizontalGroup(
+            basculaPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        basculaPanel1Layout.setVerticalGroup(
+            basculaPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -445,9 +442,9 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 654, Short.MAX_VALUE)
+            .addGap(0, 704, Short.MAX_VALUE)
             .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -460,131 +457,184 @@ public class ReciboDeProducto extends javax.swing.JPanel {
 
         jTabbedPane1.addTab("Recibo de Canales", jPanel5);
 
-        productoLov1.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                productoLov1ItemStateChanged(evt);
-            }
-        });
-        productoLov1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                productoLov1ActionPerformed(evt);
-            }
-        });
-
-        productoTxt1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                productoTxt1ActionPerformed(evt);
-            }
-        });
-        productoTxt1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                productoTxt1KeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                productoTxt1KeyTyped(evt);
-            }
-        });
-
-        jLabel8.setText("Producto:");
-
-        proveedorLOV1.setModel(new DefaultComboBoxModel(getProveedoresArrayKilo()));
-        proveedorLOV1.setSelectedItem(proveedorLOV1.getSelectedItem());
-        productoLov1.setModel(new DefaultComboBoxModel(getProductosArrayKilo()));
-        proveedorLOV1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                proveedorLOV1ActionPerformed(evt);
-            }
-        });
-
-        proveedorTxt1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                proveedorTxt1ActionPerformed(evt);
-            }
-        });
-        proveedorTxt1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                proveedorTxt1KeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                proveedorTxt1KeyTyped(evt);
-            }
-        });
-
-        jLabel7.setText("Proveedor:");
-
-        jLabel9.setText("Peso:");
-        jLabel9.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-
-        ingresarBnt.setText("Ingresar Producto");
-        ingresarBnt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ingresarBntActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(146, 146, 146)
-                .addComponent(productoLov1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addComponent(productoTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addComponent(jLabel8)
-                .addGap(5, 5, 5)
-                .addComponent(proveedorLOV1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addComponent(proveedorTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addComponent(jLabel7)
-                .addGap(5, 5, 5)
-                .addComponent(pesoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addComponent(jLabel9)
-                .addGap(5, 5, 5)
-                .addComponent(ingresarBnt)
-                .addGap(114, 114, 114))
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(productoLov1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(productoTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(9, 9, 9)
-                        .addComponent(jLabel8))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(proveedorLOV1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(proveedorTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(9, 9, 9)
-                        .addComponent(jLabel7))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(pesoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(9, 9, 9)
-                        .addComponent(jLabel9))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(ingresarBnt)))
-                .addGap(534, 534, 534))
-        );
-
-        jTabbedPane1.addTab("Recibo de Producto por Kg", jPanel6);
-
         add(jTabbedPane1);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void limpiarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarBtnActionPerformed
+        limpiar();
+    }//GEN-LAST:event_limpiarBtnActionPerformed
+
+    private void agregarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarBtnActionPerformed
+        if (modoOperacion.equals("CANAL DE EQUINO")) {
+            agregarCanalEquino();
+        } else if (modoOperacion.equals("RES CASO ESPECIAL")) {
+            agregarResCasoEspecial();
+        } else if (modoOperacion.equals("CANAL DE RES")) {
+            agregarCanalRes();
+        }
+    }//GEN-LAST:event_agregarBtnActionPerformed
+
+    private void finalizarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finalizarBtnActionPerformed
+        OrdenesCompra orden = new OrdenesCompra();
+
+        orden.setEstatus("ACTIVO");
+        orden.setFecha(new Date());
+        orden.setProveedores((Proveedores) proveedorLOV.getSelectedItem());
+        BigDecimal total = BigDecimal.ZERO;
+        for (ProductosInventario producto : nuevosCanales) {
+            total = total.add(producto.getCosto().multiply(producto.getPeso()));
+        }
+        if (matanzaTxt.getText() != null && !matanzaTxt.getText().equals("")) {
+            Integer numMatanza = new Integer(matanzaTxt.getText());
+            for (ProductosInventario producto : nuevosCanales) {
+                producto.setNumeroMatanza(numMatanza);
+            }
+        }
+        orden.setTotal(total);
+        try {
+            orden.setUsuarios(usuariosDao.getUsuarios().get(0));
+        } catch (Exception ex) {
+            Logger.getLogger(ReciboDeProducto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            productoDAO.recibirProductos(nuevosCanales, orden);
+            nuevosCanales.clear();
+            JOptionPane.showMessageDialog(null, "Se recibieron los canales correctamente");
+            model.setRowCount(0);
+            pesoTxt1.setText("");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Ocurrió un error al recibir los canales");
+        }
+    }//GEN-LAST:event_finalizarBtnActionPerformed
+
+    private void pesoTxt4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoTxt4ActionPerformed
+        // TODO add your handling code here:
+        agregarCanalRes();
+        pesoTxt1.setText("");
+        pesoTxt2.setText("");
+        pesoTxt3.setText("");
+        pesoTxt4.setText("");
+        pesoTxt1.requestFocus();
+    }//GEN-LAST:event_pesoTxt4ActionPerformed
+
+    private void pesoTxt3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoTxt3ActionPerformed
+        // TODO add your handling code here:
+        pesoTxt4.requestFocus();
+    }//GEN-LAST:event_pesoTxt3ActionPerformed
+
+    private void pesoTxt2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoTxt2ActionPerformed
+        // TODO add your handling code here:
+        if (modoOperacion.equals("CANAL DE EQUINO")) {
+            agregarCanalEquino();
+            pesoTxt1.setText("");
+            pesoTxt2.setText("");
+            pesoTxt1.requestFocus();
+
+        } else {
+            pesoTxt3.requestFocus();
+        }
+    }//GEN-LAST:event_pesoTxt2ActionPerformed
+
+    private void pesoTxt1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoTxt1ActionPerformed
+        // TODO add your handling code here:
+        if (modoOperacion.equals("RES CASO ESPECIAL")) {
+            agregarResCasoEspecial();
+            pesoTxt1.setText("");
+        } else {
+            pesoTxt2.requestFocus();
+        }
+    }//GEN-LAST:event_pesoTxt1ActionPerformed
+
+    private void matanzaTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_matanzaTxtKeyTyped
+        char c = evt.getKeyChar();
+        if (!(Character.isDigit(c)
+            || (c == KeyEvent.VK_BACK_SPACE)
+            || (c == KeyEvent.VK_DELETE))) {
+        evt.consume();
+        }
+    }//GEN-LAST:event_matanzaTxtKeyTyped
+
+    private void matanzaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matanzaTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_matanzaTxtActionPerformed
+
+    private void proveedorTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_proveedorTxtKeyTyped
+
+    }//GEN-LAST:event_proveedorTxtKeyTyped
+
+    private void proveedorTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_proveedorTxtKeyReleased
+        try {
+
+            if (!proveedorTxt.getText().equals("")) {
+                Proveedores proveedor = proveedorDAO.getProveedoresXCodigo(proveedorTxt.getText());
+                if (proveedor != null) {
+                    proveedorLOV.setSelectedItem(proveedor);
+                    proveedorLOV.repaint();
+                }
+            }
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Ocurriò un error al consultar el proveedor", "Error", ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_proveedorTxtKeyReleased
+
+    private void proveedorTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proveedorTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_proveedorTxtActionPerformed
+
+    private void productoLovActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productoLovActionPerformed
+        // TODO add your handling code here:
+        modoOperacion = ((ProductosHasProveedores) this.productoLov.getSelectedItem()).getProductos().getTipoProducto().getDescripcion();
+        if (!productoAnterior.getProductos().getTipoProducto().getDescripcion().equals(modoOperacion)) {
+            limpiar();
+        }
+    }//GEN-LAST:event_productoLovActionPerformed
+
+    private void productoLovItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_productoLovItemStateChanged
+        // TODO add your handling code here:
+        if (evt.getStateChange() == ItemEvent.DESELECTED) {
+            productoAnterior = (ProductosHasProveedores) evt.getItem();
+        }
+    }//GEN-LAST:event_productoLovItemStateChanged
+
+    private void productoTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoTxtKeyTyped
+
+    }//GEN-LAST:event_productoTxtKeyTyped
+
+    private void productoTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoTxtKeyReleased
+        char c = evt.getKeyChar();
+
+        if (!productoTxt.getText().equals("")) {
+            Productos producto = null;
+            try {
+                producto = productoDAO.getProductosXDescripcionOCodigo(productoTxt.getText());
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex, "ERROR", ERROR_MESSAGE);
+                return;
+            }
+            if (producto == null) {
+                return;
+            }
+            ProductosHasProveedores prodProv = new ProductosHasProveedores();
+            prodProv.setProveedores((Proveedores) proveedorLOV.getSelectedItem());
+            prodProv.setProductos(producto);
+            productoLov.setSelectedItem(prodProv);
+            productoLov.repaint();
+        }
+    }//GEN-LAST:event_productoTxtKeyReleased
+
+    private void productoTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productoTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_productoTxtActionPerformed
+
+    private void proveedorLOVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proveedorLOVActionPerformed
+        productoLov.setModel(new DefaultComboBoxModel(this.getProductosArray()));
+        productoLov.repaint();
+        if (productoLov.getSelectedItem() != null) {
+            modoOperacion = productoLov.getSelectedItem().toString();
+        }
+        limpiar();
+    }//GEN-LAST:event_proveedorLOVActionPerformed
 
     private Object[] getProveedoresArray() {
         Object[] proveedores = null;
@@ -618,16 +668,6 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         return productos;
     }
 
-    private Object[] getProductosArrayKilo() {
-        Object[] productos = null;
-        try {
-            productos = productoDAO.getProductosXProveedorKilo((Proveedores) proveedorLOV1.getSelectedItem()).toArray();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Ocurriò un error al consultar los Productos", "Error", ERROR_MESSAGE);
-        }
-        return productos;
-    }
-
     private Object[] getUbicacionesArray() {
         Object[] ubicaciones = null;
         try {
@@ -637,10 +677,6 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         }
         return ubicaciones;
     }
-
-    private void limpiarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarBtnActionPerformed
-        limpiar();
-    }//GEN-LAST:event_limpiarBtnActionPerformed
     private void limpiar() {
         pesoTxt1.setText("");
         pesoTxt2.setText("");
@@ -688,16 +724,6 @@ public class ReciboDeProducto extends javax.swing.JPanel {
         model.setRowCount(0);
         nuevosCanales.clear();
     }
-
-    private void agregarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarBtnActionPerformed
-        if (modoOperacion.equals("CANAL DE EQUINO")) {
-            agregarCanalEquino();
-        } else if (modoOperacion.equals("RES CASO ESPECIAL")) {
-            agregarResCasoEspecial();
-        } else if (modoOperacion.equals("CANAL DE RES")) {
-            agregarCanalRes();
-        }
-    }//GEN-LAST:event_agregarBtnActionPerformed
 
     private void agregarCanalEquino() {
 
@@ -865,316 +891,6 @@ public class ReciboDeProducto extends javax.swing.JPanel {
 
         nuevosCanales.add(producto);
     }
-    private void finalizarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finalizarBtnActionPerformed
-        OrdenesCompra orden = new OrdenesCompra();
-
-        orden.setEstatus("ACTIVO");
-        orden.setFecha(new Date());
-        orden.setProveedores((Proveedores) proveedorLOV.getSelectedItem());
-        BigDecimal total = BigDecimal.ZERO;
-        for (ProductosInventario producto : nuevosCanales) {
-            total = total.add(producto.getCosto().multiply(producto.getPeso()));
-        }
-        if (matanzaTxt.getText() != null && !matanzaTxt.getText().equals("")) {
-            Integer numMatanza = new Integer(matanzaTxt.getText());
-            for (ProductosInventario producto : nuevosCanales) {
-                producto.setNumeroMatanza(numMatanza);
-            }
-        }
-        orden.setTotal(total);
-        try {
-            orden.setUsuarios(usuariosDao.getUsuarios().get(0));
-        } catch (Exception ex) {
-            Logger.getLogger(ReciboDeProducto.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            productoDAO.recibirProductos(nuevosCanales, orden);
-            nuevosCanales.clear();
-            JOptionPane.showMessageDialog(null, "Se recibieron los canales correctamente");
-            model.setRowCount(0);
-            pesoTxt1.setText("");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Ocurrió un error al recibir los canales");
-        }
-    }//GEN-LAST:event_finalizarBtnActionPerformed
-
-    private void proveedorTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_proveedorTxtKeyReleased
-        try {
-
-            if (!proveedorTxt.getText().equals("")) {
-                Proveedores proveedor = proveedorDAO.getProveedoresXCodigo(proveedorTxt.getText());
-                if (proveedor != null) {
-                    proveedorLOV.setSelectedItem(proveedor);
-                    proveedorLOV.repaint();
-                }
-            }
-
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Ocurriò un error al consultar el proveedor", "Error", ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_proveedorTxtKeyReleased
-
-    private void proveedorTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_proveedorTxtKeyTyped
-
-
-    }//GEN-LAST:event_proveedorTxtKeyTyped
-
-    private void proveedorLOVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proveedorLOVActionPerformed
-        productoLov.setModel(new DefaultComboBoxModel(this.getProductosArray()));
-        productoLov.repaint();
-        if (productoLov.getSelectedItem() != null) {
-            modoOperacion = productoLov.getSelectedItem().toString();
-        }
-        limpiar();
-
-    }//GEN-LAST:event_proveedorLOVActionPerformed
-
-    private void productoTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoTxtKeyReleased
-        char c = evt.getKeyChar();
-
-        if (!productoTxt.getText().equals("")) {
-            Productos producto = null;
-            try {
-                producto = productoDAO.getProductosXDescripcionOCodigo(productoTxt.getText());
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, ex, "ERROR", ERROR_MESSAGE);
-                return;
-            }
-            if (producto == null) {
-                return;
-            }
-            ProductosHasProveedores prodProv = new ProductosHasProveedores();
-            prodProv.setProveedores((Proveedores) proveedorLOV.getSelectedItem());
-            prodProv.setProductos(producto);
-            productoLov.setSelectedItem(prodProv);
-            productoLov.repaint();
-        }
-
-    }//GEN-LAST:event_productoTxtKeyReleased
-
-    private void productoTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoTxtKeyTyped
-
-    }//GEN-LAST:event_productoTxtKeyTyped
-
-    private void proveedorTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proveedorTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_proveedorTxtActionPerformed
-
-    private void productoLovActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productoLovActionPerformed
-        // TODO add your handling code here:
-        modoOperacion = ((ProductosHasProveedores) this.productoLov.getSelectedItem()).getProductos().getTipoProducto().getDescripcion();
-        if (!productoAnterior.getProductos().getTipoProducto().getDescripcion().equals(modoOperacion)) {
-            limpiar();
-        }
-
-    }//GEN-LAST:event_productoLovActionPerformed
-
-    private void pesoTxt2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoTxt2ActionPerformed
-        // TODO add your handling code here:
-        if (modoOperacion.equals("CANAL DE EQUINO")) {
-            agregarCanalEquino();
-            pesoTxt1.setText("");
-            pesoTxt2.setText("");
-            pesoTxt1.requestFocus();
-
-        } else {
-            pesoTxt3.requestFocus();
-        }
-    }//GEN-LAST:event_pesoTxt2ActionPerformed
-
-    private void pesoTxt1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoTxt1ActionPerformed
-        // TODO add your handling code here:
-        if (modoOperacion.equals("RES CASO ESPECIAL")) {
-            agregarResCasoEspecial();
-            pesoTxt1.setText("");
-        } else {
-            pesoTxt2.requestFocus();
-        }
-    }//GEN-LAST:event_pesoTxt1ActionPerformed
-
-    private void pesoTxt3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoTxt3ActionPerformed
-        // TODO add your handling code here:
-        pesoTxt4.requestFocus();
-
-    }//GEN-LAST:event_pesoTxt3ActionPerformed
-
-    private void pesoTxt4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoTxt4ActionPerformed
-        // TODO add your handling code here:
-        agregarCanalRes();
-        pesoTxt1.setText("");
-        pesoTxt2.setText("");
-        pesoTxt3.setText("");
-        pesoTxt4.setText("");
-        pesoTxt1.requestFocus();
-
-    }//GEN-LAST:event_pesoTxt4ActionPerformed
-
-    private void productoTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productoTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_productoTxtActionPerformed
-
-    private void productoLovItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_productoLovItemStateChanged
-        // TODO add your handling code here:
-        if (evt.getStateChange() == ItemEvent.DESELECTED) {
-            productoAnterior = (ProductosHasProveedores) evt.getItem();
-        }
-    }//GEN-LAST:event_productoLovItemStateChanged
-
-    private void matanzaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matanzaTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_matanzaTxtActionPerformed
-
-    private void matanzaTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_matanzaTxtKeyTyped
-        char c = evt.getKeyChar();
-        if (!(Character.isDigit(c)
-                || (c == KeyEvent.VK_BACK_SPACE)
-                || (c == KeyEvent.VK_DELETE))) {
-            evt.consume();
-        }
-    }//GEN-LAST:event_matanzaTxtKeyTyped
-
-    private void proveedorTxt1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_proveedorTxt1KeyTyped
-        // TODO add your handling code here:
-    }//GEN-LAST:event_proveedorTxt1KeyTyped
-
-    private void proveedorTxt1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_proveedorTxt1KeyReleased
-        // TODO add your handling code here:
-        try {
-
-            if (!proveedorTxt1.getText().equals("")) {
-                Proveedores proveedor = proveedorDAO.getProveedoresXCodigoKilo(proveedorTxt1.getText());
-                if (proveedor != null) {
-                    proveedorLOV1.setSelectedItem(proveedor);
-                    proveedorLOV1.repaint();
-                }
-            }
-
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Ocurriò un error al consultar el proveedor", "Error", ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_proveedorTxt1KeyReleased
-
-    private void proveedorTxt1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proveedorTxt1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_proveedorTxt1ActionPerformed
-
-    private void productoLov1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productoLov1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_productoLov1ActionPerformed
-
-    private void productoLov1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_productoLov1ItemStateChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_productoLov1ItemStateChanged
-
-    private void productoTxt1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoTxt1KeyTyped
-        // TODO add your handling code here:
-    }//GEN-LAST:event_productoTxt1KeyTyped
-
-    private void productoTxt1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoTxt1KeyReleased
-        // TODO add your handling code here:
-
-        char c = evt.getKeyChar();
-
-        if (!productoTxt1.getText().equals("")) {
-            Productos producto = null;
-            try {
-                producto = productoDAO.getProductosXDescripcionOCodigoKilo(productoTxt1.getText());
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, ex, "ERROR", ERROR_MESSAGE);
-                return;
-            }
-            if (producto == null) {
-                return;
-            }
-            ProductosHasProveedores prodProv = new ProductosHasProveedores();
-            prodProv.setProveedores((Proveedores) proveedorLOV1.getSelectedItem());
-            prodProv.setProductos(producto);
-            productoLov1.setSelectedItem(prodProv);
-            productoLov1.repaint();
-        }
-    }//GEN-LAST:event_productoTxt1KeyReleased
-
-    private void productoTxt1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productoTxt1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_productoTxt1ActionPerformed
-
-    private void proveedorLOV1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proveedorLOV1ActionPerformed
-        // TODO add your handling code here:
-        productoLov1.setModel(new DefaultComboBoxModel(this.getProductosArrayKilo()));
-        productoLov1.repaint();
-
-    }//GEN-LAST:event_proveedorLOV1ActionPerformed
-
-    private void ingresarBntActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ingresarBntActionPerformed
-        // TODO add your handling code here:
-
-        OrdenesCompra orden = new OrdenesCompra();
-
-        orden.setEstatus("ACTIVO");
-        orden.setFecha(new Date());
-        orden.setProveedores((Proveedores) proveedorLOV1.getSelectedItem());
-        BigDecimal total = BigDecimal.ZERO;
-        ProductosHasProveedores productoProv = null;
-        if (productoLov1.getSelectedItem() != null) {
-            productoProv = (ProductosHasProveedores) productoLov1.getSelectedItem();
-        } else {
-
-            JOptionPane.showMessageDialog(null, "Debe seleccionar un producto para Ingresar");
-            return;
-        }
-        if (pesoTxt.getText() == null || pesoTxt.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Debe ingresar el peso del Producto");
-            return;
-        }
-        try {
-            ProductosInventario productoMaster = productoDAO.getProductoMaster(productoProv);
-
-            ProductosInventario productoNuevo = new ProductosInventario();
-            productoNuevo = new ProductosInventario();
-            productoNuevo.setEstatus("PESADO");
-            productoNuevo.setProductoMaestro(false);
-            productoNuevo.setProductosHasProveedores(productoProv);
-            productoNuevo.setPeso(new BigDecimal(pesoTxt.getText()));
-            Ubicaciones ubicacion = (Ubicaciones) almacenLOV.getSelectedItem();
-            productoNuevo.setUbicaciones(ubicacion);
-            BigDecimal precio = ((ProductosHasProveedores) productoLov1.getSelectedItem()).getProductos().getPrecioSugerido();
-            BigDecimal costo = ((ProductosHasProveedores) productoLov1.getSelectedItem()).getPrecioSugerido();
-            productoNuevo.setPrecio(precio);
-            productoNuevo.setCosto(costo);
-            total = productoNuevo.getPeso().multiply(productoNuevo.getCosto()).setScale(2, RoundingMode.HALF_EVEN);
-            orden.setTotal(total);
-            orden.setUsuarios(usuariosDao.getUsuarios().get(0));
-            productoNuevo.setOrdenesCompra(orden);
-            productoNuevo.setFechaCreacion(new Date());
-            List<ProductosInventario> lista = new ArrayList<>();
-            lista.add(productoNuevo);
-            if (productoMaster == null) {
-                productoMaster = (ProductosInventario) productoNuevo.clone();
-                productoMaster.setProductoMaestro(true);
-                productoMaster.setEstatus("ACTIVO");
-                productoMaster.setOrdenesCompra(null);
-
-                productoDAO.insertarProducto(productoMaster);
-
-                productoDAO.recibirProductos(lista, orden);
-                JOptionPane.showMessageDialog(null, "El Prodcuto se guardó correctamente");
-                return;
-            } else {
-                BigDecimal peso = new BigDecimal(pesoTxt.getText());
-                productoMaster.setPeso(productoMaster.getPeso().add(peso));
-                productoDAO.actualizarProductoInventario(productoMaster);
-                productoDAO.recibirProductos(lista, orden);
-                JOptionPane.showMessageDialog(null, "El producto se ingresó correctamente");
-                return;
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
-            return;
-        }
-
-
-    }//GEN-LAST:event_ingresarBntActionPerformed
-
     public void setProveedorSelection(CustomDropDown proveedorSelection) {
         this.proveedorSelection = proveedorSelection;
     }
@@ -1189,42 +905,33 @@ public class ReciboDeProducto extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton agregarBtn;
     private javax.swing.JComboBox almacenLOV;
+    private components.BasculaPanel basculaPanel1;
     private javax.swing.JButton finalizarBtn;
-    private javax.swing.JButton ingresarBnt;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton limpiarBtn;
     private javax.swing.JTextField matanzaTxt;
     private javax.swing.JTextField numeroCanalTxt;
-    private javax.swing.JTextField pesoTxt;
     private javax.swing.JTextField pesoTxt1;
     private javax.swing.JTextField pesoTxt2;
     private javax.swing.JTextField pesoTxt3;
     private javax.swing.JTextField pesoTxt4;
     private javax.swing.JComboBox productoLov;
-    private javax.swing.JComboBox productoLov1;
     private javax.swing.JTextField productoTxt;
-    private javax.swing.JTextField productoTxt1;
     private javax.swing.JComboBox proveedorLOV;
-    private javax.swing.JComboBox proveedorLOV1;
     private javax.swing.JTextField proveedorTxt;
-    private javax.swing.JTextField proveedorTxt1;
     private javax.swing.JTable tablaCanales;
     // End of variables declaration//GEN-END:variables
 }

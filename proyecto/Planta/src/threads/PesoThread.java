@@ -49,7 +49,7 @@ public class PesoThread implements Runnable {
         String data = null;
         String stop = null;
 
-        String csvFilename = "C:\\valco\\confBascula.csv";
+        String csvFilename = "C:\\valco_installation\\conf\\confBascula.csv";
         File csvFile = new File(csvFilename);
         if (csvFile.exists()) {
             CSVReader csvReader = new CSVReader(new FileReader(csvFilename));

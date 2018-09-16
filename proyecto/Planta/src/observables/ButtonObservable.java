@@ -7,29 +7,29 @@ package observables;
 
 import java.util.ArrayList;
 import javax.swing.JButton;
-import observers.Observer;
+import observers.BarCodeTxtObserver;
 
 /**
  *
  * @author Karla
  */
-public class ButtonObservable extends JButton implements Observable {
-    private ArrayList<Observer> observers;
+public class ButtonObservable extends JButton implements BarCodeTxtObservable {
+    private ArrayList<BarCodeTxtObserver> observers;
 
     @Override
-    public void registerObserver(Observer observer) {
+    public void registerObserver(BarCodeTxtObserver observer) {
             observers.add(observer);
     }
 
     @Override
-    public void removeObserver(Observer observer) {
+    public void removeObserver(BarCodeTxtObserver observer) {
             observers.remove(observer);
     }
 
     @Override
     public void notifyObservers() {
-            for(Observer observer : observers){
-                observer.update();
+            for(BarCodeTxtObserver observer : observers){
+                observer.updateBarCodeTxtObserver();
             }
     }
     

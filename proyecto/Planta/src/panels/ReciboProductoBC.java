@@ -6,6 +6,7 @@
 package panels;
 
 import barcode.BarCodableImpl;
+import components.BarCodeArea;
 import components.BarCodeTxt;
 import components.CustomDropDown;
 import dao.ProductoDAO;
@@ -38,8 +39,9 @@ import mapping.ProductosHasProveedores;
 import mapping.ProductosInventario;
 import mapping.Proveedores;
 import mapping.ProveedoresCodigo;
-import observables.Observable;
-import observers.Observer;
+import observables.BarCodeTxtObservable;
+import observers.BarCodeAreaObserver;
+import observers.BarCodeTxtObserver;
 import table.custom.NoEditableTableModel;
 import utilities.UsuarioFirmado;
 
@@ -47,7 +49,8 @@ import utilities.UsuarioFirmado;
  *
  * @author Administrador
  */
-public class ReciboProductoBC extends BarCodableImpl implements Observer {
+public class ReciboProductoBC extends BarCodableImpl implements BarCodeTxtObserver,
+        BarCodeAreaObserver {
 
     private UsuariosDAO usuariosDao = new UsuariosDAO();
     ProductoDAO productoDAO = new ProductoDAO();
@@ -61,6 +64,7 @@ public class ReciboProductoBC extends BarCodableImpl implements Observer {
     JOptionPane dialog = new JOptionPane();
     private CustomDropDown proveedoresDropDown = new CustomDropDown();
     private BarCodeTxt barCode = new BarCodeTxt();
+    private BarCodeArea barCodeArea = new BarCodeArea();
 
     /**
      * Creates new form ReciboProducto
@@ -73,13 +77,19 @@ public class ReciboProductoBC extends BarCodableImpl implements Observer {
         panelBusqueda.add(proveedoresDropDown);
         proveedoresDropDown.setBounds(50, 50, 500, 65);
         panelBusqueda.add(barCode);
+        panelBusqueda.add(barCodeArea);
         barCode.setModoOperacion("ENTRADA");
         barCode.setProveedoresDropDown(proveedoresDropDown);
         barCode.setBounds(600, 50, 400, 40);
         barCode.registerObserver(this);
+        barCodeArea.setModoOperacion("ENTRADA");
+        barCodeArea.setProveedoresDropDown(proveedoresDropDown);
+        barCodeArea.setBounds(600, 100, 700, 300);
+        barCodeArea.registerObserver(this);
         setManager(KeyboardFocusManager.getCurrentKeyboardFocusManager());
         exceptions.add(proveedoresDropDown.getTxt());
         exceptions.add(numeroCajasTxt);
+        exceptions.add(barCodeArea.getBarCodeArea());
         setDispacher(new BarCodeScannerKeyDispatcher(barCode.getBarCodeTxt(), getManager(), exceptions));
         getManager().addKeyEventDispatcher(getDispacher());
         eliminarBtn.setFocusTraversalKeysEnabled(false);
@@ -324,12 +334,13 @@ public class ReciboProductoBC extends BarCodableImpl implements Observer {
     }//GEN-LAST:event_panelBusquedaComponentResized
 
     private void eliminarBtnKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_eliminarBtnKeyPressed
-        if(evt.getKeyCode() == KeyEvent.VK_TAB) {
+        if (evt.getKeyCode() == KeyEvent.VK_TAB) {
             System.out.println(evt.getModifiers());
-            if(evt.getModifiers() > 0) 
+            if (evt.getModifiers() > 0) {
                 eliminarBtn.transferFocusBackward();
-            else 
+            } else {
                 proveedoresDropDown.getTxt().requestFocusInWindow();
+            }
             evt.consume();
         }
     }//GEN-LAST:event_eliminarBtnKeyPressed
@@ -346,37 +357,53 @@ public class ReciboProductoBC extends BarCodableImpl implements Observer {
     }
 
     @Override
-    public void update() {
-        if (barCode.getProducto() == null) {
-            JOptionPane.showMessageDialog(null, "No se encontro un producto con el código especificado");
-        } else {
-            ProductosInventario productoNuevo = new ProductosInventario();
-            productoNuevo.setPeso(new BigDecimal(barCode.getPeso()));
-            productoNuevo.setCodigoBarras(barCode.getBarCode());
-            productoNuevo.setProductosHasProveedores(barCode.getProducto());
-            productoNuevo.setCosto(barCode.getProducto().getPrecioSugerido());
-            productoNuevo.setPrecio(barCode.getProducto().getProductos().getPrecioSugerido());
-            productoNuevo.setUbicaciones(UsuarioFirmado.getUsuarioFirmado().getUbicaciones());
-            productoNuevo.setEstatus("ACTIVO");
-            ultimoProductoInventario = productoNuevo;
-            nuevosProductos.add(productoNuevo);
+    public void updateBarCodeTxtObserver() {
+        ProductosInventario productoNuevo = new ProductosInventario();
+        productoNuevo.setPeso(new BigDecimal(barCode.getPeso()));
+        productoNuevo.setCodigoBarras(barCode.getBarCode());
+        productoNuevo.setProductosHasProveedores(barCode.getProducto());
+        productoNuevo.setCosto(barCode.getProducto().getPrecioSugerido());
+        productoNuevo.setPrecio(barCode.getProducto().getProductos().getPrecioSugerido());
+        productoNuevo.setUbicaciones(UsuarioFirmado.getUsuarioFirmado().getUbicaciones());
+        productoNuevo.setEstatus("ACTIVO");
+        ultimoProductoInventario = productoNuevo;
+        nuevosProductos.add(productoNuevo);
+
+        Object[] canal = new Object[5];
+
+        canal[0] = barCode.getPeso();
+        canal[1] = proveedoresDropDown.getSelectedItem().toString();
+        canal[2] = barCode.getProducto().getProductos().getDescripcion();
+        canal[3] = UsuarioFirmado.getUsuarioFirmado().getUbicaciones();
+        canal[4] = barCode.getBarCode();
+        ultimoProducto = canal;
+
+        model.addRow(canal);
+    }
+
+    @Override
+    public void updateBarCodeAreaObserver() {
+        for (ProductosInventario producto : barCodeArea.getProductosInventario()) {
+            nuevosProductos.add(producto);
 
             Object[] canal = new Object[5];
 
-            canal[0] = barCode.getPeso();
+            canal[0] = producto.getPeso();
             canal[1] = proveedoresDropDown.getSelectedItem().toString();
-            canal[2] = barCode.getProducto().getProductos().getDescripcion();
+            canal[2] = producto.getProductosHasProveedores().getProductos().getDescripcion();
             canal[3] = UsuarioFirmado.getUsuarioFirmado().getUbicaciones();
-            canal[4] = barCode.getBarCode();
-            ultimoProducto = canal;
+            canal[4] = producto.getCodigoBarras();
 
             model.addRow(canal);
         }
+        barCodeArea.getProductosInventario().clear();
+
     }
 
     private Proveedores getProveedorSeleccionado() {
         return (Proveedores) proveedoresDropDown.getSelectedItem();
     }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDialog cajasDialog;

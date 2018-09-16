@@ -376,7 +376,8 @@ public class AbrirProcesoPanel extends BarCodableImpl {
         proceso.setEstatus("ACTIVO");
         proceso.setObservaciones(observacionesTxt.getText());
         try {
-            proceso.setLetra(procesosDAO.getSiguienteLetra());
+            proceso.setLetra('A');
+            proceso.setNumero(procesosDAO.getSiguienteNumero());
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Ocurriò un error al abrir el proceso", "Error", ERROR_MESSAGE);
             return;

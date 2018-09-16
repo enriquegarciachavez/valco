@@ -5,14 +5,14 @@
  */
 package observables;
 
-import observers.Observer;
+import observers.BarCodeTxtObserver;
 
 /**
  *
  * @author Karla
  */
-public interface Observable {
-    public void registerObserver(Observer observer);
-    public void removeObserver(Observer observer);
+public interface BarCodeTxtObservable {
+    public void registerObserver(BarCodeTxtObserver observer);
+    public void removeObserver(BarCodeTxtObserver observer);
     public void notifyObservers();
 }

@@ -21,10 +21,10 @@
               <Component id="label" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="combo" alignment="0" min="-2" pref="135" max="-2" attributes="0"/>
-                  <Component id="txt" alignment="0" min="-2" pref="135" max="-2" attributes="0"/>
+                  <Component id="combo" pref="223" max="32767" attributes="0"/>
+                  <Component id="txt" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace pref="24" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

@@ -1,5 +1,6 @@
 package panels;
 
+import components.BasculaPanel;
 import components.CustomCellRendered;
 import components.ProductosTableModel;
 import creators.PanelCreator;
@@ -85,6 +86,7 @@ import utilities.UsuarioFirmado;
  * @author Administrador
  */
 public class EtiquetadoPanel extends PesableBarCodeable {
+
     private CustomCellRendered cellRendered;
 
     String path;
@@ -92,7 +94,7 @@ public class EtiquetadoPanel extends PesableBarCodeable {
     ProcesosDAOImpl procesosDAO = new ProcesosDAOImpl();
     ProcesosDAO cajasProcesoDAO;
     ProductoDAO productoDAO = new ProductoDAO();
-    ProductosTableModel model ;
+    ProductosTableModel model;
     String formato = "##.##";
     JInternalFrame internalFrame;
     OrdenesCompraDAO ordenesDAO = new OrdenesCompraDAO();
@@ -102,23 +104,21 @@ public class EtiquetadoPanel extends PesableBarCodeable {
         public void actionPerformed(ActionEvent e) {
             System.out.println("triggered the action");
         }
-        
 
     };
     private boolean reetiquetado;
     private String proceso;
+    private BasculaPanel basculaPanel1;
 
     /**
      * Creates new form EtiquetadoPanel
      */
-   
-    
-    public EtiquetadoPanel( boolean reetiquetado) {
+    public EtiquetadoPanel(boolean reetiquetado) {
         this.reetiquetado = reetiquetado;
     }
-    
-    public void init(){
-      try {
+
+    public void init() {
+        try {
             this.reportDir = ParametrosGeneralesUtility.getValor("RE001");
         } catch (Exception ex) {
             this.reportDir = "C:/valco_installation/reportes/";
@@ -128,26 +128,32 @@ public class EtiquetadoPanel extends PesableBarCodeable {
         action.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control S"));
         tablaProductos.setDefaultRenderer(Object.class, (TableCellRenderer) cellRendered);
         this.setTableModel();
+        tablaProductos.getColumn("Nombre").setPreferredWidth(300);
+        tablaProductos.getColumn("Peso").setPreferredWidth(80);
+        tablaProductos.getColumn("Etiqueta").setPreferredWidth(320);
+        tablaProductos.getColumn("Consecutivo").setPreferredWidth(100);
+        tablaProductos.getColumn("Estatus").setPreferredWidth(100);
         try {
             consecutivoLbl.setText(procesosDAO.getConsecutivo(((Procesos) procesosLov.getSelectedItem()).getCodigo()).toString());
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
-        basculaPanel1.init();
         cierrePanel.setVisible(!reetiquetado);
         procesoPanel.setVisible(!reetiquetado);
         jTabbedPane1.remove(1);
-        if(procesosLov.getSelectedItem() != null){
+        if (procesosLov.getSelectedItem() != null) {
             procesoLbl.setText(procesosLov.getSelectedItem().toString());
         }
-        
+        jPanel1.add(basculaPanel1);
+        basculaPanel1.setBounds(20, 310, 379, 200);
+
     }
 
     private Object[] getProducts() {
         Object[] productosArray = new Object[0];
         try {
             Proveedores proveedor = new Proveedores();
-            proveedor.setCodigo(1);
+            proveedor.setCodigo(9999999);
             productosArray = productoDAO.getProductosXProveedor(proveedor).toArray();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", ERROR_MESSAGE);
@@ -204,7 +210,6 @@ public class EtiquetadoPanel extends PesableBarCodeable {
         jLabel9 = new javax.swing.JLabel();
         productoLbl = new javax.swing.JLabel();
         eliminarCajaBtn = new javax.swing.JButton();
-        basculaPanel1 = new components.BasculaPanel();
         procesoPanel = new javax.swing.JPanel();
         procesosCerradosChk = new javax.swing.JCheckBox();
         procesoLbl = new javax.swing.JLabel();
@@ -425,9 +430,7 @@ public class EtiquetadoPanel extends PesableBarCodeable {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(basculaPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGap(416, 416, 416)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(diasCaducidadTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -439,22 +442,22 @@ public class EtiquetadoPanel extends PesableBarCodeable {
                                     .addComponent(fechaCaducidadEtiquetaChk)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(14, 14, 14)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(reimprimirEtiquetaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(28, 28, 28)
-                                        .addComponent(imprimirEtiquetaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(49, 49, 49)
-                                        .addComponent(eliminarCajaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(productoLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(reimprimirEtiquetaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(imprimirEtiquetaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(50, 50, 50)
+                                .addComponent(eliminarCajaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(procesoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(13, 13, 13)
+                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(productoLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -462,31 +465,27 @@ public class EtiquetadoPanel extends PesableBarCodeable {
                 .addContainerGap()
                 .addComponent(procesoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(productosLov, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(11, 11, 11)
-                        .addComponent(fechaElaboracionEtiquetaChk)
-                        .addGap(9, 9, 9)
-                        .addComponent(fechaCaducidadEtiquetaChk)
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(diasCaducidadTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(basculaPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(reimprimirEtiquetaBtn)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(imprimirEtiquetaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(eliminarCajaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(productosLov, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
+                .addComponent(fechaElaboracionEtiquetaChk)
+                .addGap(9, 9, 9)
+                .addComponent(fechaCaducidadEtiquetaChk)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(productoLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(diasCaducidadTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(7, 7, 7)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(reimprimirEtiquetaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(imprimirEtiquetaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(eliminarCajaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(productoLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(132, Short.MAX_VALUE))
         );
 
         jSplitPane1.setLeftComponent(jPanel1);
@@ -877,8 +876,7 @@ public class EtiquetadoPanel extends PesableBarCodeable {
     public void setCajasProcesoDAO(ProcesosDAO cajasProcesoDAO) {
         this.cajasProcesoDAO = cajasProcesoDAO;
     }
-    
-    
+
 
     private void procesosCerradosChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_procesosCerradosChkActionPerformed
         AbstractButton abstractButton = (AbstractButton) evt.getSource();
@@ -901,25 +899,29 @@ public class EtiquetadoPanel extends PesableBarCodeable {
     }//GEN-LAST:event_procesosLovActionPerformed
 
     private void productoCodigoAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyReleased
-        char c = evt.getKeyChar();
-
-        if (!productoCodigoArea.getText().equals("")) {
-            ProductosHasProveedores productoProveedor = new ProductosHasProveedores();
-            Productos producto = new Productos();
-            try {
-                producto = productoDAO.getProductosXDescripcionOCodigo(productoCodigoArea.getText());
-            } catch (Exception ex) {
-                Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
+            imprimitEtiqueta();
+        } else {
+            if (!productoCodigoArea.getText().equals("")) {
+                ProductosHasProveedores productoProveedor = new ProductosHasProveedores();
+                Productos producto = new Productos();
+                try {
+                    producto = productoDAO.getProductosXDescripcionOCodigo(productoCodigoArea.getText());
+                } catch (Exception ex) {
+                    Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                productoProveedor.setProductos(producto);
+                Proveedores prov = new Proveedores();
+                prov.setCodigo(9999999);
+                System.out.println(producto);
+                productoProveedor.setProveedores(prov);
+                productosLov.setSelectedItem(productoProveedor);
+                productosLov.repaint();
             }
-            productoProveedor.setProductos(producto);
-            Proveedores prov = new Proveedores();
-            prov.setCodigo(1);
-            productoProveedor.setProveedores(prov);
-            productosLov.setSelectedItem(productoProveedor);
-            productosLov.repaint();
         }
 
     }//GEN-LAST:event_productoCodigoAreaKeyReleased
+
 
     private void productoCodigoAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyTyped
 
@@ -931,6 +933,10 @@ public class EtiquetadoPanel extends PesableBarCodeable {
     }//GEN-LAST:event_productosLovActionPerformed
 
     private void imprimirEtiquetaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imprimirEtiquetaBtnActionPerformed
+        imprimitEtiqueta();
+    }//GEN-LAST:event_imprimirEtiquetaBtnActionPerformed
+
+    private void imprimitEtiqueta() {
         ProductosInventario productoInventario = new ProductosInventario();
         productoInventario.setProductosHasProveedores((ProductosHasProveedores) productosLov.getSelectedItem());
         productoInventario.setUbicaciones(UsuarioFirmado.getUsuarioFirmado().getUbicaciones());
@@ -950,7 +956,7 @@ public class EtiquetadoPanel extends PesableBarCodeable {
         }
         this.setTableModel();
         this.actualizarValores();
-    }//GEN-LAST:event_imprimirEtiquetaBtnActionPerformed
+    }
 
     private void eliminarCajaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarCajaBtnActionPerformed
         int[] selectedRows = tablaProductos.getSelectedRows();
@@ -1176,7 +1182,7 @@ public class EtiquetadoPanel extends PesableBarCodeable {
     }
 
     private void setTableModel() {
-        model.eliminarProductos();
+        model.limpiar();
         List<ProductosInventario> productos = new ArrayList<>();
         try {
             productos = cajasProcesoDAO.getCajasPorProceso(((Procesos) procesosLov.getSelectedItem()).getCodigo());
@@ -1200,17 +1206,16 @@ public class EtiquetadoPanel extends PesableBarCodeable {
 
     private String getCodigoBarras() {
         return this.procesosLov.getSelectedItem()
-                + new SimpleDateFormat("yyddMM").format(new Date())
                 + String.format("%05d", ((ProductosHasProveedores) this.productosLov.getSelectedItem()).getProductos().getCodigo())
                 + String.format("%06d", Integer.parseInt(basculaPanel1.getPeso().toString().replaceAll("\\.", "")))
-                + String.format("%09d", Integer.parseInt(consecutivoLbl.getText()));
+                + String.format("%04d", Integer.parseInt(consecutivoLbl.getText()));
     }
 
     private void imprimirCodigo(ProductosInventario producto) {
         // aca obtenemos la printer default  
 
         String label = "";
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\valco\\CodigoBarras.txt"))){
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\valco_installation\\conf\\CodigoBarras.txt"))) {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 
@@ -1223,23 +1228,21 @@ public class EtiquetadoPanel extends PesableBarCodeable {
             br.close();
         } catch (IOException ex) {
             Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
         PrintService printService = PrintServiceLookup.lookupDefaultPrintService();
         label = label.replace("PRODUCTO", this.productosLov.getSelectedItem().toString());
         label = label.replace("PESO", producto.getPeso().toString());
         label = label.replace("CODIGO_BARRAS", producto.getCodigoBarras());
-        
-       /* String zplCommand = "^XA"
-                + "^FO230,50^ARN,16,9^FD " + this.productosLov.getSelectedItem() + "^FS"
-                + "^FO300,100^ARN,16,9^FD " + producto.getPeso() + " KG^BY1,3.0^FS"
-                + "^FO230,180^BCN, 80, Y, N, N^FD" + producto.getCodigoBarras() + "^FS "
-                + "^XZ";
+
+        /* String zplCommand = "^XA"
+         + "^FO230,50^ARN,16,9^FD " + this.productosLov.getSelectedItem() + "^FS"
+         + "^FO300,100^ARN,16,9^FD " + producto.getPeso() + " KG^BY1,3.0^FS"
+         + "^FO230,180^BCN, 80, Y, N, N^FD" + producto.getCodigoBarras() + "^FS "
+         + "^XZ";
         
         
                
-        */
-        
-
+         */
 // convertimos el comando a bytes  
         byte[] by = label.getBytes();
         DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
@@ -1256,7 +1259,6 @@ public class EtiquetadoPanel extends PesableBarCodeable {
         }
 
     }
-    
 
     public boolean isReetiquetado() {
         return reetiquetado;
@@ -1289,23 +1291,20 @@ public class EtiquetadoPanel extends PesableBarCodeable {
     public void setCellRendered(CustomCellRendered cellRendered) {
         this.cellRendered = cellRendered;
     }
-    
-    
 
-    
-    
-    
-    
-    
-    
-    
+    public BasculaPanel getBasculaPanel1() {
+        return basculaPanel1;
+    }
+
+    public void setBasculaPanel1(BasculaPanel basculaPanel1) {
+        this.basculaPanel1 = basculaPanel1;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel P;
     private javax.swing.JButton agregarCostoBtn;
     private javax.swing.JButton agregarPesoInicialBtn;
-    private components.BasculaPanel basculaPanel1;
     private javax.swing.JButton cerrarProcesoBtn;
     public javax.swing.JPanel cierrePanel;
     private javax.swing.JRadioButton condensadoRadio;

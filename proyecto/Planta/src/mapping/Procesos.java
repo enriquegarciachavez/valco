@@ -134,7 +134,8 @@ public class Procesos  implements java.io.Serializable {
     }
 
     public String toString(){
-        return this.getLetra() + new SimpleDateFormat("ddMMyyyy").format(this.getFechaInicio());
+        return this.getLetra()+ String.valueOf(numero) +
+                new SimpleDateFormat("yyyyMMdd").format(this.getFechaInicio());
     }
 
 

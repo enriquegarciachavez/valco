@@ -99,8 +99,8 @@ public class ProcesosDAOImpl implements ProcesosDAO{
         }
     }
     
-    public char getSiguienteLetra() throws Exception{
-        char[] letras = {'A','B','C','D','E','F','G','H','I','J','K','L','M'};
+    public int getSiguienteNumero() throws Exception{
+        int[] letras = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21};
         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;

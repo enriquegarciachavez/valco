@@ -545,6 +545,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
             return producto;
 
         } catch (HibernateException he) {
+            he.printStackTrace();
             throw new Exception("Ocurrió un error al consultar los productos.");
 
         } finally {
@@ -658,8 +659,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
                     .add(Restrictions.eq("proveedores", proveedor));
             Criteria x = q.createCriteria("productos").add(Restrictions.eq("generarSubproducto", true));
             Criteria y = x.createCriteria("tipoProducto").add(Restrictions.disjunction()
-                    .add(Restrictions.eq("descripcion", "CANAL DE RES"))
-                    .add(Restrictions.eq("descripcion", "CANAL DE EQUINO"))
+                    .add(Restrictions.like("descripcion", "CANAL%"))
                     .add(Restrictions.eq("descripcion", "RES CASO ESPECIAL")));
 
             productos = (List<ProductosHasProveedores>) q.list();

@@ -35,6 +35,7 @@ public class ProductosTableModelProceso extends NoEditableTableModel implements 
         };
 
         this.setColumnIdentifiers(columnNames);
+        
     }
 
     @Override
@@ -119,7 +120,7 @@ public class ProductosTableModelProceso extends NoEditableTableModel implements 
     }
 
     @Override
-    public void eliminarProductos() {
+    public void limpiar() {
         this.setRowCount(0);
         
     }

@@ -143,6 +143,7 @@ public class SubfamiliasDAO {
 
           } finally {
               try {
+                  if(session.isOpen())
                   session.close();
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar las subfamilias.");

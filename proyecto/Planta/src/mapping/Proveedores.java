@@ -204,13 +204,13 @@ public class Proveedores  implements java.io.Serializable {
     }
 
     public String toString(){
-        return this.getRazonSocial();
+        return this.getNombres();
     }
     
     @Override
     public boolean equals(Object o) {
         if( o != null){
-        if((o instanceof Proveedores) && (((Proveedores) o).getCodigo() == this.getCodigo())){
+        if((o instanceof Proveedores) && (((Proveedores) o).getCodigo().equals(this.getCodigo()))){
             return true;
         }else{
             return false;

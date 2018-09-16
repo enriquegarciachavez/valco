@@ -117,7 +117,7 @@ public class ProductosTableModelPOS extends NoEditableTableModel implements Prod
     }
     
      @Override
-    public void eliminarProductos() {
+    public void limpiar() {
         this.setRowCount(0);
         
     }
