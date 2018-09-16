@@ -5,6 +5,7 @@
  */
 package configuration;
 
+import components.BasculaPanel;
 import components.CustomCellRendered;
 import components.CustomDropDown;
 import components.NotaVentaTxt;
@@ -23,15 +24,18 @@ import dao.ProcesosDAO;
 import dao.ProcesosDAOImpl;
 import dao.ProductoDAO;
 import dao.ProductosDAO;
+import dao.ProductosHasProveedoresDao;
 import dao.ProveedoresDAO;
 import dao.ProveedoresKiloDAO;
 import dao.ReetiquetadoDAO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import panels.AsignacionProductoRepartidor;
 import panels.EtiquetadoPanel;
 import panels.PuntoVenta;
 import panels.ReciboDeProducto;
+import panels.ReciboDeProductoSinBC;
 import table.custom.EtiquetadoTableCellRendered;
 
 /**
@@ -90,11 +94,29 @@ public class SpringConfiguration {
         return productosSelection;
 
     }
+    
+    @Scope("prototype")
+    @Bean
+    public CustomDropDown productosHasProveedoresSelection() {
+        CustomDropDown productosSelection = new CustomDropDown();
+        productosSelection.setDao(productoHasProveedoresDAO());
+        productosSelection.setDaoFather((FiltrableByFather) productosDAO());
+        productosSelection.setEtiqueta("Producto:");
+        productosSelection.init();
+        return productosSelection;
+
+    }
 
     @Scope("prototype")
     @Bean
     public DAO productosDAO() {
         return new ProductoDAO();
+    }
+    
+    @Scope("prototype")
+    @Bean
+    public DAO productoHasProveedoresDAO() {
+        return new ProductosHasProveedoresDao();
     }
 
     @Scope("prototype")
@@ -107,6 +129,14 @@ public class SpringConfiguration {
     @Bean
     public BarCodeDAO barCodeDAO() {
         return new ProductoDAO();
+    }
+    
+    
+    @Bean
+    public BasculaPanel basculaPanel() {
+        BasculaPanel panel = new BasculaPanel();
+        panel.init();
+        return panel;
     }
 
     @Scope("prototype")
@@ -175,8 +205,23 @@ public class SpringConfiguration {
         panel.setCajasProcesoDAO(procesosDAOImpl());
         panel.setModel(tableProcesos());
         panel.setCellRendered(etiquetadoCellRendered());
+        panel.setBasculaPanel1(basculaPanel());
        panel.init();
         return panel;
+    }
+    
+    @Scope("prototype")
+    @Bean
+    public ReciboDeProductoSinBC reciboDeProductoSinBc() {
+        ReciboDeProductoSinBC reciboDeProducto = new ReciboDeProductoSinBC();
+        reciboDeProducto.setProveedoresDropdown(proveedoresSelectionKilo());
+        reciboDeProducto.setProductosDropDown(productosSelection());
+        reciboDeProducto.setBascula(basculaPanel());
+        reciboDeProducto.setModel(tableProcesos());
+        reciboDeProducto.setCellRendered(etiquetadoCellRendered());
+        reciboDeProducto.setProductosDao((ProductoDAO) productosDAO());
+        reciboDeProducto.init();
+        return reciboDeProducto;
     }
     
     @Scope("prototype")
@@ -210,4 +255,21 @@ public class SpringConfiguration {
         return panel;
     }
 
+    @Scope("prototype")
+    @Bean
+    public AsignacionProductoRepartidor asignacionRepartidorEntrada(){
+        AsignacionProductoRepartidor panel = new AsignacionProductoRepartidor("ENTRADA");
+        panel.setBasculaPanel(basculaPanel());
+        panel.init();
+        return panel;
+    }
+    
+    @Scope("prototype")
+    @Bean
+    public AsignacionProductoRepartidor asignacionRepartidorSalida(){
+        AsignacionProductoRepartidor panel = new AsignacionProductoRepartidor("SALIDA");
+        panel.setBasculaPanel(basculaPanel());
+        panel.init();
+        return panel;
+    }
 }

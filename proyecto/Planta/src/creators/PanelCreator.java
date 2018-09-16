@@ -16,6 +16,7 @@ import panels.EnviosPanel;
 import panels.InventariosMain;
 import panels.PuntoVenta;
 import panels.ReciboDeProducto;
+import panels.ReciboDeProductoSinBC;
 import panels.ReciboProductoBC;
 import panels.ReciboTransferenciasPanel;
 import panels.VentasPanel;
@@ -52,15 +53,21 @@ public class PanelCreator {
         } else if ("Recibo de transferencias".equals(panelName)) {
             return new ReciboTransferenciasPanel();
         } else if ("Asignar producto a repartidor".equals(panelName)) {
-            return new AsignacionProductoRepartidor();
+            AsignacionProductoRepartidor panel = 
+                    (AsignacionProductoRepartidor) SpringContext.getContext().getBean("asignacionRepartidorSalida");
+            return panel;
         } else if ("Producto no vendido".equals(panelName)) {
-            return new AsignacionProductoRepartidor("ENTRADA");
+            AsignacionProductoRepartidor panel = 
+                    (AsignacionProductoRepartidor) SpringContext.getContext().getBean("asignacionRepartidorEntrada");
+            return panel;
         } else if ("Venta".equals(panelName)) {
             return new VentasPanel();
         } else if ("Punto de Venta".equals(panelName)) {
             PuntoVenta puntoDeVenta = (PuntoVenta) SpringContext.getContext().getBean("puntoDeVenta");
             return puntoDeVenta;
-
+        } else if ("Recibo de cajas sin codigo".equals(panelName)) {
+            ReciboDeProductoSinBC panel = (ReciboDeProductoSinBC) SpringContext.getContext().getBean("reciboDeProductoSinBc");
+            return panel;
         }
         return null;
     }
