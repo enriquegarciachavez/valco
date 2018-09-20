@@ -5,6 +5,7 @@
  */
 package dao;
 
+import java.util.List;
 import mapping.Productos;
 import mapping.ProductosHasProveedores;
 import mapping.ProductosInventario;
@@ -17,6 +18,6 @@ public interface ProductosDAO {
     
     public ProductosInventario getProductoMaster(ProductosHasProveedores productoMaster) throws Exception;
     public ProductosInventario getProductoMaster(Productos productoMaster) throws Exception;
-     public ProductosInventario getProductosXCodigoBarrasActivos(String codigo, Integer[] codigos) throws Exception;
+     public ProductosInventario getProductosXCodigoBarrasActivos(String codigo, List codigos) throws Exception;
     
 }

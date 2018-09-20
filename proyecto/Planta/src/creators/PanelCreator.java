@@ -44,8 +44,10 @@ public class PanelCreator {
             return etiquetadoPanel;
         } else if ("Configuración de la báscula".equals(panelName)) {
             return new ConfigBascula();
-        } else if ("Inventarios".equals(panelName)) {
-            return new InventariosMain();
+        } else if ("Inventario inicial".equals(panelName)) {
+            AsignacionProductoRepartidor panel = 
+                    (AsignacionProductoRepartidor) SpringContext.getContext().getBean("inventarioInicial");
+            return panel;
         } else if ("Recibo de producto".equals(panelName)) {
             return new ReciboProductoBC();
         } else if ("Transferencia de Producto".equals(panelName)) {

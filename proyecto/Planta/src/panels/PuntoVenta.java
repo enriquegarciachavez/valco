@@ -145,13 +145,13 @@ public class PuntoVenta extends barcode.BarCodableImpl implements ActionListener
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Integer[] codigos = new Integer[tableModel.getProductos().size()];
+        List<Integer> codigos = new ArrayList<>();
 
         if (e.getSource().equals(barCodeTxt.getBarCodeTxt())) {
             try {
                 int x = 0;
                 for (ProductosInventario productoInv : tableModel.getProductos()) {
-                    codigos[x] = productoInv.getCodigo();
+                    codigos.add(productoInv.getCodigo());
                     x++;
                 }
                 ProductosInventario producto = productoDAO.getProductosXCodigoBarrasActivos(((JTextField) e.getSource()).getText(), codigos);

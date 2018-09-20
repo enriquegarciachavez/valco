@@ -20,7 +20,7 @@
       <column length="65535" name="OBSERVACIONES"/>
     </property>
     <property name="total" type="big_decimal">
-      <column name="TOTAL" not-null="true" precision="7"/>
+      <column name="TOTAL" not-null="true" precision="9"/>
     </property>
     <property name="estatus" type="string">
       <column length="20" name="ESTATUS" not-null="true"/>

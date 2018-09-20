@@ -8,7 +8,10 @@ package dao;
 
 import Hibernate.HibernateUtil;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mapping.Productos;
 import mapping.Repartidores;
 import org.apache.commons.lang.StringUtils;
@@ -24,7 +27,7 @@ import org.hibernate.criterion.Restrictions;
  *
  * @author Enrique
  */
-public class RepartidoresDAO {
+public class RepartidoresDAO implements DAO{
     
     public void insertarRepartidores(Repartidores repartidores) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -162,6 +165,26 @@ public class RepartidoresDAO {
                   throw new Exception("Ocurrió un error al consultar los productos.");
               }
         }
+    }
+
+    @Override
+    public Collection getElements() throws Exception {
+        return getRepartidores();
+    }
+
+    @Override
+    public Object getElementsByCodeOrDesc(String criteria) throws Exception {
+        return getRepartidorXDescripcionOCodigo(criteria);
+    }
+
+    @Override
+    public Object[] getElementsArray() {
+        try {
+            return getRepartidores().toArray();
+        } catch (Exception ex) {
+            Logger.getLogger(RepartidoresDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new Object[0];
     }
     
 }

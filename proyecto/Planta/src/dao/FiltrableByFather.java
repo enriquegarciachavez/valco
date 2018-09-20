@@ -16,5 +16,7 @@ public interface FiltrableByFather  {
     public Collection getElementsByFather(Object father) throws Exception;
 
     public Object[] getElementsByFatherArray(Object father);
+    
+    public Object getElementByFatherAndCriteria(Object father, String criteria) throws Exception;
 
 }

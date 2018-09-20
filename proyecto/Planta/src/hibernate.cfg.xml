@@ -47,5 +47,7 @@
     <mapping resource="mapping/Mermas.hbm.xml"/>
     <mapping resource="mapping/ProductosHasProveedoresView.hbm.xml"/>
     <mapping resource="mapping/ProveedoresCodigo.hbm.xml"/>
+    <mapping resource="mapping/Familias.hbm.xml"/>
+    <mapping resource="mapping/Subfamilias.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

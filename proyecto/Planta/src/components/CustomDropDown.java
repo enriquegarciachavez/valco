@@ -26,6 +26,7 @@ public class CustomDropDown extends javax.swing.JPanel {
     private DAO dao;
     private Timer t;
     private CustomDropDown child;
+    private CustomDropDown father;
     private FiltrableByFather daoFather;
     private String etiqueta;
     
@@ -36,7 +37,8 @@ public class CustomDropDown extends javax.swing.JPanel {
     public void init() {
        
         initComponents();
-        t = new Timer(800, new CustomDropDownActionListener(txt, combo, dao, child));
+        t = new Timer(500, new CustomDropDownActionListener(txt, combo, dao, child,
+                                                            father, daoFather));
 
         t.setRepeats(false);
         if (etiqueta != null){
@@ -137,7 +139,11 @@ public class CustomDropDown extends javax.swing.JPanel {
           combo.setModel(new DefaultComboBoxModel(daoFather.getElementsByFatherArray(father)));
           combo.repaint();
           
-     }  
+     }
+     
+     public void setItem(Object item){
+         combo.setSelectedItem(item);
+     }
 
     public void setEtiqueta(String etiqueta) {
         this.etiqueta = etiqueta;
@@ -149,6 +155,14 @@ public class CustomDropDown extends javax.swing.JPanel {
 
     public CustomDropDown getChild() {
         return child;
+    }
+
+    public CustomDropDown getFather() {
+        return father;
+    }
+
+    public void setFather(CustomDropDown father) {
+        this.father = father;
     }
     
     public void disable(){
@@ -179,8 +193,9 @@ public class CustomDropDown extends javax.swing.JPanel {
     }//GEN-LAST:event_txtKeyTyped
 
     private void comboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboActionPerformed
-        // TODO add your handling code here:
-
+        if(child != null){
+            reloadChild();
+        }
     }//GEN-LAST:event_comboActionPerformed
 
     

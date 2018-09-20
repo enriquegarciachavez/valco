@@ -32,9 +32,8 @@ import utilities.UsuarioFirmado;
 public class BarCodeArea extends javax.swing.JPanel implements BarCodeAreaObservable {
 
     private ProductoDAO productosDAO = new ProductoDAO();
-    private List<ProductosHasProveedores> productos;
     private boolean productoExistente;
-    private Integer[] codigos;
+    private List<Integer> codigos = new ArrayList<>();
     private List<BarCodeAreaObserver> observers = new ArrayList<>();
     private String peso;
     private String[] barCodes;
@@ -46,6 +45,9 @@ public class BarCodeArea extends javax.swing.JPanel implements BarCodeAreaObserv
      * Creates new form BarCodeArea
      */
     public BarCodeArea() {
+    }
+    
+    public void init(){
         initComponents();
     }
 
@@ -53,7 +55,9 @@ public class BarCodeArea extends javax.swing.JPanel implements BarCodeAreaObserv
         int barCodeSize = 0;
         barCodes = barCodeArea.getText().split("\\n");
         barCodeArea.setText("");
+        System.out.println(((Proveedores)proveedoresDropDown.getSelectedItem()).getCodigo());
         for (String barCode : barCodes) {
+            barCode = barCode.trim();
             ProductosInventario productoInv = new ProductosInventario();
             ProductosHasProveedores producto = new ProductosHasProveedores();
             for (ProveedoresCodigo codigo : ((Proveedores) proveedoresDropDown.getSelectedItem()).getProveedoresCodigos()) {
@@ -63,6 +67,7 @@ public class BarCodeArea extends javax.swing.JPanel implements BarCodeAreaObserv
                             || barCodeSize < codigo.getPosicionCodigoFinal()
                             || barCodeSize < codigo.getPosicionPesoInicial()
                             || barCodeSize < codigo.getPosicionPesoFinal()) {
+                        noReconocidosArea.append(barCode+"\n");
                         continue;
                     }
 
@@ -93,6 +98,7 @@ public class BarCodeArea extends javax.swing.JPanel implements BarCodeAreaObserv
                     ex.printStackTrace();
                     producto = null;
                 }
+                noReconocidosArea.append(barCode+"\n");
             }
         }
         notifyObservers();
@@ -110,11 +116,13 @@ public class BarCodeArea extends javax.swing.JPanel implements BarCodeAreaObserv
                 } else {
                     productoInventario = productosDAO.getProductosXCodigoBarrasActivos(barCode, codigos);
                 }
-                notifyObservers();
             } catch (Exception ex) {
-                productoInventario.setCodigoBarras(barCode);
+                noReconocidosArea.append(barCode+"\n");
+                continue;
             }
             productosInventario.add(productoInventario);
+            codigos.add(productoInventario.getCodigo());
+            notifyObservers();
         }
     }
 
@@ -132,16 +140,22 @@ public class BarCodeArea extends javax.swing.JPanel implements BarCodeAreaObserv
         barCodeArea = new javax.swing.JTextArea();
         barCodeLbl = new javax.swing.JLabel();
         btnCargar = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        noReconocidosArea = new javax.swing.JTextArea();
+        jLabel1 = new javax.swing.JLabel();
+        reconocidosLbl = new javax.swing.JLabel();
+        noReconocidosLbl = new javax.swing.JLabel();
+        copiarNoReconoBtn = new javax.swing.JButton();
 
         jButton1.setText("jButton1");
 
-        setPreferredSize(new java.awt.Dimension(481, 300));
+        setPreferredSize(new java.awt.Dimension(461, 300));
 
         barCodeArea.setColumns(20);
         barCodeArea.setRows(99999);
         barCodeArea.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                barCodeAreaKeyReleased(evt);
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                barCodeAreaKeyTyped(evt);
             }
         });
         jScrollPane1.setViewportView(barCodeArea);
@@ -156,37 +170,71 @@ public class BarCodeArea extends javax.swing.JPanel implements BarCodeAreaObserv
             }
         });
 
+        noReconocidosArea.setColumns(20);
+        noReconocidosArea.setRows(99999);
+        jScrollPane2.setViewportView(noReconocidosArea);
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setText("No reconocidos:");
+
+        reconocidosLbl.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        reconocidosLbl.setText("0");
+
+        noReconocidosLbl.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        noReconocidosLbl.setText("0");
+
+        copiarNoReconoBtn.setText("<");
+        copiarNoReconoBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                copiarNoReconoBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(76, 76, 76)
+                .addComponent(barCodeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(reconocidosLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(noReconocidosLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(97, 97, 97))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(barCodeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCargar, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnCargar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(copiarNoReconoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(53, 53, 53))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(reconocidosLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(barCodeLbl)
+                    .addComponent(noReconocidosLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(72, 72, 72)
-                        .addComponent(barCodeLbl))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(68, 68, 68)
-                        .addComponent(btnCargar)))
+                        .addGap(43, 43, 43)
+                        .addComponent(copiarNoReconoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCargar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void barCodeAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_barCodeAreaKeyReleased
-
-    }//GEN-LAST:event_barCodeAreaKeyReleased
 
     private void btnCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarActionPerformed
         if (!productoExistente) {
@@ -194,15 +242,34 @@ public class BarCodeArea extends javax.swing.JPanel implements BarCodeAreaObserv
         } else {
             changeScanned(barCodeArea.getText());
         }
+        reconocidosLbl.setText("0");
+        noReconocidosLbl.setText(String.valueOf(noReconocidosArea.getLineCount()-1));
     }//GEN-LAST:event_btnCargarActionPerformed
+
+    private void copiarNoReconoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copiarNoReconoBtnActionPerformed
+        barCodeArea.append(noReconocidosArea.getText());
+        noReconocidosArea.setText("");
+        noReconocidosLbl.setText("0");
+        reconocidosLbl.setText(String.valueOf(barCodeArea.getLineCount()-1));
+    }//GEN-LAST:event_copiarNoReconoBtnActionPerformed
+
+    private void barCodeAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_barCodeAreaKeyTyped
+        reconocidosLbl.setText(String.valueOf(barCodeArea.getLineCount()-1));
+    }//GEN-LAST:event_barCodeAreaKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea barCodeArea;
     private javax.swing.JLabel barCodeLbl;
     private javax.swing.JButton btnCargar;
+    private javax.swing.JButton copiarNoReconoBtn;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextArea noReconocidosArea;
+    private javax.swing.JLabel noReconocidosLbl;
+    private javax.swing.JLabel reconocidosLbl;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -254,20 +321,12 @@ public class BarCodeArea extends javax.swing.JPanel implements BarCodeAreaObserv
         this.modoOperacion = modoOperacion;
     }
 
-    public Integer[] getCodigos() {
+    public List<Integer> getCodigos() {
         return codigos;
     }
 
-    public void setCodigos(Integer[] codigos) {
+    public void setCodigos(List<Integer> codigos) {
         this.codigos = codigos;
-    }
-
-    public List<ProductosHasProveedores> getProductos() {
-        return productos;
-    }
-
-    public void setProductos(List<ProductosHasProveedores> productos) {
-        this.productos = productos;
     }
 
     public List<ProductosInventario> getProductosInventario() {

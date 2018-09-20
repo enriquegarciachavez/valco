@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -222,6 +223,7 @@ public class ReciboDeProductoSinBC extends javax.swing.JPanel {
         if(bascula.getPesoManualChk().isSelected()){
             bascula.getPesoManualTxt().requestFocus();
         }
+        bascula.getPesoManualTxt().setText(null);
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
@@ -231,9 +233,10 @@ public class ReciboDeProductoSinBC extends javax.swing.JPanel {
         orden.setProveedores((Proveedores) proveedoresDropdown.getSelectedItem());
         BigDecimal total = BigDecimal.ZERO;
         for (ProductosInventario producto : model.getProductos()) {
-            total = total.add(producto.getCosto().multiply(producto.getPeso()));
+            total = total.add(producto.getCosto().multiply(producto.getPeso()).setScale(2, RoundingMode.HALF_EVEN));
         }
         orden.setTotal(total);
+        System.out.println(total);
         try {
             orden.setUsuarios(UsuarioFirmado.getUsuarioFirmado());
         } catch (Exception ex) {
@@ -241,10 +244,10 @@ public class ReciboDeProductoSinBC extends javax.swing.JPanel {
         }
         try {
             productosDao.recibirProductos(new ArrayList(model.getProductos()), orden);
-            JOptionPane.showMessageDialog(null, "Se recibieron los canales correctamente");
+            JOptionPane.showMessageDialog(null, "Se recibieron los productos correctamente");
             model.limpiar();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Ocurrió un error al recibir los canales");
+            JOptionPane.showMessageDialog(null, "Ocurrió un error al recibir los Productos");
         }
         consecutivoLbl.setText(String.valueOf(tablaProductos.getRowCount()));
     }//GEN-LAST:event_btnFinalizarActionPerformed
@@ -265,7 +268,6 @@ public class ReciboDeProductoSinBC extends javax.swing.JPanel {
     
     private void imprimirCodigo(ProductosInventario producto) {
         // aca obtenemos la printer default  
-
         String label = "";
         try (BufferedReader br = new BufferedReader(new FileReader("C:\\valco_installation\\conf\\CodigoBarras.txt"))){
             StringBuilder sb = new StringBuilder();
@@ -285,17 +287,6 @@ public class ReciboDeProductoSinBC extends javax.swing.JPanel {
         label = label.replace("PRODUCTO", this.productosDropDown.getSelectedItem().toString());
         label = label.replace("PESO", producto.getPeso().toString());
         label = label.replace("CODIGO_BARRAS", producto.getCodigoBarras());
-        
-       /* String zplCommand = "^XA"
-                + "^FO230,50^ARN,16,9^FD " + this.productosLov.getSelectedItem() + "^FS"
-                + "^FO300,100^ARN,16,9^FD " + producto.getPeso() + " KG^BY1,3.0^FS"
-                + "^FO230,180^BCN, 80, Y, N, N^FD" + producto.getCodigoBarras() + "^FS "
-                + "^XZ";
-        
-        
-               
-        */
-        
 
 // convertimos el comando a bytes  
         byte[] by = label.getBytes();
@@ -311,7 +302,6 @@ public class ReciboDeProductoSinBC extends javax.swing.JPanel {
         } catch (PrintException ex) {
             Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
     
     public BasculaPanel getBascula() {
@@ -361,11 +351,6 @@ public class ReciboDeProductoSinBC extends javax.swing.JPanel {
     public void setProductosDao(ProductoDAO productosDao) {
         this.productosDao = productosDao;
     }
-
-    
-    
-    
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;

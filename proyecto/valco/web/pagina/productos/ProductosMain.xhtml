@@ -100,11 +100,7 @@
 
                             <f:facet name="header">
                                 <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
-                            </f:facet>
-
-                            <p:outputLabel for="codigo" value="Codigo" />
-                            <p:inputText id="codigo" binding="#{productoMainBean.codigo}" required="true" label="codigo" value="#{productoMainBean.productoNuevo.codigo}"/>
-                            <p:message for="codigo" display="icon" />
+                            </f:facet>                 
 
                             <p:outputLabel for="descripcion" value="Ingresar Producto: " />
                             <p:inputText id="descripcion"  validator="#{productoMainBean.validarDescripcion}" required="true" label="descripcion" value="#{productoMainBean.productoNuevo.descripcion}" >
@@ -203,11 +199,6 @@
                             <f:facet name="header">
                                 <p:messages id="msgsmodificar" style="font-size: 12px; text-align: left;"/>
                             </f:facet>
-
-                            <p:outputLabel for="codigo1" value="Codigo: " />
-                            <p:inputText id="codigo1" required="true" label="codigo1" value="#{productoMainBean.productoSeleccionado.codigo}" disabled="true">                                
-                            </p:inputText>
-                            <p:message for="codigo1" display="icon" />
 
                             <p:outputLabel for="descripcion1" value="Ingresar Producto: " />
                             <p:inputText id="descripcion1" validator="#{productoMainBean.validarModificarDescripcion}" required="true" label="descripcion1" value="#{productoMainBean.productoSeleccionado.descripcion}">                                

@@ -98,7 +98,6 @@ public class NotasVentaDAO implements NotaVentaDAOInterface {
             cuenta.setNotasDeVenta(nota);
             session.save(cuenta);
             for (ProductosInventario producto : nota.getProductosInventarios()) {
-                producto.setEstatus("VENDIDO");
                 session.update(producto);
             }
             tx.commit();

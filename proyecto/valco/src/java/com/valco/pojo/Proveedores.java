@@ -197,7 +197,7 @@ public class Proveedores  implements java.io.Serializable {
     }
 
     public String toString (){
-        return razonSocial; 
+        return razonSocial +" - "+nombres; 
     }
 
     public boolean isAbarrotes() {

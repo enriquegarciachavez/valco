@@ -89,11 +89,6 @@
                                         <p:messages id="msgs" style="font-size: 12px; text-align: left;"/>
                                     </f:facet>
 
-
-                                    <p:outputLabel for="codigo" value="Codigo" />
-                                    <p:inputText id="codigo" binding="#{proveedoresMainBean.codigo}" required="true" label="codigo" value="#{proveedoresMainBean.proveedorNuevo.codigo}"/>
-                                    <p:message for="codigo" display="icon" />
-
                                     <p:outputLabel for="razon" value="Razón Social: " />
                                     <p:inputText id="razon" validator="#{proveedoresMainBean.validarRazonSocial}" required="true" label="razon" value="#{proveedoresMainBean.proveedorNuevo.razonSocial}" />
                                     <p:message for="razon" display="icon" />
@@ -171,10 +166,6 @@
                                     <f:facet name="header">
                                         <p:messages id="msgsmodificar" style="font-size: 12px; text-align: left;"/>
                                     </f:facet>
-
-                                    <p:outputLabel for="codigo2" value="Codigo" />
-                                    <p:inputText id="codigo2" required="true" label="codigo2" value="#{proveedoresMainBean.proveedorSeleccionado.codigo}" disabled="true"/>
-                                    <p:message for="codigo2" display="icon" />
 
                                     <p:outputLabel for="razon2" value="Razón Social: " />
                                     <p:inputText id="razon2" validator="#{proveedoresMainBean.validarModificarRazonSocial}" required="true" label="razon" value="#{proveedoresMainBean.proveedorSeleccionado.razonSocial}" />

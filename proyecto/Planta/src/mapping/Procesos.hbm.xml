@@ -40,5 +40,19 @@
     <property name="observaciones" type="string">
       <column name="OBSERVACIONES"/>
     </property>
+    <set name="productosHijos" table="PRODUCTOS_INVENTARIO" 
+         inverse="true" lazy="true" fetch="select" cascade="all">
+            <key>
+                <column name="PROCESOS_CODIGO_PADRE" not-null="true"/>
+            </key>
+            <one-to-many class="mapping.ProductosInventario"/>
+    </set>
+    <set name="productosPadres" table="PRODUCTOS_INVENTARIO" 
+         inverse="true" lazy="true" fetch="select" cascade="all">
+            <key>
+                <column name="PROCESOS_CODIGO_HIJO" not-null="true"/>
+            </key>
+            <one-to-many class="mapping.ProductosInventario"/>
+    </set>
   </class>
 </hibernate-mapping>

@@ -21,6 +21,7 @@ public class Productos  implements java.io.Serializable {
      private boolean aplicaInventarioFisico;
      private String estatus;
      private BigDecimal precioSugerido;
+     private Subfamilias subfamilias;
      private Set<Productos> productosesForProductosCodigoPadre = new HashSet<Productos>(0);
      private Set<Productos> productosesForProductosCodigoHijo = new HashSet<Productos>(0);
      private Set<ProductosHasProveedores> productosHasProveedoreses = new HashSet<ProductosHasProveedores>(0);
@@ -128,6 +129,15 @@ public class Productos  implements java.io.Serializable {
     public void setPrecioSugerido(BigDecimal precioSugerido) {
         this.precioSugerido = precioSugerido;
     }
+
+    public Subfamilias getSubfamilias() {
+        return subfamilias;
+    }
+
+    public void setSubfamilias(Subfamilias subfamilias) {
+        this.subfamilias = subfamilias;
+    }
+    
     public Set<Productos> getProductosesForProductosCodigoPadre() {
         return this.productosesForProductosCodigoPadre;
     }

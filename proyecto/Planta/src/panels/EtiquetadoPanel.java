@@ -28,9 +28,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.print.Doc;
@@ -62,6 +64,7 @@ import mapping.Productos;
 import mapping.ProductosHasProveedores;
 import mapping.ProductosInventario;
 import mapping.Proveedores;
+import mapping.Subfamilias;
 import mapping.Ubicaciones;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -121,7 +124,7 @@ public class EtiquetadoPanel extends PesableBarCodeable {
         try {
             this.reportDir = ParametrosGeneralesUtility.getValor("RE001");
         } catch (Exception ex) {
-            this.reportDir = "C:/valco_installation/reportes/";
+            this.reportDir = "C://valco_installation//reportes//";
         }
         this.mainPanel = mainPanel;
         initComponents();
@@ -131,7 +134,7 @@ public class EtiquetadoPanel extends PesableBarCodeable {
         tablaProductos.getColumn("Nombre").setPreferredWidth(300);
         tablaProductos.getColumn("Peso").setPreferredWidth(80);
         tablaProductos.getColumn("Etiqueta").setPreferredWidth(320);
-        tablaProductos.getColumn("Consecutivo").setPreferredWidth(100);
+//        tablaProductos.getColumn("Consecutivo").setPreferredWidth(100);
         tablaProductos.getColumn("Estatus").setPreferredWidth(100);
         try {
             consecutivoLbl.setText(procesosDAO.getConsecutivo(((Procesos) procesosLov.getSelectedItem()).getCodigo()).toString());
@@ -140,21 +143,33 @@ public class EtiquetadoPanel extends PesableBarCodeable {
         }
         cierrePanel.setVisible(!reetiquetado);
         procesoPanel.setVisible(!reetiquetado);
-        jTabbedPane1.remove(1);
         if (procesosLov.getSelectedItem() != null) {
             procesoLbl.setText(procesosLov.getSelectedItem().toString());
+            model.limpiar();
         }
         jPanel1.add(basculaPanel1);
         basculaPanel1.setBounds(20, 310, 379, 200);
-
+        if (reetiquetado) {
+            panelPestanas.remove(1);
+            imprimirEtiquetaBtn.setVisible(false);
+            eliminarCajaBtn.setVisible(false);
+        }else{
+            productosLov.setModel(new DefaultComboBoxModel(getProducts()));
+        }
+        
     }
 
     private Object[] getProducts() {
         Object[] productosArray = new Object[0];
+        Set<Subfamilias> subfamilias = new HashSet<>();
         try {
+            for(ProductosInventario productos: ((Procesos)procesosLov.getSelectedItem()).getProductosPadres()){
+                subfamilias.add(productos.getProductosHasProveedores().getProductos().getSubfamilias());
+                System.out.println("Una subfamilia");
+            }
             Proveedores proveedor = new Proveedores();
             proveedor.setCodigo(9999999);
-            productosArray = productoDAO.getProductosXProveedor(proveedor).toArray();
+            productosArray = productoDAO.getProductosHasProveedoresInFamilias(subfamilias, proveedor).toArray();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", ERROR_MESSAGE);
         }
@@ -193,7 +208,7 @@ public class EtiquetadoPanel extends PesableBarCodeable {
     private void initComponents() {
 
         reporteGroup = new javax.swing.ButtonGroup();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        panelPestanas = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
@@ -222,6 +237,7 @@ public class EtiquetadoPanel extends PesableBarCodeable {
         jLabel4 = new javax.swing.JLabel();
         procesosLov = new javax.swing.JComboBox();
         jLabel12 = new javax.swing.JLabel();
+        buscarBtn = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tablaProductos = new javax.swing.JTable();
@@ -247,6 +263,7 @@ public class EtiquetadoPanel extends PesableBarCodeable {
         pesoFinalLbl = new javax.swing.JLabel();
         agregarPesoInicialBtn = new javax.swing.JButton();
         pesoInicialLbl = new javax.swing.JLabel();
+        pesoFinalLbl2 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         condensadoRadio = new javax.swing.JRadioButton();
         detalladoRadio = new javax.swing.JRadioButton();
@@ -261,6 +278,11 @@ public class EtiquetadoPanel extends PesableBarCodeable {
         cerrarProcesoBtn = new javax.swing.JButton();
         reporteFinalBtn = new javax.swing.JButton();
 
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+        });
         addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 formKeyPressed(evt);
@@ -268,12 +290,19 @@ public class EtiquetadoPanel extends PesableBarCodeable {
         });
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
+        panelPestanas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                panelPestanasMouseClicked(evt);
+            }
+        });
+
         jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.LINE_AXIS));
 
         jScrollPane2.setHorizontalScrollBar(null);
 
-        productoCodigoArea.setColumns(20);
-        productoCodigoArea.setRows(5);
+        productoCodigoArea.setColumns(40);
+        productoCodigoArea.setFont(new java.awt.Font("Arial", 1, 22)); // NOI18N
+        productoCodigoArea.setRows(1);
         productoCodigoArea.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 productoCodigoAreaKeyReleased(evt);
@@ -284,7 +313,6 @@ public class EtiquetadoPanel extends PesableBarCodeable {
         });
         jScrollPane2.setViewportView(productoCodigoArea);
 
-        productosLov.setModel(new DefaultComboBoxModel(getProducts()));
         productosLov.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 productosLovActionPerformed(evt);
@@ -319,7 +347,6 @@ public class EtiquetadoPanel extends PesableBarCodeable {
         jLabel9.setText("Producto:");
 
         productoLbl.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        productoLbl.setText(productosLov.getSelectedItem().toString());
 
         eliminarCajaBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         eliminarCajaBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/button_cancel-48.png"))); // NOI18N
@@ -375,13 +402,13 @@ public class EtiquetadoPanel extends PesableBarCodeable {
                             .addGroup(procesoPanelLayout.createSequentialGroup()
                                 .addGap(4, 4, 4)
                                 .addComponent(procesosCerradosChk)
-                                .addGap(31, 31, 31)
-                                .addComponent(procesosLov, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(procesosLov, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(procesoPanelLayout.createSequentialGroup()
                                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(procesoLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
                         .addGroup(procesoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel13)
                             .addComponent(jLabel11))
@@ -390,9 +417,11 @@ public class EtiquetadoPanel extends PesableBarCodeable {
                             .addComponent(jLabel12)
                             .addComponent(consecutivoLbl))
                         .addGap(115, 115, 115))
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 609, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addGroup(procesoPanelLayout.createSequentialGroup()
+                        .addGroup(procesoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 609, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())))
         );
         procesoPanelLayout.setVerticalGroup(
             procesoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -421,6 +450,14 @@ public class EtiquetadoPanel extends PesableBarCodeable {
                 .addContainerGap())
         );
 
+        buscarBtn.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        buscarBtn.setText("Buscar");
+        buscarBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buscarBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -428,25 +465,25 @@ public class EtiquetadoPanel extends PesableBarCodeable {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(14, 14, 14)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(diasCaducidadTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(productosLov, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(fechaElaboracionEtiquetaChk)
+                                .addComponent(fechaCaducidadEtiquetaChk))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(416, 416, 416)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(diasCaducidadTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(productosLov, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fechaElaboracionEtiquetaChk)
-                                    .addComponent(fechaCaducidadEtiquetaChk)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(14, 14, 14)
                                 .addComponent(reimprimirEtiquetaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
+                                .addGap(10, 10, 10)
                                 .addComponent(imprimirEtiquetaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(50, 50, 50)
-                                .addComponent(eliminarCajaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(eliminarCajaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(buscarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
@@ -480,12 +517,13 @@ public class EtiquetadoPanel extends PesableBarCodeable {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(reimprimirEtiquetaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(imprimirEtiquetaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(eliminarCajaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(eliminarCajaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buscarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(productoLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(productoLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(132, Short.MAX_VALUE))
+                .addContainerGap(122, Short.MAX_VALUE))
         );
 
         jSplitPane1.setLeftComponent(jPanel1);
@@ -501,7 +539,7 @@ public class EtiquetadoPanel extends PesableBarCodeable {
 
         jPanel3.add(jSplitPane1);
 
-        jTabbedPane1.addTab("Pesaje de proceso", jPanel3);
+        panelPestanas.addTab("Pesaje de proceso", jPanel3);
 
         jLabel3.setText("proceso:");
 
@@ -617,7 +655,8 @@ public class EtiquetadoPanel extends PesableBarCodeable {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pesoInicialLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pesoFinalLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pesoFinalLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pesoFinalLbl2, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(agregarPesoInicialBtn)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -633,7 +672,9 @@ public class EtiquetadoPanel extends PesableBarCodeable {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(35, 35, 35)
-                        .addComponent(jLabel1))
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(pesoFinalLbl2, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(pesoFinalLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 29, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
@@ -773,7 +814,7 @@ public class EtiquetadoPanel extends PesableBarCodeable {
         cierrePanelLayout.setHorizontalGroup(
             cierrePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(cierrePanelLayout.createSequentialGroup()
-                .addGroup(cierrePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(cierrePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(cierrePanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(cierrePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -783,7 +824,7 @@ public class EtiquetadoPanel extends PesableBarCodeable {
                         .addGap(21, 21, 21)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(procesoLbl1, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(procesoLbl1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(30, 30, 30)
                 .addGroup(cierrePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(cierrePanelLayout.createSequentialGroup()
@@ -824,9 +865,9 @@ public class EtiquetadoPanel extends PesableBarCodeable {
 
         cerrarProcesoBtn.getAccessibleContext().setAccessibleName("Cerrarproceso");
 
-        jTabbedPane1.addTab("Cierre de proceso", cierrePanel);
+        panelPestanas.addTab("Cierre de proceso", cierrePanel);
 
-        add(jTabbedPane1);
+        add(panelPestanas);
     }// </editor-fold>//GEN-END:initComponents
 
     private String getPesoInicial() {
@@ -892,10 +933,12 @@ public class EtiquetadoPanel extends PesableBarCodeable {
     private void procesosLovActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_procesosLovActionPerformed
         procesoLbl.setText(procesosLov.getSelectedItem().toString());
         procesoLbl1.setText(procesosLov.getSelectedItem().toString());
-
+        descripcionArea.setText(((Procesos)procesosLov.getSelectedItem()).getObservaciones());
         this.setTableModel();
         this.actualizarValores();
         this.reporteFinalBtn.setEnabled(!((Procesos) this.procesosLov.getSelectedItem()).getEstatus().equals("ACTIVO"));
+        pesoFinalLbl2.setText(((Procesos)procesosLov.getSelectedItem()).getPesoSalida().toString());
+        productosLov.setModel(new DefaultComboBoxModel(getProducts()));
     }//GEN-LAST:event_procesosLovActionPerformed
 
     private void productoCodigoAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyReleased
@@ -1116,6 +1159,8 @@ public class EtiquetadoPanel extends PesableBarCodeable {
             InputStream input = new FileInputStream(new File(realPath));
             Map mapa = new HashMap();
 
+            System.out.println(reportDir);
+            System.out.println(realPath);
             mapa.put("procesoCodigo", ((Procesos) (this.procesosLov.getSelectedItem())).getCodigo());
             mapa.put("SUBREPORT_DIR", reportDir + "/planta/");
 
@@ -1149,15 +1194,36 @@ public class EtiquetadoPanel extends PesableBarCodeable {
 
     private void reimprimirEtiquetaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reimprimirEtiquetaBtnActionPerformed
         int[] selectedRows = tablaProductos.getSelectedRows();
-        List<ProductosInventario> productosSeleccionados = new ArrayList<>();
         if (selectedRows.length > 0) {
             for (int i = selectedRows.length - 1; i >= 0; i--) {
                 ProductosInventario productoSeleccionado = (ProductosInventario) model.getElementAt(selectedRows[i], 0);
                 this.imprimirCodigo(productoSeleccionado);
             }
-
         }
+        model.limpiar();
     }//GEN-LAST:event_reimprimirEtiquetaBtnActionPerformed
+
+    private void buscarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarBtnActionPerformed
+        try {
+            List<ProductosInventario>  productos = productoDAO.getProductosPesadosByEstatus(
+                    basculaPanel1.getPeso(),
+                    ((ProductosHasProveedores) productosLov.getSelectedItem()).getProductos(),
+                    "ACTIVO");
+            model.convertirProductos(productos);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                System.out.println(ex.getMessage());
+                return;
+            }
+    }//GEN-LAST:event_buscarBtnActionPerformed
+
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formMouseClicked
+
+    private void panelPestanasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelPestanasMouseClicked
+        pesoFinalLbl2.setText(((Procesos)procesosLov.getSelectedItem()).getPesoSalida().toString());
+    }//GEN-LAST:event_panelPestanasMouseClicked
 
     private void addNewPanel(ActionEvent evt) {
         if (internalFrame != null) {
@@ -1305,6 +1371,7 @@ public class EtiquetadoPanel extends PesableBarCodeable {
     private javax.swing.JLabel P;
     private javax.swing.JButton agregarCostoBtn;
     private javax.swing.JButton agregarPesoInicialBtn;
+    private javax.swing.JButton buscarBtn;
     private javax.swing.JButton cerrarProcesoBtn;
     public javax.swing.JPanel cierrePanel;
     private javax.swing.JRadioButton condensadoRadio;
@@ -1347,11 +1414,12 @@ public class EtiquetadoPanel extends PesableBarCodeable {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField manoDeObraTxt;
     private javax.swing.JTextField masTxt;
+    private javax.swing.JTabbedPane panelPestanas;
     private javax.swing.JLabel pesoAcerrinLbl;
     private javax.swing.JLabel pesoFinalLbl;
+    private javax.swing.JLabel pesoFinalLbl2;
     private javax.swing.JLabel pesoHuesoLbl;
     private javax.swing.JLabel pesoInicialLbl;
     private javax.swing.JLabel pesoSeboLbl;

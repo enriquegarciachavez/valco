@@ -14,10 +14,6 @@
                     <p:fieldset legend="Datos Personales" style="margin-bottom: 20px" >
                         <h:panelGrid id="ingresarGrid"  columns="6" cellpadding="5">
 
-                            <p:outputLabel for="codigo" value="Codigo:" />
-                            <p:inputText id="codigo"  required="true" label="codigo" value="#{editarClienteBean.cliente.codigo}"/>
-                            <p:message for="codigo" display="icon" />
-
                             <p:outputLabel for="razon" value="Razón Social: " />
                             <p:inputText id="razon" validator="#{editarClienteBean.validarRazonSocial}" required="true" label="razon" value="#{editarClienteBean.cliente.razonSocial}" />
                             <p:message for="razon" display="icon" />

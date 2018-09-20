@@ -21,7 +21,7 @@
             <column name="OBSERVACIONES" length="65535" />
         </property>
         <property name="total" type="big_decimal">
-            <column name="TOTAL" precision="7" not-null="true" />
+            <column name="TOTAL" precision="9" not-null="true" />
         </property>
         <property name="iva" type="big_decimal">
             <column name="IVA" precision="8" not-null="true" />

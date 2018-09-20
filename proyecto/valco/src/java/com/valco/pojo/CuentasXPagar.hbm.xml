@@ -15,7 +15,7 @@
             <column name="FECHA" length="19" not-null="true" />
         </property>
         <property name="importe" type="big_decimal">
-            <column name="IMPORTE" precision="7" not-null="true" />
+            <column name="IMPORTE" precision="9" not-null="true" />
         </property>
         <property name="observaciones" type="string">
             <column name="OBSERVACIONES" length="65535" />

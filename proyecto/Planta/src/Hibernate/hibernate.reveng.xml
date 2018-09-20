@@ -33,4 +33,6 @@
   <table-filter match-name="MERMAS"/>
   <table-filter match-name="PRODUCTOS_has_PROVEEDORES_VIEW"/>
   <table-filter match-name="PROVEEDORES_CODIGOS"/>
+  <table-filter match-name="FAMILIAS"/>
+  <table-filter match-name="SUBFAMILIAS"/>
 </hibernate-reverse-engineering>

@@ -13,6 +13,9 @@
     <many-to-one class="mapping.UnidadesDeMedida" fetch="select" name="unidadesDeMedida">
       <column name="UNIDADES_DE_MEDIDA_CODIGO" not-null="true"/>
     </many-to-one>
+    <many-to-one class="mapping.Subfamilias" fetch="select" name="subfamilias" >
+      <column name="SUBFAMILIAS_CODIGO" not-null="true"/>
+    </many-to-one>
     <property name="descripcion" type="string">
       <column length="45" name="DESCRIPCION" not-null="true" unique="true"/>
     </property>

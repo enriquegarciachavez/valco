@@ -12,16 +12,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import mapping.CuentasXPagar;
+import mapping.Familias;
 import mapping.OrdenesCompra;
 import mapping.Productos;
 import mapping.ProductosHasProveedores;
 import mapping.ProductosHasProveedoresView;
 import mapping.ProductosInventario;
 import mapping.Proveedores;
+import mapping.Subfamilias;
 import mapping.Tranferencias;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
@@ -217,7 +220,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
         try {
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(Productos.class);
-
+            q.addOrder(Order.asc("descripcion"));
             productos = (List<Productos>) q.list();
             for (Productos producto : productos) {
                 Hibernate.initialize(producto.getTipoProducto());
@@ -377,7 +380,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
         }
     }
 
-    public ProductosInventario getProductosXCodigoBarrasActivos(String codigo, Integer[] codigos) throws Exception {
+    public ProductosInventario getProductosXCodigoBarrasActivos(String codigo, List codigos) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
         ProductosInventario producto = new ProductosInventario();
@@ -386,21 +389,14 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
             Criteria q = session.createCriteria(ProductosInventario.class)
                     .add(Restrictions.eq("codigoBarras", codigo))
                     .add(Restrictions.eq("estatus", "ACTIVO"));
-            if (codigos != null && codigos.length > 0) {
+            if (codigos != null && codigos.size() > 0) {
                 q.add(Restrictions.not(Restrictions.in("codigo", codigos)));
             }
             q.setMaxResults(1);
-            if (q.uniqueResult() == null) {
-                Criteria x = session.createCriteria(ProductosHasProveedoresView.class);
-                List<ProductosHasProveedoresView> productosHasProveedores = x.list();
-                ProductosHasProveedores productoProveedor = ProductosUtility.getProductosHasProveedoresByBarCode(productosHasProveedores, codigo);
-                ProductosInventario productoBuild = ProductosUtility.buildProductoFromBarCode(productoProveedor, codigo);
-                if (productoBuild != null) {
-                    return productoBuild;
-                }
+            producto = (ProductosInventario) q.uniqueResult();
+            if (producto == null) {
                 throw new Exception("No se encontró el producto buscado.");
             }
-            producto = (ProductosInventario) q.uniqueResult();
             Hibernate.initialize(producto.getProductosHasProveedores().getProductos());
             Hibernate.initialize(producto.getUbicaciones());
             Hibernate.initialize(producto.getProductosHasProveedores().getProveedores());
@@ -420,7 +416,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
         }
     }
 
-    public ProductosInventario getProductosXCodigoBarrasTransito(String codigo, Integer[] codigos) throws Exception {
+    public ProductosInventario getProductosXCodigoBarrasTransito(String codigo, List codigos) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
         ProductosInventario producto = new ProductosInventario();
@@ -429,18 +425,11 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
             Criteria q = session.createCriteria(ProductosInventario.class)
                     .add(Restrictions.eq("codigoBarras", codigo))
                     .add(Restrictions.eq("estatus", "EN TRANSITO"));
-            if (codigos != null && codigos.length > 0) {
+            if (codigos != null && codigos.size() > 0) {
                 q.add(Restrictions.not(Restrictions.in("codigo", codigos)));
             }
             q.setMaxResults(1);
             if (q.uniqueResult() == null) {
-                Criteria x = session.createCriteria(ProductosHasProveedoresView.class);
-                List<ProductosHasProveedoresView> productosHasProveedores = x.list();
-                ProductosHasProveedores productoProveedor = ProductosUtility.getProductosHasProveedoresByBarCode(productosHasProveedores, codigo);
-                ProductosInventario productoBuild = ProductosUtility.buildProductoFromBarCode(productoProveedor, codigo);
-                if (productoBuild != null) {
-                    return productoBuild;
-                }
                 throw new Exception("No se encontró el producto buscado.");
             }
             producto = (ProductosInventario) q.uniqueResult();
@@ -504,7 +493,8 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
             //session.clear();
             Criteria q = session.createCriteria(ProductosInventario.class).add(Restrictions.eq("estatus", "ACTIVO"));
             Criteria y = q.createCriteria("productosHasProveedores");
-            Criteria x = y.createCriteria("productos").add(Restrictions.eq("generarSubproducto", true));
+            Criteria x = y.createCriteria("productos").add(Restrictions.eq("generarSubproducto", true))
+                    .addOrder(Order.asc("descripcion"));
             //Query x = session.createQuery("FROM ProductosInventario");
             productos = (List<ProductosInventario>) x.list();
             for (ProductosInventario producto : productos) {
@@ -595,6 +585,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(ProductosHasProveedores.class)
                     .add(Restrictions.eq("proveedores", proveedor));
+            q.createCriteria("productos").addOrder(Order.asc("descripcion"));
             productos = (List<ProductosHasProveedores>) q.list();
             for (ProductosHasProveedores producto : productos) {
                 Hibernate.initialize(producto.getProductos());
@@ -625,7 +616,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(ProductosHasProveedores.class)
                     .add(Restrictions.eq("proveedores", proveedor));
-
+            q.createCriteria("productos").addOrder(Order.asc("descripcion"));
             Criteria y = q.createCriteria("productos").add(Restrictions.eq("productoPesado", true));
             productos = (List<ProductosHasProveedores>) q.list();
             for (ProductosHasProveedores producto : productos) {
@@ -657,7 +648,8 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(ProductosHasProveedores.class)
                     .add(Restrictions.eq("proveedores", proveedor));
-            Criteria x = q.createCriteria("productos").add(Restrictions.eq("generarSubproducto", true));
+            Criteria x = q.createCriteria("productos").add(Restrictions.eq("generarSubproducto", true))
+                    .addOrder(Order.asc("descripcion"));
             Criteria y = x.createCriteria("tipoProducto").add(Restrictions.disjunction()
                     .add(Restrictions.like("descripcion", "CANAL%"))
                     .add(Restrictions.eq("descripcion", "RES CASO ESPECIAL")));
@@ -736,6 +728,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
                     throw new Exception("Ocurrió un error al registrar el producto.");
                 }
             }
+            e.printStackTrace();
             throw new Exception("Ocurrió un error al registrar el producto.");
         } finally {
             try {
@@ -777,7 +770,9 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
 
     }
 
-    public ProductosInventario getProductoPesadoActivo(String peso, Productos producto, DefaultTableModel model) throws Exception {
+    public ProductosInventario getProductoPesadoByEstatus(String peso, 
+            Productos producto, Collection<ProductosInventario> productos,
+            String estatus) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
         tx = session.beginTransaction();
@@ -785,16 +780,15 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
         String hql = "From ProductosInventario PI "
                 + "inner join PI.productosHasProveedores as PHP"
                 + " inner join PHP.productos as P "
-                + "where PI.estatus = \"ACTIVO\" and  P.codigo =" + producto.getCodigo()
+                + "where PI.estatus = \""+estatus+"\" and  P.codigo =" + producto.getCodigo()
                 + " and PI.peso >= " + peso;
-        if (model.getRowCount() > 0) {
+        if (productos.size() > 0) {
             hql += " AND PI.codigo not in (";
-            for (int row = 0; row < model.getRowCount(); row++) {
-                hql += ((ProductosInventario) model.getValueAt(row, 0)).getCodigo();
-                if (model.getRowCount() - 1 != row) {
-                    hql += ",";
-                }
+            for (ProductosInventario prod: productos) {
+                hql += prod.getCodigo();
+                hql += ",";
             }
+            hql = hql.substring(0, hql.length()-1);
             hql += ")";
         }
         hql += " order by abs(peso - " + peso + ")";
@@ -812,6 +806,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
             return productoInventario;
 
         } catch (HibernateException he) {
+            he.printStackTrace();
             tx.commit();
             throw new Exception("Ocurrió un error al consultar los productos.");
 
@@ -825,40 +820,42 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
             }
         }
     }
-
-    public ProductosInventario getProductoPesadoTransito(String peso, Productos producto, DefaultTableModel model) throws Exception {
+    
+    public List<ProductosInventario> getProductosPesadosByEstatus(BigDecimal peso, 
+            Productos producto, String estatus) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
-        ProductosInventario productoInventario = new ProductosInventario();
+        tx = session.beginTransaction();
+        List<ProductosInventario> productosInventario = new ArrayList<ProductosInventario>();
+        Criteria q = session.createCriteria(ProductosInventario.class);
+        q.add(Restrictions.eq("estatus", estatus));
+        q.add(Restrictions.ge("peso", peso));
+        q.createCriteria("productosHasProveedores").createCriteria("productos")
+                .add(Restrictions.eq("codigo",producto.getCodigo()));
+        q.addOrder(Order.asc("peso"));
         String hql = "From ProductosInventario PI "
                 + "inner join PI.productosHasProveedores as PHP"
                 + " inner join PHP.productos as P "
-                + "where PI.estatus = \"EN TRANSITO\" and  P.codigo =" + producto.getCodigo()
+                + "where PI.estatus = \""+estatus+"\" and  P.codigo =" + producto.getCodigo()
                 + " and PI.peso >= " + peso;
-        if (model.getRowCount() > 0) {
-            hql += " AND PI.codigo not in (";
-            for (int row = 0; row < model.getRowCount(); row++) {
-                hql += ((ProductosInventario) model.getValueAt(row, 0)).getCodigo();
-                if (model.getRowCount() - 1 != row) {
-                    hql += ",";
-                }
-            }
-            hql += ")";
-        }
         hql += " order by abs(peso - " + peso + ")";
         try {
-            Query query = session.createQuery(hql);
-            query.setMaxResults(1);
-            if (query.uniqueResult() == null) {
-                throw new Exception("No se encontró el producto buscado en el inventario.");
+        //    Query query = session.createQuery(hql);
+          //  query.setMaxResults(5);     
+            q.setMaxResults(5);
+            productosInventario = (List<ProductosInventario>)q.list();
+            for(ProductosInventario prod: productosInventario){
+                Hibernate.initialize(prod.getProductosHasProveedores().getProductos());
+                Hibernate.initialize(prod.getUbicaciones());
+                Hibernate.initialize(prod.getProductosHasProveedores().getProveedores());
             }
-            productoInventario = (ProductosInventario) ((Object[]) query.uniqueResult())[0];
-            Hibernate.initialize(productoInventario.getProductosHasProveedores().getProductos());
-            Hibernate.initialize(productoInventario.getUbicaciones());
-            Hibernate.initialize(productoInventario.getProductosHasProveedores().getProveedores());
-            return productoInventario;
+            tx.commit();
+            return productosInventario;
 
         } catch (HibernateException he) {
+            he.printStackTrace();
+            tx.commit();
+            he.printStackTrace();
             throw new Exception("Ocurrió un error al consultar los productos.");
 
         } finally {
@@ -918,16 +915,13 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
     public Collection getElementsByFather(Object father) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
-        List<ProductosHasProveedores> productos = new ArrayList<ProductosHasProveedores>();
+        List<Productos> productos = new ArrayList<Productos>();
         try {
             tx = session.beginTransaction();
-            Criteria q = session.createCriteria(ProductosHasProveedores.class)
-                    .add(Restrictions.eq("proveedores", father));
-            productos = (List<ProductosHasProveedores>) q.list();
-            for (ProductosHasProveedores producto : productos) {
-                Hibernate.initialize(producto.getProductos());
-                Hibernate.initialize(producto.getProveedores());
-            }
+            Criteria q = session.createCriteria(Productos.class);
+            q.createCriteria("productosHasProveedoreses").add(Restrictions.eq("proveedores", father));
+            q.addOrder(Order.asc("descripcion"));
+            productos = (List<Productos>) q.list();
             tx.commit();
             return productos;
 
@@ -963,12 +957,8 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
         try {
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(Productos.class);
-
+            q.addOrder(Order.asc("descripcion"));
             productos = (List<Productos>) q.list();
-            for (Productos producto : productos) {
-                Hibernate.initialize(producto.getTipoProducto());
-                Hibernate.initialize(producto.getUnidadesDeMedida());
-            }
             tx.commit();
             return productos;
 
@@ -1125,6 +1115,75 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
                 }
             } catch (HibernateException he) {
                 throw new Exception("Ocurrió un error al consultar los Prodcutos por proveedor.");
+            }
+        }
+    }
+
+    @Override
+    public Object getElementByFatherAndCriteria(Object father, String criteria)
+                                                               throws Exception{
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        ProductosHasProveedores productos = new ProductosHasProveedores();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(ProductosHasProveedores.class)
+                    .add(Restrictions.eq("proveedores", father));
+            if (StringUtils.isNumeric(criteria)) {
+                q.createCriteria("productos").add(Restrictions.eq("codigo", new Integer(criteria)));
+            } else {
+
+                q.createCriteria("productos").add(Restrictions.like("descripcion", criteria + "%"))
+                        .addOrder(Order.asc("descripcion"))
+                        .setMaxResults(1);
+            }
+            productos = (ProductosHasProveedores) q.uniqueResult();
+            tx.commit();
+            return productos.getProductos();
+
+        } catch (HibernateException he) {
+            throw new Exception("Ocurrió un error al consultar los productos.");
+
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar los productos.");
+            }
+        }
+    }
+    
+    public List<ProductosHasProveedores> getProductosHasProveedoresInFamilias(
+                                                 Set<Subfamilias> subfamilias,
+                                                 Proveedores proveedor) throws Exception{
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        List<ProductosHasProveedores> productos = new ArrayList<>();
+        try {
+            tx = session.beginTransaction();
+            Criteria q = session.createCriteria(ProductosHasProveedores.class);
+            q.add(Restrictions.eq("proveedores", proveedor));
+            if(subfamilias.size()>=1)
+                q.createCriteria("productos").add(Restrictions.in("subfamilias",subfamilias ))
+            .addOrder(Order.asc("descripcion"));
+
+            productos = q.list();
+            tx.commit();
+            return productos;
+
+        } catch (HibernateException he) {
+            he.printStackTrace();
+            throw new Exception("Ocurrió un error al consultar los productos.");
+
+        } finally {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                }
+            } catch (HibernateException he) {
+                throw new Exception("Ocurrió un error al consultar los productos.");
             }
         }
     }

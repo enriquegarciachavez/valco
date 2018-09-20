@@ -5,99 +5,96 @@
  */
 package panels;
 
-import components.BarCodeTxt;
+import components.BarCodeArea;
 import components.BasculaPanel;
+import components.CustomCellRendered;
 import components.CustomDropDown;
+import components.ProductosTableModel;
 import dao.ProductoDAO;
-import dao.ProveedoresDAO;
-import dao.ProveedoresKiloDAO;
-import dao.RepartidoresDAO;
-import java.awt.Component;
-import java.awt.ComponentOrientation;
-import java.awt.KeyboardFocusManager;
+import dao.ProductosHasProveedoresDao;
 import java.awt.event.KeyEvent;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.print.Doc;
-import javax.print.DocFlavor;
-import javax.print.DocPrintJob;
-import javax.print.PrintException;
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
-import javax.print.SimpleDoc;
-import javax.swing.AbstractButton;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
-import javax.swing.table.DefaultTableModel;
-import keydispatchers.BarCodeScannerKeyDispatcher;
-import listeners.NumericKeyListener;
-import mapping.Mermas;
-import mapping.Procesos;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 import mapping.Productos;
-import mapping.ProductosDelInventario;
 import mapping.ProductosHasProveedores;
 import mapping.ProductosInventario;
 import mapping.Proveedores;
 import mapping.Repartidores;
-import observers.BarCodeTxtObserver;
+import observers.BarCodeAreaObserver;
 import pesable.PesableBarCodeable;
-import table.custom.NoEditableTableModel;
-import threads.PesoThread;
+import service.BasculaService;
+import service.ProductosService;
+import service.TransactionService;
 import utilities.UsuarioFirmado;
 
 /**
  *
  * @author Administrador
  */
-public class AsignacionProductoRepartidor extends PesableBarCodeable implements BarCodeTxtObserver {
+public class AsignacionProductoRepartidor extends PesableBarCodeable implements BarCodeAreaObserver {
 
-    ProductoDAO productoDAO = new ProductoDAO();
-    ProveedoresDAO proveedoresDao = new ProveedoresKiloDAO();
-    DefaultTableModel modelProductos = new NoEditableTableModel();
-    private RepartidoresDAO repartidoresDao = new RepartidoresDAO();
-    List<Repartidores> repartidores = new ArrayList<>();
-    List<ProductosInventario> productos = new ArrayList<>();
-    public List<Component> exceptions = new ArrayList<>();
+    private ProductosTableModel model;
+    private CustomCellRendered cellRendered;
+    private List<ProductosInventario> productos = new ArrayList<>();
     private String modoOperacion;
-    private CustomDropDown proveedoresDropDown = new CustomDropDown();
-    private BarCodeTxt barCode = new BarCodeTxt();
+    private CustomDropDown proveedoresDropDown;
+    private CustomDropDown productosDropDown;
+    private CustomDropDown repartidoresDropDown;
+    private BarCodeArea barCodeArea;
     private BasculaPanel basculaPanel;
+    private ProductoDAO productoDAO;
+    private ProductosHasProveedoresDao pHasPro;
+    private BasculaService basculaService;
+    private ProductosService productosService;
+    private TransactionService transactionService;
+    private String letra;
+    private boolean inventarioInicial;
 
     /**
      * Creates new form AsignacionProductoRepartidor
      */
-
     public AsignacionProductoRepartidor(String modoOperacion) {
         this.modoOperacion = modoOperacion;
     }
-    
-    public void init(){
+
+    public void init() {
         initComponents();
-        proveedoresDropDown.setDao(proveedoresDao);
-        proveedoresDropDown.setEtiqueta("Proveedor");
-        proveedoresDropDown.init();
-        panelProveedor.add(proveedoresDropDown);
-        proveedoresDropDown.setBounds(10, 20, 500, 65);
-        proveedoresDropDown.disable();
-        PanelCodigoBarras.add(barCode);
-        barCode.setModoOperacion(modoOperacion);
-        barCode.setProveedoresDropDown(proveedoresDropDown);
-        barCode.setBounds(10, 40, 400, 40);
-        barCode.setProductoExistente(true);
-        barCode.registerObserver(this);
-        repartidorTxt.requestFocusInWindow();
+        PanelCodigoBarras.add(barCodeArea);
+        barCodeArea.setModoOperacion(modoOperacion);
+        barCodeArea.setProveedoresDropDown(proveedoresDropDown);
+        barCodeArea.setBounds(10, 20, 700, 180);
+        barCodeArea.setProductoExistente(true);
+        barCodeArea.registerObserver(this);
         PanelPeso.add(basculaPanel);
-        basculaPanel.setBounds(20, 30, 380, 120);
+        basculaPanel.setBounds(20, 25, 380, 120);
+        PanelPeso.add(productosDropDown);
+        productosDropDown.setBounds(420, 20, 300, 65);
+        PanelRepartidor.add(repartidoresDropDown);
+        repartidoresDropDown.setBounds(20, 20, 300, 65);
+        panelProveedor.add(proveedoresDropDown);
+        proveedoresDropDown.setBounds(20, 20, 300, 65);
+        proveedoresDropDown.disable();
+        tablaProductos.setDefaultRenderer(Object.class, (TableCellRenderer) cellRendered);
+        tablaProductos.setModel((TableModel) model);
+        if(inventarioInicial){
+            PanelRepartidor.setVisible(false);
+            noRadio.setSelected(inventarioInicial);
+            panelExistente.setVisible(false);
+            PanelFinalizar.setVisible(false);
+            proveedoresDropDown.setEnabled(true);
+            panelProveedor.setEnabled(true);
+        }else{
+            Proveedores valco = new Proveedores();
+            valco.setCodigo(9999999);
+            productosDropDown.filterByFather(valco);
+        }
     }
 
     /**
@@ -118,30 +115,17 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable implements 
         eliminarCajaBtn = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        tablaProductos1 = new javax.swing.JTable();
-        String[] columnNames = {
-            "Nombre",
-            "Peso",
-            "Codigo de Barras",
-            "Estatus"};
-
-        modelProductos.setColumnIdentifiers(columnNames);
+        tablaProductos = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
         PanelRepartidor = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        repartidoresLov = new javax.swing.JComboBox();
-        repartidorTxt = new javax.swing.JTextField();
         PanelCodigoBarras = new javax.swing.JPanel();
         PanelPeso = new javax.swing.JPanel();
-        productosLov = new javax.swing.JComboBox();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        productoCodigoArea = new javax.swing.JTextArea();
         imprimirEtiquetaBtn = new javax.swing.JButton();
         imprimirEtiquetaBtn.setMnemonic(KeyEvent.VK_ENTER);
         PanelFinalizar = new javax.swing.JPanel();
         finalizarBtn = new javax.swing.JButton();
-        jPanel5 = new javax.swing.JPanel();
+        panelExistente = new javax.swing.JPanel();
         yesRadio = new javax.swing.JRadioButton();
         noRadio = new javax.swing.JRadioButton();
         panelProveedor = new javax.swing.JPanel();
@@ -152,7 +136,7 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable implements 
         Pesaje.setPreferredSize(new java.awt.Dimension(1558, 455));
         Pesaje.setLayout(new javax.swing.BoxLayout(Pesaje, javax.swing.BoxLayout.LINE_AXIS));
 
-        jSplitPane2.setDividerLocation(651);
+        jSplitPane2.setDividerLocation(751);
         jSplitPane2.setMinimumSize(new java.awt.Dimension(30, 25));
 
         jPanel4.setPreferredSize(new java.awt.Dimension(922, 425));
@@ -192,19 +176,7 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable implements 
 
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
 
-        tablaProductos1.getTableHeader().add(eliminarCajaBtn);
-        tablaProductos1.setModel(modelProductos);
-        tablaProductos1.getColumnModel().getColumn(1).setMaxWidth(60);
-        tablaProductos1.getColumnModel().getColumn(2).setMaxWidth(200);
-        tablaProductos1.getColumnModel().getColumn(3).setMaxWidth(200);
-        tablaProductos1.getColumnModel().getColumn(2).setMinWidth(200);
-        tablaProductos1.getColumnModel().getColumn(3).setMinWidth(200);
-        tablaProductos1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                tablaProductos1MousePressed(evt);
-            }
-        });
-        jScrollPane4.setViewportView(tablaProductos1);
+        jScrollPane4.setViewportView(tablaProductos);
 
         jPanel2.add(jScrollPane4);
 
@@ -222,54 +194,15 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable implements 
 
         PanelRepartidor.setBorder(javax.swing.BorderFactory.createTitledBorder("Selecione el Repartidor"));
 
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("Repartidor:");
-
-        repartidoresLov.setModel(new DefaultComboBoxModel(getRepartidoes()));
-        repartidoresLov.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                repartidoresLovItemStateChanged(evt);
-            }
-        });
-        repartidoresLov.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                repartidoresLovActionPerformed(evt);
-            }
-        });
-
-        repartidorTxt.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentResized(java.awt.event.ComponentEvent evt) {
-                repartidorTxtComponentResized(evt);
-            }
-        });
-        repartidorTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                repartidorTxtKeyReleased(evt);
-            }
-        });
-
         javax.swing.GroupLayout PanelRepartidorLayout = new javax.swing.GroupLayout(PanelRepartidor);
         PanelRepartidor.setLayout(PanelRepartidorLayout);
         PanelRepartidorLayout.setHorizontalGroup(
             PanelRepartidorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelRepartidorLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(repartidorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(repartidoresLov, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         PanelRepartidorLayout.setVerticalGroup(
             PanelRepartidorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelRepartidorLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(PanelRepartidorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(repartidorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(repartidoresLov, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         PanelCodigoBarras.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(""), "Ingrese el Codigo de Barras"));
@@ -285,36 +218,11 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable implements 
         );
         PanelCodigoBarrasLayout.setVerticalGroup(
             PanelCodigoBarrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 69, Short.MAX_VALUE)
+            .addGap(0, 192, Short.MAX_VALUE)
         );
 
         PanelPeso.setBorder(javax.swing.BorderFactory.createTitledBorder("Ó Seleccione y pese un producto"));
         PanelPeso.setPreferredSize(new java.awt.Dimension(584, 343));
-
-        productosLov.setModel(new DefaultComboBoxModel(getProducts()));
-        productosLov.getSelectedItem().toString();
-        productosLov.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                productosLovActionPerformed(evt);
-            }
-        });
-
-        jScrollPane3.setHorizontalScrollBar(null);
-
-        productoCodigoArea.setColumns(20);
-        productoCodigoArea.setRows(5);
-        productoCodigoArea.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                productoCodigoAreaKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                productoCodigoAreaKeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                productoCodigoAreaKeyTyped(evt);
-            }
-        });
-        jScrollPane3.setViewportView(productoCodigoArea);
 
         imprimirEtiquetaBtn.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         imprimirEtiquetaBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Print-48.png"))); // NOI18N
@@ -332,21 +240,15 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable implements 
             PanelPesoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelPesoLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(PanelPesoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(imprimirEtiquetaBtn, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(productosLov, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(imprimirEtiquetaBtn)
                 .addContainerGap())
         );
         PanelPesoLayout.setVerticalGroup(
             PanelPesoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelPesoLayout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(productosLov)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelPesoLayout.createSequentialGroup()
+                .addContainerGap(77, Short.MAX_VALUE)
                 .addComponent(imprimirEtiquetaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34))
+                .addContainerGap())
         );
 
         PanelFinalizar.setBorder(javax.swing.BorderFactory.createTitledBorder("Finalizar"));
@@ -364,19 +266,16 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable implements 
         PanelFinalizarLayout.setHorizontalGroup(
             PanelFinalizarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelFinalizarLayout.createSequentialGroup()
-                .addGap(230, 230, 230)
+                .addGap(229, 229, 229)
                 .addComponent(finalizarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(357, Short.MAX_VALUE))
         );
         PanelFinalizarLayout.setVerticalGroup(
             PanelFinalizarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelFinalizarLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(finalizarBtn)
-                .addContainerGap(14, Short.MAX_VALUE))
+            .addComponent(finalizarBtn)
         );
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("¿El producto ya existe en el inventario?"));
+        panelExistente.setBorder(javax.swing.BorderFactory.createTitledBorder("¿El producto ya existe en el inventario?"));
 
         buttonGroup1.add(yesRadio);
         yesRadio.setSelected(true);
@@ -398,21 +297,21 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable implements 
             }
         });
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelExistenteLayout = new javax.swing.GroupLayout(panelExistente);
+        panelExistente.setLayout(panelExistenteLayout);
+        panelExistenteLayout.setHorizontalGroup(
+            panelExistenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelExistenteLayout.createSequentialGroup()
                 .addComponent(yesRadio)
                 .addGap(41, 41, 41)
                 .addComponent(noRadio)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        panelExistenteLayout.setVerticalGroup(
+            panelExistenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelExistenteLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelExistenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(yesRadio)
                     .addComponent(noRadio))
                 .addContainerGap(13, Short.MAX_VALUE))
@@ -427,7 +326,7 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable implements 
         panelProveedor.setLayout(panelProveedorLayout);
         panelProveedorLayout.setHorizontalGroup(
             panelProveedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 600, Short.MAX_VALUE)
+            .addGap(0, 345, Short.MAX_VALUE)
         );
         panelProveedorLayout.setVerticalGroup(
             panelProveedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -441,33 +340,35 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable implements 
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(PanelPeso, javax.swing.GroupLayout.DEFAULT_SIZE, 612, Short.MAX_VALUE)
-                    .addComponent(PanelCodigoBarras, javax.swing.GroupLayout.DEFAULT_SIZE, 612, Short.MAX_VALUE)
-                    .addComponent(PanelRepartidor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(PanelPeso, javax.swing.GroupLayout.DEFAULT_SIZE, 728, Short.MAX_VALUE)
+                    .addComponent(panelExistente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(PanelFinalizar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(panelProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(PanelFinalizar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(panelProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(PanelRepartidor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(PanelCodigoBarras, javax.swing.GroupLayout.DEFAULT_SIZE, 728, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(panelProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelExistente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(PanelRepartidor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panelProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
+                    .addComponent(PanelRepartidor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(PanelCodigoBarras, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(PanelPeso, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(PanelCodigoBarras, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
+                .addComponent(PanelPeso, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(PanelFinalizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39))
+                .addContainerGap(89, Short.MAX_VALUE))
         );
+
+        PanelCodigoBarras.getAccessibleContext().setAccessibleName("Ingrese los Codigos de Barras");
 
         jScrollPane2.setViewportView(jPanel3);
 
@@ -478,27 +379,23 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable implements 
         add(Pesaje);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tablaProductos1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaProductos1MousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tablaProductos1MousePressed
-
-    private boolean isProductoRepetido(DefaultTableModel model, ProductosInventario producto) {
-        for (int count = 0; count < model.getRowCount(); count++) {
-            if (producto.equals((ProductosInventario) model.getValueAt(count, 0))) {
+    private boolean isProductoRepetido(Collection<ProductosInventario> productos,
+            ProductosInventario producto) {
+        for (ProductosInventario prod : productos) {
+            if (producto.equals(prod)) {
                 return true;
             }
         }
         return false;
-
     }
 
     public void agregarProductoDeBascula() {
         ProductosInventario productoNuevo = new ProductosInventario();
         String peso = basculaPanel.getPeso().toString();
-        
+
         if (noRadio.isSelected()) {
             ProductosInventario productoInventario = new ProductosInventario();
-            productoInventario.setProductosHasProveedores((ProductosHasProveedores) productosLov.getSelectedItem());
+            productoInventario.setProductosHasProveedores(armarProductoHasProveedores());
             productoInventario.setUbicaciones(UsuarioFirmado.getUsuarioFirmado().getUbicaciones());
             productoInventario.setPeso(basculaPanel.getPeso());
             productoInventario.setPrecio(BigDecimal.ZERO);
@@ -508,148 +405,70 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable implements 
             productoInventario.setReetiquetado(false);
             try {
                 productoDAO.insertarProducto(productoInventario);
+                productos.add(productoInventario);
+                model.agregarProducto(productoInventario);
+                barCodeArea.getCodigos().add(productoInventario.getCodigo());
                 imprimirCodigo(productoInventario);
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, ex, "Errot", ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, ex, "Error", ERROR_MESSAGE);
             }
-            setTableModel();
-        }
+        } else {
+            try {
+                if (modoOperacion.equals("ENTRADA")) {
+                    productoNuevo = productoDAO.getProductoPesadoByEstatus(peso,
+                            (Productos) productosDropDown.getSelectedItem(),
+                            model.getProductos(), "TRANSITO");
+                } else {
+                    productoNuevo = productoDAO.getProductoPesadoByEstatus(peso,
+                            (Productos) productosDropDown.getSelectedItem(),
+                            model.getProductos(), "ACTIVO");
+                }
 
-        try {
-            if (modoOperacion.equals("ENTRADA")) {
-                productoNuevo = productoDAO.getProductoPesadoTransito(peso, ((ProductosHasProveedores) productosLov.getSelectedItem()).getProductos(), modelProductos);
-            } else {
-                productoNuevo = productoDAO.getProductoPesadoActivo(peso, ((ProductosHasProveedores) productosLov.getSelectedItem()).getProductos(), modelProductos);
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+                return;
             }
+            if (productoNuevo == null) {
+                return;
+            }
+            if (isProductoRepetido(model.getProductos(), productoNuevo)) {
+                return;
+            }
+            productos.add(productoNuevo);
+            model.agregarProducto(productoNuevo);
+            barCodeArea.getCodigos().add(productoNuevo.getCodigo());
+        }
+    }
 
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-            return;
-        }
-        if (productoNuevo == null) {
-            return;
-        }
-        if (isProductoRepetido(modelProductos, productoNuevo)) {
-            return;
-        }
-        productos.add(productoNuevo);
-        setTableModel();
+    private ProductosHasProveedores armarProductoHasProveedores() {
+        return productosService.armarProdHasProv((Productos)productosDropDown.getSelectedItem(),
+                                                (Proveedores)proveedoresDropDown.getSelectedItem());
     }
 
     private String getCodigoBarras(String peso) {
-        return "N"
-                + new SimpleDateFormat("yyddMM").format(new Date())
-                + String.format("%05d", ((ProductosHasProveedores) this.productosLov.getSelectedItem()).getProductos().getCodigo())
-                + String.format("%06d", Integer.parseInt(peso.replaceAll("\\.", "")))
-                + String.format("%09d", 999999999);
+        return basculaService.armarCodigoBarras(letra, 
+                ((Productos)productosDropDown.getSelectedItem()).getCodigo(),
+                Integer.parseInt(peso.replaceAll("\\.", "")),
+                tablaProductos.getRowCount());
     }
 
     private void imprimirCodigo(ProductosInventario producto) {
-        // aca obtenemos la printer default  
-
-        String label = "";
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\valco_installation\\conf\\CodigoBarras.txt"))) {
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
-
-            while (line != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-                line = br.readLine();
-            }
-            label = sb.toString();
-            br.close();
-        } catch (IOException ex) {
-            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        PrintService printService = PrintServiceLookup.lookupDefaultPrintService();
-        label = label.replace("PRODUCTO", this.productosLov.getSelectedItem().toString());
-        label = label.replace("PESO", producto.getPeso().toString());
-        label = label.replace("CODIGO_BARRAS", producto.getCodigoBarras());
-
-        /* String zplCommand = "^XA"
-         + "^FO230,50^ARN,16,9^FD " + this.productosLov.getSelectedItem() + "^FS"
-         + "^FO300,100^ARN,16,9^FD " + producto.getPeso() + " KG^BY1,3.0^FS"
-         + "^FO230,180^BCN, 80, Y, N, N^FD" + producto.getCodigoBarras() + "^FS "
-         + "^XZ";
+        basculaService.imprimitCodigoBarras(productosDropDown.getSelectedItem().toString(),
+                producto.getPeso().toString(), producto.getCodigoBarras());
         
-        
-               
-         */
-// convertimos el comando a bytes  
-        byte[] by = label.getBytes();
-        DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
-        Doc doc = new SimpleDoc(by, flavor, null);
-
-// creamos el printjob  
-        DocPrintJob job = printService.createPrintJob();
-
-        try {
-            // imprimimos
-            job.print(doc, null);
-        } catch (PrintException ex) {
-            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
     }
-
-    private Proveedores getProveedorSeleccionado() {
-        return (Proveedores) proveedoresDropDown.getSelectedItem();
-    }
-
-    private void repartidorTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_repartidorTxtKeyReleased
-        char c = evt.getKeyChar();
-
-        if (!repartidorTxt.getText().equals("")) {
-            Repartidores repartidor = new Repartidores();
-            Productos producto = new Productos();
-            try {
-                repartidor = repartidoresDao.getRepartidorXDescripcionOCodigo(repartidorTxt.getText());
-            } catch (Exception ex) {
-                Logger.getLogger(AsignacionProductoRepartidor.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            repartidoresLov.setSelectedItem(repartidor);
-
-        }
-    }//GEN-LAST:event_repartidorTxtKeyReleased
 
     private void finalizarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finalizarBtnActionPerformed
-        if (productos == null || productos.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Debe seleccionar algún producto");
-            return;
-        }
-        if (modoOperacion.equals("ENTRADA")) {
-            for (ProductosInventario producto : productos) {
-                producto.setEstatus("ACTIVO");
-                producto.setRepartidores(null);
-            }
-
-            try {
-                productoDAO.actualizarProductosInventario(productos);
-                JOptionPane.showMessageDialog(null, "El product se asignó al repartidor correctamente");
-                limpiar();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, ex);
-            }
-            return;
-        }
-        if (repartidoresLov.getSelectedItem() == null) {
-            JOptionPane.showMessageDialog(null, "Debe seleccionar un repartidor");
-            return;
-        }
-        for (ProductosInventario producto : productos) {
-            producto.setEstatus("EN TRANSITO");
-            producto.setRepartidores((Repartidores) repartidoresLov.getSelectedItem());
-        }
-
         try {
-            productoDAO.actualizarProductosInventario(productos);
-            JOptionPane.showMessageDialog(null, "El product se asignó al repartidor correctamente");
-            limpiar();
+            transactionService.finalize(productos, (Repartidores) repartidoresDropDown.getSelectedItem(),
+                                        modoOperacion);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
+            ex.printStackTrace();
+            return;
         }
+        JOptionPane.showMessageDialog(null, "La transacción se terminó correctamente");
+        limpiar();
     }//GEN-LAST:event_finalizarBtnActionPerformed
 
     private void imprimirEtiquetaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imprimirEtiquetaBtnActionPerformed
@@ -657,139 +476,171 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable implements 
     }//GEN-LAST:event_imprimirEtiquetaBtnActionPerformed
 
     private void eliminarCajaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarCajaBtnActionPerformed
-        int[] selectedRows = tablaProductos1.getSelectedRows();
-        List<ProductosInventario> productosSeleccionados = new ArrayList<>();
+        int[] selectedRows = tablaProductos.getSelectedRows();
         if (selectedRows.length > 0) {
             for (int i = selectedRows.length - 1; i >= 0; i--) {
-                ProductosInventario productoSeleccionado = (ProductosInventario) modelProductos.getValueAt(selectedRows[i], 0);
+                ProductosInventario productoSeleccionado = (ProductosInventario) model.getElementAt(selectedRows[i], 0);
                 productos.remove(productoSeleccionado);
+                barCodeArea.getCodigos().remove(i);
             }
-            try {
-                //inventarioDao.actualizarProductosInventario(productosSeleccionados);
-                //JOptionPane.showMessageDialog(null, "Las cajas se cancelaron correctamente");
-                setTableModel();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, ex, "Error", ERROR_MESSAGE);
-            }
+            model.eliminarProductos(selectedRows);
         } else {
             JOptionPane.showMessageDialog(null, "No hay ningúna caja seleccionada.");
         }
     }//GEN-LAST:event_eliminarCajaBtnActionPerformed
 
-    private void productoCodigoAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyTyped
-
-    }//GEN-LAST:event_productoCodigoAreaKeyTyped
-
-    private void productoCodigoAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyReleased
-        char c = evt.getKeyChar();
-
-        if (!productoCodigoArea.getText().equals("")) {
-            ProductosHasProveedores productoProveedor = new ProductosHasProveedores();
-            Productos producto = new Productos();
-            try {
-                producto = productoDAO.getProductosXDescripcionOCodigo(productoCodigoArea.getText());
-            } catch (Exception ex) {
-                Logger.getLogger(AsignacionProductoRepartidor.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            if (producto == null) {
-                return;
-            }
-            productoProveedor.setProductos(producto);
-            Proveedores prov = new Proveedores();
-            prov.setCodigo(1);
-            productoProveedor.setProveedores(prov);
-            productosLov.setSelectedItem(productoProveedor);
-            productosLov.repaint();
-        }
-    }//GEN-LAST:event_productoCodigoAreaKeyReleased
-
-    private void productosLovActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productosLovActionPerformed
-
-    }//GEN-LAST:event_productosLovActionPerformed
-
     private void noRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noRadioActionPerformed
         panelProveedor.setEnabled(true);
         proveedoresDropDown.enable();
-        barCode.setProductoExistente(false);
+        barCodeArea.setProductoExistente(false);
+        productosDropDown.filterByFather(proveedoresDropDown.getSelectedItem());
     }//GEN-LAST:event_noRadioActionPerformed
 
     private void yesRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yesRadioActionPerformed
         panelProveedor.setEnabled(false);
         proveedoresDropDown.disable();
-        productosLov.setModel(new DefaultComboBoxModel(getProducts()));
-        barCode.setProductoExistente(true);
+        barCodeArea.setProductoExistente(true);
+        Proveedores local = new Proveedores();
+        local.setCodigo(9999999);
+        productosDropDown.filterByFather(local);
     }//GEN-LAST:event_yesRadioActionPerformed
 
-    private void repartidoresLovItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_repartidoresLovItemStateChanged
-        Proveedores proveedorSeleccionado = (Proveedores) proveedoresDropDown.getSelectedItem();
-        productosLov.setModel(new DefaultComboBoxModel(proveedorSeleccionado.getProductosHasProveedoreses().toArray()));
-    }//GEN-LAST:event_repartidoresLovItemStateChanged
-
-    private void repartidoresLovActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repartidoresLovActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_repartidoresLovActionPerformed
-
-    private void productoCodigoAreaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productoCodigoAreaKeyPressed
-        if(evt.getKeyCode() == KeyEvent.VK_TAB) {
-            System.out.println(evt.getModifiers());
-            if(evt.getModifiers() > 0) productoCodigoArea.transferFocusBackward();
-            else productoCodigoArea.transferFocus(); 
-            evt.consume();
-        }
-    }//GEN-LAST:event_productoCodigoAreaKeyPressed
-
-    private void repartidorTxtComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_repartidorTxtComponentResized
-        repartidorTxt.requestFocusInWindow();
-    }//GEN-LAST:event_repartidorTxtComponentResized
-
     public void limpiar() {
-        modelProductos.setRowCount(0);
+        model.limpiar();
+        barCodeArea.getCodigos().clear();
         productos.clear();
     }
 
-    private Object[] getProducts() {
-        Object[] productosArray = new Object[0];
-        try {
-            Proveedores proveedor = new Proveedores();
-            proveedor.setCodigo(9999999);
-            productosArray = productoDAO.getProductosXProveedor(proveedor).toArray();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", ERROR_MESSAGE);
+    @Override
+    public void updateBarCodeAreaObserver() {
+        for (ProductosInventario producto : barCodeArea.getProductosInventario()) {
+            productos.add(producto);
+            model.agregarProducto(producto);
         }
-        return productosArray;
+        barCodeArea.getProductosInventario().clear();
     }
 
-    private Object[] getRepartidoes() {
-        Object[] repatidoressArray = new Object[0];
-        try {
-            repatidoressArray = repartidoresDao.getRepartidores().toArray();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", ERROR_MESSAGE);
-        }
-        return repatidoressArray;
+    public BasculaPanel getBasculaPanel() {
+        return basculaPanel;
     }
 
-    private void changeScanned(String barCode) {
-
+    public void setBasculaPanel(BasculaPanel basculaPanel) {
+        this.basculaPanel = basculaPanel;
     }
 
-    private void setTableModel() {
-        int rowCount = modelProductos.getRowCount();
-        //Remove rows one by one from the end of the table
-        for (int i = rowCount - 1; i >= 0; i--) {
-            modelProductos.removeRow(i);
-        }
-
-        for (ProductosInventario producto : productos) {
-            Object[] row = new Object[5];
-            row[0] = producto;
-            row[1] = producto.getPeso();
-            row[2] = producto.getCodigoBarras();
-            row[3] = producto.getEstatus();
-            modelProductos.addRow(row);
-        }
+    public ProductosTableModel getModel() {
+        return model;
     }
 
+    public void setModel(ProductosTableModel model) {
+        this.model = model;
+    }
+
+    public String getModoOperacion() {
+        return modoOperacion;
+    }
+
+    public void setModoOperacion(String modoOperacion) {
+        this.modoOperacion = modoOperacion;
+    }
+
+    public CustomDropDown getProveedoresDropDown() {
+        return proveedoresDropDown;
+    }
+
+    public void setProveedoresDropDown(CustomDropDown proveedoresDropDown) {
+        this.proveedoresDropDown = proveedoresDropDown;
+    }
+
+    public CustomDropDown getProductosDropDown() {
+        return productosDropDown;
+    }
+
+    public void setProductosDropDown(CustomDropDown productosDropDown) {
+        this.productosDropDown = productosDropDown;
+    }
+
+    public CustomDropDown getRepartidoresDropDown() {
+        return repartidoresDropDown;
+    }
+
+    public void setRepartidoresDropDown(CustomDropDown repartidoresDropDown) {
+        this.repartidoresDropDown = repartidoresDropDown;
+    }
+
+    public BarCodeArea getBarCodeArea() {
+        return barCodeArea;
+    }
+
+    public void setBarCodeArea(BarCodeArea barCodeArea) {
+        this.barCodeArea = barCodeArea;
+    }
+
+    public ProductoDAO getProductoDAO() {
+        return productoDAO;
+    }
+
+    public void setProductoDAO(ProductoDAO productoDAO) {
+        this.productoDAO = productoDAO;
+    }
+
+    public CustomCellRendered getCellRendered() {
+        return cellRendered;
+    }
+
+    public void setCellRendered(CustomCellRendered cellRendered) {
+        this.cellRendered = cellRendered;
+    }
+
+    public ProductosHasProveedoresDao getpHasPro() {
+        return pHasPro;
+    }
+
+    public void setpHasPro(ProductosHasProveedoresDao pHasPro) {
+        this.pHasPro = pHasPro;
+    }
+
+    public BasculaService getBasculaService() {
+        return basculaService;
+    }
+
+    public void setBasculaService(BasculaService basculaService) {
+        this.basculaService = basculaService;
+    }
+
+    public ProductosService getProductosService() {
+        return productosService;
+    }
+
+    public void setProductosService(ProductosService productosService) {
+        this.productosService = productosService;
+    }
+
+    public String getLetra() {
+        return letra;
+    }
+
+    public void setLetra(String letra) {
+        this.letra = letra;
+    }
+
+    public TransactionService getTransactionService() {
+        return transactionService;
+    }
+
+    public void setTransactionService(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
+
+    public boolean isInventarioInicial() {
+        return inventarioInicial;
+    }
+
+    public void setInventarioInicial(boolean inventarioInicial) {
+        this.inventarioInicial = inventarioInicial;
+    }
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelCodigoBarras;
@@ -801,84 +652,19 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable implements 
     private javax.swing.JButton eliminarCajaBtn;
     private javax.swing.JButton finalizarBtn;
     public javax.swing.JButton imprimirEtiquetaBtn;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JRadioButton noRadio;
+    private javax.swing.JPanel panelExistente;
     private javax.swing.JPanel panelProveedor;
-    private javax.swing.JTextArea productoCodigoArea;
-    private javax.swing.JComboBox productosLov;
-    private javax.swing.JTextField repartidorTxt;
-    private javax.swing.JComboBox repartidoresLov;
-    private javax.swing.JTable tablaProductos1;
+    private javax.swing.JTable tablaProductos;
     private javax.swing.JRadioButton yesRadio;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void updateBarCodeTxtObserver() {
-        if (noRadio.isSelected()) {
-            ProductosHasProveedores producto = barCode.getProducto();
-            if (producto == null) {
-                JOptionPane.showMessageDialog(null, "No se encontro un producto con el código especificado");
-            } else {
-                ProductosInventario productoNuevo = new ProductosInventario();
-                productoNuevo.setPeso(new BigDecimal(barCode.getPeso()));
-                productoNuevo.setCodigoBarras(barCode.getBarCode());
-                productoNuevo.setProductosHasProveedores(producto);
-                productoNuevo.setCosto(producto.getPrecioSugerido());
-                productoNuevo.setPrecio(producto.getProductos().getPrecioSugerido());
-                productoNuevo.setUbicaciones(UsuarioFirmado.getUsuarioFirmado().getUbicaciones());
-                productoNuevo.setEstatus("ACTIVO");
-                productos.add(productoNuevo);
-                setTableModel();
-            }
-
-        } else {
-            ProductosInventario producto = null;
-            Integer[] codigos = new Integer[productos.size()];
-
-            int x = 0;
-            for (ProductosInventario productoInv : productos) {
-                codigos[x] = productoInv.getCodigo();
-                x++;
-            }
-            producto = barCode.getProductoInventario();
-
-            if (producto == null) {
-                //JOptionPane.showMessageDialog(null, "No se encontro el codigo de barras");
-                return;
-            } else {
-
-                try {
-                    if (isProductoRepetido(modelProductos, producto)) {
-                        return;
-                    }
-                    productos.add(producto);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex);
-                    return;
-                }
-                this.setTableModel();
-
-            }
-        }
-    }
-
-    public BasculaPanel getBasculaPanel() {
-        return basculaPanel;
-    }
-
-    public void setBasculaPanel(BasculaPanel basculaPanel) {
-        this.basculaPanel = basculaPanel;
-    }
-    
-    
 }

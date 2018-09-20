@@ -6,20 +6,11 @@ import creators.PanelCreator;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.InputStream;
-import static java.lang.Thread.sleep;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import java.security.Principal;
 import java.security.PrivilegedAction;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.security.auth.*;
 import javax.security.auth.login.AccountExpiredException;
 import javax.security.auth.login.CredentialExpiredException;
@@ -27,9 +18,6 @@ import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.swing.BoxLayout;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 import pesable.Pesable;
 import security.HWLoginModule;
 import utilities.UsuarioFirmado;
@@ -133,7 +121,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu1.add(jMenuItem4);
 
         jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/warehouse.png"))); // NOI18N
-        jMenuItem1.setText("Inventarios");
+        jMenuItem1.setText("Inventario inicial");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -255,7 +243,6 @@ public class MainFrame extends javax.swing.JFrame {
             if (prueb instanceof ReciboTransferenciasPanel) {
                 ((ReciboTransferenciasPanel) prueb).enviosPanel.finalizeThread();
                 ((ReciboTransferenciasPanel) prueb).enviosPanel.removeKeyEvent();
-
             } 
             mainPanel.remove(internalFrame);
         }
@@ -264,12 +251,9 @@ public class MainFrame extends javax.swing.JFrame {
         String sourceName = ((JMenuItem) evt.getSource()).getText();
         prueb = PanelCreator.createPanel(sourceName, mainPanel);
         internalFrame.add(prueb);
-        //internalFrame.setBounds(0, 0, 200, 200);
-        //internalFrame.setResizable(true);
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         gd.getDefaultConfiguration().getBounds().getWidth();
-        //internalFrame.setSize(gd.getDefaultConfiguration().getBounds().getSize());
         internalFrame.setBounds(0, 0,gd.getDefaultConfiguration().getBounds().getSize().width , gd.getDefaultConfiguration().getBounds().getSize().height-80);
         mainPanel.add(internalFrame);
         internalFrame.show();

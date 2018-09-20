@@ -49,8 +49,7 @@ import utilities.UsuarioFirmado;
  *
  * @author Administrador
  */
-public class ReciboProductoBC extends BarCodableImpl implements BarCodeTxtObserver,
-        BarCodeAreaObserver {
+public class ReciboProductoBC extends BarCodableImpl implements BarCodeAreaObserver {
 
     private UsuariosDAO usuariosDao = new UsuariosDAO();
     ProductoDAO productoDAO = new ProductoDAO();
@@ -58,12 +57,10 @@ public class ReciboProductoBC extends BarCodableImpl implements BarCodeTxtObserv
     UbicacionesDAO ubicacionesDAO = new UbicacionesDAO();
     DefaultTableModel model = new NoEditableTableModel();
     List<ProductosInventario> nuevosProductos = new ArrayList<ProductosInventario>();
-    public List<Component> exceptions = new ArrayList<>();
     Object[] ultimoProducto = null;
     ProductosInventario ultimoProductoInventario = null;
     JOptionPane dialog = new JOptionPane();
     private CustomDropDown proveedoresDropDown = new CustomDropDown();
-    private BarCodeTxt barCode = new BarCodeTxt();
     private BarCodeArea barCodeArea = new BarCodeArea();
 
     /**
@@ -76,22 +73,12 @@ public class ReciboProductoBC extends BarCodableImpl implements BarCodeTxtObserv
         proveedoresDropDown.init();
         panelBusqueda.add(proveedoresDropDown);
         proveedoresDropDown.setBounds(50, 50, 500, 65);
-        panelBusqueda.add(barCode);
+        barCodeArea.init();
         panelBusqueda.add(barCodeArea);
-        barCode.setModoOperacion("ENTRADA");
-        barCode.setProveedoresDropDown(proveedoresDropDown);
-        barCode.setBounds(600, 50, 400, 40);
-        barCode.registerObserver(this);
         barCodeArea.setModoOperacion("ENTRADA");
         barCodeArea.setProveedoresDropDown(proveedoresDropDown);
         barCodeArea.setBounds(600, 100, 700, 300);
         barCodeArea.registerObserver(this);
-        setManager(KeyboardFocusManager.getCurrentKeyboardFocusManager());
-        exceptions.add(proveedoresDropDown.getTxt());
-        exceptions.add(numeroCajasTxt);
-        exceptions.add(barCodeArea.getBarCodeArea());
-        setDispacher(new BarCodeScannerKeyDispatcher(barCode.getBarCodeTxt(), getManager(), exceptions));
-        getManager().addKeyEventDispatcher(getDispacher());
         eliminarBtn.setFocusTraversalKeysEnabled(false);
     }
 
@@ -344,42 +331,6 @@ public class ReciboProductoBC extends BarCodableImpl implements BarCodeTxtObserv
             evt.consume();
         }
     }//GEN-LAST:event_eliminarBtnKeyPressed
-
-    private Object[] getProveedoresArray() {
-        Object[] proveedores = null;
-        try {
-            proveedores = proveedoresDao.getElementsArray();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Ocurriò un error al consultar los proveedores", "Error", ERROR_MESSAGE);
-            return null;
-        }
-        return proveedores;
-    }
-
-    @Override
-    public void updateBarCodeTxtObserver() {
-        ProductosInventario productoNuevo = new ProductosInventario();
-        productoNuevo.setPeso(new BigDecimal(barCode.getPeso()));
-        productoNuevo.setCodigoBarras(barCode.getBarCode());
-        productoNuevo.setProductosHasProveedores(barCode.getProducto());
-        productoNuevo.setCosto(barCode.getProducto().getPrecioSugerido());
-        productoNuevo.setPrecio(barCode.getProducto().getProductos().getPrecioSugerido());
-        productoNuevo.setUbicaciones(UsuarioFirmado.getUsuarioFirmado().getUbicaciones());
-        productoNuevo.setEstatus("ACTIVO");
-        ultimoProductoInventario = productoNuevo;
-        nuevosProductos.add(productoNuevo);
-
-        Object[] canal = new Object[5];
-
-        canal[0] = barCode.getPeso();
-        canal[1] = proveedoresDropDown.getSelectedItem().toString();
-        canal[2] = barCode.getProducto().getProductos().getDescripcion();
-        canal[3] = UsuarioFirmado.getUsuarioFirmado().getUbicaciones();
-        canal[4] = barCode.getBarCode();
-        ultimoProducto = canal;
-
-        model.addRow(canal);
-    }
 
     @Override
     public void updateBarCodeAreaObserver() {

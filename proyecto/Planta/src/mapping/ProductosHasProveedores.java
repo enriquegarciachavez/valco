@@ -88,17 +88,6 @@ public class ProductosHasProveedores implements java.io.Serializable {
 
     public boolean equals(Object o) {
         if (o != null) {
-            System.out.print(((ProductosHasProveedores) o).getProveedores().getCodigo()+" ");
-            System.out.print(this.getProveedores().getCodigo()+" ");
-            System.out.print(((ProductosHasProveedores) o).getProductos().getCodigo()+" ");
-            System.out.print(this.getProductos().getCodigo()+" ");
-            System.out.println();
-            if(o instanceof ProductosHasProveedores)
-                System.out.print("Si es instance");
-            if(((ProductosHasProveedores) o).getProveedores().equals(this.getProveedores()))
-                System.out.print("si es el mismo proveedor");
-            if(((ProductosHasProveedores) o).getProductos().getCodigo().equals(this.getProductos().getCodigo()))
-                System.out.println("Si es el producto");
             if (((o instanceof ProductosHasProveedores) && (((ProductosHasProveedores) o).getProveedores().equals(this.getProveedores())))
                     && (((ProductosHasProveedores) o).getProductos().getCodigo().equals(this.getProductos().getCodigo()))) {
                 return true;

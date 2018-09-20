@@ -13,7 +13,6 @@ import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,15 +34,12 @@ import javax.swing.table.DefaultTableModel;
 import keydispatchers.BarCodeScannerKeyDispatcher;
 import listeners.NumericKeyListener;
 import mapping.Inventarios;
-import mapping.Procesos;
 import mapping.Productos;
 import mapping.ProductosDelInventario;
 import mapping.ProductosHasProveedores;
 import mapping.ProductosInventario;
 import mapping.Proveedores;
-import mapping.Ubicaciones;
 import pesable.PesableBarCodeable;
-import table.custom.EtiquetadoTableCellRendered;
 import table.custom.InventariosTableCellRendered;
 import table.custom.NoEditableTableModel;
 import threads.PesoThread;
@@ -506,7 +502,7 @@ public class InventariosMain extends PesableBarCodeable {
         } else {
             productoInventario.setPeso(new BigDecimal(pesoBasculaLbl.getText()));
         }
-        productoInventario.setProductos(((ProductosHasProveedores) productosLov.getSelectedItem()).getProductos());
+        productoInventario.setProductos((Productos) productosLov.getSelectedItem());
         productoInventario.setInventarios(inventarioSeleccionado);
         productoInventario.setEstatus("ACTIVO");
         try {
@@ -623,8 +619,8 @@ public class InventariosMain extends PesableBarCodeable {
         Object[] productosArray = new Object[0];
         try {
             Proveedores proveedor = new Proveedores();
-            proveedor.setCodigo(1);
-            productosArray = productoDAO.getProductosXProveedor(proveedor).toArray();
+            proveedor.setCodigo(9999999);
+            productosArray = productoDAO.getElementsByFatherArray(proveedor);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", ERROR_MESSAGE);
         }

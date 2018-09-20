@@ -33,7 +33,7 @@ public class BarCodeTxt extends javax.swing.JPanel implements BarCodeTxtObservab
     private ProductoDAO productosDAO = new ProductoDAO();
     private ProductosHasProveedores producto;
     private boolean productoExistente;
-    private Integer[] codigos;
+    private List<Integer> codigos = new ArrayList<>();
     private ProductosInventario productoInventario;
     private List<BarCodeTxtObserver> observers = new ArrayList<>();
     private String peso;
@@ -152,6 +152,7 @@ public class BarCodeTxt extends javax.swing.JPanel implements BarCodeTxtObservab
             } else {
                 productoInventario = productosDAO.getProductosXCodigoBarrasActivos(barCode, codigos);
             }
+            codigos.add(productoInventario.getCodigo());
             notifyObservers();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
@@ -189,11 +190,11 @@ public class BarCodeTxt extends javax.swing.JPanel implements BarCodeTxtObservab
         this.modoOperacion = modoOperacion;
     }
 
-    public Integer[] getCodigos() {
+    public List<Integer> getCodigos() {
         return codigos;
     }
 
-    public void setCodigos(Integer[] codigos) {
+    public void setCodigos(List<Integer> codigos) {
         this.codigos = codigos;
     }
 

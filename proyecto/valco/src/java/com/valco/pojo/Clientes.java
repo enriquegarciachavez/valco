@@ -300,7 +300,9 @@ public class Clientes  implements java.io.Serializable {
         this.regimenFiscal = regimenFiscal;
     }
     
-    
+    public String toString(){
+        return this.getRazonSocial();
+    }
     
     public boolean equals(Object o) {
         if( o != null){

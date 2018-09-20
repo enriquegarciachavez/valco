@@ -46,10 +46,8 @@ public class ProveedoresKiloDAO implements ProveedoresDAO {
             List<Proveedores> proveedores = new ArrayList<Proveedores>();
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(Proveedores.class);
-            //Criteria x = q.createCriteria("productosHasProveedoreses");
-            //Criteria y = x.createCriteria("productos").add(Restrictions.eq("productoPesado", true));
-
-            q.addOrder(Order.asc("razonSocial"));
+     
+            q.addOrder(Order.asc("nombres"));
             proveedores = (List<Proveedores>) q.list();
             Set<Proveedores> proveedoresSet = new LinkedHashSet<>(proveedores);
             tx.commit();
@@ -78,9 +76,7 @@ public class ProveedoresKiloDAO implements ProveedoresDAO {
         try {
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(Proveedores.class);
-            Criteria x = q.createCriteria("productosHasProveedoreses");
-            Criteria y = x.createCriteria("productos").add(Restrictions.eq("productoPesado", true));
-
+      
             if (StringUtils.isNumeric(criteria)) {
                 q.add(Restrictions.eq("codigo", new Integer(criteria)));
             } else {
@@ -95,7 +91,6 @@ public class ProveedoresKiloDAO implements ProveedoresDAO {
         } catch (HibernateException he) {
             tx.commit();
             throw new Exception("Ocurrió un error al consultar los proveedores.");
-
         }
     }
 

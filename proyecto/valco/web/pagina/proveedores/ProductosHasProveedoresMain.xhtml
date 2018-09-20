@@ -92,13 +92,25 @@
                             </f:facet>
 
                             <p:outputLabel for="proveedor" value="Proveedor" />
-                            <p:selectOneMenu id="proveedor" required="true" converter="omnifaces.SelectItemsConverter" value="#{productosHasProveedoresMainBean.productosHasProveedoresNuevo.proveedores}" style="width:125px">
+                            <p:selectOneMenu id="proveedor" 
+                                             required="true" 
+                                             converter="omnifaces.SelectItemsConverter" 
+                                             value="#{productosHasProveedoresMainBean.productosHasProveedoresNuevo.proveedores}" 
+                                             style="width:200px"
+                                             filter="true"
+                                             filterMatchMode="contains">
                                 <f:selectItems value="#{productosHasProveedoresMainBean.proveedores}" var="proveedor" itemLabel="#{proveedor}" itemValue="#{proveedor}"  />
                             </p:selectOneMenu>
                             <p:message for="proveedor" display="icon" />
                             
                             <p:outputLabel for="producto" value="Producto" />
-                            <p:selectOneMenu id="producto" required="true" converter="omnifaces.SelectItemsConverter" value="#{productosHasProveedoresMainBean.productosHasProveedoresNuevo.productos}" style="width:125px">
+                            <p:selectOneMenu id="producto" 
+                                             required="true" 
+                                             converter="omnifaces.SelectItemsConverter" 
+                                             value="#{productosHasProveedoresMainBean.productosHasProveedoresNuevo.productos}" 
+                                             style="width:200px"
+                                             filter="true"
+                                             filterMatchMode="contains">
                                 <f:selectItems value="#{productosHasProveedoresMainBean.productos}" var="producto" itemLabel="#{producto.descripcion}" itemValue="#{producto}"  />
                             </p:selectOneMenu>
                             <p:message for="producto" display="icon" />
