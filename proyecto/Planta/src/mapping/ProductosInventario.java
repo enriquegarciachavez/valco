@@ -23,6 +23,7 @@ public class ProductosInventario implements java.io.Serializable {
     private BigDecimal costo;
     private String codigoBarras;
     private String estatus;
+    private String descripcion;
     private Integer procesosCodigoPadre;
     private Integer procesosCodigoHijo;
     private Date fechaCaducidad;
@@ -33,6 +34,7 @@ public class ProductosInventario implements java.io.Serializable {
     private Set<Mermas> mermas = new HashSet<Mermas>(0);
     private Boolean ProductoMaestro;
     private Boolean reetiquetado; 
+    private Boolean menudeo;
 
     public ProductosInventario() {
     }
@@ -159,6 +161,14 @@ public class ProductosInventario implements java.io.Serializable {
         this.estatus = estatus;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
     public Integer getProcesosCodigoPadre() {
         return this.procesosCodigoPadre;
     }
@@ -247,17 +257,16 @@ public class ProductosInventario implements java.io.Serializable {
         this.reetiquetado = reetiquetado;
     }
 
-   
-    
-    
+    public Boolean getMenudeo() {
+        return menudeo;
+    }
+
+    public void setMenudeo(Boolean menudeo) {
+        this.menudeo = menudeo;
+    }
 
     public String toString() {
-        String descripcion = "";
-        descripcion += this.getProductosHasProveedores().getProductos().getDescripcion();
-        descripcion += "    ";
-        descripcion += this.getPeso();
-        descripcion += " KG";
-        return descripcion;
+        return this.getProductosHasProveedores().getProductos().getDescripcion();
     }
 
     public boolean equals(Object o) {
@@ -305,7 +314,6 @@ public class ProductosInventario implements java.io.Serializable {
 
     public ProductosInventario getBasicClone() {
         ProductosInventario clon = new ProductosInventario();
-        clon.setCodigo(codigo);
         clon.setCodigoBarras(this.getCodigoBarras());
         clon.setConsecutivoProceso(this.getConsecutivoProceso());
         clon.setCosto(this.getCosto());

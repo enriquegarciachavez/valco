@@ -34,7 +34,7 @@
                             filterMatchMode="contains"
                             value="#{creacionFacturaBean.clienteSeleccionado}">
                             <f:selectItem itemLabel="Seleccionar cliente" itemValue="" />
-                            <f:selectItems value="#{creacionFacturaBean.clientes}" var="cliente" itemLabel="#{cliente.codigo} | #{cliente.nombres} #{cliente.apellidoPaterno}" itemValue="#{cliente}" />
+                            <f:selectItems value="#{creacionFacturaBean.clientes}" var="cliente" itemLabel="#{cliente.codigo} | #{cliente.razonSocial} #{cliente.nombres} #{cliente.apellidoPaterno}" itemValue="#{cliente}" />
 
                             <p:column style="width:10%">
                                 <h:outputText value="#{c.codigo}" />

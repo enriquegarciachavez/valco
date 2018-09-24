@@ -7,12 +7,16 @@ package components;
 
 import java.awt.ComponentOrientation;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.AbstractButton;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import javax.swing.JTextField;
 import listeners.NumericKeyListener;
+import observables.BasculaPanelObservable;
+import observers.BasculaPanelObserver;
 import pesable.PesableBarCodeable;
 import threads.PesoThread;
 
@@ -20,17 +24,19 @@ import threads.PesoThread;
  *
  * @author Administrador
  */
-public class BasculaPanel extends PesableBarCodeable {
+public class BasculaPanel extends PesableBarCodeable implements BasculaPanelObservable {
+
+    private List<BasculaPanelObserver> observers = new ArrayList<>();
 
     /**
      * Creates new form BasculaPanel
      */
     public BasculaPanel() {
-        
     }
-    
-    public void init(){
-      initComponents();
+
+    public void init() {
+        initComponents();
+
         try {
             setPesoThread(new PesoThread());
         } catch (Exception ex) {
@@ -43,10 +49,8 @@ public class BasculaPanel extends PesableBarCodeable {
         }
         getPesoThread().setPesoLbl(pesoBasculaLbl);
         Thread thread = new Thread(getPesoThread());
-        thread.start();  
+        thread.start();
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -73,6 +77,11 @@ public class BasculaPanel extends PesableBarCodeable {
         pesoManualTxt.setForeground(new java.awt.Color(0, 204, 51));
         pesoManualTxt.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         pesoManualTxt.addKeyListener(new NumericKeyListener());
+        pesoManualTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pesoManualTxtActionPerformed(evt);
+            }
+        });
 
         pesoManualChk.setText("Pesaje Manual");
         pesoManualChk.addActionListener(new java.awt.event.ActionListener() {
@@ -121,7 +130,11 @@ public class BasculaPanel extends PesableBarCodeable {
         }
     }//GEN-LAST:event_pesoManualChkActionPerformed
 
-    public BigDecimal getPeso(){
+    private void pesoManualTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoManualTxtActionPerformed
+        notifyObservers();
+    }//GEN-LAST:event_pesoManualTxtActionPerformed
+
+    public BigDecimal getPeso() {
         if (pesoManualChk.isSelected()) {
             if (pesoManualTxt.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "Debe introducir el peso de la caja.");
@@ -129,7 +142,24 @@ public class BasculaPanel extends PesableBarCodeable {
             }
             return (new BigDecimal(pesoManualTxt.getText()));
         } else {
-           return (new BigDecimal(pesoBasculaLbl.getText().trim()));
+            return (new BigDecimal(pesoBasculaLbl.getText().trim()));
+        }
+    }
+
+    @Override
+    public void registerObserver(BasculaPanelObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(BasculaPanelObserver observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for(BasculaPanelObserver observer: observers){
+            observer.updateBasculaPanelObserver();
         }
     }
 
@@ -144,14 +174,11 @@ public class BasculaPanel extends PesableBarCodeable {
     public void setPesoManualChk(JCheckBox pesoManualChk) {
         this.pesoManualChk = pesoManualChk;
     }
-    
-    
-    
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel pesoBasculaLbl;
     private javax.swing.JCheckBox pesoManualChk;
     private javax.swing.JTextField pesoManualTxt;
     // End of variables declaration//GEN-END:variables
+
 }

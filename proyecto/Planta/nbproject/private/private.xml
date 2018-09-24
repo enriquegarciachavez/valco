@@ -5,18 +5,16 @@
         <group>
             <file>file:/C:/apps/valco/proyecto/Planta/src/panels/MainFrame.java</file>
             <file>file:/C:/apps/valco/proyecto/Planta/src/dao/ProductoDAO.java</file>
-            <file>file:/C:/apps/valco/proyecto/Planta/src/mapping/Productos.java</file>
-            <file>file:/C:/apps/valco/proyecto/Planta/src/hibernate.cfg.xml</file>
-            <file>file:/C:/apps/valco/proyecto/Planta/src/mapping/Subfamilias.java</file>
-            <file>file:/C:/apps/valco/proyecto/Planta/src/Hibernate/hibernate.reveng.xml</file>
-            <file>file:/C:/apps/valco/proyecto/Planta/src/mapping/Procesos.java</file>
-            <file>file:/C:/apps/valco/proyecto/Planta/src/mapping/Procesos.hbm.xml</file>
+            <file>file:/C:/apps/valco/proyecto/Planta/src/panels/AbrirCajaPanel.java</file>
+            <file>file:/C:/apps/valco/proyecto/Planta/src/mapping/ProductosInventario.hbm.xml</file>
             <file>file:/C:/apps/valco/proyecto/Planta/src/configuration/SpringConfiguration.java</file>
-            <file>file:/C:/apps/valco/proyecto/Planta/src/mapping/Productos.hbm.xml</file>
-            <file>file:/C:/apps/valco/proyecto/Planta/src/mapping/ProductosHasProveedores.java</file>
-            <file>file:/C:/apps/valco/proyecto/Planta/src/panels/ReciboDeProducto.java</file>
-            <file>file:/C:/apps/valco/proyecto/Planta/src/mapping/Subfamilias.hbm.xml</file>
             <file>file:/C:/apps/valco/proyecto/Planta/src/panels/EtiquetadoPanel.java</file>
+            <file>file:/C:/apps/valco/proyecto/Planta/src/creators/PanelCreator.java</file>
+            <file>file:/C:/apps/valco/proyecto/Planta/src/components/BarCodeTxt.java</file>
+            <file>file:/C:/apps/valco/proyecto/Planta/src/components/BasculaPanel.java</file>
+            <file>file:/C:/apps/valco/proyecto/Planta/src/panels/VentasPanel.java</file>
+            <file>file:/C:/apps/valco/proyecto/Planta/src/table/custom/EtiquetadoTableCellRendered.java</file>
+            <file>file:/C:/apps/valco/proyecto/Planta/src/mapping/ProductosInventario.java</file>
         </group>
     </open-files>
 </project-private>

@@ -40,6 +40,9 @@
     <property name="estatus" type="string">
       <column length="20" name="ESTATUS" not-null="true"/>
     </property>
+    <property name="descripcion" type="string">
+      <column length="100" name="DESCRIPCION" not-null="false"/>
+    </property>
     <property name="procesosCodigoPadre" type="java.lang.Integer">
       <column name="PROCESOS_CODIGO_PADRE"/>
     </property>
@@ -66,6 +69,9 @@
     </property>
     <property name="reetiquetado" type="java.lang.Boolean">
       <column name="REETIQUETADO" not-null="false"/>
+    </property>
+    <property name="menudeo" type="java.lang.Boolean">
+      <column name="MENUDEO" not-null="false"/>
     </property>
     <set fetch="select" inverse="true" lazy="true" name="mermas" table="MERMAS">
       <key>

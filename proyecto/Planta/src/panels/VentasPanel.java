@@ -14,17 +14,29 @@ import dao.RepartidoresDAO;
 import java.awt.Component;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import javax.swing.event.TableModelEvent;
@@ -33,17 +45,28 @@ import javax.swing.table.DefaultTableModel;
 import keydispatchers.BarCodeScannerKeyDispatcher;
 import mapping.Clientes;
 import mapping.NotasDeVenta;
+import mapping.Procesos;
 import mapping.ProductosInventario;
 import mapping.Repartidores;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperPrintManager;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
+import observers.AbrirCajaObserver;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import table.custom.ColumnEditableTableModel;
 import table.custom.NoEditableTableModel;
+import utilities.ParametrosGeneralesUtility;
 
 /**
  *
  * @author Administrador
  */
-public class VentasPanel extends BarCodableImpl {
+public class VentasPanel extends BarCodableImpl  implements AbrirCajaObserver{
 
     ClienteDAO clienteDAO = new ClienteDAO();
     ProductoDAO productoDAO = new ProductoDAO();
@@ -52,12 +75,27 @@ public class VentasPanel extends BarCodableImpl {
     List<ProductosInventario> productos = new ArrayList<>();
     public List<Component> exceptions = new ArrayList<>();
     NotasDeVenta notaSeleccionada = null;
+    private String reportDir;
+    private String path;
+    private AbrirCajaPanel abrirCajaPanel;
 
     /**
      * Creates new form VentasPanel
      */
-    public VentasPanel() {
+    public VentasPanel(){
+    }
+    
+    public void init() {
+        try {
+            this.reportDir = ParametrosGeneralesUtility.getValor("RE001");
+        } catch (Exception ex) {
+            this.reportDir = "C://valco_installation//reportes//";
+        }
         initComponents();
+        abrirCajaDlg.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        abrirCajaDlg.add(abrirCajaPanel);
+        abrirCajaPanel.setBounds(0, 0, 1004, 453);
+        abrirCajaPanel.registerObserver(this);
         List<Integer> columnasEditables = new ArrayList<>();
         columnasEditables.add(3);
         columnasEditables.add(1);
@@ -71,7 +109,7 @@ public class VentasPanel extends BarCodableImpl {
                             = productos.get(tablaProductos1.getSelectedRow());
                     String precioNuevo = tablaProductos1.getValueAt(tablaProductos1.getSelectedRow(),
                             tablaProductos1.getSelectedColumn()).toString();
-                    if (!StringUtils.isNumeric(precioNuevo)) {
+                    if (!NumberUtils.isNumber(precioNuevo)) {
                         return;
                     }
                     productoSeleccionado.setPrecio(new BigDecimal(precioNuevo));
@@ -109,6 +147,7 @@ public class VentasPanel extends BarCodableImpl {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        abrirCajaDlg = new javax.swing.JDialog();
         Pesaje = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanel4 = new javax.swing.JPanel();
@@ -140,12 +179,26 @@ public class VentasPanel extends BarCodableImpl {
         PanelCodigoBarras = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         barCodeTxt = new javax.swing.JTextField();
+        abrirCajaBtn = new javax.swing.JButton();
         PanelFinalizar = new javax.swing.JPanel();
         finalizarBtn = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         notaLabel = new javax.swing.JLabel();
         notaTxt = new javax.swing.JTextField();
         repartidorLabel = new javax.swing.JLabel();
+
+        abrirCajaDlg.setSize(new java.awt.Dimension(804, 453));
+
+        javax.swing.GroupLayout abrirCajaDlgLayout = new javax.swing.GroupLayout(abrirCajaDlg.getContentPane());
+        abrirCajaDlg.getContentPane().setLayout(abrirCajaDlgLayout);
+        abrirCajaDlgLayout.setHorizontalGroup(
+            abrirCajaDlgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        abrirCajaDlgLayout.setVerticalGroup(
+            abrirCajaDlgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -232,11 +285,11 @@ public class VentasPanel extends BarCodableImpl {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pesoTotalLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(85, 85, 85)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(totalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addComponent(totalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(204, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -323,6 +376,13 @@ public class VentasPanel extends BarCodableImpl {
             }
         });
 
+        abrirCajaBtn.setText("Abrir caja");
+        abrirCajaBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                abrirCajaBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout PanelCodigoBarrasLayout = new javax.swing.GroupLayout(PanelCodigoBarras);
         PanelCodigoBarras.setLayout(PanelCodigoBarrasLayout);
         PanelCodigoBarrasLayout.setHorizontalGroup(
@@ -332,6 +392,8 @@ public class VentasPanel extends BarCodableImpl {
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(barCodeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(abrirCajaBtn)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         PanelCodigoBarrasLayout.setVerticalGroup(
@@ -340,8 +402,9 @@ public class VentasPanel extends BarCodableImpl {
                 .addGap(20, 20, 20)
                 .addGroup(PanelCodigoBarrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(barCodeTxt))
-                .addContainerGap(27, Short.MAX_VALUE))
+                    .addComponent(barCodeTxt)
+                    .addComponent(abrirCajaBtn))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         PanelFinalizar.setBorder(javax.swing.BorderFactory.createTitledBorder("Finalizar"));
@@ -375,14 +438,14 @@ public class VentasPanel extends BarCodableImpl {
 
         notaLabel.setText("No. de Nota:");
 
-        notaTxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                notaTxtActionPerformed(evt);
-            }
-        });
         notaTxt.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 notaTxtFocusLost(evt);
+            }
+        });
+        notaTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                notaTxtActionPerformed(evt);
             }
         });
         notaTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -615,7 +678,6 @@ public class VentasPanel extends BarCodableImpl {
             notaSeleccionada.getProductosInventarios().add(producto);
             producto.setRepartidores(notaSeleccionada.getRepartidores());
             producto.setNotasDeVenta(notaSeleccionada);
-            producto.setPeso(new BigDecimal(modelProductos.getValueAt(row, 3).toString()));
             producto.setEstatus("vendido");
         }
         notaSeleccionada.setClientes((Clientes) clientesLov.getSelectedItem());
@@ -627,11 +689,68 @@ public class VentasPanel extends BarCodableImpl {
             notasDAO.actualizarNotaDeVenta(notaSeleccionada);
             JOptionPane.showMessageDialog(null, "El producto se vendio correctamente");
             limpiar();
+            imprimirNota(notaSeleccionada.getCodigo());
         } catch (Exception ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(null, ex);
         }
+        
     }//GEN-LAST:event_finalizarBtnActionPerformed
 
+    private void imprimirNota(int notaDeVentaCodigo) throws Exception{
+        path = reportDir + "planta/NotaDeVenta.jrxml";
+        String jasperPath = reportDir+"planta/NotaDeVenta2.jasper";
+        String subreportPath = reportDir+"planta/NotaDeVenta_subreport1";
+
+        Properties prop = new Properties();
+        String propFileName = "C:\\valco_installation\\conf\\valco.properties";
+
+        InputStream inputStream = null;
+            inputStream = new FileInputStream(propFileName);
+       
+
+        if (inputStream != null) {
+            
+                prop.load(inputStream);
+            
+        } else {
+            
+                throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+            
+        }
+
+        String server = prop.getProperty("server");
+        String port = prop.getProperty("port");
+        String dbname = prop.getProperty("dbname");
+        String user = prop.getProperty("user");
+        String password = prop.getProperty("password");
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + dbname, user, password);) {
+            /* TODO output your page here. You may use following sample code. */
+
+            //Connecting to the MySQL database
+            //Loading Jasper Report File from Local file system
+            String realPath = path;
+            InputStream input = new FileInputStream(new File(realPath));
+            Map mapa = new HashMap();
+
+            System.out.println(reportDir);
+            System.out.println(realPath);
+            mapa.put("NOTA_DE_VENTA_CODIGO", notaDeVentaCodigo);
+            mapa.put("SUBREPORT_DIR", reportDir + "/planta/");
+            JasperCompileManager.compileReportToFile(subreportPath+".jrxml", subreportPath+".jasper");
+            JasperCompileManager.compileReportToFile(realPath, jasperPath);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperPath, mapa, conn);
+            JasperViewer.viewReport(jasperPrint, false);
+            JasperPrintManager.printReport(jasperPrint, false);
+        } catch (SQLException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private void notaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_notaTxtActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_notaTxtActionPerformed
@@ -668,6 +787,11 @@ public class VentasPanel extends BarCodableImpl {
 
     }//GEN-LAST:event_notaTxtFocusLost
 
+    private void abrirCajaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_abrirCajaBtnActionPerformed
+        abrirCajaDlg.setModal(true);
+        abrirCajaDlg.setVisible(true);
+    }//GEN-LAST:event_abrirCajaBtnActionPerformed
+
     public void limpiar() {
         modelProductos.setRowCount(0);
         productos.clear();
@@ -683,11 +807,29 @@ public class VentasPanel extends BarCodableImpl {
         return clientesArray;
     }
 
+    @Override
+    public void updateAbrirCajaObserver(ProductosInventario producto) {
+        productos.add(producto);
+        setTableModel();
+        recalcularPeso();
+        recalcularPrecio();
+    }
+    
+    public AbrirCajaPanel getAbrirCajaPanel() {
+        return abrirCajaPanel;
+    }
+
+    public void setAbrirCajaPanel(AbrirCajaPanel abrirCajaPanel) {
+        this.abrirCajaPanel = abrirCajaPanel;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelCodigoBarras;
     private javax.swing.JPanel PanelFinalizar;
     private javax.swing.JPanel PanelRepartidor;
     private javax.swing.JPanel Pesaje;
+    private javax.swing.JButton abrirCajaBtn;
+    private javax.swing.JDialog abrirCajaDlg;
     private javax.swing.JTextField barCodeTxt;
     private javax.swing.JTextField clienteTxt;
     private javax.swing.JComboBox clientesLov;
@@ -715,4 +857,6 @@ public class VentasPanel extends BarCodableImpl {
     private javax.swing.JTable tablaProductos1;
     private javax.swing.JLabel totalLabel;
     // End of variables declaration//GEN-END:variables
+
+
 }

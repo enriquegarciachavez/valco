@@ -63,7 +63,9 @@ public class PanelCreator {
                     (AsignacionProductoRepartidor) SpringContext.getContext().getBean("asignacionRepartidorEntrada");
             return panel;
         } else if ("Venta".equals(panelName)) {
-            return new VentasPanel();
+            VentasPanel panel =
+                    (VentasPanel) SpringContext.getContext().getBean("ventasPanel");
+            return panel;
         } else if ("Punto de Venta".equals(panelName)) {
             PuntoVenta puntoDeVenta = (PuntoVenta) SpringContext.getContext().getBean("puntoDeVenta");
             return puntoDeVenta;

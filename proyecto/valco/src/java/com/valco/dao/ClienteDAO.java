@@ -37,6 +37,7 @@ public class ClienteDAO implements Serializable{
             session.save(cliente);
             tx.commit();
         } catch (Exception e) {
+            e.printStackTrace();
             if (tx != null) {
                 try {
                     tx.rollback();

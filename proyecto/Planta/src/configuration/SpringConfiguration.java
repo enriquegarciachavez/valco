@@ -6,6 +6,7 @@
 package configuration;
 
 import components.BarCodeArea;
+import components.BarCodeTxt;
 import components.BasculaPanel;
 import components.CustomCellRendered;
 import components.CustomDropDown;
@@ -31,11 +32,13 @@ import dao.RepartidoresDAO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import panels.AbrirCajaPanel;
 import panels.AsignacionProductoRepartidor;
 import panels.EtiquetadoPanel;
 import panels.PuntoVenta;
 import panels.ReciboDeProducto;
 import panels.ReciboDeProductoSinBC;
+import panels.VentasPanel;
 import service.AsignacionServiceImpl;
 import service.BasculaService;
 import service.BasculaServiceImpl;
@@ -132,6 +135,17 @@ public class SpringConfiguration {
         productosSelection.setEtiqueta("Cliente:");
         productosSelection.init();
         return productosSelection;
+    }
+
+    @Scope("prototype")
+    @Bean
+    public BarCodeTxt barCodeTxt(){
+        BarCodeTxt panel = new BarCodeTxt();
+        panel.setProveedoresDropDown(proveedoresSelectionKilo());
+        panel.setProductoExistente(true);
+        panel.setProductosDAO((ProductoDAO) productosDAO());
+        panel.setModoOperacion("SALIDA");
+        return panel;
     }
     
     @Scope("prototype")
@@ -290,6 +304,29 @@ public class SpringConfiguration {
         return cellRendered;
     }
 
+    @Scope("prototype")
+    @Bean
+    public AbrirCajaPanel abrirCajaPanel(){
+        AbrirCajaPanel panel = new AbrirCajaPanel();
+        panel.setBarCode(barCodeTxt());
+        panel.setBascula(basculaPanel());
+        panel.setBasculaService(basculaService());
+        panel.setModel(tableProcesos());
+        panel.setCellRendered(etiquetadoCellRendered());
+        panel.setProductosDAO((ProductoDAO) productosDAO());
+        panel.init();
+        return panel;
+    }
+    
+    @Scope("prototype")
+    @Bean
+    public VentasPanel ventasPanel() {
+        VentasPanel panel = new VentasPanel();
+        panel.setAbrirCajaPanel(abrirCajaPanel());
+        panel.init();
+        return panel;
+    }
+    
     @Scope("prototype")
     @Bean
     public EtiquetadoPanel reetiquetadoPanel() {

@@ -481,7 +481,7 @@ public class FacturasUtility {
                             0, 
                             sNombre, 
                             sContraseña, 
-                            factura.getXml());
+                            factura.getVersion());
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

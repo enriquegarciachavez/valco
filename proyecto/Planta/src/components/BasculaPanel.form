@@ -77,6 +77,9 @@
           <Color blue="33" green="cc" red="0" type="rgb"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pesoManualTxtActionPerformed"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="pesoManualTxt.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);&#xd;&#xa;pesoManualTxt.addKeyListener(new NumericKeyListener());&#xd;&#xa;"/>
       </AuxValues>
