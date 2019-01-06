@@ -11,6 +11,14 @@
     <property name="hibernate.current_session_context_class">thread</property>
     <property name="hibernate.enable_lazy_load_no_trans">true</property>
     <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
+    <!-- hibernate.cfg.xml -->
+    <property name="connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+    <property name="c3p0.min_size">5</property>
+    <property name="c3p0.max_size">20</property>
+    <property name="c3p0.timeout">1800</property>
+    <property name="c3p0.max_statements">50</property>
+    <property name="c3p0.idle_test_period">3600</property>
+    <!-- no "connection.pool_size" entry! -->
     <mapping resource="com/valco/pojo/TipoProducto.hbm.xml"/>
     <mapping resource="com/valco/pojo/CuentasContables.hbm.xml"/>
     <mapping resource="com/valco/pojo/NotasDeVenta.hbm.xml"/>

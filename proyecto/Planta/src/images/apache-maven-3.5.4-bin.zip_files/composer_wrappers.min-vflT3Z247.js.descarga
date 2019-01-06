@@ -1,0 +1,2 @@
+define(["require","exports","prop-types"],function(e,n,o){"use strict";function r(e){var n=function(n,o){return o.container.compose(e,o.scope,n)};return n.contextTypes={container:o.object,scope:o.object},n}function t(e,n){return function(o){var r=o.innerProps,t=Object.assign(r,n);return o.kernel.compose(e,t)}}Object.defineProperty(n,"__esModule",{value:!0}),n.wrapComposerComponent=r,n.bindComposer=t});
+//# sourceMappingURL=composer_wrappers.min.js-vflS6BeVx.map

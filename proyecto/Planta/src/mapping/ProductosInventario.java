@@ -266,7 +266,7 @@ public class ProductosInventario implements java.io.Serializable {
     }
 
     public String toString() {
-        return this.getProductosHasProveedores().getProductos().getDescripcion();
+        return this.getDescripcion();
     }
 
     public boolean equals(Object o) {

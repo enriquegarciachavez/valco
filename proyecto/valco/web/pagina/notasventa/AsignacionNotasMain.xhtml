@@ -13,7 +13,7 @@
         <ui:composition template="../templates/Template1.xhtml">
 
             <ui:define name="content">
-              
+                <!-- Formulario de asignar notas -->
                 <h:form id="formAsignar">
                     <h:panelGrid id="ingresarGrid"  
                                  columns="10"
@@ -41,57 +41,53 @@
                         <p:message for="repartidor" display="icon" />
 
 
-                        <p:commandButton 
+                        <p:commandButton
+                            id="btnAsignar"
                             value="Ingresar" 
                             partialSubmit="true" 
                             update=":formAsignar :tableForm:singleDT" 
                             action="#{asignacionNotasMainBean.asignarNotas()}"  />
-                        
-
-
                     </h:panelGrid>
                 </h:form>
                 <p:separator/>
+
                 <!-- Tabla de las notas de vanta -->
                 <h:form id="tableForm">               
-             <p:commandButton 
-                            value="Borrar notas seleccionadas"
-                            process="tableForm"
-                            partialSubmit="true"
-                            update=":formAsignar singleDT" 
-                            action="#{asignacionNotasMainBean.borrarNotas()}" 
-                            />
+                    <p:commandButton 
+                        id="btnBorrar"
+                        value="Borrar notas seleccionadas"
+                        process="tableForm"
+                        partialSubmit="true"
+                        update=":formAsignar singleDT" 
+                        action="#{asignacionNotasMainBean.borrarNotas()}" 
+                        />
                     <p:dataTable id="singleDT" var="asignacion" value="#{asignacionNotasMainBean.modeloAsignacion}" selection="#{asignacionNotasMainBean.notasSeleccionadas}" rowKey="#{asignacion.codigo}">
-                <f:facet name="header">
-                  Asignacion de Notas de venta
-                </f:facet>
-                <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
-                <p:column headerText="folio">
-                    <p:outputLabel value="#{asignacion.folio}" />
-                </p:column>
-                <p:column headerText="fecha">
-                    <p:outputLabel value="#{asignacion.fechaDeVenta}" />
-                </p:column>
-                <p:column headerText="Estatus">
-                    <p:outputLabel value="#{asignacion.estatus}" />
-                </p:column>
-                <p:column headerText="repartidor">
-                    <p:outputLabel value="#{asignacion.repartidores.nombres} #{asignacion.repartidores.apellidoPaterno}" />
-                </p:column>
-                <f:facet name="footer">
-                </f:facet>
-            </p:dataTable>
-            
-            
-          </h:form>
-                
-                
-                
-                
+                        <f:facet name="header">
+                            Asignacion de Notas de venta
+                        </f:facet>
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                        <p:column headerText="folio">
+                            <p:outputLabel value="#{asignacion.folio}" />
+                        </p:column>
+                        <p:column headerText="fecha">
+                            <p:outputLabel value="#{asignacion.fechaDeVenta}" />
+                        </p:column>
+                        <p:column headerText="Estatus">
+                            <p:outputLabel value="#{asignacion.estatus}" />
+                        </p:column>
+                        <p:column headerText="repartidor">
+                            <p:outputLabel value="#{asignacion.repartidores.nombres} #{asignacion.repartidores.apellidoPaterno}" />
+                        </p:column>
+                        <f:facet name="footer">
+                        </f:facet>
+                    </p:dataTable>
+                </h:form>
+
+                <p:blockUI block="tableForm" trigger=":formAsignar:btnAsignar :tableForm:btnBorrar">
+                    Cargando.... Espere porfavor<br />
+                    <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
+                </p:blockUI>                
             </ui:define>
-
-            
-
         </ui:composition>
 
     </body>

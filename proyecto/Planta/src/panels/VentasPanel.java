@@ -730,7 +730,7 @@ public class VentasPanel extends BarCodableImpl  implements AbrirCajaObserver{
             //Connecting to the MySQL database
             //Loading Jasper Report File from Local file system
             String realPath = path;
-            InputStream input = new FileInputStream(new File(realPath));
+            
             Map mapa = new HashMap();
 
             System.out.println(reportDir);
@@ -745,8 +745,6 @@ public class VentasPanel extends BarCodableImpl  implements AbrirCajaObserver{
         } catch (SQLException ex) {
             Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
         } catch (JRException ex) {
-            Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (FileNotFoundException ex) {
             Logger.getLogger(EtiquetadoPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

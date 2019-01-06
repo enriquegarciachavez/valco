@@ -1,0 +1,2 @@
+define(["require","exports","react"],function(t,e,n){"use strict";function r(t){function e(){i.comment.cancel(null)}function r(){i.comment.post(o.draft.editorState)}var i=t.triggers,o=t.status,a=t.innerProps,s=a.signalComponent,c=""===o.draft.editorState.getCurrentContent().getPlainText().trim();return n.createElement(s,{signals:{cancel:e,post:r},isEmpty:c})}Object.defineProperty(e,"__esModule",{value:!0}),e.postSignal=r});
+//# sourceMappingURL=post_signal.min.js-vflztgoat.map

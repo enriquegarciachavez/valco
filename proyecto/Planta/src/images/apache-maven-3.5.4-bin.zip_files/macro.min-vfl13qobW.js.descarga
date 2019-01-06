@@ -1,0 +1,2 @@
+define(["require","exports"],function(e,r){"use strict";function t(e,r){function t(e){return e.innerProps.evt}function n(e){return e.innerProps.evt}function i(e){return e.innerProps.evt}return{active:{update:t},macroRef:{updateMacroRef:n},isVisible:{updateVisibility:i}}}function n(e,r){function t(t){var n=t.status.macro;r&&n.active&&n.active.type===e&&t.kernel.compose(r)}return{apply:t}}Object.defineProperty(r,"__esModule",{value:!0}),r.createMacroValuesReducers=t,r.createMacroEventReducers=n});
+//# sourceMappingURL=macro.min.js-vflmlpDhQ.map

@@ -29,6 +29,12 @@
         <property name="longMaxima" type="int">
             <column name="LONG_MAXIMA" not-null="true" />
         </property>
+        <property name="pesoEnLibras" type="java.lang.Boolean">
+            <column name="PESO_EN_LIBRAS"/>
+        </property>
+        <property name="puntoDecimal" type="java.lang.Boolean">
+            <column name="PUNTO_DECIMAL"/>
+        </property> 
         <many-to-one name="proveedor" class="com.valco.pojo.Proveedores" 
                      fetch="select" insert="true" update="true">
             <column name="ID_PROVEEDOR" not-null="true"/>

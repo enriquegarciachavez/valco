@@ -29,6 +29,9 @@ import dao.ProductosHasProveedoresDao;
 import dao.ProveedoresKiloDAO;
 import dao.ReetiquetadoDAO;
 import dao.RepartidoresDAO;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -46,6 +49,7 @@ import service.ProductosService;
 import service.ProductosServiceImpl;
 import service.TransactionService;
 import table.custom.EtiquetadoTableCellRendered;
+import threads.PesoThread;
 
 /**
  *
@@ -207,8 +211,20 @@ public class SpringConfiguration {
     }
     
     @Bean
+    public PesoThread pesoThread(){
+        try {
+            return new PesoThread();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+            return null;
+        }
+    }
+    
+    @Scope("prototype")
+    @Bean
     public BasculaPanel basculaPanel() {
         BasculaPanel panel = new BasculaPanel();
+        panel.setPesoThread(pesoThread());
         panel.init();
         return panel;
     }
@@ -272,6 +288,7 @@ public class SpringConfiguration {
         panel.setModel(tableProcesos());
         panel.setCellRendered(etiquetadoCellRendered());
         panel.setBasculaPanel1(basculaPanel());
+        panel.setAbrirCajaPanel(abrirCajaPanel());
         panel.init();
         return panel;
     }

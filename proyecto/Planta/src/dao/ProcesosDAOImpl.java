@@ -220,6 +220,7 @@ public class ProcesosDAOImpl implements ProcesosDAO{
                     .add(Restrictions.eq("procesosCodigoPadre", procesoCodigo));
               productos = q.list();
               for(ProductosInventario producto: productos){
+                  producto.setDescripcion(new String(producto.getProductosHasProveedores().getProductos().getDescripcion()));
                   Hibernate.initialize(producto.getProductosHasProveedores());
                   Hibernate.initialize(producto.getProductosHasProveedores().getProductos());
               }

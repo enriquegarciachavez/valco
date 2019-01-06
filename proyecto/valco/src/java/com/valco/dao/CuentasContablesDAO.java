@@ -150,6 +150,7 @@ public class CuentasContablesDAO implements Serializable{
 
           } finally {
               try {
+                  if(session.isOpen())
                   session.close();
               } catch (HibernateException he) {
                   throw new Exception("Ocurrió un error al consultar las cuentas.");

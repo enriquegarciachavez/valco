@@ -111,6 +111,7 @@ public class AsignacionNotasMainBean {
         }
         try {
             notadeVentaDao.insertarNotas(notas);
+            MsgUtility.showInfoMeage("Las notas se asignaron correctamente");
         } catch (Exception ex) {
             FacesMessage msg = null;
             msg = new FacesMessage(ex.getMessage());

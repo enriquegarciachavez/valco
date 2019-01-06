@@ -62,7 +62,8 @@ public class Mail {
      * @throws AddressException if the email address parse failed
      * @throws MessagingException if the connection is dead or not in the connected state or if the message is not a MimeMessage
      */
-    public static void Send( String recipientEmail, String ccEmail, String title, String message,String path,String file) throws AddressException, MessagingException, Exception {
+    public static void Send( String recipientEmail, String ccEmail, String title,
+            String message,String path,String file) throws AddressException, MessagingException, Exception {
         Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
         final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
         DataSource source = null;

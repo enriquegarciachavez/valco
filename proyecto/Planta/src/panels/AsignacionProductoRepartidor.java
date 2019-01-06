@@ -17,7 +17,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import javax.swing.table.TableCellRenderer;
@@ -31,7 +35,10 @@ import observers.BarCodeAreaObserver;
 import pesable.PesableBarCodeable;
 import service.BasculaService;
 import service.ProductosService;
+import service.ReportService;
+import service.ReportServiceImpl;
 import service.TransactionService;
+import utilities.ProductosUtility;
 import utilities.UsuarioFirmado;
 
 /**
@@ -467,6 +474,16 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable implements 
             ex.printStackTrace();
             return;
         }
+        Map parametros = new HashMap<>();
+        parametros.put("productos", ProductosUtility.getCodigosCsv(productos));
+        parametros.put("devolucion", false);
+        parametros.put("repartidor", ((Repartidores)repartidoresDropDown.getSelectedItem()).toString());
+        try {
+            ReportServiceImpl.imprimirReporte(parametros, "planta/ProductoAsignadoARepartidor", false, true);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Ocurrio un error al imprimir el reporte\n"+ex,
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
         JOptionPane.showMessageDialog(null, "La transacción se terminó correctamente");
         limpiar();
     }//GEN-LAST:event_finalizarBtnActionPerformed
@@ -639,7 +656,6 @@ public class AsignacionProductoRepartidor extends PesableBarCodeable implements 
     public void setInventarioInicial(boolean inventarioInicial) {
         this.inventarioInicial = inventarioInicial;
     }
-    
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

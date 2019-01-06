@@ -33,6 +33,7 @@ public class PesoThread implements Runnable {
     private InputStream in;
     private OutputStream out;
     private volatile boolean shutdown;
+    private boolean working;
     SerialPort serialPort;
 
     public void shutdown() {
@@ -76,15 +77,18 @@ public class PesoThread implements Runnable {
         try {
             portIdentifier = CommPortIdentifier.getPortIdentifier(puerto);
         } catch (Throwable ex) {
+            working = false;
             throw new Exception("No se encontro el puerto especificado en la configuracion");
         } 
         if (portIdentifier.isCurrentlyOwned()) {
+            working = false;
             throw new Exception("El puerto de la bascula ya se encuentra en uso");
         } else {
             CommPort commPort = null;
             try {
                 commPort = portIdentifier.open(this.getClass().getName(), 2000);
             } catch (PortInUseException ex) {
+                working = false;
                 throw new Exception("El puerto de la bascula ya se encuentra en uso");
             }
 
@@ -93,12 +97,14 @@ public class PesoThread implements Runnable {
                 try {
                     serialPort.setSerialPortParams(new Integer(baudios), new Integer(data), new Integer(stop), new Integer(parity));
                 } catch (UnsupportedCommOperationException ex) {
+                    working = false;
                     throw new Exception("Ocurrio un error al leer la bascula");
                 }
                 try {
                     this.in = serialPort.getInputStream();
                     this.out = serialPort.getOutputStream();
                 } catch (IOException ex) {
+                    working = false;
                     throw new Exception("Ocurrio un error al leer la bascula");
                 }
             }
@@ -156,5 +162,15 @@ public class PesoThread implements Runnable {
     public void setOut(OutputStream out) {
         this.out = out;
     }
+
+    public boolean isWorking() {
+        return working;
+    }
+
+    public void setWorking(boolean working) {
+        this.working = working;
+    }
+    
+    
 
 }

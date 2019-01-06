@@ -11,5 +11,7 @@ package service;
  */
 public interface BasculaService {
     public void imprimitCodigoBarras(String producto, String peso, String codigoBarras);
+    public void imprimitCodigoBarrasPDF(String producto, String peso,
+            String codigoBarras, String productoCodigo) throws Exception;
     public String armarCodigoBarras(String letra, int codigoProducto, int peso, int consecutivo);
 }

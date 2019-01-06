@@ -1,0 +1,2 @@
+define(["require","exports"],function(e,O){"use strict";Object.defineProperty(O,"__esModule",{value:!0});(function(e){e[e.DOWNLOAD=0]="DOWNLOAD",e[e.UNITY_FILE=1]="UNITY_FILE",e[e.UNITY_FOLDER=2]="UNITY_FOLDER",e[e.OPEN_WITH=3]="OPEN_WITH",e[e.OPEN_IN_PAPER=4]="OPEN_IN_PAPER",e[e.APP_ACTION=5]="APP_ACTION"})(O.OpenButtonAction||(O.OpenButtonAction={}))});
+//# sourceMappingURL=types.min.js-vflMOPaHk.map

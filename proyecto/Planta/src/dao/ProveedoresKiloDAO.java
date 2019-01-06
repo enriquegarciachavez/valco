@@ -31,14 +31,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProveedoresKiloDAO implements ProveedoresDAO {
 
-   
-    
-
-  
-    
-
     @Override
-    public Collection getElements() throws Exception{
+    public Collection getElements() throws Exception {
         Session session = null;
         Transaction tx = null;
         try {
@@ -46,7 +40,7 @@ public class ProveedoresKiloDAO implements ProveedoresDAO {
             List<Proveedores> proveedores = new ArrayList<Proveedores>();
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(Proveedores.class);
-     
+
             q.addOrder(Order.asc("nombres"));
             proveedores = (List<Proveedores>) q.list();
             Set<Proveedores> proveedoresSet = new LinkedHashSet<>(proveedores);
@@ -69,18 +63,20 @@ public class ProveedoresKiloDAO implements ProveedoresDAO {
     }
 
     @Override
-    public Object getElementsByCodeOrDesc(String criteria) throws Exception{
-         Session session = HibernateUtil.getSessionFactory().openSession();
+    public Object getElementsByCodeOrDesc(String criteria) throws Exception {
+        Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
         Proveedores proveedor = new Proveedores();
         try {
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(Proveedores.class);
-      
+
             if (StringUtils.isNumeric(criteria)) {
                 q.add(Restrictions.eq("codigo", new Integer(criteria)));
             } else {
-                q.add(Restrictions.like("razonSocial", criteria, MatchMode.ANYWHERE));
+                q.add(Restrictions.disjunction()
+                        .add(Restrictions.like("razonSocial", criteria, MatchMode.ANYWHERE))
+                        .add(Restrictions.like("nombres", criteria, MatchMode.ANYWHERE)));
             }
 
             q.setMaxResults(1);

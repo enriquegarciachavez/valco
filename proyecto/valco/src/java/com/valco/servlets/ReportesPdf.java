@@ -48,38 +48,18 @@ public class ReportesPdf extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, Exception {
-        try {
+            throws Exception {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
-        }
         Properties prop = new Properties();
         String propFileName = "C:\\valco_installation\\conf\\valco.properties";
 
         InputStream inputStream = null;
-        try {
             inputStream = new FileInputStream(propFileName);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ReportesPdf.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
         if (inputStream != null) {
-            try {
                 prop.load(inputStream);
-            } catch (IOException ex) {
-                Logger.getLogger(ReportesPdf.class.getName()).log(Level.SEVERE, null, ex);
-            }
         } else {
-            try {
                 throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(ReportesPdf.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
 
         String server = prop.getProperty("server");
@@ -87,8 +67,8 @@ public class ReportesPdf extends HttpServlet {
         String dbname = prop.getProperty("dbname");
         String user = prop.getProperty("user");
         String password = prop.getProperty("password");
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://"+server+":"+port+"/"+dbname, user, password);
-                OutputStream output = response.getOutputStream();) {
+        Connection conn = DriverManager.getConnection("jdbc:mysql://"+server+":"+port+"/"+dbname, user, password);
+                OutputStream output = response.getOutputStream();
             /* TODO output your page here. You may use following sample code. */
 
             //Connecting to the MySQL database
@@ -117,11 +97,6 @@ public class ReportesPdf extends HttpServlet {
             JasperReport jasperReport = JasperCompileManager.compileReport(input);
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
             JasperExportManager.exportReportToPdfStream(jasperPrint, output);
-        } catch (SQLException ex) {
-            Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JRException ex) {
-            Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

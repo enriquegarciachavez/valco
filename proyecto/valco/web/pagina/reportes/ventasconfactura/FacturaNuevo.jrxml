@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="FacturaNuevo" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
-	<property name="ireport.x" value="36"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="587"/>
 	<style name="table" lineSpacing="Single">
 		<box>
 			<topPen lineWidth="1.0" lineColor="#000000"/>
@@ -176,36 +176,36 @@ WHERE
 				<text><![CDATA[CHIHUAHUA, CHIHUAHUA, MÉXICO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="595" width="128" height="14"/>
+				<reportElement x="0" y="585" width="128" height="14"/>
 				<textElement lineSpacing="Single"/>
 				<text><![CDATA[Sello digital del CFDI:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="-2" y="628" width="128" height="14"/>
+				<reportElement x="-2" y="619" width="128" height="14"/>
 				<textElement lineSpacing="Single"/>
 				<text><![CDATA[SELLO DEL SAT:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="-2" y="661" width="297" height="14"/>
+				<reportElement x="-2" y="653" width="297" height="14"/>
 				<textElement lineSpacing="Single"/>
 				<text><![CDATA[CADENA ORIGINAL DEL COMPLEMENTO DE CERTIFICACIÓN DEL SAT:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="609" width="572" height="20"/>
+				<reportElement x="0" y="599" width="572" height="20"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_SELLO_CDFI}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="642" width="572" height="20"/>
+				<reportElement x="0" y="633" width="572" height="20"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_SELLO_SAT}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="675" width="572" height="20"/>
+				<reportElement x="0" y="665" width="572" height="12"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
@@ -635,7 +635,7 @@ WHERE
          com.google.zxing.BarcodeFormat.QR_CODE, 300, 300))]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="1" y="546" width="404" height="47">
+				<reportElement x="1" y="546" width="404" height="39">
 					<printWhenExpression><![CDATA[$F{FACTURAS_TIPO_DOCUMENTO}=="ingreso"]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Justified" lineSpacing="Single" markup="html">
@@ -657,14 +657,28 @@ WHERE
 			<textField>
 				<reportElement x="4" y="157" width="432" height="20"/>
 				<textElement textAlignment="Center" lineSpacing="Single"/>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_TIPO_DOCUMENTO}=="egreso" ? "Acreditado a:" : "Vendido a:"]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_TIPO_DOCUMENTO}=="E" ? "Acreditado a:" : "Vendido a:"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="450" y="3" width="122" height="10"/>
 				<textElement textAlignment="Center" lineSpacing="Single">
 					<font size="5"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_TIPO_DOCUMENTO}=="ingreso" ? "Documento: Factura" : "Documento: Nota de Credito"]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_TIPO_DOCUMENTO}== "I" ? "Documento: Factura" : $F{FACTURAS_TIPO_DOCUMENTO}== "E" ? "Documento: Nota de Credito" : "Documento: Pago"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="675" width="81" height="20"/>
+				<textElement verticalAlignment="Bottom" lineSpacing="Single">
+					<font size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["OBSERVACIONES: "]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="81" y="677" width="100" height="18"/>
+				<textElement verticalAlignment="Bottom" lineSpacing="Single">
+					<font size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_OBSERVACIONES}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

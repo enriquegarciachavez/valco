@@ -185,6 +185,7 @@ public class FacturasDAO implements Serializable {
         tx = session.beginTransaction();
         try {
             session.saveOrUpdate(factura.getNotasDeVenta());
+            session.saveOrUpdate(factura.getNotasDeVenta().getCuentaXCobrar());
         } catch (Exception e) {
             throw new Exception("Fallo en el primero" + e.getMessage());
         }
@@ -590,7 +591,10 @@ public class FacturasDAO implements Serializable {
                     .setProjection(Projections.max("codigo"));
             folio = (Integer) criteria.uniqueResult();
             tx.commit();
-            return folio+1;
+            if(folio != null){
+                return folio+1;
+            }
+            return 1;
 
         } catch (HibernateException he) {
             tx.commit();

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="FacturaNuevo" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="338"/>
+	<property name="ireport.x" value="7"/>
+	<property name="ireport.y" value="239"/>
 	<style name="table" lineSpacing="Single">
 		<box>
 			<topPen lineWidth="1.0" lineColor="#000000"/>
@@ -604,7 +604,7 @@ WHERE
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "FacturaNuevo_subreport1.jasper"]]></subreportExpression>
 			</subreport>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="426" y="506" width="123" height="19"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6" isBold="true"/>
@@ -632,7 +632,7 @@ WHERE
 				</textElement>
 				<text><![CDATA[SUBTOTAL]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="426" y="496" width="123" height="9"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
@@ -642,14 +642,14 @@ WHERE
 			<rectangle>
 				<reportElement x="426" y="485" width="123" height="10"/>
 			</rectangle>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="426" y="486" width="123" height="9"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_SUBTOTAL}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="326" y="524" width="223" height="19"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="6" isBold="true"/>
@@ -694,112 +694,112 @@ WHERE
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{FACTURAS_TIPO_DOCUMENTO}=="ingreso" ? "Documento: Factura" : "Documento: Nota de Credito"]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="116" y="337" width="131" height="10"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{abonos_cuentas_x_cobrar_NUM_OPERACION}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="116" y="347" width="131" height="10"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{abonos_cuentas_x_cobrar_RFC_CTA_ORIGEN}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="116" y="357" width="131" height="10"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{abonos_cuentas_x_cobrar_NOMBRE_BANCO_ORD}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="116" y="367" width="131" height="10"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{abonos_cuentas_x_cobrar_CTA_ORDENANTE}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="417" y="337" width="132" height="10"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{abonos_cuentas_x_cobrar_RFC_CTA_BEN}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="417" y="347" width="132" height="10"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{abonos_cuentas_x_cobrar_NOMBRE_BANCO_BEN}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="417" y="357" width="132" height="10"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{abonos_cuentas_x_cobrar_CTA_BENEFICIARIO}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="75" y="247" width="172" height="12"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{abonos_cuentas_x_cobrar_ID_DOC_RELACIONADO}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="4" y="247" width="70" height="12"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{facturas_A_SERIE}+$F{facturas_A_FOLIO}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="247" y="247" width="70" height="12"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{facturas_A_METODO_PAGO}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="318" y="247" width="55" height="12"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{facturas_A_TOTAL}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="373" y="247" width="53" height="12"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{abonos_cuentas_x_cobrar_IMP_SALDO_ANT}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="426" y="247" width="120" height="12"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{abonos_cuentas_x_cobrar_IMP_SALDO_INSOLUTO}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="71" y="411" width="475" height="12"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{abonos_cuentas_x_cobrar_CERT_PAGO}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="71" y="423" width="475" height="10"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{abonos_cuentas_x_cobrar_CADENA_PAGO}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="71" y="433" width="475" height="11"/>
 				<textElement lineSpacing="Single">
 					<font size="6"/>

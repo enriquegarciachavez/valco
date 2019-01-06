@@ -1,0 +1,2 @@
+define(["require","exports","tslib","jquery"],function(n,t,e,i){"use strict";return i=e.__importDefault(i),(function(){function n(){n.initialized||this.listen()}return n.prototype.listen=function(){n.initialized=!0,i.default(document).on("keydown",function(n){if(9===n.keyCode)return i.default(document.body).addClass("tabbing")}),i.default(document).on("mousedown",function(n){return i.default(document.body).removeClass("tabbing")})},n.initialize_module=function(){return new n},n.initialized=!1,n})()});
+//# sourceMappingURL=tabbable.min.js-vflvtE-ho.map

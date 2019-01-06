@@ -37,10 +37,7 @@ public class BasculaPanel extends PesableBarCodeable implements BasculaPanelObse
     public void init() {
         initComponents();
 
-        try {
-            setPesoThread(new PesoThread());
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Ocurrio un error al leer el peso de la bascula", "Error", ERROR_MESSAGE);
+        if (getPesoThread() == null || !getPesoThread().isWorking()) {
             pesoManualChk.setSelected(true);
             pesoManualChk.setEnabled(false);
             pesoBasculaLbl.setEnabled(false);
@@ -158,7 +155,7 @@ public class BasculaPanel extends PesableBarCodeable implements BasculaPanelObse
 
     @Override
     public void notifyObservers() {
-        for(BasculaPanelObserver observer: observers){
+        for (BasculaPanelObserver observer : observers) {
             observer.updateBasculaPanelObserver();
         }
     }

@@ -7,6 +7,7 @@ package com.valco.dao;
 
 import com.valco.HibernateUtil;
 import com.valco.pojo.CuentasXPagar;
+import com.valco.pojo.InventarioDetallado;
 import com.valco.pojo.InventarioGlobal;
 import com.valco.pojo.OrdenesCompra;
 import com.valco.pojo.Productos;

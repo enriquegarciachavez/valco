@@ -89,10 +89,14 @@ import javax.faces.validator.ValidatorException;
         tipoNota = "LOCAL";
     }
     
-    public String consultaXFolio() throws Exception{
+    public String consultaXFolio(){
 	NotasDeVenta aux = new NotasDeVenta();
-        aux = 
-                this.notasDeVentaDao.getNotaDeVentaXFolio(notaNueva.getFolio());
+        try {
+            aux = this.notasDeVentaDao.getNotaDeVentaXFolio(notaNueva.getFolio());
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+            return null;
+        }
         if(aux == null){
             MsgUtility.showErrorMeage("No existe el folio suministrado");
         }else if(aux.getEstatus() == null){
@@ -116,11 +120,15 @@ import javax.faces.validator.ValidatorException;
         return null;
     }
     
-    public void validaEstatusActivo(FacesContext context, UIComponent component, Object value) throws ValidatorException, Exception {
+    public void validaEstatusActivo(FacesContext context, UIComponent component, Object value) throws ValidatorException {
 
         NotasDeVenta aux = new NotasDeVenta();
-        aux = 
-                this.notasDeVentaDao.getNotaDeVentaXFolio((int)value);
+        try {
+            aux = this.notasDeVentaDao.getNotaDeVentaXFolio((int)value);
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage(ex.getMessage());
+            return;
+        }
         if(aux == null){
             throw new ValidatorException(new FacesMessage("La nota de venta no ha sido suministrada a ningún repartidor")); 
         }else if(aux.getEstatus() == null){

@@ -9,6 +9,8 @@ import dao.DAO;
 import dao.FiltrableByFather;
 import dao.ProveedoresDAO;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
@@ -16,12 +18,14 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 import listeners.CustomDropDownActionListener;
 import mapping.Proveedores;
+import observables.Observable;
+import observers.Observer;
 
 /**
  *
  * @author Administrador
  */
-public class CustomDropDown extends javax.swing.JPanel {
+public class CustomDropDown extends javax.swing.JPanel implements Observable{
 
     private DAO dao;
     private Timer t;
@@ -29,6 +33,7 @@ public class CustomDropDown extends javax.swing.JPanel {
     private CustomDropDown father;
     private FiltrableByFather daoFather;
     private String etiqueta;
+    private List<Observer> observers = new ArrayList<>();
     
 
     /**
@@ -175,7 +180,24 @@ public class CustomDropDown extends javax.swing.JPanel {
         combo.setEnabled(true);
         label.setEnabled(true);
         txt.setEnabled(true);
-    }    
+    }
+    
+    @Override
+    public void registerObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for(Observer observer : observers){
+            observer.Update(this);
+        }
+    }
     
     private void txtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtActionPerformed
         // TODO add your handling code here:
@@ -196,6 +218,7 @@ public class CustomDropDown extends javax.swing.JPanel {
         if(child != null){
             reloadChild();
         }
+        notifyObservers();
     }//GEN-LAST:event_comboActionPerformed
 
     
@@ -205,4 +228,5 @@ public class CustomDropDown extends javax.swing.JPanel {
     private javax.swing.JLabel label;
     private javax.swing.JTextField txt;
     // End of variables declaration//GEN-END:variables
+
 }

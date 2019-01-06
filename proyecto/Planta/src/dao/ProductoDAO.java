@@ -398,6 +398,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
             if (producto == null) {
                 throw new Exception("No se encontró el producto buscado.");
             }
+            producto.setDescripcion(new String(producto.getProductosHasProveedores().getProductos().getDescripcion()));
             Hibernate.initialize(producto.getProductosHasProveedores().getProductos());
             Hibernate.initialize(producto.getUbicaciones());
             Hibernate.initialize(producto.getProductosHasProveedores().getProveedores());
@@ -434,6 +435,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
                 throw new Exception("No se encontró el producto buscado.");
             }
             producto = (ProductosInventario) q.uniqueResult();
+            producto.setDescripcion(new String(producto.getProductosHasProveedores().getProductos().getDescripcion()));
             Hibernate.initialize(producto.getProductosHasProveedores().getProductos());
             Hibernate.initialize(producto.getUbicaciones());
             Hibernate.initialize(producto.getProductosHasProveedores().getProveedores());
@@ -463,6 +465,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
                     .add(Restrictions.eq("codigoBarras", codigo));
             producto = (ProductosInventario) q.uniqueResult();
             if (producto != null) {
+                producto.setDescripcion(new String(producto.getProductosHasProveedores().getProductos().getDescripcion()));
                 Hibernate.initialize(producto.getTranferencias());
                 Hibernate.initialize(producto.getTranferencias().getUbicacionesByDestino());
             }
@@ -499,10 +502,14 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
             //Query x = session.createQuery("FROM ProductosInventario");
             productos = (List<ProductosInventario>) x.list();
             for (ProductosInventario producto : productos) {
+                producto.setDescripcion(new String(producto
+                        .getProductosHasProveedores().getProductos().getDescripcion()
+                +" "+producto.getPeso()+" KG"));
                 Hibernate.initialize(producto.getProductosHasProveedores());
                 Hibernate.initialize(producto.getProductosHasProveedores().getProductos());
             }
             tx.commit();
+            System.out.println(productos.size());
             return productos;
 
         } catch (HibernateException he) {
@@ -528,6 +535,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
             Criteria q = session.createCriteria(ProductosHasProveedores.class)
                     .add(Restrictions.eq("proveedores", proveedor))
                     .add(Restrictions.eq("codigoProveedor", codigo));
+            q.setMaxResults(1);
             producto = (ProductosHasProveedores) q.uniqueResult();
             if (producto != null) {
                 Hibernate.initialize(producto.getProductos());
@@ -841,7 +849,7 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
                 + " and PI.peso >= " + peso;
         hql += " order by abs(peso - " + peso + ")";
         try {
-        //    Query query = session.createQuery(hql);
+            //    Query query = session.createQuery(hql);
             //  query.setMaxResults(5);     
             q.setMaxResults(5);
             productosInventario = (List<ProductosInventario>) q.list();
@@ -1228,9 +1236,13 @@ public class ProductoDAO implements FiltrableByFather, DAO, BarCodeDAO, Producto
                     .add(Restrictions.eq("estatus", "ACTIVO"));
 
             productos = q.list();
+            for (ProductosInventario producto : productos) {
+                producto.setDescripcion(new String(producto.getProductosHasProveedores().getProductos().getDescripcion()));
+            }
             tx.commit();
             return productos;
         } catch (HibernateException he) {
+            he.printStackTrace();
             throw new Exception("Ocurrió un error al obtener el siguiente numero.");
 
         } finally {

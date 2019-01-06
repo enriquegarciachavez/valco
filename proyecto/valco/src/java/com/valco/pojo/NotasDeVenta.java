@@ -169,7 +169,7 @@ public class NotasDeVenta implements java.io.Serializable {
         total = new BigDecimal(0.00);
         total.setScale(2, RoundingMode.HALF_EVEN);
         for (ProductosInventario producto : this.getProductosInventarios()) {
-            total = total.add(producto.getPeso().multiply(producto.getPrecio()));
+            total = total.add(producto.getPeso().multiply(producto.getPrecio()).setScale(2, RoundingMode.HALF_EVEN));
         }
         return total;
     }

@@ -1,0 +1,2 @@
+define(["require","exports","react"],function(e,r,a){"use strict";function t(e){var r=e.innerProps,t=e.triggers,c=r.children,s=r.style,n=r.className;return a.createElement("span",{className:"active-macro",ref:t.macro.updateMacroRef},a.createElement("span",{className:n,style:s},c))}Object.defineProperty(r,"__esModule",{value:!0}),r.activeMacroDecorator=t});
+//# sourceMappingURL=active_macro_decorator.min.js-vfl20PDUb.map

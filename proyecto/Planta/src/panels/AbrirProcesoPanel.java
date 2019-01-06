@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import mapping.Procesos;
+import observables.Observable;
+import observers.Observer;
 import utilities.ParametrosGeneralesUtility;
 
 /*
@@ -37,7 +39,7 @@ import utilities.ParametrosGeneralesUtility;
  *
  * @author Karla
  */
-public class AbrirProcesoPanel extends BarCodableImpl {
+public class AbrirProcesoPanel extends BarCodableImpl implements Observable {
 
     ProductoDAO productoDAO = new ProductoDAO();
     ProcesosDAOImpl procesosDAO = new ProcesosDAOImpl();
@@ -50,6 +52,8 @@ public class AbrirProcesoPanel extends BarCodableImpl {
     List<ProductosInventario> source = new ArrayList<>();
     List<ProductosInventario> destination = new ArrayList<>();
     Procesos procesoEdicion;
+    private String mensaje;
+    private List<Observer> observers = new ArrayList<Observer>();
 
     public List<Component> exceptions = new ArrayList<>();
 
@@ -67,7 +71,7 @@ public class AbrirProcesoPanel extends BarCodableImpl {
         exceptions.add(observacionesTxt);
         setDispacher(new BarCodeScannerKeyDispatcher(barCodeTxt, getManager(), exceptions));
         getManager().addKeyEventDispatcher(getDispacher());
-
+        mensaje = "El proceso se abrio correctamente";
     }
 
     public AbrirProcesoPanel(Procesos proceso) {
@@ -84,7 +88,8 @@ public class AbrirProcesoPanel extends BarCodableImpl {
         setDispacher(new BarCodeScannerKeyDispatcher(barCodeTxt, getManager(), exceptions));
         getManager().addKeyEventDispatcher(getDispacher());
         modoEdicion = true;
-
+        abrirProcesoBtn.setText("Actualizar peso");
+        mensaje = "El proceso se actualizo correctamente";
     }
 
     /**
@@ -96,7 +101,7 @@ public class AbrirProcesoPanel extends BarCodableImpl {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        abrirProcesoBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         disponiblesJList = new javax.swing.JList();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -118,10 +123,10 @@ public class AbrirProcesoPanel extends BarCodableImpl {
         fechaLbl = new javax.swing.JLabel();
         barCodeTxt = new javax.swing.JTextField();
 
-        jButton1.setText("Abrir proceso");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        abrirProcesoBtn.setText("Abrir proceso");
+        abrirProcesoBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                abrirProcesoBtnActionPerformed(evt);
             }
         });
 
@@ -207,10 +212,10 @@ public class AbrirProcesoPanel extends BarCodableImpl {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(62, 62, 62)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(pesoLbl2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(51, 51, 51)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel10)
+                    .addComponent(pesoLbl2, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(126, 126, 126)
@@ -256,17 +261,25 @@ public class AbrirProcesoPanel extends BarCodableImpl {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(SeleccionarTodosBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(quitarTodosBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(quitarSelecBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(seleccionarSelecBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(SeleccionarTodosBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(quitarTodosBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(quitarSelecBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(seleccionarSelecBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -275,7 +288,7 @@ public class AbrirProcesoPanel extends BarCodableImpl {
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(401, 401, 401)
-                        .addComponent(jButton1))
+                        .addComponent(abrirProcesoBtn))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(barCodeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -313,7 +326,7 @@ public class AbrirProcesoPanel extends BarCodableImpl {
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addComponent(abrirProcesoBtn)
                 .addContainerGap(25, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -370,8 +383,12 @@ public class AbrirProcesoPanel extends BarCodableImpl {
         actualizarPeso();
     }//GEN-LAST:event_quitarSelecBtnActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void abrirProcesoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_abrirProcesoBtnActionPerformed
         mapping.Procesos proceso = new mapping.Procesos();
+        if(lmDisponibles.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Debe seleccionar productos para poder abrir procesos.");
+            return;
+        }
         proceso.setFechaInicio(new Date());
         proceso.setEstatus("ACTIVO");
         proceso.setObservaciones(observacionesTxt.getText());
@@ -395,8 +412,9 @@ public class AbrirProcesoPanel extends BarCodableImpl {
             JOptionPane.showMessageDialog(null, "Ocurriò un error al abrir el proceso", "Error", ERROR_MESSAGE);
             return;
         }
-        JOptionPane.showMessageDialog(null, "Se abrio el proceso correctamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-    }//GEN-LAST:event_jButton1ActionPerformed
+        JOptionPane.showMessageDialog(null, mensaje, "Informacion", JOptionPane.INFORMATION_MESSAGE);
+        notifyObservers();
+    }//GEN-LAST:event_abrirProcesoBtnActionPerformed
 
     private void barCodeTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_barCodeTxtKeyTyped
         if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
@@ -451,10 +469,10 @@ public class AbrirProcesoPanel extends BarCodableImpl {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton SeleccionarTodosBtn;
+    private javax.swing.JButton abrirProcesoBtn;
     private javax.swing.JTextField barCodeTxt;
     private javax.swing.JList disponiblesJList;
     private javax.swing.JLabel fechaLbl;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -472,4 +490,21 @@ public class AbrirProcesoPanel extends BarCodableImpl {
     private javax.swing.JList seleccionadosJList;
     private javax.swing.JButton seleccionarSelecBtn;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void registerObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for(Observer observer : observers){
+            observer.Update(this);
+        }
+    }
 }

@@ -151,9 +151,6 @@ public class ProveedorDAO implements Serializable {
             Criteria q = session.createCriteria(Proveedores.class);
             Criteria x = q.createCriteria("productosHasProveedoreses");
             Criteria y = x.createCriteria("productos").add(Restrictions.eq("productoPesado", true));
-            
-           
-
             q.addOrder(Order.asc("razonSocial"));
             proveedores = (List<Proveedores>) q.list();
             Set<Proveedores> proveedoresSet = new LinkedHashSet<>(proveedores);

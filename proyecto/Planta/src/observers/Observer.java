@@ -5,10 +5,12 @@
  */
 package observers;
 
+import observables.Observable;
+
 /**
  *
  * @author Karla
  */
 public interface Observer {
-    
+    public void Update(Observable observable);
 }

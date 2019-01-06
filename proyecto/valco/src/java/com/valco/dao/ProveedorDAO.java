@@ -31,7 +31,7 @@ public class ProveedorDAO implements Serializable{
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            session.save(proveedor);
+            session.saveOrUpdate(proveedor);
             tx.commit();
         } catch (Exception e) {
             if (tx != null) {

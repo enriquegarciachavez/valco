@@ -131,17 +131,22 @@ public class CreacionFacturaBean {
         return notaPublicoEnGeneral;
     }
 
-    public void facturarPublicoEnGeneral() throws Exception {
+    public void facturarPublicoEnGeneral() {
         String correoCopia = "info.valco.sistemas@hotmail.com";
         NotasDeVenta nota = buildNotaPublicoEnGeneral();
         if (nota == null) {
-            throw new Exception("Ocurrió un problema al facturar al publico en general.");
+            MsgUtility.showErrorMeage("Ocurrió un problema al facturar al publico en general.");
         }
 
         Facturas factura = new Facturas();
-        armarDocumento(factura, nota);
-        nota.setFolio(facturasDao.getConsecutivo());
-        nota.setRepartidores(repartidoresDao.getRepartidores().get(0));
+        try {
+            armarDocumento(factura, nota);
+
+            nota.setFolio(facturasDao.getConsecutivo());
+            nota.setRepartidores(repartidoresDao.getRepartidores().get(0));
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage("Ocurrió un error al armar el documento");
+        }
         nota.setUsuarios(UsuariosUtility.getUsuarioFirmado());
         for (NotasDeVenta notaVenta : notasDeVenta.getTarget()) {
             notaVenta.setFacturas(factura);
@@ -173,7 +178,7 @@ public class CreacionFacturaBean {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
         try {
-            FacturasUtility.guardaPdf(factura.getCodigo(), nota.getClientes().getRfc() + "-" + factura.getCodigo() + ".pdf", "C:/SAT/","FacturaNuevo.jrxml");
+            FacturasUtility.guardaPdf(factura.getCodigo(), nota.getClientes().getRfc() + "-" + factura.getCodigo() + ".pdf", "C:/SAT/", "FacturaNuevo.jrxml");
             MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": PDF guardado correctamente.");
             String url = "/valco/ReportesPdf?reporte="
                     + "//pagina//reportes//ventasconfactura//FacturaNuevo.jrxml"
@@ -186,14 +191,14 @@ public class CreacionFacturaBean {
         try {
             Mail.Send(nota.getClientes().getCorreoElectronico(), correoCopia, "Factura de valco", "Esta es una factura de valco", "C:\\SAT\\", nota.getClientes().getRfc() + "-" + factura.getCodigo());
             MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": Correo enviado correctamente.");
-        } catch (MessagingException ex) {
+        } catch (Exception ex) {
             MsgUtility.showErrorMeage("Ocurrio un error al enviar el correo" + ex.getMessage() + ex.getCause());
         }
         notasDeVenta.getTarget().clear();
 
     }
 
-    public void facturar() throws Exception {
+    public void facturar() {
         if (notasDeVenta.getTarget().isEmpty()) {
             MsgUtility.showInfoMeage("Debe de seleccionar una nota de venta para facturar.");
             return;
@@ -208,7 +213,11 @@ public class CreacionFacturaBean {
             for (NotasDeVenta nota : notasDeVenta.getTarget()) {
                 Facturas factura = new Facturas();
                 String correoCopia = "info.valco.sistemas@hotmail.com";
-                armarDocumento(factura, nota);
+                try {
+                    armarDocumento(factura, nota);
+                } catch (Exception ex) {
+                    MsgUtility.showErrorMessage("ERROR", "Ocurrió un error al armar el documetno");
+                }
                 nota.setEstatus("FACTURADA");
                 try {
                     correoCopia = parametrosGeneralesDAO.getParametroGeneralXClave("FA001");
@@ -236,7 +245,7 @@ public class CreacionFacturaBean {
                     MsgUtility.showErrorMeage(ex.getMessage());
                 }
                 try {
-                    FacturasUtility.guardaPdf(factura.getCodigo(), factura.getNotasDeVenta().getClientes().getRfc() + "-" + factura.getCodigo() + ".pdf", "C:/SAT/","FacturaNuevo.jrxml");
+                    FacturasUtility.guardaPdf(factura.getCodigo(), factura.getNotasDeVenta().getClientes().getRfc() + "-" + factura.getCodigo() + ".pdf", "C:/SAT/", "FacturaNuevo.jrxml");
                     MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": PDF guardado correctamente.");
                     String url = "/valco/ReportesPdf?reporte="
                             + "//pagina//reportes//ventasconfactura//FacturaNuevo.jrxml"
@@ -249,8 +258,8 @@ public class CreacionFacturaBean {
                 try {
                     Mail.Send(nota.getClientes().getCorreoElectronico(), correoCopia, "Factura de valco", "Esta es una factura de valco", "C:\\SAT\\", factura.getNotasDeVenta().getClientes().getRfc() + "-" + factura.getCodigo());
                     MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": Correo enviado correctamente.");
-                } catch (MessagingException ex) {
-                    MsgUtility.showErrorMeage(ex.getMessage());
+                } catch (Exception ex) {
+                    MsgUtility.showErrorMeage("Ocurrio un error al enviar el correo" + ex.getMessage() + ex.getCause());
                 }
             }
         }

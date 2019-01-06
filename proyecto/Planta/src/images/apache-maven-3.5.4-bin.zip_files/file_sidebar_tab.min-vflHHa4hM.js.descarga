@@ -1,0 +1,2 @@
+define(["require","exports","tslib","external/react"],function(e,t,r,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),n=r.__importStar(n);var i=(function(e){function t(){return null!==e&&e.apply(this,arguments)||this}return r.__extends(t,e),t.prototype.render=function(){return n.Children.only(this.props.children)},t.defaultProps={count:0},t})(n.Component);t.FileSidebarTab=i});
+//# sourceMappingURL=file_sidebar_tab.min.js-vflruOr8t.map

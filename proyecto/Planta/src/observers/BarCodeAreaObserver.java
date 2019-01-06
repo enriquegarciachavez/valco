@@ -9,6 +9,6 @@ package observers;
  *
  * @author Karla
  */
-public interface BarCodeAreaObserver extends Observer {
+public interface BarCodeAreaObserver{
     public void updateBarCodeAreaObserver();
 }

@@ -461,6 +461,8 @@ public class FacturasUtility {
             debug = false;
         }
 
+        System.out.println(sNombre);
+        System.out.println(sContraseña);
         try {
             if (debug) {
                 https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX service1 = new https.test_paxfacturacion_com_mx._453.WcfRecepcionASMX();
@@ -474,13 +476,15 @@ public class FacturasUtility {
             } else {
 
                 try {
+                    System.out.println(sNombre);
+                    System.out.println(sContraseña);
                     https.www_paxfacturacion_com_mx._453.WcfRecepcionASMX service1 = new https.www_paxfacturacion_com_mx._453.WcfRecepcionASMX();
                     https.www_paxfacturacion_com_mx._453.WcfRecepcionASMXSoap port1 = service1.getWcfRecepcionASMXSoap();
-                    result = port1.fnEnviarXML(xml, 
-                            tipoDocumento, 
-                            0, 
-                            sNombre, 
-                            sContraseña, 
+                    result = port1.fnEnviarXML(xml,
+                            tipoDocumento,
+                            0,
+                            sNombre,
+                            sContraseña,
                             factura.getVersion());
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -719,37 +723,26 @@ public class FacturasUtility {
     }
 
     public static void guardaPdf(Integer facturaId, String name, String path, String reportName) throws Exception {
-        try {
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(ReportesXls.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Class.forName("com.mysql.jdbc.Driver").newInstance();
         String host = ParametrosGeneralesUtility.getValor("DB001");
         String port = ParametrosGeneralesUtility.getValor("DB002");
         String dbName = ParametrosGeneralesUtility.getValor("DB003");
         String user = ParametrosGeneralesUtility.getValor("DB004");
         String pss = ParametrosGeneralesUtility.getValor("DB005");
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + dbName, user, pss);) {
-            String reportsDir = ParametrosGeneralesUtility.getValor("RE001");
-            JasperReport jasperReport = null;
-            jasperReport = JasperCompileManager.compileReport(reportsDir + "ventasconfactura//" + reportName);
+        Connection conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + dbName, user, pss);
+        String reportsDir = ParametrosGeneralesUtility.getValor("RE001");
+        JasperReport jasperReport = null;
+        jasperReport = JasperCompileManager.compileReport(reportsDir + "ventasconfactura//" + reportName);
 
-            JasperPrint jasperPrint = null;
+        JasperPrint jasperPrint = null;
 
-            Map mapa = new HashMap();
-            mapa.put("FacturaId", facturaId);
-            mapa.put("SUBREPORT_DIR", reportsDir + "ventasconfactura//");
-            jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
+        Map mapa = new HashMap();
+        mapa.put("FacturaId", facturaId);
+        mapa.put("SUBREPORT_DIR", reportsDir + "ventasconfactura//");
+        jasperPrint = JasperFillManager.fillReport(jasperReport, mapa, conn);
 
-            JasperExportManager.exportReportToPdfFile(jasperPrint, path + name);
+        JasperExportManager.exportReportToPdfFile(jasperPrint, path + name);
 
-        } catch (Exception ex) {
-            throw new Exception("Factura " + facturaId + ": Ocurrio un error al generar el PDF." + ex.getMessage() + ex.getCause());
-        }
     }
 
     public static String Convertir(String numero, boolean mayusculas) {

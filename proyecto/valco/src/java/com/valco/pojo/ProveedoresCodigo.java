@@ -19,6 +19,8 @@ public class ProveedoresCodigo implements java.io.Serializable{
     private int decimales;
     private int longMinima;
     private int longMaxima;
+    private Boolean pesoEnLibras;
+    private Boolean puntoDecimal;
     private Proveedores proveedor;
 
     public Integer getCodigo() {
@@ -83,6 +85,22 @@ public class ProveedoresCodigo implements java.io.Serializable{
 
     public void setLongMaxima(int longMaxima) {
         this.longMaxima = longMaxima;
+    }
+
+    public Boolean getPesoEnLibras() {
+        return pesoEnLibras;
+    }
+
+    public void setPesoEnLibras(Boolean pesoEnLibras) {
+        this.pesoEnLibras = pesoEnLibras;
+    }
+
+    public Boolean getPuntoDecimal() {
+        return puntoDecimal;
+    }
+
+    public void setPuntoDecimal(Boolean puntoDecimal) {
+        this.puntoDecimal = puntoDecimal;
     }
 
     public Proveedores getProveedor() {

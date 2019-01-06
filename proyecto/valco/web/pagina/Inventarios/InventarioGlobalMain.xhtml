@@ -15,6 +15,13 @@
             </ui:define>
 
             <ui:define name="content">
+                
+                <p:commandButton 
+                    value="Reporte Global"
+                    action="#{inventarioMainBean.imprimirInventarioGlobal()}"/>
+                <p:commandButton
+                    value="Reporte detallado"
+                    action="#{inventarioMainBean.imprimirInventarioDetallado()}"/>
 
 
                 <p:dataTable id="tablaInventarioGlobal" 

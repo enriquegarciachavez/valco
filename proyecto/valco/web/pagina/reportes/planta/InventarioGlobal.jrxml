@@ -3,48 +3,48 @@
 	<property name="ireport.zoom" value="1.3310000000000004"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="fechaInicial" class="java.util.Date"/>
-	<parameter name="fechaFinal" class="java.util.Date"/>
+	<style name="Zebra" mode="Transparent" lineSpacing="Single">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 1]]></conditionExpression>
+			<style backcolor="#CCCCCC" lineSpacing="Single"/>
+		</conditionalStyle>
+	</style>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\apps\\valco\\valco\\proyecto\\valco\\web\\pagina\\reportes\\planta\\"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT
-     PRODUCTOS_INVENTARIO.`CODIGO` AS PRODUCTOS_INVENTARIO_CODIGO,
-     PRODUCTOS_INVENTARIO.`PESO` AS PRODUCTOS_INVENTARIO_PESO,
-     PRODUCTOS_INVENTARIO.`PRECIO` AS PRODUCTOS_INVENTARIO_PRECIO,
-     PRODUCTOS_INVENTARIO.`PRODUCTOS_has_PROVEEDORES_CODIGO` AS PRODUCTOS_INVENTARIO_PRODUCTOS_has_PROVEEDORES_CODIGO,
-     PRODUCTOS_INVENTARIO.`CODIGO_BARRAS` AS PRODUCTOS_INVENTARIO_CODIGO_BARRAS,
-     PRODUCTOS_INVENTARIO.`ESTATUS` AS PRODUCTOS_INVENTARIO_ESTATUS,
-     PRODUCTOS_INVENTARIO.`CONSECUTIVO_PROCESO` AS PRODUCTOS_INVENTARIO_CONSECUTIVO_PROCESO,
-     PRODUCTOS_INVENTARIO.`COSTO` AS PRODUCTOS_INVENTARIO_COSTO,
-     PRODUCTOS_INVENTARIO.`FECHA_CREACION` AS PRODUCTOS_INVENTARIO_FECHA_CREACION,
-     PRODUCTOS_has_PROVEEDORES.`CODIGO` AS PRODUCTOS_has_PROVEEDORES_CODIGO,
-     PRODUCTOS_has_PROVEEDORES.`PRODUCTOS_CODIGO` AS PRODUCTOS_has_PROVEEDORES_PRODUCTOS_CODIGO,
-     PRODUCTOS.`CODIGO` AS PRODUCTOS_CODIGO
+     inventario_global.`PRODUCTO_CODIGO` AS inventario_global_PRODUCTO_CODIGO,
+     inventario_global.`DESCRIPCION` AS inventario_global_DESCRIPCION,
+     inventario_global.`NUMERO_CAJAS` AS inventario_global_NUMERO_CAJAS,
+     inventario_global.`PESO_TOTAL` AS inventario_global_PESO_TOTAL,
+     inventario_global.`PRECIO_TOTAL` AS inventario_global_PRECIO_TOTAL,
+     inventario_global.`ESTATUS` AS inventario_global_ESTATUS
 FROM
-     `PRODUCTOS_has_PROVEEDORES` PRODUCTOS_has_PROVEEDORES INNER JOIN `PRODUCTOS_INVENTARIO` PRODUCTOS_INVENTARIO ON PRODUCTOS_has_PROVEEDORES.`CODIGO` = PRODUCTOS_INVENTARIO.`PRODUCTOS_has_PROVEEDORES_CODIGO`
-     INNER JOIN `PRODUCTOS` PRODUCTOS ON PRODUCTOS_has_PROVEEDORES.`PRODUCTOS_CODIGO` = PRODUCTOS.`CODIGO`]]>
+     `inventario_global` inventario_global]]>
 	</queryString>
-	<field name="PRODUCTOS_INVENTARIO_CODIGO" class="java.lang.Integer"/>
-	<field name="PRODUCTOS_INVENTARIO_PESO" class="java.math.BigDecimal"/>
-	<field name="PRODUCTOS_INVENTARIO_PRECIO" class="java.math.BigDecimal"/>
-	<field name="PRODUCTOS_INVENTARIO_PRODUCTOS_has_PROVEEDORES_CODIGO" class="java.lang.Integer"/>
-	<field name="PRODUCTOS_INVENTARIO_CODIGO_BARRAS" class="java.lang.String"/>
-	<field name="PRODUCTOS_INVENTARIO_ESTATUS" class="java.lang.String"/>
-	<field name="PRODUCTOS_INVENTARIO_CONSECUTIVO_PROCESO" class="java.lang.Integer"/>
-	<field name="PRODUCTOS_INVENTARIO_COSTO" class="java.math.BigDecimal"/>
-	<field name="PRODUCTOS_INVENTARIO_FECHA_CREACION" class="java.sql.Timestamp"/>
-	<field name="PRODUCTOS_has_PROVEEDORES_CODIGO" class="java.lang.Integer"/>
-	<field name="PRODUCTOS_has_PROVEEDORES_PRODUCTOS_CODIGO" class="java.lang.Integer"/>
-	<field name="PRODUCTOS_CODIGO" class="java.lang.Integer"/>
+	<field name="inventario_global_PRODUCTO_CODIGO" class="java.lang.Integer"/>
+	<field name="inventario_global_DESCRIPCION" class="java.lang.String"/>
+	<field name="inventario_global_NUMERO_CAJAS" class="java.lang.Long"/>
+	<field name="inventario_global_PESO_TOTAL" class="java.math.BigDecimal"/>
+	<field name="inventario_global_PRECIO_TOTAL" class="java.math.BigDecimal"/>
+	<field name="inventario_global_ESTATUS" class="java.lang.String"/>
+	<variable name="inventario_global_NUMERO_CAJAS_1" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{inventario_global_NUMERO_CAJAS}]]></variableExpression>
+	</variable>
+	<variable name="inventario_global_PESO_TOTAL_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{inventario_global_PESO_TOTAL}]]></variableExpression>
+	</variable>
+	<variable name="inventario_global_PRECIO_TOTAL_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{inventario_global_PRECIO_TOTAL}]]></variableExpression>
+	</variable>
 	<background>
 		<band/>
 	</background>
 	<title>
 		<band height="89">
 			<staticText>
-				<reportElement x="159" y="35" width="270" height="34"/>
+				<reportElement mode="Opaque" x="158" y="0" width="261" height="34" forecolor="#FFFFFF" backcolor="#999999"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 					<font size="16" isBold="true"/>
 				</textElement>
@@ -54,46 +54,103 @@ FROM
 				<reportElement x="0" y="0" width="115" height="75"/>
 				<imageExpression class="java.lang.String"><![CDATA["C:\\Valco\\Imagenes\\logo.jpg"]]></imageExpression>
 			</image>
-			<staticText>
-				<reportElement x="128" y="0" width="270" height="15"/>
-				<textElement textAlignment="Center" lineSpacing="Single">
-					<font size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[DISTRIBUIDORA DE CARNES VALCO S.A. DE C.V.]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="131" y="15" width="28" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-					<font size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[DEL]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="259" y="15" width="29" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-					<font size="9"/>
-				</textElement>
-				<text><![CDATA[AL]]></text>
-			</staticText>
 			<textField>
-				<reportElement x="159" y="15" width="100" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single"/>
-				<textFieldExpression class="java.util.Date"><![CDATA[new SimpleDateFormat("dd/MMM/yyyy").format($P{fechaInicial})]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="288" y="15" width="100" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single"/>
-				<textFieldExpression class="java.util.Date"><![CDATA[new SimpleDateFormat("dd/MMM/yyyy").format($P{fechaFinal})]]></textFieldExpression>
+				<reportElement x="158" y="44" width="261" height="20"/>
+				<textElement textAlignment="Center" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Fecha de consulta: "+new SimpleDateFormat("yyyy-mm-DD").format(new Date())]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
+	<columnHeader>
+		<band height="17">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="1" width="259" height="16" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement lineSpacing="Single">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripcion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="259" y="1" width="113" height="16" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Numero de cajas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="372" y="1" width="100" height="16" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Peso]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="472" y="1" width="100" height="16" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Precio]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
 	<detail>
-		<band height="191">
-			<subreport>
-				<reportElement x="0" y="0" width="200" height="100"/>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "InventarioGlobal_subreport1.jasper"]]></subreportExpression>
-			</subreport>
+		<band height="12">
+			<textField>
+				<reportElement style="Zebra" mode="Opaque" x="0" y="0" width="272" height="12"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{inventario_global_DESCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Zebra" mode="Opaque" x="372" y="0" width="100" height="12"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{inventario_global_PESO_TOTAL}+" KG"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Zebra" mode="Opaque" x="472" y="0" width="100" height="12"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA["\$ "+$F{inventario_global_PRECIO_TOTAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Zebra" mode="Opaque" x="272" y="0" width="100" height="12"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{inventario_global_NUMERO_CAJAS}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
+	<columnFooter>
+		<band height="50"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="50"/>
+	</pageFooter>
+	<summary>
+		<band height="50">
+			<textField>
+				<reportElement x="272" y="12" width="100" height="14"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$V{inventario_global_NUMERO_CAJAS_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="472" y="12" width="100" height="14"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA["\$ "+$V{inventario_global_PRECIO_TOTAL_1}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="272" y="12" width="300" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="372" y="13" width="100" height="14"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{inventario_global_PESO_TOTAL_1}+" KG"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
 </jasperReport>

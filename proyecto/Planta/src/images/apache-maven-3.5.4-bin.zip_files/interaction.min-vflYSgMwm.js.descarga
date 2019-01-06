@@ -1,0 +1,2 @@
+define(["require","exports","draft-js"],function(e,n,r){"use strict";function t(e){return e.innerProps.evt}function i(e){var n=e.innerProps,t=n.evt,i=n.value,u=r.RichUtils.handleKeyCommand(i,t);return u?u:i}function u(){return{draft:{values:a}}}Object.defineProperty(n,"__esModule",{value:!0});var a={editorState:{change:t,keyCommand:i}};n.interactionReducers=u});
+//# sourceMappingURL=interaction.min.js-vflZGp5qh.map

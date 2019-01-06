@@ -77,5 +77,16 @@ public class ProductosUtility {
         return productoInventario;
 
     }
+    
+    public static String getCodigosCsv(List<ProductosInventario> productos){
+        String codigos="(";
+        for(ProductosInventario producto: productos){
+            codigos+=producto.getCodigo()+",";
+        }
+        codigos = codigos.substring(0, codigos.length()-1);
+        codigos+=")";
+        System.out.println(codigos);
+        return codigos;
+    }
 
 }

@@ -454,17 +454,17 @@ public class NotasVentaDAO {
             tx.commit();
             return nota;
 
-        } catch (HibernateException he) {
+        } catch (Exception ex) {
             tx.commit();
-            throw new Exception("Ocurrió un error al consultar los clientes.");
+            throw new Exception("No se encontró el folio seleccionado.");
 
         } finally {
             try {
                 if (session.isOpen()) {
                     session.close();
                 }
-            } catch (HibernateException he) {
-                throw new Exception("Ocurrió un error al consultar los clientes.");
+            } catch (Exception ex) {
+                throw new Exception("No se encontró el folio seleccionado.");
             }
         }
     }
@@ -501,7 +501,8 @@ public class NotasVentaDAO {
         }
     }
     
-    public List<NotasDeVentaView> getNotasDeVentaViewXCliente(Clientes cliente) throws Exception {
+    public List<NotasDeVentaView> getNotasDeVentaViewXClienteAndStatus(Clientes cliente,
+            String estatus) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
         List<NotasDeVentaView> notas = new ArrayList<NotasDeVentaView>();
@@ -509,7 +510,8 @@ public class NotasVentaDAO {
             tx = session.beginTransaction();
             Criteria q = session.createCriteria(NotasDeVentaView.class)
                     
-                    .add(Restrictions.eq("clientes", cliente));
+                    .add(Restrictions.eq("clientes", cliente))
+                    .add(Restrictions.eq("estatus", estatus));
             notas = (List<NotasDeVentaView>) q.list();
 
             tx.commit();

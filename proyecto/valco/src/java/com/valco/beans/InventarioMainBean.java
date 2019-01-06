@@ -16,6 +16,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -46,7 +47,17 @@ public class InventarioMainBean {
         }
     }
     
+    public void imprimirInventarioGlobal(){
+        String url = "/valco/ReportesPdf?reporte="+
+                        "//pagina//reportes//planta//InventarioGlobal.jrxml";
+                    RequestContext.getCurrentInstance().execute("window.open('"+url+"');");
+    }
     
+    public void imprimirInventarioDetallado(){
+        String url = "/valco/ReportesPdf?reporte="+
+                        "//pagina//reportes//planta//InventarioGlobalDetallado.jrxml";
+                    RequestContext.getCurrentInstance().execute("window.open('"+url+"');");
+    }
 
     public List<InventarioGlobal> getInventariosGlobales() {
         return inventariosGlobales;

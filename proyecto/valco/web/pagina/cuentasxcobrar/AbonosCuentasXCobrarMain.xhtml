@@ -49,7 +49,7 @@
                         <p:selectOneMenu id="clientes" 
                                          value="#{abonosCuentasXCobrarMainBean.clienteSelecionado}" 
                                          converter="omnifaces.SelectItemsConverter" 
-                                         panelStyle="width:180px"
+                                         panelStyle="width:280px"
                                          effect="fade"  
                                          style="width:160px" 
                                          required="true"
@@ -62,20 +62,28 @@
                                            var="clientes" 
                                            itemLabel="#{clientes.codigo} | #{clientes.nombres} #{clientes.apellidoPaterno} " 
                                            itemValue="#{clientes}" /> 
-                            <p:ajax event="change" listener="#{abonosCuentasXCobrarMainBean.obtenerNotas()}"
-                                    update="tabla"  />             
 
                         </p:selectOneMenu>
+
+                        <p:selectOneMenu id="estatuses"
+                                         value="#{abonosCuentasXCobrarMainBean.estatus}"
+                                         panelStyle="width:280px"
+                                         effect="fade"
+                                         style="width:160px">
+                            <f:selectItem itemLabel="FACTURADA" itemValue="FACTURADA"/>
+                            <f:selectItem itemLabel="VENDIDA" itemValue="VENDIDA"/>
+                            <f:selectItem itemLabel="PAGADA" itemValue="PAGADA"/>
+
+                        </p:selectOneMenu>
+
+                        <p:commandButton
+                            id="btnBuscar"
+                            value="Buscar"
+                            action="#{abonosCuentasXCobrarMainBean.obtenerNotas()}"
+                            update=":formAsignar"
+                            />
                         <p:message for="clientes" display="icon" />
-
-
-
-
-
-
                     </h:panelGrid>
-
-
 
                     <!-- TABLA-->
 
@@ -116,6 +124,13 @@
                             <h:outputText value="#{nota.folio}" />
                         </p:column>
 
+                        <p:column headerText="Estatus" 
+                                  filterMatchMode="contains"
+                                  filterBy="#{nota.estatus}"
+                                  >
+                            <h:outputText value="#{nota.estatus}" />
+                        </p:column>
+
                         <p:column headerText="Importe" >
                             <h:outputText value="#{nota.importe}" />
                         </p:column>
@@ -126,8 +141,6 @@
                         <p:column headerText="Saldo a la fecha " >
                             <h:outputText value="#{nota.saldoPendiente}" />
                         </p:column>
-
-
 
                         <f:facet name="footer">
 
@@ -153,10 +166,6 @@
                             update=":formpop:tablapop :formAsignar:tabla"
                             action="#{abonosCuentasXCobrarMainBean.actualizarAbono()}"
                             ></p:commandButton>
-
-
-
-
 
                         <p:dataTable id="tablapop" 
                                      var="abonos" 
@@ -186,8 +195,6 @@
                                 <h:outputText value="#{abonos.importe}" />
                             </p:column>
 
-
-
                             <f:facet name="footer">
 
                             </f:facet>
@@ -196,10 +203,7 @@
                     </p:dialog>
                 </h:form>
 
-
-
-
-
+                <!-- VENTANA PARA CAPTURAR ABONOS-->
                 <p:dialog id="capAbonoPop" header="Capturar Abono" widgetVar="capAbonoPop" focus=":abonarForm:fecha" modal="true">
                     <h:form id="abonarForm">
 
@@ -220,14 +224,13 @@
                                     <p:outputLabel for="importe"   value="Importe a Abonar: " />
                                 </p:column>
                                 <p:column>
-                                    <p:inputMask id="importe" 
+                                    <p:inputText id="importe" 
                                                  required="true"
                                                  requiredMessage="Debe capturar un monto"
                                                  value="#{abonosCuentasXCobrarMainBean.abonoNuevo.importe}"
-                                                 mask="99999.99"
                                                  >
                                         <p:ajax event="blur" update="saldoInsoluto"/>
-                                    </p:inputMask>                       
+                                    </p:inputText>                    
                                 </p:column>
                             </p:row>
 
@@ -253,7 +256,7 @@
                                         <f:selectItems value="#{abonosCuentasXCobrarMainBean.ctasBeneficiario}"/>
                                     </p:selectOneMenu>
                                 </p:column>
-                                
+
                                 <p:column style="text-align: right">
                                     <h:outputLabel for="cuentaOrdenante" 
                                                    value="Cuenta Ordenante:" />
@@ -278,7 +281,7 @@
                                     <p:inputText  id="referencia" 
                                                   value="#{abonosCuentasXCobrarMainBean.abonoNuevo.numOperacion}"/>
                                 </p:column>
-                               
+
                             </p:row>
 
                             <p:row>
@@ -324,7 +327,7 @@
                                                              !abonosCuentasXCobrarMainBean.formaPagoSeleccionado.tipoCadenaPago}"
                                                  id="selloPago"/>
                                 </p:column> 
-                                
+
                             </p:row>
 
                             <p:row>
@@ -338,11 +341,17 @@
                                     <h:outputLabel for="saldoInsoluto" value="Saldo Insoluto: " />                                    
                                 </p:column>
                                 <p:column >
-                                    <p:inputText disabled="true" id="saldoInsoluto" value="#{abonosCuentasXCobrarMainBean.notaSeleccionado.saldoPendiente - abonosCuentasXCobrarMainBean.abonoNuevo.importe}"/>
+                                    <p:inputText 
+                                        disabled="true" 
+                                        id="saldoInsoluto" 
+                                        value="#{abonosCuentasXCobrarMainBean.notaSeleccionado.saldoPendiente - abonosCuentasXCobrarMainBean.abonoNuevo.importe}"
+                                        >
+                                        <f:validateDoubleRange minimum="0.0"/>
+                                    </p:inputText>
                                 </p:column>
                             </p:row>
                             <p:row>
-                                 <p:column style="text-align: right">
+                                <p:column style="text-align: right">
                                     <h:outputLabel for="total" 
                                                    value="Total:" />
                                 </p:column>
@@ -378,27 +387,17 @@
                         </p:panelGrid>
                         <p:commandButton action="#{abonosCuentasXCobrarMainBean.insertarAbono()}"
                                          oncomplete="handleLoginRequest(xhr, status, args, 'capAbonoPop' )"
-                                         value="abonar"
-                                         id="abonar"/>
+                                         value="Abonar"
+                                         update=":formAsignar"
+                                         id="btnAbonar"/>
                     </h:form>
                 </p:dialog>
 
-
-
-
-                <p:blockUI block="formAsignar" trigger=":formAsignar:btnAbonar :formAsignar:btnCancelar ">
+                <p:blockUI block="formAsignar" trigger=":formAsignar:btnAbonar :formAsignar:btnCancelar :abonarForm:btnAbonar">
                     Cargando.... Espere porfavor<br />
                     <img src="../../resources/imagenes/Progress_bar.gif" alt=""/>
-
                 </p:blockUI>
             </ui:define>
-
-
-
-
-
         </ui:composition>
-
-
     </body>
 </html>

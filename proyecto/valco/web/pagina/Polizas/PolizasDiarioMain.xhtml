@@ -63,7 +63,7 @@
                             <p:inputText id="haber" value="#{polizasMainBean.conceptoNuevo.haber}" required="false"/>
 
                             <p:commandButton id="btnAgregar" value="Agregar" update=":formPolizas:tablaConceptos" action="#{polizasMainBean.reinit}" >
-                                <p:collector value="#{polizasMainBean.conceptoNuevo}" addTo="#{polizasMainBean.polizaNueva.conpolizaNuevaceptos}" unique="false"/>
+                                <p:collector value="#{polizasMainBean.conceptoNuevo}" addTo="#{polizasMainBean.polizaNueva.conceptos}" unique="false"/>
                             </p:commandButton>
                         </h:panelGrid>
 

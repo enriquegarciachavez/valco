@@ -6,10 +6,20 @@
 package service;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.print.Doc;
@@ -20,13 +30,21 @@ import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import javax.print.SimpleDoc;
 import mapping.Productos;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperPrintManager;
+import net.sf.jasperreports.engine.type.OrientationEnum;
+import net.sf.jasperreports.view.JasperViewer;
 import panels.EtiquetadoPanel;
+import utilities.ParametrosGeneralesUtility;
 
 /**
  *
  * @author Karla
  */
-public class BasculaServiceImpl implements BasculaService{
+public class BasculaServiceImpl implements BasculaService {
 
     @Override
     public void imprimitCodigoBarras(String producto, String peso, String codigoBarras) {
@@ -67,6 +85,30 @@ public class BasculaServiceImpl implements BasculaService{
     }
 
     @Override
+    public void imprimitCodigoBarrasPDF(String producto, String peso,
+            String codigoBarras, String productoCodigo)
+                                        throws Exception {
+        
+        String reportDir = ParametrosGeneralesUtility.getValor("RE001");
+        String path = reportDir + "planta/BarCode.jasper";
+        String path2 = reportDir + "planta/BarCode.jrxml";
+
+        String realPath = path;
+        Map mapa = new HashMap();
+
+        System.out.println(reportDir);
+        System.out.println(realPath);
+        mapa.put("barCode", codigoBarras);
+        mapa.put("producto", producto);
+        mapa.put("peso", peso);
+        mapa.put("productoCodigo", productoCodigo);
+        //JasperCompileManager.compileReportToFile(path2, path);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(path, mapa);
+        JasperViewer.viewReport(jasperPrint, false);
+        JasperPrintManager.printReport(jasperPrint, false);
+    }
+
+    @Override
     public String armarCodigoBarras(String letra, int codigoProducto, int peso, int consecutivo) {
         return letra
                 + new SimpleDateFormat("yyyyMMdd").format(new Date())
@@ -74,5 +116,5 @@ public class BasculaServiceImpl implements BasculaService{
                 + String.format("%06d", peso)
                 + String.format("%04d", consecutivo);
     }
-    
+
 }

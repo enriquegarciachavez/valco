@@ -1,0 +1,2 @@
+define(["require","exports","tslib","external/react","external/classnames"],function(e,t,r,a,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),a=r.__importStar(a),n=r.__importDefault(n),t.TitleBarControlsContainer=function(e){var t=e.children;return a.createElement("div",{className:n.default("react-title-bar__controls","u-mar-right-xs")},t)}});
+//# sourceMappingURL=controls_container.min.js-vflHI-OML.map

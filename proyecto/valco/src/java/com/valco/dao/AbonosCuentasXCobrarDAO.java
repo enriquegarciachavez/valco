@@ -243,7 +243,7 @@ public class AbonosCuentasXCobrarDAO {
         }
     }
 
-    public Integer getNextFolio() throws Exception {
+    public Integer getNextFolio(CuentasXCobrar cuentasXCobrar) throws Exception {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         Integer folio = 0;
@@ -251,14 +251,17 @@ public class AbonosCuentasXCobrarDAO {
             tx = session.beginTransaction();
             Criteria criteria = session
                     .createCriteria(AbonosCuentasXCobrar.class)
-                    .setProjection(Projections.max("folio"));
+                    .setProjection(Projections.max("folio"))
+                    .add(Restrictions.eq("cuentasXCobrar", cuentasXCobrar));
             folio = (Integer) criteria.uniqueResult();
             tx.commit();
+            if(folio == null)
+                return new Integer(1);
             return folio+1;
 
         } catch (HibernateException he) {
             tx.commit();
-            throw new Exception("Ocurrió un error al consultar los clientes.");
+            throw new Exception("Ocurrió un error al consultr el siguiente numero de abono.");
 
         } finally {
             try {

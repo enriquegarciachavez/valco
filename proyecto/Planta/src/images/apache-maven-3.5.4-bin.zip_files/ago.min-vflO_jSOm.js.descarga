@@ -1,0 +1,2 @@
+define(["require","exports","moment"],function(e,o,t){"use strict";function a(e){var o=t(),a=t(e),s=o.diff(a,"minutes"),f=o.diff(a,"hours"),r=o.diff(a.startOf("day"),"days"),n=o.diff(a,"months"),i=o.diff(a,"years");return s<1?"Just now":s<60?1===s?"1 min ago":s+" mins ago":f<24?1===f?"1 hr ago":f+" hrs ago":1===r?"Yesterday":n<1?r+" days ago":1===n?"Last month":i<1?n+" months ago":a.format("MMM YYYY")}Object.defineProperty(o,"__esModule",{value:!0}),o.ago=a});
+//# sourceMappingURL=ago.min.js-vflHuCIa0.map

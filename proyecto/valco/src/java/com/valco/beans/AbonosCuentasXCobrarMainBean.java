@@ -87,7 +87,8 @@ public class AbonosCuentasXCobrarMainBean {
     FormaPago formaPagoSeleccionado;
     CuentasContables cuentaOrdenante;
     CuentasContables cuentaBeneficiario;
-    Boolean tipoCadenaPago;
+    Boolean tipoCadenaPago = false;
+    private String estatus;
 
     Date fecha;
 
@@ -116,7 +117,8 @@ public class AbonosCuentasXCobrarMainBean {
     public void obtenerNotas() {
 
         try {
-            this.notas = notasDeVentaDao.getNotasDeVentaViewXCliente(clienteSelecionado);
+            System.out.println(clienteSelecionado + " " + estatus);
+            this.notas = notasDeVentaDao.getNotasDeVentaViewXClienteAndStatus(clienteSelecionado, estatus);
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
@@ -140,68 +142,103 @@ public class AbonosCuentasXCobrarMainBean {
             FacesContext.getCurrentInstance().validationFailed();
             return;
         }
-        abonoNuevo.setFolio(abonoscuentascobrarDAO.getNextFolio());
+        abonoNuevo.setFolio(abonoscuentascobrarDAO.getNextFolio(notaSeleccionado.getCuentaXCobrar()));
         abonoNuevo.setSerie(ParametrosGeneralesUtility.getValor("FA014"));
     }
 
-    public void insertarAbono() throws Exception {
+    public void insertarAbono() {
+        if (notaSeleccionado.getSaldoPendiente().subtract(abonoNuevo.getImporte()).compareTo(BigDecimal.ZERO) < 0) {
+            MsgUtility.showErrorMeage("Esta intentando pagar mas de lo que se debe");
+            FacesContext.getCurrentInstance().validationFailed();
+            return;
+        }
+        if (notaSeleccionado == null) {
+            MsgUtility.showErrorMeage("Debe Seleccionar una nota para realizar el abono");
+            FacesContext.getCurrentInstance().validationFailed();
+            return;
+        }
+        if ((formaPagoSeleccionado.getTipoCadenaPago() && tipoCadenaPago)
+                && (abonoNuevo.getCertPago() == null || abonoNuevo.getCertPago().equals("")
+                || abonoNuevo.getSelloPago() == null || abonoNuevo.getSelloPago().equals("")
+                || abonoNuevo.getCadenaPago() == null || abonoNuevo.getCadenaPago().equals(""))) {
+            MsgUtility.showErrorMessage("Datos Faltantes", "Debe capturar toda la información adicional de SPEI");
+            FacesContext.getCurrentInstance().validationFailed();
+            return;
+        }
+        if (tipoCadenaPago) {
+            abonoNuevo.setTipoCadPago("01");
+        } else {
+            abonoNuevo.setTipoCadPago(null);
+            abonoNuevo.setCadenaPago(null);
+            abonoNuevo.setCertPago(null);
+            abonoNuevo.setSelloPago(null);
+        }
+        if ("".equals(abonoNuevo.getNumOperacion().trim())) {
+            abonoNuevo.setNumOperacion(null);
+        }
+        abonoNuevo.setEstatus("ACTIVO");
+        abonoNuevo.setCuentasXCobrar(notaSeleccionado.getCuentaXCobrar());
+        abonoNuevo.setMoneda("MXN");
+        if (cuentaOrdenante != null && formaPagoSeleccionado.getBancarizado()) {
+            abonoNuevo.setCtaOrdenante(cuentaOrdenante.getNoDeCuenta());
+            abonoNuevo.setRfcCtaOrigen(cuentaOrdenante.getRfcBanco());
+            abonoNuevo.setNombreBancoOrd(cuentaOrdenante.getDescripcion());
+        }
+        if (cuentaBeneficiario != null && formaPagoSeleccionado.getBancarizado()) {
+            abonoNuevo.setCtaBen(cuentaBeneficiario.getNoDeCuenta());
+            abonoNuevo.setRfcCtaBen(cuentaBeneficiario.getRfcBanco());
+            abonoNuevo.setNombreBancoBen(cuentaBeneficiario.getDescripcion());
+        }
+        abonoNuevo.setImpSaldoAnt(notaSeleccionado.getCuentaXCobrar().getSaldoAnterior().toString());
+        abonoNuevo.setImpSaldoInsoluto(notaSeleccionado.getCuentaXCobrar().getSaldoAnterior().subtract(abonoNuevo.getImporte()).toString());
+        abonoNuevo.setNumParcialidad(String.valueOf(notaSeleccionado.getNumParcialidad() + 1));
+        abonoNuevo.setFormaPago(formaPagoSeleccionado.getCodigo());
+
+        notaSeleccionado.setImporteAbonado(notaSeleccionado.getImporteAbonado().add(abonoNuevo.getImporte()));
+        notaSeleccionado.setSaldoPendiente(notaSeleccionado.getImporte().subtract(notaSeleccionado.getImporteAbonado()));
+        if (notaSeleccionado.getSaldoPendiente().compareTo(BigDecimal.ZERO) == 0) {
+            notaSeleccionado.setEstatus("PAGADO");
+            notaSeleccionado.getCuentaXCobrar().setEstatus("PAGADO");
+            notaSeleccionado.getFacturas().setEstatus("PAGADO");
+        }
+        try {
+            guardarAbono();
+        } catch (Exception ex) {
+            MsgUtility.showErrorMeage("Ocurrio un error al guardar el abono");
+            FacesContext.getCurrentInstance().validationFailed();
+            return;
+        }
+        if (notaSeleccionado.getEstatus().equals("FACTURADA")) {
+            facturarAbono();
+        }
+        AbonosCuentasXCobrar abono = new AbonosCuentasXCobrar();
+        abono.setImporte(abonoNuevo.getImporte());
+        formaPagoSeleccionado = new FormaPago();
+        formaPagoSeleccionado.setCodigo("01");
+        abonoNuevo = new AbonosCuentasXCobrar();
+        abonoNuevo.setFecha(new Date());
+        tipoCadenaPago = false;
+    }
+
+    public void guardarAbono() throws Exception {
+        abonoscuentascobrarDAO.insertarAbono(abonoNuevo);
+        MsgUtility.showInfoMeage("El abono se guardo correctamente");
+        notaSeleccionado.getCuentaXCobrar().getAbonosCuentasXCobrars().add(abonoNuevo);
+    }
+
+    public void facturarAbono() {
         Facturas factura = new Facturas();
         try {
-            if (notaSeleccionado == null) {
-                throw new Exception("Debe Seleccionar una nota para realizar el abono");
-            }
-            if ((formaPagoSeleccionado.getTipoCadenaPago() && tipoCadenaPago)
-                    && (abonoNuevo.getCertPago() == null || abonoNuevo.getCertPago().equals("")
-                    || abonoNuevo.getSelloPago() == null || abonoNuevo.getSelloPago().equals("")
-                    || abonoNuevo.getCadenaPago() == null || abonoNuevo.getCadenaPago().equals(""))) {
-                MsgUtility.showErrorMessage("Datos Faltantes", "Debe capturar toda la información adicional de SPEI");
-                FacesContext.getCurrentInstance().validationFailed();
-                return;
-            }
-            if (tipoCadenaPago) {
-                abonoNuevo.setTipoCadPago("01");
-            } else {
-                abonoNuevo.setTipoCadPago(null);
-                abonoNuevo.setCadenaPago(null);
-                abonoNuevo.setCertPago(null);
-                abonoNuevo.setSelloPago(null);
-            }
-            if ("".equals(abonoNuevo.getNumOperacion().trim())) {
-                abonoNuevo.setNumOperacion(null);
-            }
-            abonoNuevo.setEstatus("ACTIVO");
-            abonoNuevo.setCuentasXCobrar(notaSeleccionado.getCuentaXCobrar());
-            abonoNuevo.setMoneda("MXN");
-            if (cuentaOrdenante != null && formaPagoSeleccionado.getBancarizado()) {
-                abonoNuevo.setCtaOrdenante(cuentaOrdenante.getNoDeCuenta());
-                abonoNuevo.setRfcCtaOrigen(cuentaOrdenante.getRfcBanco());
-                abonoNuevo.setNombreBancoOrd(cuentaOrdenante.getDescripcion());
-            }
-            if (cuentaBeneficiario != null && formaPagoSeleccionado.getBancarizado()) {
-                abonoNuevo.setCtaBen(cuentaBeneficiario.getNoDeCuenta());
-                abonoNuevo.setRfcCtaBen(cuentaBeneficiario.getRfcBanco());
-                abonoNuevo.setNombreBancoBen(cuentaBeneficiario.getDescripcion());
-            }
-            abonoNuevo.setImpSaldoAnt(notaSeleccionado.getCuentaXCobrar().getSaldoAnterior().toString());
-            abonoNuevo.setImpSaldoInsoluto(notaSeleccionado.getCuentaXCobrar().getSaldoAnterior().subtract(abonoNuevo.getImporte()).toString());
-            abonoNuevo.setNumParcialidad(String.valueOf(notaSeleccionado.getNumParcialidad() + 1));
-            abonoNuevo.setFormaPago(formaPagoSeleccionado.getCodigo());
-            if (notaSeleccionado.getFacturas() != null) {
-                System.out.println(notaSeleccionado.getFacturas().getFolioFiscal());
-                abonoNuevo.setIdDocRelacionado(notaSeleccionado.getFacturas().getFolioFiscal());
-            }
-
-            notaSeleccionado.setImporteAbonado(notaSeleccionado.getImporteAbonado().add(abonoNuevo.getImporte()));
-            notaSeleccionado.setSaldoPendiente(notaSeleccionado.getImporte().subtract(notaSeleccionado.getImporteAbonado()));
-
+            abonoNuevo.setIdDocRelacionado(notaSeleccionado.getFacturas().getFolioFiscal());
             armarComprobanteDeRcepcionDePago(factura);
             FacturasUtility.facturarPago(factura, factura.getXml(), "07");
-            abonoscuentascobrarDAO.insertarAbono(abonoNuevo);
+
             facturasDao.insertarFacturaYActualizarNota(factura);
             MsgUtility.showInfoMeage("Se realizó el abono correctamente.");
         } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
-            ex.printStackTrace();
+            FacesContext.getCurrentInstance().validationFailed();
+            return;
         }
         String correoCopia = "info.valco.sistemas@hotmail.com";
         try {
@@ -216,7 +253,7 @@ public class AbonosCuentasXCobrarMainBean {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
         try {
-            FacturasUtility.guardaPdf(factura.getCodigo(), factura.getNotasDeVenta().getClientes().getRfc() + "-" + factura.getCodigo() + ".pdf", "C:/SAT/","RecepcionPago.jrxml");
+            FacturasUtility.guardaPdf(factura.getCodigo(), factura.getNotasDeVenta().getClientes().getRfc() + "-" + factura.getCodigo() + ".pdf", "C:/SAT/", "RecepcionPago.jrxml");
             MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": PDF guardado correctamente.");
             String url = "/valco/ReportesPdf?reporte="
                     + "//pagina//reportes//ventasconfactura//RecepcionPago.jrxml"
@@ -229,19 +266,9 @@ public class AbonosCuentasXCobrarMainBean {
         try {
             Mail.Send(notaSeleccionado.getClientes().getCorreoElectronico(), correoCopia, "Factura de valco", "Esta es una factura de valco", "C:\\SAT\\", factura.getNotasDeVenta().getClientes().getRfc() + "-" + factura.getCodigo());
             MsgUtility.showInfoMeage("Factura " + factura.getCodigo() + ": Correo enviado correctamente.");
-        } catch (MessagingException ex) {
+        } catch (Exception ex) {
             MsgUtility.showErrorMeage(ex.getMessage());
         }
-        //cuentaSeleccionado.getAbonosCuentasXCobrars().add(abonoNuevo);
-        AbonosCuentasXCobrar abono = new AbonosCuentasXCobrar();
-        abono.setImporte(abonoNuevo.getImporte());
-        //notaSeleccionado.getCuentaXCobrar().getAbonosCuentasXCobrars().add(abono);
-        //notaSeleccionado.setImporteAbonado(notaSeleccionado.getImporteAbonado().add(abonoNuevo.getImporte()));
-        formaPagoSeleccionado = new FormaPago();
-        formaPagoSeleccionado.setCodigo("01");
-        abonoNuevo = new AbonosCuentasXCobrar();
-        abonoNuevo.setFecha(new Date());
-        tipoCadenaPago = false;
     }
 
     public void actualizarAbono() {
@@ -549,4 +576,13 @@ public class AbonosCuentasXCobrarMainBean {
     public void setFacturasDao(FacturasDAO facturasDao) {
         this.facturasDao = facturasDao;
     }
+
+    public String getEstatus() {
+        return estatus;
+    }
+
+    public void setEstatus(String estatus) {
+        this.estatus = estatus;
+    }
+
 }

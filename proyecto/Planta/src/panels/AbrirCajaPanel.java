@@ -90,29 +90,38 @@ public class AbrirCajaPanel extends javax.swing.JPanel implements AbrirCajaObser
     }
 
     private void segregarProducto() throws Exception {
+        if(productoSeleccionado==null){
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un producto");
+            return;
+        }
         if (productoSeleccionado.getMenudeo()) {
             restarKilos();
         } else {
             abrirCaja();
         }
         ProductosInventario productoNuevo = productoSeleccionado.getBasicClone();
+        Integer codigo = productoNuevo.getProductosHasProveedores().getProductos().getCodigo();
         productoNuevo.setMenudeo(false);
         productoNuevo.setPeso(bascula.getPeso());
-        productoNuevo.setCodigoBarras(basculaService.armarCodigoBarras("S",
-                productoNuevo.getProductosHasProveedores().getProductos().getCodigo(),
+        productoNuevo.setOrdenesCompra(null);
+        productoNuevo.setCodigoBarras(basculaService.armarCodigoBarras("S1",
+                codigo,
                 Integer.parseInt(productoNuevo.getPeso().toString().replaceAll("\\.", "")),
                 productosDAO.getNextNumberByType(productoNuevo.getProductosHasProveedores(),
                         false)));
         try {
             productosDAO.insertarProducto(productoNuevo);
         } catch (Exception ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(this, ex, "ERROR", JOptionPane.ERROR_MESSAGE);
         }
         try {
-            basculaService.imprimitCodigoBarras(productoLabel.getText(),
-                    productoNuevo.getPeso().toString().replaceAll("\\.", ""),
-                    productoNuevo.getCodigoBarras());
+            basculaService.imprimitCodigoBarrasPDF(productoLabel.getText(),
+                    productoNuevo.getPeso().toString(),
+                    productoNuevo.getCodigoBarras(),
+                    codigo.toString());
         } catch (Exception ex) {
+            ex.printStackTrace();
         }
         notifyObservers(productoNuevo);
         kilosLbl.setText(productoSeleccionado.getPeso().toString() + " KG");
@@ -168,6 +177,7 @@ public class AbrirCajaPanel extends javax.swing.JPanel implements AbrirCajaObser
         try {
             segregarProducto();
         } catch (Exception ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(this, ex, "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }

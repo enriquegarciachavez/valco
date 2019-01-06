@@ -4,7 +4,7 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["C:\\apps\\valco\\valco\\proyecto\\valco\\web\\pagina\\reportes\\polizas\\"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["C:\\apps\\valco\\proyecto\\valco\\web\\pagina\\reportes\\polizas\\"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="fecha" class="java.util.Date"/>
 	<queryString>

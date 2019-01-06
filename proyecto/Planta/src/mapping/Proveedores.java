@@ -204,7 +204,7 @@ public class Proveedores  implements java.io.Serializable {
     }
 
     public String toString(){
-        return this.getNombres();
+        return this.getRazonSocial() + " - " + this.getNombres();
     }
     
     @Override

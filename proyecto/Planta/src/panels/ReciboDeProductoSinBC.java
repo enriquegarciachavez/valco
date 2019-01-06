@@ -40,13 +40,14 @@ import mapping.Productos;
 import mapping.ProductosHasProveedores;
 import mapping.ProductosInventario;
 import mapping.Proveedores;
+import observers.BasculaPanelObserver;
 import utilities.UsuarioFirmado;
 
 /**
  *
  * @author Karla
  */
-public class ReciboDeProductoSinBC extends javax.swing.JPanel {
+public class ReciboDeProductoSinBC extends javax.swing.JPanel implements BasculaPanelObserver{
 
     private BasculaPanel bascula;
     private CustomDropDown productosDropDown;
@@ -72,6 +73,7 @@ public class ReciboDeProductoSinBC extends javax.swing.JPanel {
         bascula.setBounds(30, 260, 400, 400);
         tablaProductos.setDefaultRenderer(Object.class, (TableCellRenderer) cellRendered);
         tablaProductos.setModel((TableModel) model);
+        bascula.registerObserver(this);
     }
     
 
@@ -187,6 +189,10 @@ public class ReciboDeProductoSinBC extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        agregarCaja();
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void agregarCaja(){
         ProductosInventario productoInventario = new ProductosInventario();
         Proveedores proveedor = (Proveedores) proveedoresDropdown.getSelectedItem();
         Productos producto = (Productos) productosDropDown.getSelectedItem();
@@ -217,6 +223,7 @@ public class ReciboDeProductoSinBC extends javax.swing.JPanel {
         productoInventario.setConsecutivoProceso(new Integer(consecutivoLbl.getText()));
         productoInventario.setCodigoBarras(getCodigoBarras());
         productoInventario.setFechaCreacion(new Date());
+        productoInventario.setDescripcion(producto.getDescripcion());
         model.agregarProducto(productoInventario);
         this.imprimirCodigo(productoInventario);
         consecutivoLbl.setText(String.valueOf(tablaProductos.getRowCount()));
@@ -224,8 +231,8 @@ public class ReciboDeProductoSinBC extends javax.swing.JPanel {
             bascula.getPesoManualTxt().requestFocus();
         }
         bascula.getPesoManualTxt().setText(null);
-    }//GEN-LAST:event_btnAgregarActionPerformed
-
+    }
+    
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
         OrdenesCompra orden = new OrdenesCompra();
         orden.setEstatus("ACTIVO");
@@ -304,6 +311,11 @@ public class ReciboDeProductoSinBC extends javax.swing.JPanel {
         }
     }
     
+    @Override
+    public void updateBasculaPanelObserver() {
+        agregarCaja();
+    }
+    
     public BasculaPanel getBascula() {
         return bascula;
     }
@@ -364,4 +376,5 @@ public class ReciboDeProductoSinBC extends javax.swing.JPanel {
     private javax.swing.JScrollPane scrollPanel;
     private javax.swing.JTable tablaProductos;
     // End of variables declaration//GEN-END:variables
+
 }

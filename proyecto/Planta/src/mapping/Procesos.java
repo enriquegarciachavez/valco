@@ -173,6 +173,11 @@ public class Procesos implements java.io.Serializable {
         }
         return total;
     }
+    
+    public String getId(){
+        return this.getLetra() + String.valueOf(numero)
+                + new SimpleDateFormat("yyyyMMdd").format(this.getFechaInicio());
+    }
 
     public String toString() {
         return this.getLetra() + String.valueOf(numero)
